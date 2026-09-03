@@ -10,12 +10,11 @@ their own roadmaps.
 ## Release order
 
 ```text
-Zhinu runtime release gate
-        |
-        v
-Hongxian preview-2 release readiness
-        |
-        v
+Zhinu preview.12 ───────────────────────┐
+                                        v
+Siming preview.3 -> Hongxian preview.2 ─┘
+                                        |
+                                        v
 Marang contracts and in-memory control plane
         |
         v
@@ -31,8 +30,8 @@ optional Marang + Hongxian evidence
 MCP dogfood
 ```
 
-Engineering work on the first two gates may run in parallel, but packages are
-reviewed and released in dependency order.
+Engineering work on Zhinu, Siming, and Hongxian may run in parallel, but
+packages are reviewed and released in dependency order.
 
 ## Gate 1 — Zhinu runtime release
 
@@ -54,9 +53,25 @@ Release candidate: **0.1.0-preview.12**
 This gate does not include Zhinu's declarative workflow, activity catalogue,
 policy compiler, AI activity, or Fuwen-adapter roadmap.
 
-## Gate 2 — Hongxian preview-2 readiness
+## Gate 2 — Siming SQLite preview-3 prerequisite
 
-Status: **implemented, reviewed, and pushed; awaiting NuGet publication/indexing**
+Status: **implemented, verified, and pushed; awaiting NuGet
+publication/indexing**
+
+Release candidate: **0.1.0-preview.3**
+
+Hongxian preview-2 requires Siming SQLite's atomic `ExpectedHead` APIs. The
+release is verified (51 tests and pack passed) and pushed at commit
+**b40ec1c**; it is not yet published or indexed.
+
+- Publish `Penghou.Siming.Sqlite` **0.1.0-preview.3**.
+- Do not advance the Hongxian dependency gate until the package is available
+  on NuGet.
+
+## Gate 3 — Hongxian preview-2 readiness
+
+Status: **implemented, reviewed, and pushed; waiting for Siming preview.3 and
+NuGet publication/indexing**
 
 Release candidate: **0.1.0-preview.2**
 
@@ -75,10 +90,10 @@ branching, archives, encryption, or second-consumer features. Hongxian is not a
 prerequisite for Marang execution; it becomes an optional evidence integration
 after Marang's vocabulary is proven.
 
-## Gate 3 — Marang control plane
+## Gate 4 — Marang control plane
 
-Status: **queued — waiting for the Zhinu and Hongxian packages to be
-published and indexed**
+Status: **queued — waiting for Zhinu preview.12, Siming preview.3, and
+Hongxian preview.2 to be published and indexed**
 
 - Freeze delegation identity, canonical request fingerprints, immutable public
   inputs, lifecycle invariants, budgets, artifacts, and normalized evidence.
@@ -87,7 +102,7 @@ published and indexed**
 - Implement and exhaustively test the fixed workflow with fake agent, model, and
   deterministic providers.
 
-## Gate 4 — Execution feasibility
+## Gate 5 — Execution feasibility
 
 Status: **queued**
 
@@ -100,7 +115,7 @@ Status: **queued**
 Failure at this gate triggers a product-design review before further workflow
 infrastructure is added.
 
-## Gate 5 — Durable integration and dogfood
+## Gate 6 — Durable integration and dogfood
 
 Status: **queued**
 
