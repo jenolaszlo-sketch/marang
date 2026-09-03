@@ -55,23 +55,20 @@ policy compiler, AI activity, or Fuwen-adapter roadmap.
 
 ## Gate 2 — Siming SQLite preview-3 prerequisite
 
-Status: **implemented, verified, and pushed; awaiting NuGet
-publication/indexing**
+Status: **implemented, verified, pushed, published, and indexed on NuGet**
 
 Release candidate: **0.1.0-preview.3**
 
 Hongxian preview-2 requires Siming SQLite's atomic `ExpectedHead` APIs. The
-release is verified (51 tests and pack passed) and pushed at commit
-**b40ec1c**; it is not yet published or indexed.
+release is verified (51 tests and pack passed), pushed at commit **b40ec1c**,
+and is now published and indexed on NuGet.
 
-- Publish `Penghou.Siming.Sqlite` **0.1.0-preview.3**.
-- Do not advance the Hongxian dependency gate until the package is available
-  on NuGet.
+- `Penghou.Siming.Sqlite` **0.1.0-preview.3** is available on NuGet.
 
 ## Gate 3 — Hongxian preview-2 readiness
 
-Status: **implemented, reviewed, and pushed; waiting for Siming preview.3 and
-NuGet publication/indexing**
+Status: **implemented, reviewed, pushed, and verified; awaiting NuGet
+publication/indexing**
 
 Release candidate: **0.1.0-preview.2**
 
@@ -82,6 +79,8 @@ Release candidate: **0.1.0-preview.2**
 - Defer .NET 8 unless UUIDv7 support is simple, compatible, and justified by a
   real consumer.
 - The implementation, review, verification, and release version are confirmed.
+- The clean public restore/build/test/example/pack/isolated-consumer CI run
+  (**33756201901**) passed against Siming preview.3.
 - NuGet publication/indexing remains the release action; do not advance the
   dependency gate until the package is available.
 
@@ -92,8 +91,8 @@ after Marang's vocabulary is proven.
 
 ## Gate 4 — Marang control plane
 
-Status: **queued — waiting for Zhinu preview.12, Siming preview.3, and
-Hongxian preview.2 to be published and indexed**
+Status: **queued — waiting for Zhinu preview.12 and Hongxian preview.2 to be
+published and indexed**
 
 - Freeze delegation identity, canonical request fingerprints, immutable public
   inputs, lifecycle invariants, budgets, artifacts, and normalized evidence.
