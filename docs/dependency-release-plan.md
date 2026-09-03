@@ -35,7 +35,7 @@ packages are reviewed and released in dependency order.
 
 ## Gate 1 — Zhinu runtime release
 
-Status: **implemented, reviewed, and pushed; awaiting NuGet publication/indexing**
+Status: **implemented, reviewed, pushed, and published; awaiting public NuGet indexing**
 
 Release candidate: **0.1.0-preview.12**
 
@@ -47,8 +47,9 @@ Release candidate: **0.1.0-preview.12**
   effects.
 - Fix only concrete release blockers discovered by that audit.
 - The implementation, review, verification, and release version are confirmed.
-- NuGet publication/indexing remains the release action; do not advance the
-  dependency gate until the package is available.
+- `Penghou.Zhinu` **0.1.0-preview.12** is reported published, but direct NuGet
+  search still shows preview.11; await public indexing before advancing the
+  dependency gate.
 
 This gate does not include Zhinu's declarative workflow, activity catalogue,
 policy compiler, AI activity, or Fuwen-adapter roadmap.
@@ -67,8 +68,8 @@ and is now published and indexed on NuGet.
 
 ## Gate 3 — Hongxian preview-2 readiness
 
-Status: **implemented, reviewed, pushed, and verified; awaiting NuGet
-publication/indexing**
+Status: **implemented, reviewed, pushed, verified, and published; awaiting
+public NuGet indexing**
 
 Release candidate: **0.1.0-preview.2**
 
@@ -81,8 +82,9 @@ Release candidate: **0.1.0-preview.2**
 - The implementation, review, verification, and release version are confirmed.
 - The clean public restore/build/test/example/pack/isolated-consumer CI run
   (**33756201901**) passed against Siming preview.3.
-- NuGet publication/indexing remains the release action; do not advance the
-  dependency gate until the package is available.
+- `Penghou.Hongxian` **0.1.0-preview.2** is reported published, but direct NuGet
+  search still shows preview.1; await public indexing before advancing the
+  dependency gate.
 
 This gate does not include richer query APIs, collaboration publications,
 branching, archives, encryption, or second-consumer features. Hongxian is not a
@@ -93,6 +95,9 @@ after Marang's vocabulary is proven.
 
 Status: **queued — waiting for Zhinu preview.12 and Hongxian preview.2 to be
 published and indexed**
+
+Marang CI is green; this gate remains queued until both new package versions
+are publicly indexed.
 
 - Freeze delegation identity, canonical request fingerprints, immutable public
   inputs, lifecycle invariants, budgets, artifacts, and normalized evidence.
