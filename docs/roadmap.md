@@ -9,6 +9,9 @@ returns a tested, independently reviewed candidate with concise evidence.
 Progress is marked here so development can resume without relying on chat
 history.
 
+The cross-project order and primitive release gates are recorded in the
+[dependency release plan](dependency-release-plan.md).
+
 ## Milestone 0 — Project and boundary scaffold
 
 Status: **complete**

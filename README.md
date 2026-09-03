@@ -83,4 +83,6 @@ CI scaffold, and its first validation tests. See the
 [architecture](docs/architecture.md), [specification review](docs/spec-review.md),
 the [agent execution boundary](docs/agent-execution.md), the
 [protocol boundaries](docs/protocol-boundaries.md), the
-[initial workflow contract](docs/initial-workflow.md), and the [roadmap](docs/roadmap.md).
+[initial workflow contract](docs/initial-workflow.md), the
+[dependency release plan](docs/dependency-release-plan.md), and the
+[roadmap](docs/roadmap.md).
