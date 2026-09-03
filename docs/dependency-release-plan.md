@@ -35,7 +35,7 @@ packages are reviewed and released in dependency order.
 
 ## Gate 1 — Zhinu runtime release
 
-Status: **implemented, reviewed, pushed, and published; awaiting public NuGet indexing**
+Status: **complete — implemented, reviewed, pushed, published, and indexed on NuGet**
 
 Release candidate: **0.1.0-preview.12**
 
@@ -47,16 +47,16 @@ Release candidate: **0.1.0-preview.12**
   effects.
 - Fix only concrete release blockers discovered by that audit.
 - The implementation, review, verification, and release version are confirmed.
-- `Penghou.Zhinu` **0.1.0-preview.12** is reported published, but direct NuGet
-  search still shows preview.11; await public indexing before advancing the
-  dependency gate.
+- NuGet flat-container confirms `Penghou.Zhinu` **0.1.0-preview.12** is
+  published, downloadable, and indexed for exact-version restore. Gallery
+  search and symbols may lag and are non-blocking.
 
 This gate does not include Zhinu's declarative workflow, activity catalogue,
 policy compiler, AI activity, or Fuwen-adapter roadmap.
 
 ## Gate 2 — Siming SQLite preview-3 prerequisite
 
-Status: **implemented, verified, pushed, published, and indexed on NuGet**
+Status: **complete — implemented, verified, pushed, published, and indexed on NuGet**
 
 Release candidate: **0.1.0-preview.3**
 
@@ -68,8 +68,8 @@ and is now published and indexed on NuGet.
 
 ## Gate 3 — Hongxian preview-2 readiness
 
-Status: **implemented, reviewed, pushed, verified, and published; awaiting
-public NuGet indexing**
+Status: **complete — implemented, reviewed, pushed, verified, published, and
+indexed on NuGet**
 
 Release candidate: **0.1.0-preview.2**
 
@@ -82,9 +82,9 @@ Release candidate: **0.1.0-preview.2**
 - The implementation, review, verification, and release version are confirmed.
 - The clean public restore/build/test/example/pack/isolated-consumer CI run
   (**33756201901**) passed against Siming preview.3.
-- `Penghou.Hongxian` **0.1.0-preview.2** is reported published, but direct NuGet
-  search still shows preview.1; await public indexing before advancing the
-  dependency gate.
+- NuGet flat-container confirms `Penghou.Hongxian` **0.1.0-preview.2** is
+  published, downloadable, and indexed for exact-version restore. Gallery
+  search and symbols may lag and are non-blocking.
 
 This gate does not include richer query APIs, collaboration publications,
 branching, archives, encryption, or second-consumer features. Hongxian is not a
@@ -93,11 +93,11 @@ after Marang's vocabulary is proven.
 
 ## Gate 4 — Marang control plane
 
-Status: **queued — waiting for Zhinu preview.12 and Hongxian preview.2 to be
-published and indexed**
+Status: **ready — next: Marang contracts and in-memory control plane**
 
-Marang CI is green; this gate remains queued until both new package versions
-are publicly indexed.
+Marang CI is green, and the required dependency versions are available for
+exact-version restore. This gate covers the control-plane implementation; it
+does not require gallery search or symbol indexing to complete.
 
 - Freeze delegation identity, canonical request fingerprints, immutable public
   inputs, lifecycle invariants, budgets, artifacts, and normalized evidence.
