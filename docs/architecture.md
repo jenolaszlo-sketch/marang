@@ -16,7 +16,8 @@ Marang: delegation identity, policy, profiles, evaluation, result
     v
 Zhinu: durable execution, retries, recovery, cancellation
     |
-    +--> agent provider: bounded outcome using native agent capabilities
+    +--> A2A provider: interoperable external agent task
+    +--> process provider: bounded local/headless agent
     +--> Baize: provider-neutral bounded model execution
     +--> deterministic provider: tests, builds, diff and static analysis
     +--> artifact repository: typed reports and immutable evidence
@@ -25,6 +26,11 @@ Zhinu: durable execution, retries, recovery, cancellation
 
 Dependencies point inward: neither the abstractions package nor core domain
 contracts expose MCP, Zhinu, Baize, or a filesystem path.
+
+MCP is the primary agent-facing northbound protocol. A2A is the preferred
+southbound protocol when an external agent supports it. Both remain adapters;
+Marang's lifecycle and evidence contracts do not expose their wire models. See
+[protocol boundaries](protocol-boundaries.md).
 
 ## Delegation identity and idempotency
 

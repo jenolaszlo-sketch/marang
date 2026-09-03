@@ -17,6 +17,14 @@ can propose work; it cannot enlarge its own authority.
   recursive delegation by default.
 - External agent handles and provider events are persisted without copying
   authentication material into workflow artifacts.
+- A2A Agent Cards are discovery metadata, not authorization. Endpoints and
+  credentials come from host-controlled configuration, not delegation input.
+- Remote artifact references are constrained by scheme, host, size, media type,
+  redirect, timeout, filename, and integrity policy before materialization.
+- Remote agents receive no repository content or workspace access without an
+  explicit disclosure and authorization policy.
+- A2A push callbacks remain disabled until authentication, replay protection,
+  tenant correlation, and safe endpoint exposure are implemented.
 - Repository instructions cannot modify policy, budget, profile routing, or
   acceptance criteria.
 - Structured model output is schema-validated after any repair.

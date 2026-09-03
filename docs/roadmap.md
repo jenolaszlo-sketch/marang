@@ -24,6 +24,10 @@ Status: **complete**
       their native delegation and repository loops.
 - [x] Verify that the official Codex SDK and non-interactive surfaces can support
       an initial Codex execution adapter.
+- [x] Establish MCP northbound, A2A-preferred southbound, and provider adapters
+      as external protocol boundaries.
+- [x] Record the invariant that protocols are adapters while Marang owns the
+      durable outcome model.
 
 ## Milestone 1 — Contract and identity freeze
 
@@ -45,6 +49,11 @@ Status: **next**
       telemetry.
 - [ ] Define normalized evidence shared by agent, model, and deterministic
       execution without forcing them into one lowest-common-denominator API.
+- [ ] Define stable external agent/task identities and correlation with
+      delegation, workflow step, and execution attempt.
+- [ ] Define transport failures separately from remote task failures and result
+      validation failures.
+- [ ] Define versioned provider capability snapshots and deterministic matching.
 - [ ] Add public API baselines after the contracts pass review.
 
 Exit: duplicate submissions cannot create duplicate cost, and every public
@@ -121,6 +130,8 @@ Exit: the supervisor can judge the result without raw worker transcripts.
 
 - [ ] Expose `marang_delegate`, `marang_status`, `marang_result`, and
       `marang_cancel`.
+- [ ] Expose bounded `marang_get_artifact` metadata/content retrieval with
+      authorization, retention, and response-size policy.
 - [ ] Keep transport DTOs separate from domain contracts.
 - [ ] Define host authentication and workspace authorization.
 - [ ] Add compact status revision/cursor behavior.
@@ -139,6 +150,27 @@ Exit: Codex can safely submit, observe, cancel, and retrieve a delegation.
 - [ ] Add restart, cancellation, stale-revision, and partial-artifact tests.
 - [ ] Review package boundaries and graduate only packages with a stable use.
 
+## Milestone 8 — A2A execution adapter
+
+- [ ] Select and pin a tested A2A protocol version and conforming client.
+- [ ] Discover capabilities from host-authorized Agent Cards; never accept
+      arbitrary caller-supplied endpoints.
+- [ ] Map one execution attempt to one durable external A2A Task.
+- [ ] Persist agent, task, protocol-version, and capability-snapshot identities.
+- [ ] Map working, completed, failed, rejected, cancelled, and
+      input/authorization-required states without leaking protocol types into
+      core.
+- [ ] Normalize A2A Artifacts and Parts into Marang artifacts with provenance
+      and integrity checks.
+- [ ] Support reconnect through Task observation/subscription after restart.
+- [ ] Add conformance, malformed-response, SSRF, remote-artifact, cancellation,
+      version-negotiation, and data-disclosure tests.
+- [ ] Keep push notifications disabled until authenticated callback and replay
+      protection are available.
+
+Exit: the fixed workflow can replace its process agent with a conforming A2A
+agent without changing Marang workflow semantics or its MCP contract.
+
 ## Later, evidence-driven integrations
 
 - Hetu-focused inspection context.
@@ -151,6 +183,8 @@ Exit: Codex can safely submit, observe, cancel, and retrieve a delegation.
 - Additional bounded-execution providers.
 - Deeper visibility into opaque provider subagent trees only when cancellation,
   cost, traceability, or policy demonstrates a need.
+- Optional A2A bridges for valuable non-A2A agents, only where the bridge adds
+  real interoperability value.
 
 ## Non-goals
 
@@ -165,4 +199,7 @@ Exit: Codex can safely submit, observe, cancel, and retrieve a delegation.
   escalation.
 - Direct commits, pushes, publication, credential access, or primary-workspace
   mutation by default.
+- Implementing a generic A2A framework, registry, gateway, or protocol stack.
+- Treating Agent Card capability claims as authorization or automatically
+  transmitting repository contents to remote agents.
 - Returning complete worker transcripts in normal MCP results.

@@ -47,6 +47,11 @@ Hongxian is deliberately not treated as a repository sandbox or command
 runner. An agent such as Codex may use its native tools and internal subagents
 inside one bounded provider activity; Marang independently verifies its output.
 
+At its external boundaries, Marang uses MCP northbound for supervising agents
+and prefers A2A southbound for interoperable external agents. Process and SDK
+adapters remain available when an agent does not expose A2A. Protocols are
+adapters; Marang's durable outcome model remains independent of them.
+
 ## First vertical slice
 
 ```text
@@ -77,4 +82,5 @@ The project currently contains the reviewed architecture, initial contracts,
 CI scaffold, and its first validation tests. See the
 [architecture](docs/architecture.md), [specification review](docs/spec-review.md),
 the [agent execution boundary](docs/agent-execution.md), the
+[protocol boundaries](docs/protocol-boundaries.md), the
 [initial workflow contract](docs/initial-workflow.md), and the [roadmap](docs/roadmap.md).

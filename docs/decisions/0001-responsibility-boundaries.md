@@ -31,3 +31,12 @@ committed, or published change.
   changing delegation semantics.
 - Every non-atomic provider call needs an external handle so workflow replay can
   reconnect instead of duplicating work.
+
+## Protocol boundary
+
+MCP is Marang's primary northbound interface for supervising agents. A2A is the
+preferred southbound interface for compatible external agents. Process, SDK,
+Baize, and deterministic adapters remain valid alternatives. Protocol wire
+types and provider-specific behavior stay outside core orchestration.
+
+Protocols are adapters. The durable outcome model is Marang.
