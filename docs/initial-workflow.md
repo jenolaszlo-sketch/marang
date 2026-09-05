@@ -1,7 +1,16 @@
-# Initial Implement workflow
+# Simple Implement preset
 
-This document preserves the behavioral detail of the first vertical slice. It
-is a predefined Marang strategy, not a caller-authored workflow or a new DSL.
+This document describes the current `marang_delegate` preset and remains a
+small, opinionated bootstrap slice. It is not the complete product
+direction: supervisors will later select or author compiled Fuwen workflows,
+wait at durable checkpoints, intervene, and selectively re-execute linked
+`NodeGeneration`s. See [product direction](product-direction.md) and the
+[roadmap](roadmap.md).
+
+This document preserves the behavioral detail of the bootstrap preset. It is a
+predefined Marang strategy, not a caller-authored workflow or a new DSL, and it
+is not the durable supervisory vertical slice described by the product
+direction.
 
 ## Request
 

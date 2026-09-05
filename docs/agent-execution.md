@@ -13,6 +13,11 @@ An internal Codex worker tree is one opaque provider operation by default. It
 does not become a tree of Zhinu steps, and Marang does not reproduce native
 subagent scheduling, repository exploration, or prompt iteration.
 
+An accepted supervised work item may have multiple immutable `NodeGeneration`s
+inside linked workflow runs. A retry reconnects to the same provider operation;
+deliberate selective re-execution creates a new linked node generation. Marang
+never reopens a terminal execution or rewrites its result.
+
 ## Execution categories
 
 Marang recognizes three semantic categories:
@@ -48,6 +53,11 @@ Cancel(handle)                       -> idempotent cancellation request
 Resume(handle, optional correction)  -> continued execution
 ```
 
+`Start`, `Observe`, `GetResult`, and `Cancel` are durable provider operations;
+`Resume` is an explicit continuation capability, not permission to reopen a
+terminal execution. A provider may expose richer protocol details behind this
+seam.
+
 The exact API remains a Milestone 1 design gate. Required invariants are:
 
 1. Persist the external handle as soon as the provider reveals it.
@@ -60,6 +70,10 @@ The exact API remains a Milestone 1 design gate. Required invariants are:
 
 Zhinu owns workflow replay. The provider handle lets a replay reconnect to the
 external activity safely.
+
+Notification and wake values are hints, not authorization. They may schedule
+supervisor attention, but only a durable, revision-fenced Marang intervention
+can change policy or resume a planned waiting checkpoint.
 
 ## Codex provider
 
@@ -121,7 +135,11 @@ the Marang MCP endpoint or credentials needed to start another Marang
 delegation. Any future recursion requires an explicit depth, ancestry, and
 budget contract.
 
-## Revised first workflow
+## Simple Implement preset/provider flow
+
+This is the bootstrap provider flow for `marang_delegate`, not the complete
+supervisory vertical slice. The durable waiting and intervention sequence is
+defined in [product direction](product-direction.md).
 
 ```text
 Accept -> Execute agent -> seal candidate revision

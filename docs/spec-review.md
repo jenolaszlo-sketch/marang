@@ -1,5 +1,12 @@
 # Initial specification review
 
+> Historical review note: this document records the initial fixed-slice
+> decision. The revised product direction keeps that slice as the simple
+> `marang_delegate` preset and now plans advanced supervisor-selected or
+> supervisor-authored Fuwen workflows, durable waiting, intervention, and
+> selective re-execution. See [product direction](product-direction.md) for
+> the current authority.
+
 ## Verdict
 
 The proposal is a good product boundary and likely a much shorter route to
@@ -11,8 +18,9 @@ The original fixed `Inspect -> Plan -> Implement -> Test/Review -> Fix -> Result
 slice was sufficient to prove the idea. The agent-execution addendum improves it
 further by allowing a capable provider to own inspection and planning while
 Marang retains independent Test, Review, Evaluate, and bounded Correction gates.
-A DSL, adaptive swarm, memory system, and dynamic workflow authoring would
-obscure that test and are correctly excluded.
+That slice remains the simple preset. A workflow DSL is still not a Marang
+responsibility, but Fuwen now provides the planned semantic/compiler boundary
+for supervisor-selected or supervisor-authored artifact-driven workflows.
 
 ## Changes made while curating the design
 
@@ -22,8 +30,9 @@ The current Hongxian package is a durable session kernel. It owns temporal
 continuity, correlation, decisions, incidents, recovery evidence, and
 projections. It does not currently own repository access, shell execution, or
 sandboxing. Marang therefore starts with provider-neutral execution and durable
-external-operation contracts. Hongxian remains a valuable optional audit/session
-integration.
+external-operation contracts. Hongxian is the session/correlation authority for
+the real durable supervisory slice, although pure core/in-memory tests and
+simple preset policy evaluation can use fakes. Hongxian is not an executor.
 
 ### Workspace inputs are capabilities, not paths
 
@@ -68,8 +77,8 @@ Before the first durable adapter, decide:
 4. which Zhinu workflow/result APIs are stable enough to adapt directly;
 5. the MCP authentication and workspace authorization responsibility of the
    hosting process;
-6. whether `NeedsSupervisor` is terminal only in version 1 or gains an explicit
-   resume/decision signal before the first release.
+6. how the planned `WaitingForSupervisor` state, wake policy, and
+   revision-fenced intervention should coexist with terminal `NeedsSupervisor`.
 
 ## Agent-execution addendum
 

@@ -1,6 +1,7 @@
 # ADR 0001: Keep Marang a delegation composition layer
 
-Status: accepted for the initial vertical slice.
+Status: accepted for the initial vertical slice; expanded by the planned
+supervisory lifecycle in [product direction](../product-direction.md).
 
 ## Decision
 
@@ -40,3 +41,9 @@ Baize, and deterministic adapters remain valid alternatives. Protocol wire
 types and provider-specific behavior stay outside core orchestration.
 
 Protocols are adapters. The durable outcome model is Marang.
+
+The initial predefined strategy remains the simple entry point. Future
+supervisor-selected or supervisor-authored workflows use Fuwen for semantics
+and compilation; they do not turn Marang into a workflow language. Planned
+waiting, wake, and intervention behavior extends supervision while preserving
+Zhinu's authority over durable execution.

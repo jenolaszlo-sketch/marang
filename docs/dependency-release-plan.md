@@ -15,7 +15,7 @@ Zhinu preview.12 ─────────────────────
 Siming preview.3 -> Hongxian preview.2 ─┘
                                         |
                                         v
-Marang contracts and in-memory control plane
+Marang contracts and in-memory supervision control plane
         |
         v
 Codex execution-provider spike
@@ -24,7 +24,7 @@ Codex execution-provider spike
 Marang + Zhinu durability
         |
         v
-optional Marang + Hongxian evidence
+Marang + Zhinu + Hongxian durable supervision/session correlation
         |
         v
 MCP dogfood
@@ -87,24 +87,54 @@ Release candidate: **0.1.0-preview.2**
   search and symbols may lag and are non-blocking.
 
 This gate does not include richer query APIs, collaboration publications,
-branching, archives, encryption, or second-consumer features. Hongxian is not a
-prerequisite for Marang execution; it becomes an optional evidence integration
-after Marang's vocabulary is proven.
+branching, archives, encryption, or second-consumer features. Hongxian is not
+an executor, but session continuity/correlation is required for the real
+durable supervisory slice; pure Marang tests may use fakes.
 
 ## Gate 4 — Marang control plane
 
-Status: **ready — next: Marang contracts and in-memory control plane**
+Status: **in progress — identity/lifecycle Batches 1–4 complete; Batches 5–7 next**
 
 Marang CI is green, and the required dependency versions are available for
 exact-version restore. This gate covers the control-plane implementation; it
 does not require gallery search or symbol indexing to complete.
 
-- Freeze delegation identity, canonical request fingerprints, immutable public
-  inputs, lifecycle invariants, budgets, artifacts, and normalized evidence.
-- Define capability routing and a durable external-provider protocol with
-  idempotent start, handle capture, observe, result, cancellation, and resume.
-- Implement and exhaustively test the fixed workflow with fake agent, model, and
-  deterministic providers.
+Complete the remaining Marang Batches 5–7 in the Marang roadmap in order. These are
+provider-neutral contract work and do not by themselves require new releases
+of Fuwen, Zhinu, Hongxian, Hetu, Cangjie, or Baize.
+
+The Gate 0.5 capability audit is the only reason to open an upstream package
+gate: if an audited semantic is generally reusable, implement, test, and
+release it in the owning primitive first. Marang pauses only when that released
+capability is a required blocker; otherwise it records the result and uses a
+small adapter. Do not create premature package work to compensate for an
+unaudited or merely inconvenient API.
+
+The current audit leaves explicit future upstream gates:
+
+- **Fuwen P0** blocks accepting supervisor-authored or advanced Fuwen plans
+  until deep immutability, authoritative reference/binding/type/acyclicity/
+  resource validation, revision lineage, supervisor/checkpoint external-input
+  nodes, and typed context requirements are released and audited. Marang's
+  provider-neutral lifecycle work may proceed before that gate.
+- **Zhinu P0** blocks durable Milestone 4 until signal-consumption fencing,
+  stale artifact-publication fencing, and generic external-operation handle
+  persistence are fixed, released, and safely consumable. Do not add a Marang
+  workaround for these durable execution semantics.
+- **Hetu/Cangjie audit:** current snapshot, repository, and index-publication
+  identities are usable through Marang's reference-only adapter. Their P1
+  upstream gaps remain in the owning roadmaps and block richer impact-driven
+  re-entry integration only; they do not block the in-memory slice or this
+  context contract.
+- **Baize audit:** bounded in-memory model execution and provenance are
+  reusable. Two Baize P0 tool-integrity gaps block authoritative complex-tool
+  integration; durable ordinary completion also blocks until provider-native
+  external-operation handles are available. Do not add Marang workarounds for
+  those provider semantics.
+
+After Batch 7, implement and exhaustively test both the `marang_delegate`
+preset and the advanced Fuwen workflow seam with fake agent, model, context,
+and deterministic providers.
 
 ## Gate 5 — Execution feasibility
 
@@ -114,7 +144,7 @@ Status: **queued**
 - Capture its thread identity early and reconnect without duplicate execution.
 - Verify results with deterministic tests and an independent reviewer.
 - Prefer A2A for later interoperable agent providers without making it part of
-  the first vertical slice.
+  the initial implementation slice.
 
 Failure at this gate triggers a product-design review before further workflow
 infrastructure is added.
@@ -123,10 +153,14 @@ infrastructure is added.
 
 Status: **queued**
 
-- Map the proven Marang control plane onto the released Zhinu package.
+- Map the proven Marang supervision control plane onto the released Zhinu
+  package, including waiting, wake, intervention, and generation recovery.
 - Add restart and ambiguous-external-operation tests.
-- Add Hongxian only for useful session, participant, incident, decision,
-  recovery, and unusual-event evidence.
+- Integrate Hongxian as the session/correlation authority for the durable slice,
+  including participant, incident, decision, recovery, and unusual-event
+  evidence; keep Zhinu authoritative for execution state and reconcile through
+  idempotent saga/forward-reconciliation steps. Each outbox is atomic only with
+  its owning store; no outbox spans the Zhinu and Hongxian SQLite databases.
 - Expose the bounded MCP surface and delegate one small Marang improvement to
   Marang itself.
 

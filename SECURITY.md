@@ -29,6 +29,13 @@ can propose work; it cannot enlarge its own authority.
   acceptance criteria.
 - Structured model output is schema-validated after any repair.
 - Cancellation prevents later work but preserves prior evidence.
+- Future-attention notifications are hints only; they cannot authorize work,
+  alter state, extend budgets, or replace results.
+- Supervisor interventions require host authentication, workspace authorization,
+  and an expected revision; stale or replayed actions are rejected or treated
+  as idempotent duplicates.
+- Selective re-execution creates a new isolated `NodeGeneration` and cannot
+  reopen or mutate terminal executions, results, or evidence.
 - Logs and artifacts apply explicit secret redaction and retention policy.
 
 Please report suspected vulnerabilities privately through the repository's

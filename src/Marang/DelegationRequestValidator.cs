@@ -2,19 +2,37 @@ namespace Marang;
 
 public static class DelegationRequestValidator
 {
+    private const int MaximumListItems = 256;
+    private const int MaximumTotalTextLength = 1_048_576;
+
     public static void Validate(DelegationRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        RequireText(request.RequestKey, nameof(request.RequestKey), 256);
+        RequireCanonicalIdentityText(request.RequestKey, nameof(request.RequestKey), 256);
         RequireText(request.Objective, nameof(request.Objective), 16_384);
 
         ArgumentNullException.ThrowIfNull(request.Workspace);
-        RequireText(request.Workspace.Provider, nameof(request.Workspace.Provider), 128);
-        RequireText(request.Workspace.Identifier, nameof(request.Workspace.Identifier), 2_048);
+        RequireCanonicalIdentityText(request.Workspace.Provider, nameof(request.Workspace.Provider), 128);
+        RequireCanonicalIdentityText(request.Workspace.Identifier, nameof(request.Workspace.Identifier), 2_048);
+        if (request.Workspace.Revision is not null)
+        {
+            RequireCanonicalIdentityText(request.Workspace.Revision, nameof(request.Workspace.Revision), 2_048);
+        }
 
-        ValidateTextList(request.AcceptanceCriteria, nameof(request.AcceptanceCriteria), required: true);
-        ValidateTextList(request.Constraints, nameof(request.Constraints), required: false);
+        request.PlanRevision?.Validate();
+
+        var totalTextLength = (long)request.RequestKey.Length + request.Objective.Length
+            + request.Workspace.Provider.Length + request.Workspace.Identifier.Length
+            + (request.Workspace.Revision?.Length ?? 0);
+        totalTextLength += ValidateTextList(request.AcceptanceCriteria, nameof(request.AcceptanceCriteria), required: true);
+        totalTextLength += ValidateTextList(request.Constraints, nameof(request.Constraints), required: false);
+        if (totalTextLength > MaximumTotalTextLength)
+        {
+            throw new ArgumentException(
+                $"The total request text cannot exceed {MaximumTotalTextLength} characters.",
+                nameof(request));
+        }
 
         ArgumentNullException.ThrowIfNull(request.Budget);
         ArgumentOutOfRangeException.ThrowIfLessThan(request.Budget.MaximumWorkerCalls, 1);
@@ -36,7 +54,7 @@ public static class DelegationRequestValidator
         }
     }
 
-    private static void ValidateTextList(
+    private static int ValidateTextList(
         IReadOnlyList<string>? values,
         string parameterName,
         bool required)
@@ -48,10 +66,19 @@ public static class DelegationRequestValidator
             throw new ArgumentException("At least one value is required.", parameterName);
         }
 
+        if (values.Count > MaximumListItems)
+        {
+            throw new ArgumentException($"A list cannot contain more than {MaximumListItems} values.", parameterName);
+        }
+
+        var totalLength = 0;
         for (var index = 0; index < values.Count; index++)
         {
             RequireText(values[index], $"{parameterName}[{index}]", 4_096);
+            totalLength += values[index].Length;
         }
+
+        return totalLength;
     }
 
     private static void RequireText(string? value, string parameterName, int maximumLength)
@@ -66,6 +93,18 @@ public static class DelegationRequestValidator
             throw new ArgumentException(
                 $"The value cannot exceed {maximumLength} characters.",
                 parameterName);
+        }
+    }
+
+    private static void RequireCanonicalIdentityText(string? value, string parameterName, int maximumLength)
+    {
+        RequireText(value, parameterName, maximumLength);
+        if (value!.Normalize(System.Text.NormalizationForm.FormC) != value
+            || value != value.Trim()
+            || value.Contains('\r')
+            || value.Contains('\n'))
+        {
+            throw new ArgumentException("Identity text must already be in canonical form.", parameterName);
         }
     }
 }

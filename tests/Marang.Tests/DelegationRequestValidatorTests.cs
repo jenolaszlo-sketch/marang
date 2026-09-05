@@ -17,7 +17,13 @@ public sealed class DelegationRequestValidatorTests
     [Fact]
     public void Validate_requires_an_idempotency_key()
     {
-        var request = CreateRequest() with { RequestKey = " " };
+        var request = new DelegationRequest(
+            " ",
+            "Add deterministic cursor pagination.",
+            new WorkspaceReference("local-project", "marang", "abc123"),
+            ["Pagination is deterministic."],
+            ["Do not change unrelated APIs."],
+            new DelegationBudget(MaximumDuration: TimeSpan.FromMinutes(20)));
 
         var act = () => DelegationRequestValidator.Validate(request);
 
@@ -28,10 +34,13 @@ public sealed class DelegationRequestValidatorTests
     [Fact]
     public void Validate_rejects_an_unbounded_worker_call_count()
     {
-        var request = CreateRequest() with
-        {
-            Budget = new DelegationBudget(MaximumWorkerCalls: 0),
-        };
+        var request = new DelegationRequest(
+            "change-42",
+            "Add deterministic cursor pagination.",
+            new WorkspaceReference("local-project", "marang", "abc123"),
+            ["Pagination is deterministic."],
+            ["Do not change unrelated APIs."],
+            new DelegationBudget(MaximumWorkerCalls: 0));
 
         var act = () => DelegationRequestValidator.Validate(request);
 
@@ -41,7 +50,14 @@ public sealed class DelegationRequestValidatorTests
     [Fact]
     public void Validate_rejects_unimplemented_strategies()
     {
-        var request = CreateRequest() with { Strategy = DelegationStrategy.Investigate };
+        var request = new DelegationRequest(
+            "change-42",
+            "Add deterministic cursor pagination.",
+            new WorkspaceReference("local-project", "marang", "abc123"),
+            ["Pagination is deterministic."],
+            ["Do not change unrelated APIs."],
+            new DelegationBudget(MaximumDuration: TimeSpan.FromMinutes(20)),
+            DelegationStrategy.Investigate);
 
         var act = () => DelegationRequestValidator.Validate(request);
 
@@ -49,10 +65,10 @@ public sealed class DelegationRequestValidatorTests
     }
 
     private static DelegationRequest CreateRequest() => new(
-        RequestKey: "change-42",
-        Objective: "Add deterministic cursor pagination.",
-        Workspace: new WorkspaceReference("local-project", "marang", "abc123"),
-        AcceptanceCriteria: ["Pagination is deterministic."],
-        Constraints: ["Do not change unrelated APIs."],
-        Budget: new DelegationBudget(MaximumDuration: TimeSpan.FromMinutes(20)));
+        "change-42",
+        "Add deterministic cursor pagination.",
+        new WorkspaceReference("local-project", "marang", "abc123"),
+        ["Pagination is deterministic."],
+        ["Do not change unrelated APIs."],
+        new DelegationBudget(MaximumDuration: TimeSpan.FromMinutes(20)));
 }

@@ -39,15 +39,21 @@ Marang does not identify or special-case the supervising product. Codex, Claude
 Code, OpenCode, Cursor, or another MCP-capable agent uses the same outcome API:
 
 - `marang_delegate`
+- `marang_execute_workflow` (validated compiled Fuwen plan/revision)
+- `marang_wait` (schedule or observe a supervisory checkpoint)
+- `marang_intervene` (revision-fenced supervisor response)
+- `marang_inspect` (bounded checkpoint re-entry context)
 - `marang_status`
 - `marang_result`
 - `marang_cancel`
 - `marang_get_artifact`
 
 Requests contain an objective, acceptance criteria, constraints, budget, and
-required evidence—not a low-level workflow graph. Artifact retrieval is bounded
-and authorization-aware. Large or sensitive artifacts return metadata and an
-approved reference rather than being copied into the model context by default.
+required evidence. Advanced execution accepts a selected or host-validated
+compiled Fuwen plan/revision, not an arbitrary low-level graph. Artifact
+retrieval is bounded and authorization-aware. Large or sensitive artifacts
+return metadata and an approved reference rather than being copied into the
+model context by default.
 
 ## Southbound A2A
 
@@ -101,7 +107,11 @@ authentication reference. Credentials never enter workflow artifacts.
 A2A work may outlive a connection or Marang process. Persist the relationship:
 
 ```text
-DelegationId
+SupervisedWorkId / DelegationId
+FuwenPlanRevision
+ZhinuWorkflowRunId / ExecutionEpoch
+StructuralNodeId
+NodeGenerationId
 WorkflowReference
 WorkflowStepId
 ExecutionAttemptId
@@ -121,9 +131,12 @@ small execution state. Transport failure, authentication failure, unsupported
 capability, remote task rejection/failure/cancellation, timeout, and invalid
 result remain distinguishable for retry and escalation policy.
 
-If an agent requests more input, authorization, or interaction, version 1 maps
-that condition to `NeedsSupervisor` with evidence. Marang does not invent an
-answer or silently enlarge the task.
+If an agent requests more input, authorization, or interaction, the current
+fixed strategy maps that condition to terminal `NeedsSupervisor` with evidence.
+The planned supervisory lifecycle adds `WaitingForSupervisor` for intentional
+durable pauses and explicit revision-fenced intervention. Marang does not
+invent an answer or silently enlarge the task, and never reopens a terminal
+execution or result.
 
 ## Artifact normalization
 
