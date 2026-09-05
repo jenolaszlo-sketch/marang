@@ -171,18 +171,33 @@ checkpoint re-entry context.
 
 See [ADR 0007](decisions/0007-artifact-and-candidate-identity.md).
 
+#### Batch 5B — Logical JSON content identity (upstream complete; package pending)
+
+- [x] Define the separately versioned `penghou-canonical-json-v2` contract in
+      Siming without changing or reinterpreting persisted v1 identities.
+- [x] Add type-independent canonicalization and SHA-256 verification from
+      persisted JSON, duplicate-property rejection, exact number handling, and
+      independent cross-runtime golden vectors in Siming.
+- [ ] Consume the released Siming preview.4 contract in Marang artifact
+      references after the package is published; do not copy the canonicalizer
+      or add a temporary Marang hash contract.
+
 #### Remaining Batch 5
 
-- [ ] Batch 5B: define logical JSON content identity with its owning
-      canonicalizer; do not infer or reinterpret a JSON hash contract in
-      Marang.
-- [ ] Define normalized evidence for agent, model, deterministic execution,
+- [x] Define normalized evidence for agent, model, deterministic execution,
       validation, and review without forcing one lowest-common-denominator API.
-- [ ] Define worker invocation and review-independence evidence.
+- [x] Define worker invocation and review-independence evidence, including
+      candidate subject and reviewer identity.
+- [x] Integrate the richer evidence records into immutable candidate/result
+      publication without weakening existing terminal-result equality.
 
 Tests: canonical payload/file hashes, schema compatibility, duplicate
 publication, conflicting references, missing/invalid evidence, and immutable
-candidate/result tests.
+candidate/result tests. Batch 5C additionally covers provider/model identity,
+bounded extension data, ownership, deterministic validation, review subject
+identity, and adversarial independence claims. Batch 5D adds bounded evidence
+bundles, publication ownership checks, evidence-aware candidate conflicts, and
+terminal-result replay/replacement checks.
 
 Exit: every accepted output is verifiable, attributable to a node generation,
 and safely referenced by the eventual immutable aggregate result.

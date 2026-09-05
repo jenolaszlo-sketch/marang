@@ -262,7 +262,8 @@ public sealed record DelegationResult
         DelegationEvidence evidence,
         IReadOnlyList<DelegationArtifactReference> artifacts,
         IReadOnlyList<string> unresolvedConcerns,
-        DateTimeOffset completedAt)
+        DateTimeOffset completedAt,
+        EvidenceBundle? normalizedEvidence = null)
     {
         DelegationId = delegationId;
         State = state;
@@ -271,6 +272,8 @@ public sealed record DelegationResult
         Artifacts = Snapshot(artifacts, nameof(artifacts));
         UnresolvedConcerns = Snapshot(unresolvedConcerns, nameof(unresolvedConcerns));
         CompletedAt = completedAt;
+        NormalizedEvidence = normalizedEvidence;
+        EvidenceContracts.ValidateBundleForDelegation(NormalizedEvidence, delegationId, nameof(normalizedEvidence));
     }
 
     public DelegationId DelegationId { get; }
@@ -280,6 +283,11 @@ public sealed record DelegationResult
     public IReadOnlyList<DelegationArtifactReference> Artifacts { get; }
     public IReadOnlyList<string> UnresolvedConcerns { get; }
     public DateTimeOffset CompletedAt { get; }
+    /// <summary>
+    /// Optional bounded normalized evidence. Raw transcripts and provider
+    /// payloads remain artifact references rather than result payloads.
+    /// </summary>
+    public EvidenceBundle? NormalizedEvidence { get; }
 
     private static IReadOnlyList<T> Snapshot<T>(IReadOnlyList<T> values, string parameterName)
     {

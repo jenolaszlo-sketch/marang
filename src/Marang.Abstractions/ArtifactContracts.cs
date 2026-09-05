@@ -65,7 +65,8 @@ public sealed record CandidateRevisionReference
         CandidateId candidateId,
         int revision,
         ArtifactContentIdentity contentIdentity,
-        IReadOnlyList<DelegationArtifactReference> artifacts)
+        IReadOnlyList<DelegationArtifactReference> artifacts,
+        EvidenceBundle? evidence = null)
     {
         ArtifactContracts.RequireDelegation(delegationId, nameof(delegationId));
         structuralNode.Validate();
@@ -99,6 +100,8 @@ public sealed record CandidateRevisionReference
         NodeGeneration = nodeGeneration;
         Revision = revision;
         ContentIdentity = contentIdentity;
+        Evidence = evidence;
+        EvidenceContracts.ValidateBundle(Evidence, this, nameof(evidence));
     }
 
     public DelegationId DelegationId { get; }
@@ -107,6 +110,7 @@ public sealed record CandidateRevisionReference
     public CandidateId CandidateId { get; }
     public int Revision { get; }
     public ArtifactContentIdentity ContentIdentity { get; }
+    public EvidenceBundle? Evidence { get; }
     public IReadOnlyList<DelegationArtifactReference> Artifacts { get; }
 }
 
@@ -117,7 +121,8 @@ public sealed record DelegationResultReference
         DelegationId delegationId,
         DelegationResultId resultId,
         CandidateRevisionReference candidate,
-        IReadOnlyList<DelegationArtifactReference> artifacts)
+        IReadOnlyList<DelegationArtifactReference> artifacts,
+        EvidenceBundle? evidence = null)
     {
         ArtifactContracts.RequireDelegation(delegationId, nameof(delegationId));
         resultId.Validate();
@@ -141,12 +146,18 @@ public sealed record DelegationResultReference
         }
 
         DelegationId = delegationId;
+        Evidence = evidence;
+        // An aggregate result may collect validation/review evidence from
+        // multiple node generations. Candidate publication remains bound to
+        // one exact node generation; the aggregate is only delegation-scoped.
+        EvidenceContracts.ValidateBundleForDelegation(Evidence, delegationId, nameof(evidence));
     }
 
     public DelegationId DelegationId { get; }
     public DelegationResultId ResultId { get; }
     public CandidateRevisionReference Candidate { get; }
     public IReadOnlyList<DelegationArtifactReference> Artifacts { get; }
+    public EvidenceBundle? Evidence { get; }
 }
 
 public sealed record CandidateRevisionPublication(CandidateRevisionReference Candidate, bool IsNew);
@@ -165,10 +176,22 @@ public interface ICandidateRevisionPublicationRegistry
 
 public static class CandidateRevisionIdentity
 {
-    public static bool SemanticallyEqual(CandidateRevisionReference left, CandidateRevisionReference right)
+    /// <summary>
+    /// Compares the candidate subject that evidence may reference without
+    /// recursively comparing the evidence attached to that candidate.
+    /// </summary>
+    public static bool SubjectEqual(CandidateRevisionReference? left, CandidateRevisionReference? right)
     {
-        ArgumentNullException.ThrowIfNull(left);
-        ArgumentNullException.ThrowIfNull(right);
+        if (ReferenceEquals(left, right))
+        {
+            return true;
+        }
+
+        if (left is null || right is null)
+        {
+            return false;
+        }
+
         return left.DelegationId == right.DelegationId
             && left.StructuralNode == right.StructuralNode
             && left.NodeGeneration == right.NodeGeneration
@@ -176,6 +199,14 @@ public static class CandidateRevisionIdentity
             && left.Revision == right.Revision
             && left.ContentIdentity == right.ContentIdentity
             && left.Artifacts.SequenceEqual(right.Artifacts);
+    }
+
+    public static bool SemanticallyEqual(CandidateRevisionReference left, CandidateRevisionReference right)
+    {
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
+        return SubjectEqual(left, right)
+            && EvidenceBundleIdentity.SemanticallyEqual(left.Evidence, right.Evidence);
     }
 }
 

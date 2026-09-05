@@ -273,6 +273,7 @@ public static class DelegationLifecycle
         && left.Evidence.ReviewFindingsResolved == right.Evidence.ReviewFindingsResolved
         && left.Evidence.ChangedFiles.SequenceEqual(right.Evidence.ChangedFiles, StringComparer.Ordinal)
         && left.Evidence.Commands.SequenceEqual(right.Evidence.Commands, StringComparer.Ordinal)
+        && EvidenceBundleIdentity.SemanticallyEqual(left.NormalizedEvidence, right.NormalizedEvidence)
         && left.Artifacts.SequenceEqual(right.Artifacts)
         && left.UnresolvedConcerns.SequenceEqual(right.UnresolvedConcerns, StringComparer.Ordinal)
         && left.CompletedAt == right.CompletedAt;

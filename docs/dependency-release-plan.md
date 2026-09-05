@@ -112,6 +112,11 @@ unaudited or merely inconvenient API.
 
 The current audit leaves explicit future upstream gates:
 
+- **Siming canonical JSON v2** is implemented and verified upstream as
+  `penghou-canonical-json-v2`, with Siming preview.4 prepared for publication.
+  Marang Batch 5B waits for that exact package instead of copying or
+  reinterpreting the canonicalization and logical SHA-256 identity contract.
+
 - **Fuwen P0** blocks accepting supervisor-authored or advanced Fuwen plans
   until deep immutability, authoritative reference/binding/type/acyclicity/
   resource validation, revision lineage, supervisor/checkpoint external-input
