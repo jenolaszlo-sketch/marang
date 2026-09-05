@@ -93,7 +93,7 @@ durable supervisory slice; pure Marang tests may use fakes.
 
 ## Gate 4 — Marang control plane
 
-Status: **in progress — identity/lifecycle Batches 1–4 complete; Batches 5–7 next**
+Status: **in progress — control-plane Batches 1–6 complete; Batch 7 next**
 
 Marang CI is green, and the required dependency versions are available for
 exact-version restore. This gate covers the control-plane implementation; it

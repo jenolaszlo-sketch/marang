@@ -202,19 +202,22 @@ terminal-result replay/replacement checks.
 Exit: every accepted output is verifiable, attributable to a node generation,
 and safely referenced by the eventual immutable aggregate result.
 
-### Batch 6 — Budgets, capabilities, providers, and provenance
+### Batch 6 — Budgets, capabilities, providers, and provenance (complete)
 
-- [ ] Define budget consumption receipts, provider hints, telemetry, and
+- [x] Define budget consumption receipts, provider hints, telemetry, and
       `BudgetExceeded` as a durable outcome.
-- [ ] Define open capability descriptors and deterministic matching without a
+- [x] Define open capability descriptors and deterministic matching without a
       closed provider/model enum.
-- [ ] Define the durable external-operation protocol: idempotent start, handle
+- [x] Define the durable external-operation protocol: idempotent start, handle
       capture, observe, cancel, result retrieval, and resume.
-- [ ] Define stable external agent/task identities and correlation with
+- [x] Define stable external agent/task identities and correlation with
       delegation, workflow step, and execution attempt.
-- [ ] Separate transport failure, remote failure, cancellation, timeout,
+- [x] Separate transport failure, remote failure, cancellation, timeout,
       rejection, and result-validation failure.
-- [ ] Define versioned capability snapshots and model/tool/usage provenance.
+- [x] Define versioned capability snapshots and model/tool/usage provenance.
+
+See [ADR 0009](decisions/0009-budgets-capabilities-and-provider-selection.md)
+and [ADR 0010](decisions/0010-durable-external-operation-protocol.md).
 
 Tests: budget accounting, capability matching, ambiguous start/reconnect,
 provider result validation, cancellation, timeout, and provenance tests.

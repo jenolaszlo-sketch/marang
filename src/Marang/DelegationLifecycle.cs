@@ -167,6 +167,26 @@ public static class DelegationLifecycle
         {
             throw new DelegationLifecycleViolationException("A terminal result must have a completion timestamp.");
         }
+
+        if (result.State == DelegationState.BudgetExceeded)
+        {
+            if (result.BudgetExceeded is null)
+            {
+                throw new DelegationLifecycleViolationException(
+                    "A BudgetExceeded result must include durable budget accounting evidence.");
+            }
+
+            if (result.BudgetExceeded.DelegationId != result.DelegationId)
+            {
+                throw new DelegationLifecycleViolationException(
+                    "BudgetExceeded accounting evidence must belong to the result delegation.");
+            }
+        }
+        else if (result.BudgetExceeded is not null)
+        {
+            throw new DelegationLifecycleViolationException(
+                "Budget accounting evidence is valid only for a BudgetExceeded result.");
+        }
     }
 
     /// <summary>
@@ -274,9 +294,24 @@ public static class DelegationLifecycle
         && left.Evidence.ChangedFiles.SequenceEqual(right.Evidence.ChangedFiles, StringComparer.Ordinal)
         && left.Evidence.Commands.SequenceEqual(right.Evidence.Commands, StringComparer.Ordinal)
         && EvidenceBundleIdentity.SemanticallyEqual(left.NormalizedEvidence, right.NormalizedEvidence)
+        && BudgetOutcomeEqual(left.BudgetExceeded, right.BudgetExceeded)
         && left.Artifacts.SequenceEqual(right.Artifacts)
         && left.UnresolvedConcerns.SequenceEqual(right.UnresolvedConcerns, StringComparer.Ordinal)
         && left.CompletedAt == right.CompletedAt;
+
+    private static bool BudgetOutcomeEqual(BudgetExceededOutcome? left, BudgetExceededOutcome? right)
+    {
+        if (left is null || right is null) return left is null && right is null;
+        return left.DelegationId == right.DelegationId
+            && string.Equals(left.DefinitionVersion, right.DefinitionVersion, StringComparison.Ordinal)
+            && string.Equals(left.Charge.Dimension, right.Charge.Dimension, StringComparison.Ordinal)
+            && left.Charge.Amount == right.Charge.Amount
+            && left.Limit == right.Limit
+            && left.Consumed == right.Consumed
+            && left.TriggeringReceiptId == right.TriggeringReceiptId
+            && string.Equals(left.Reason, right.Reason, StringComparison.Ordinal)
+            && left.RecordedAt == right.RecordedAt;
+    }
 
     private static void ValidateSnapshot(DelegationProgress progress)
     {

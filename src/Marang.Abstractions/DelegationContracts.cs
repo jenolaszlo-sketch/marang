@@ -263,7 +263,8 @@ public sealed record DelegationResult
         IReadOnlyList<DelegationArtifactReference> artifacts,
         IReadOnlyList<string> unresolvedConcerns,
         DateTimeOffset completedAt,
-        EvidenceBundle? normalizedEvidence = null)
+        EvidenceBundle? normalizedEvidence = null,
+        BudgetExceededOutcome? budgetExceeded = null)
     {
         DelegationId = delegationId;
         State = state;
@@ -273,6 +274,12 @@ public sealed record DelegationResult
         UnresolvedConcerns = Snapshot(unresolvedConcerns, nameof(unresolvedConcerns));
         CompletedAt = completedAt;
         NormalizedEvidence = normalizedEvidence;
+        if (budgetExceeded is not null && budgetExceeded.DelegationId != delegationId)
+        {
+            throw new ArgumentException("A budget-exceeded outcome must belong to the result delegation.", nameof(budgetExceeded));
+        }
+
+        BudgetExceeded = budgetExceeded;
         EvidenceContracts.ValidateBundleForDelegation(NormalizedEvidence, delegationId, nameof(normalizedEvidence));
     }
 
@@ -288,6 +295,11 @@ public sealed record DelegationResult
     /// payloads remain artifact references rather than result payloads.
     /// </summary>
     public EvidenceBundle? NormalizedEvidence { get; }
+    /// <summary>
+    /// Durable accounting evidence required when <see cref="State"/> is
+    /// <see cref="DelegationState.BudgetExceeded"/>.
+    /// </summary>
+    public BudgetExceededOutcome? BudgetExceeded { get; }
 
     private static IReadOnlyList<T> Snapshot<T>(IReadOnlyList<T> values, string parameterName)
     {
