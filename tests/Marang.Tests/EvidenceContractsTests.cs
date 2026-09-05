@@ -41,6 +41,46 @@ public sealed class EvidenceContractsTests
 
         duplicate.Should().Throw<ArgumentException>();
         wrongCandidate.Should().Throw<ArgumentException>();
+
+        var wrongNodeArtifact = new DelegationArtifactReference(
+            DelegationIdValue,
+            new StructuralNodeReference("other-node"),
+            Generation,
+            "provider",
+            "repository",
+            "other-artifact",
+            "evidence",
+            1,
+            "artifact-location/other-artifact",
+            ArtifactContentIdentity.Sha256Bytes(Hash));
+        var wrongOutput = () => CreateInvocation(outputArtifacts: [wrongNodeArtifact]);
+        wrongOutput.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void External_execution_correlation_must_match_invocation_owner_and_attempt()
+    {
+        var correlation = new ExternalOperationCorrelation(
+            DelegationIdValue,
+            new WorkflowRunExecutionReference("zhinu", "run-1", "epoch-1"),
+            Node,
+            Generation,
+            "review-attempt",
+            new ExternalAgentReference("provider", "agent-1", "protocol-v1"),
+            new ExternalTaskReference("provider", "task-1"));
+        var invocation = CreateInvocation(executionCorrelation: correlation);
+        invocation.ExecutionCorrelation.Should().Be(correlation);
+
+        var wrongOwner = new ExternalOperationCorrelation(
+            OtherDelegationId,
+            correlation.WorkflowRun,
+            Node,
+            Generation,
+            "review-attempt",
+            correlation.Agent,
+            correlation.Task);
+        var mismatch = () => CreateInvocation(executionCorrelation: wrongOwner);
+        mismatch.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -174,7 +214,8 @@ public sealed class EvidenceContractsTests
         IReadOnlyDictionary<string, string>? usage = null,
         IReadOnlyDictionary<string, string>? providerData = null,
         DateTimeOffset? startedAt = null,
-        DateTimeOffset? completedAt = null) => new(
+        DateTimeOffset? completedAt = null,
+        ExternalOperationCorrelation? executionCorrelation = null) => new(
         DelegationIdValue,
         Node,
         Generation,
@@ -193,7 +234,8 @@ public sealed class EvidenceContractsTests
         outputArtifacts ?? [],
         candidate,
         usage,
-        providerData);
+         providerData,
+         executionCorrelation);
 
     private static DelegationArtifactReference CreateArtifact(
         string artifactId = "artifact-1",

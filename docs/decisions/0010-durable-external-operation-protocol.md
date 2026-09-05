@@ -23,7 +23,7 @@ Start(request, handle capture sink) -> start receipt + handle
 Observe(handle)                     -> monotonic state revision
 GetResult(handle)                    -> normalized immutable result
 Cancel(handle, cancellation key)    -> confirmed disposition
-Resume(handle, resume key)           -> continued start receipt
+Resume(handle, resume key)           -> continued resume receipt
 ```
 
 The handle capture sink is mandatory at the provider seam. The provider calls
@@ -43,6 +43,26 @@ deadline, or an invalid result into one generic error. Cancellation is a
 request; its receipt records whether it was merely requested, confirmed,
 already terminal, rejected, or unknown, with a rejected cancellation staying
 non-terminal and carrying cancellation evidence.
+
+Cancellation and resume receipts retain their caller idempotency keys. A
+resume receipt also retains both the previous and resulting handles and must
+preserve the exact operation correlation, so a repeated resume cannot be
+mistaken for a new execution.
+
+The semantic start fingerprint is computed outside Marang. Its exact input
+envelope is the versioned `external-start-semantics-v1` shape containing the
+delegation, selected external agent, capability, delegation-scoped input
+artifact references, optional budget hint, and optional deadline.
+`ExternalOperationSemanticInputEnvelope` exposes this shape and
+`IExternalOperationSemanticFingerprintVerifier` is the verification seam;
+Siming owns canonical JSON and SHA-256 serialization, so Marang does not
+duplicate that authority. Hosts must verify the request through this seam
+before calling `StartAsync`. Changed semantic inputs must therefore fail an
+adapter's verifier even when the transport and execution correlation remain
+unchanged.
+
+External result artifacts are owned by the exact correlation node and
+generation. Start/resume correction inputs remain delegation-scoped inputs.
 
 Provider/model/tool/usage provenance is represented by versioned snapshots.
 Snapshots contain bounded identities, capabilities, and usage measurements;

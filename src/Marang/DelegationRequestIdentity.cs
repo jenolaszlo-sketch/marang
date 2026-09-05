@@ -8,24 +8,31 @@ namespace Marang;
 /// <summary>The versioned, deterministic identity of normalized request content.</summary>
 public readonly record struct DelegationRequestFingerprint
 {
+    /// <summary>Fingerprint format version for requests without a plan revision.</summary>
     public const string CurrentVersion = "v1";
+    /// <summary>Fingerprint format version for requests bound to a plan revision.</summary>
     public const string PlanBoundVersion = "v2";
 
+    /// <summary>Creates a validated version and lowercase hexadecimal hash pair.</summary>
     public DelegationRequestFingerprint(string version, string hash)
     {
         Version = RequireVersion(version);
         Hash = RequireHash(hash);
     }
 
+    /// <summary>Gets the canonical fingerprint format version.</summary>
     public string Version { get; }
+    /// <summary>Gets the lowercase SHA-256 hexadecimal digest.</summary>
     public string Hash { get; }
 
+    /// <summary>Validates the stored version and digest.</summary>
     public void Validate()
     {
         RequireVersion(Version);
         RequireHash(Hash);
     }
 
+    /// <summary>Returns the stable <c>version:hash</c> representation.</summary>
     public override string ToString() => $"{Version}:{Hash}";
 
     private static string RequireVersion(string? value)
@@ -67,6 +74,7 @@ public readonly record struct DelegationRequestFingerprint
 /// </summary>
 public static class DelegationRequestIdentity
 {
+    /// <summary>Computes the versioned SHA-256 identity of a validated request.</summary>
     public static DelegationRequestFingerprint Compute(DelegationRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -238,6 +246,7 @@ public static class DelegationRequestIdentity
 /// <summary>Raised when a caller reuses a request key for different content.</summary>
 public sealed class DelegationRequestKeyConflictException : InvalidOperationException
 {
+    /// <summary>Initializes an exception for a request key reused with different content.</summary>
     public DelegationRequestKeyConflictException(
         DelegationCallerScope caller,
         string requestKey,
@@ -251,13 +260,21 @@ public sealed class DelegationRequestKeyConflictException : InvalidOperationExce
         SuppliedFingerprint = suppliedFingerprint;
     }
 
+    /// <summary>Gets the caller scope in which the conflict occurred.</summary>
     public DelegationCallerScope Caller { get; }
+    /// <summary>Gets the conflicting request key.</summary>
     public string RequestKey { get; }
+    /// <summary>Gets the fingerprint already bound to the key.</summary>
     public DelegationRequestFingerprint ExistingFingerprint { get; }
+    /// <summary>Gets the supplied fingerprint that conflicted with the existing binding.</summary>
     public DelegationRequestFingerprint SuppliedFingerprint { get; }
 }
 
 /// <summary>The result of an idempotent acceptance operation.</summary>
+/// <summary>Result of accepting a caller-scoped request key.</summary>
+/// <param name="DelegationId">Stable identifier assigned to the accepted request.</param>
+/// <param name="Fingerprint">Normalized request content identity.</param>
+/// <param name="IsNew">Whether this call created the binding rather than replaying it.</param>
 public sealed record DelegationAcceptance(
     DelegationId DelegationId,
     DelegationRequestFingerprint Fingerprint,
@@ -269,16 +286,19 @@ public sealed record DelegationAcceptance(
 /// </summary>
 public interface IDelegationAcceptanceRegistry
 {
+    /// <summary>Accepts a request idempotently within the caller scope.</summary>
     ValueTask<DelegationAcceptance> AcceptAsync(
         DelegationCallerScope caller,
         DelegationRequest request,
         CancellationToken cancellationToken = default);
 }
 
+/// <summary>Thread-safe in-memory acceptance registry with caller-scoped idempotency.</summary>
 public sealed class InMemoryDelegationAcceptanceRegistry : IDelegationAcceptanceRegistry
 {
     private readonly System.Collections.Concurrent.ConcurrentDictionary<ScopedRequestKey, AcceptedRequest> _accepted = new();
 
+    /// <summary>Returns the original acceptance for an identical replay; conflicting content is rejected.</summary>
     public ValueTask<DelegationAcceptance> AcceptAsync(
         DelegationCallerScope caller,
         DelegationRequest request,

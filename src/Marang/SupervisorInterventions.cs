@@ -5,16 +5,23 @@ using System.Text.Json;
 
 namespace Marang;
 
+/// <summary>The versioned, deterministic identity of a supervisor intervention.</summary>
 public readonly record struct SupervisorInterventionFingerprint
 {
+    /// <summary>Current canonical fingerprint format version.</summary>
     public const string CurrentVersion = "v1";
+    /// <summary>Creates a validated intervention fingerprint.</summary>
     public SupervisorInterventionFingerprint(string version, string hash)
     {
         Version = RequireVersion(version); Hash = RequireHash(hash);
     }
+    /// <summary>Gets the fingerprint format version.</summary>
     public string Version { get; }
+    /// <summary>Gets the lowercase SHA-256 hexadecimal digest.</summary>
     public string Hash { get; }
+    /// <summary>Validates this fingerprint's version and digest.</summary>
     public void Validate() { RequireVersion(Version); RequireHash(Hash); }
+    /// <summary>Returns the stable <c>version:hash</c> representation.</summary>
     public override string ToString() => $"{Version}:{Hash}";
     private static string RequireVersion(string? value)
     {
@@ -32,8 +39,10 @@ public readonly record struct SupervisorInterventionFingerprint
     private static bool IsAsciiLowercaseLetterOrDigit(char value) => value is >= 'a' and <= 'z' or >= '0' and <= '9';
 }
 
+/// <summary>Canonicalizes interventions and computes their stable SHA-256 identity.</summary>
 public static class SupervisorInterventionIdentity
 {
+    /// <summary>Computes the deterministic identity of an intervention.</summary>
     public static SupervisorInterventionFingerprint Compute(SupervisorIntervention intervention)
     {
         ArgumentNullException.ThrowIfNull(intervention);
@@ -41,6 +50,7 @@ public static class SupervisorInterventionIdentity
         return new SupervisorInterventionFingerprint(SupervisorInterventionFingerprint.CurrentVersion, hash);
     }
 
+    /// <summary>Serializes an intervention as compact, deterministic canonical JSON.</summary>
     public static string Canonicalize(SupervisorIntervention intervention)
     {
         ArgumentNullException.ThrowIfNull(intervention); intervention.Validate();
@@ -78,20 +88,40 @@ public static class SupervisorInterventionIdentity
     }
 }
 
+/// <summary>Reasons an intervention or checkpoint authorization can be rejected.</summary>
 public enum SupervisorInterventionRejectionReason
 {
-    CheckpointNotActive = 0, UnauthorizedCheckpoint = 1, StaleRevision = 2, ConflictingInterventionKey = 3,
-    CheckpointAlreadyDecided = 4, ConflictingCheckpointActivation = 5, CheckpointRevisionRegression = 6,
+    /// <summary>The checkpoint is not active.</summary>
+    CheckpointNotActive = 0,
+    /// <summary>The supervisor was not authorized.</summary>
+    UnauthorizedCheckpoint = 1,
+    /// <summary>The intervention revision is stale.</summary>
+    StaleRevision = 2,
+    /// <summary>The intervention key is bound to different content.</summary>
+    ConflictingInterventionKey = 3,
+    /// <summary>The checkpoint already has a decision.</summary>
+    CheckpointAlreadyDecided = 4,
+    /// <summary>The activation conflicts with the existing checkpoint.</summary>
+    ConflictingCheckpointActivation = 5,
+    /// <summary>The checkpoint revision moved backwards.</summary>
+    CheckpointRevisionRegression = 6,
+    /// <summary>The checkpoint reached its authorization limit.</summary>
+    AuthorizedSupervisorLimitExceeded = 7,
 }
 
+/// <summary>Raised when checkpoint authorization or intervention acceptance fails.</summary>
 public sealed class SupervisorInterventionRejectedException : InvalidOperationException
 {
+    /// <summary>Initializes a rejection with its stable reason code.</summary>
     public SupervisorInterventionRejectedException(SupervisorInterventionRejectionReason reason, string message) : base(message) => Reason = reason;
+    /// <summary>Gets the machine-readable rejection reason.</summary>
     public SupervisorInterventionRejectionReason Reason { get; }
 }
 
+/// <summary>Receipt returned for a newly accepted or idempotently replayed intervention.</summary>
 public sealed record SupervisorInterventionAcceptance
 {
+    /// <summary>Creates a validated intervention acceptance receipt.</summary>
     public SupervisorInterventionAcceptance(Guid receiptId, DelegationId delegationId, SupervisorCheckpointId checkpointId, long expectedRevision, SupervisorIdentity supervisor, SupervisorInterventionFingerprint fingerprint, bool isNew)
     {
         if (receiptId == Guid.Empty) throw new ArgumentException("A receipt identifier cannot be empty.", nameof(receiptId));
@@ -99,15 +129,23 @@ public sealed record SupervisorInterventionAcceptance
         checkpointId.Validate(); ArgumentOutOfRangeException.ThrowIfNegative(expectedRevision); ArgumentNullException.ThrowIfNull(supervisor); supervisor.Validate(); fingerprint.Validate();
         ReceiptId = receiptId; DelegationId = delegationId; CheckpointId = checkpointId; ExpectedRevision = expectedRevision; Supervisor = supervisor; Fingerprint = fingerprint; IsNew = isNew;
     }
+    /// <summary>Gets the unique receipt identifier.</summary>
     public Guid ReceiptId { get; }
+    /// <summary>Gets the delegation receiving the intervention.</summary>
     public DelegationId DelegationId { get; }
+    /// <summary>Gets the checkpoint to which the intervention applies.</summary>
     public SupervisorCheckpointId CheckpointId { get; }
+    /// <summary>Gets the progress revision fenced by the intervention.</summary>
     public long ExpectedRevision { get; }
+    /// <summary>Gets the authorized supervisor identity.</summary>
     public SupervisorIdentity Supervisor { get; }
+    /// <summary>Gets the deterministic intervention fingerprint.</summary>
     public SupervisorInterventionFingerprint Fingerprint { get; }
+    /// <summary>Gets whether this call created the decision rather than replaying it.</summary>
     public bool IsNew { get; }
 }
 
+/// <summary>Authorizes supervisors and accepts at most one fenced intervention per checkpoint.</summary>
 public interface ISupervisorInterventionAcceptanceRegistry
 {
     /// <summary>
@@ -116,15 +154,18 @@ public interface ISupervisorInterventionAcceptanceRegistry
     /// be derived from untrusted request or model payloads.
     /// </summary>
     ValueTask ActivateAsync(SupervisorIdentity supervisor, DelegationProgress waitingProgress, CancellationToken cancellationToken = default);
+    /// <summary>Accepts one authorized intervention, or returns its identical replay receipt.</summary>
     ValueTask<SupervisorInterventionAcceptance> AcceptAsync(SupervisorIdentity supervisor, SupervisorIntervention intervention, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Atomic in-memory proof of authorization, fencing, and global single-assignment.</summary>
 public sealed class InMemorySupervisorInterventionAcceptanceRegistry : ISupervisorInterventionAcceptanceRegistry
 {
+    private const int MaximumAuthorizedSupervisors = 32;
     private readonly object _gate = new();
     private readonly Dictionary<SupervisorCheckpointId, ActiveCheckpoint> _active = new();
 
+    /// <summary>Activates or refreshes authorization for a validated waiting checkpoint.</summary>
     public ValueTask ActivateAsync(SupervisorIdentity supervisor, DelegationProgress waitingProgress, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(supervisor); ArgumentNullException.ThrowIfNull(waitingProgress); supervisor.Validate();
@@ -140,11 +181,22 @@ public sealed class InMemorySupervisorInterventionAcceptanceRegistry : ISupervis
             if (waitingProgress.Revision < active.Progress.Revision) throw Reject(SupervisorInterventionRejectionReason.CheckpointRevisionRegression, "Checkpoint progress cannot move backwards.");
             try { DelegationLifecycle.ValidateProgress(waitingProgress, active.Progress); }
             catch (Exception exception) when (exception is ArgumentException or InvalidOperationException) { throw Reject(SupervisorInterventionRejectionReason.ConflictingCheckpointActivation, exception.Message); }
-            active.Progress = waitingProgress; active.Supervisors.Add(new SupervisorPrincipal(supervisor));
+            var principal = new SupervisorPrincipal(supervisor);
+            if (!active.Supervisors.Contains(principal)
+                && active.Supervisors.Count >= MaximumAuthorizedSupervisors)
+            {
+                throw Reject(
+                    SupervisorInterventionRejectionReason.AuthorizedSupervisorLimitExceeded,
+                    $"A checkpoint cannot authorize more than {MaximumAuthorizedSupervisors} supervisors.");
+            }
+
+            active.Progress = waitingProgress;
+            active.Supervisors.Add(principal);
         }
         return ValueTask.CompletedTask;
     }
 
+    /// <summary>Accepts one intervention atomically with checkpoint fencing and single assignment.</summary>
     public ValueTask<SupervisorInterventionAcceptance> AcceptAsync(SupervisorIdentity supervisor, SupervisorIntervention intervention, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested(); ArgumentNullException.ThrowIfNull(supervisor); ArgumentNullException.ThrowIfNull(intervention); supervisor.Validate(); intervention.Validate();

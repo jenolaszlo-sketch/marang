@@ -7,6 +7,12 @@
     <Description>Provider-neutral contracts for durable, budget-aware delegation and supervision.</Description>
     <PackageTags>mcp;delegation;supervision;agents;workflow;ai</PackageTags>
     <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>

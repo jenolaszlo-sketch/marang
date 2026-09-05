@@ -1,26 +1,62 @@
 namespace Marang;
 
+/// <summary>
+/// Represents the SupervisorContextFacet contract and its invariants.
+/// </summary>
 [Flags]
 public enum SupervisorContextFacet
 {
+    /// <summary>
+    /// Identifies the None enum value.
+    /// </summary>
     None = 0,
+    /// <summary>
+    /// Identifies the Status enum value.
+    /// </summary>
     Status = 1,
+    /// <summary>
+    /// Identifies the Summary enum value.
+    /// </summary>
     Summary = 2,
+    /// <summary>
+    /// Identifies the Artifacts enum value.
+    /// </summary>
     Artifacts = 4,
+    /// <summary>
+    /// Identifies the Correlations enum value.
+    /// </summary>
     Correlations = 8,
+    /// <summary>
+    /// Identifies the PrimitiveReferences enum value.
+    /// </summary>
     PrimitiveReferences = 16,
 }
 
+/// <summary>
+/// Represents the ContextFacetAvailability contract and its invariants.
+/// </summary>
 public enum ContextFacetAvailability
 {
+    /// <summary>
+    /// Identifies the Included enum value.
+    /// </summary>
     Included = 0,
+    /// <summary>
+    /// Identifies the Truncated enum value.
+    /// </summary>
     Truncated = 1,
+    /// <summary>
+    /// Identifies the Omitted enum value.
+    /// </summary>
     Omitted = 2,
 }
 
 /// <summary>Explicitly records whether a requested context facet was included.</summary>
 public sealed record ContextFacetOutcome
 {
+    /// <summary>
+    /// Initializes a new instance of the ContextFacetOutcome type.
+    /// </summary>
     public ContextFacetOutcome(
         SupervisorContextFacet facet,
         ContextFacetAvailability availability,
@@ -52,15 +88,30 @@ public sealed record ContextFacetOutcome
         Reason = reason is null ? null : ContextContracts.Prose(reason, nameof(reason), 1_024);
     }
 
+    /// <summary>
+    /// Gets the Facet value.
+    /// </summary>
     public SupervisorContextFacet Facet { get; }
+    /// <summary>
+    /// Gets the Availability value.
+    /// </summary>
     public ContextFacetAvailability Availability { get; }
+    /// <summary>
+    /// Gets the ItemCount value.
+    /// </summary>
     public int ItemCount { get; }
+    /// <summary>
+    /// Gets the Reason value.
+    /// </summary>
     public string? Reason { get; }
 }
 
 /// <summary>Hard limits applied to one context response.</summary>
 public sealed record SupervisorContextLimits
 {
+    /// <summary>
+    /// Initializes a new instance of the SupervisorContextLimits type.
+    /// </summary>
     public SupervisorContextLimits(int maxItems, int maxInlineSummaryBytes)
     {
         if (maxItems is < 1 or > ContextContracts.MaximumItems)
@@ -77,13 +128,22 @@ public sealed record SupervisorContextLimits
         MaxInlineSummaryBytes = maxInlineSummaryBytes;
     }
 
+    /// <summary>
+    /// Gets the MaxItems value.
+    /// </summary>
     public int MaxItems { get; }
+    /// <summary>
+    /// Gets the MaxInlineSummaryBytes value.
+    /// </summary>
     public int MaxInlineSummaryBytes { get; }
 }
 
 /// <summary>Bounded, explicit request for checkpoint re-entry context.</summary>
 public sealed record SupervisorContextRequest
 {
+    /// <summary>
+    /// Initializes a new instance of the SupervisorContextRequest type.
+    /// </summary>
     public SupervisorContextRequest(
         DelegationId delegationId,
         SupervisorCheckpointId checkpointId,
@@ -103,12 +163,30 @@ public sealed record SupervisorContextRequest
         Limits = limits;
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the CheckpointId value.
+    /// </summary>
     public SupervisorCheckpointId CheckpointId { get; }
+    /// <summary>
+    /// Gets the ExpectedRevision value.
+    /// </summary>
     public long ExpectedRevision { get; }
+    /// <summary>
+    /// Gets the RequestedFacets value.
+    /// </summary>
     public SupervisorContextFacet RequestedFacets { get; }
+    /// <summary>
+    /// Gets the Limits value.
+    /// </summary>
     public SupervisorContextLimits Limits { get; }
 
+    /// <summary>
+    /// Performs the ValidateAgainst contract operation.
+    /// </summary>
     public void ValidateAgainst(DelegationProgress waitingProgress)
     {
         ArgumentNullException.ThrowIfNull(waitingProgress);
@@ -145,6 +223,9 @@ public sealed record SupervisorContextRequest
 /// <summary>A bounded human-readable status or summary item; never raw transcript content.</summary>
 public sealed record SupervisorContextItem
 {
+    /// <summary>
+    /// Initializes a new instance of the SupervisorContextItem type.
+    /// </summary>
     public SupervisorContextItem(SupervisorContextFacet facet, string key, string text)
     {
         ContextContracts.RequireSingleFacet(facet, nameof(facet));
@@ -158,15 +239,30 @@ public sealed record SupervisorContextItem
         Text = ContextContracts.Prose(text, nameof(text), 16_384);
     }
 
+    /// <summary>
+    /// Gets the Facet value.
+    /// </summary>
     public SupervisorContextFacet Facet { get; }
+    /// <summary>
+    /// Gets the Key value.
+    /// </summary>
     public string Key { get; }
+    /// <summary>
+    /// Gets the Text value.
+    /// </summary>
     public string Text { get; }
+    /// <summary>
+    /// Gets the Utf8ByteCount value.
+    /// </summary>
     public int Utf8ByteCount => System.Text.Encoding.UTF8.GetByteCount(Text);
 }
 
 /// <summary>Identity used to correlate context with another durable system.</summary>
 public sealed record ContextCorrelationReference
 {
+    /// <summary>
+    /// Initializes a new instance of the ContextCorrelationReference type.
+    /// </summary>
     public ContextCorrelationReference(string provider, string kind, string identifier, string? revision = null)
     {
         Provider = ContextContracts.Identity(provider, nameof(provider), 128);
@@ -175,9 +271,21 @@ public sealed record ContextCorrelationReference
         Revision = revision is null ? null : ContextContracts.Identity(revision, nameof(revision), 512);
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Kind value.
+    /// </summary>
     public string Kind { get; }
+    /// <summary>
+    /// Gets the Identifier value.
+    /// </summary>
     public string Identifier { get; }
+    /// <summary>
+    /// Gets the Revision value.
+    /// </summary>
     public string? Revision { get; }
 }
 
@@ -187,6 +295,9 @@ public sealed record ContextCorrelationReference
 /// </summary>
 public sealed record ContextProvenanceReference
 {
+    /// <summary>
+    /// Initializes a new instance of the ContextProvenanceReference type.
+    /// </summary>
     public ContextProvenanceReference(
         string provider,
         string kind,
@@ -203,16 +314,37 @@ public sealed record ContextProvenanceReference
             : IdentityText.RequireSha256(contentHash, nameof(contentHash));
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Kind value.
+    /// </summary>
     public string Kind { get; }
+    /// <summary>
+    /// Gets the Identifier value.
+    /// </summary>
     public string Identifier { get; }
+    /// <summary>
+    /// Gets the Revision value.
+    /// </summary>
     public string? Revision { get; }
+    /// <summary>
+    /// Gets the ContentHash value.
+    /// </summary>
     public string? ContentHash { get; }
 
+    /// <summary>
+    /// Performs the CangjieSnapshot contract operation.
+    /// </summary>
     public static ContextProvenanceReference CangjieSnapshot(
         string identifier,
         string? contentHash = null) => new("cangjie", "context-snapshot", identifier, null, contentHash);
 
+    /// <summary>
+    /// Performs the HetuIndexPublication contract operation.
+    /// </summary>
     public static ContextProvenanceReference HetuIndexPublication(
         string repositoryIdentifier,
         string indexRunIdentifier,
@@ -222,6 +354,9 @@ public sealed record ContextProvenanceReference
 /// <summary>Bounded context package for one exact waiting checkpoint.</summary>
 public sealed record SupervisorContextPackage
 {
+    /// <summary>
+    /// Initializes a new instance of the SupervisorContextPackage type.
+    /// </summary>
     public SupervisorContextPackage(
         DelegationId delegationId,
         SupervisorCheckpointId checkpointId,
@@ -245,7 +380,7 @@ public sealed record SupervisorContextPackage
         PrimitiveReferences = Snapshot(primitiveReferences, nameof(primitiveReferences));
         FacetOutcomes = Snapshot(facetOutcomes, nameof(facetOutcomes));
         foreach (var item in Items) ArgumentNullException.ThrowIfNull(item);
-        foreach (var artifact in Artifacts) ContextContracts.ValidateArtifact(artifact);
+        foreach (var artifact in Artifacts) ContextContracts.ValidateArtifact(artifact, delegationId);
         foreach (var correlation in Correlations) ArgumentNullException.ThrowIfNull(correlation);
         foreach (var reference in PrimitiveReferences) ArgumentNullException.ThrowIfNull(reference);
         foreach (var outcome in FacetOutcomes) ArgumentNullException.ThrowIfNull(outcome);
@@ -270,18 +405,54 @@ public sealed record SupervisorContextPackage
         ValidateFacetConsistency();
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the CheckpointId value.
+    /// </summary>
     public SupervisorCheckpointId CheckpointId { get; }
+    /// <summary>
+    /// Gets the Revision value.
+    /// </summary>
     public long Revision { get; }
+    /// <summary>
+    /// Gets the RequestedFacets value.
+    /// </summary>
     public SupervisorContextFacet RequestedFacets { get; }
+    /// <summary>
+    /// Gets the AppliedLimits value.
+    /// </summary>
     public SupervisorContextLimits AppliedLimits { get; }
+    /// <summary>
+    /// Gets the Items value.
+    /// </summary>
     public IReadOnlyList<SupervisorContextItem> Items { get; }
+    /// <summary>
+    /// Gets the Artifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> Artifacts { get; }
+    /// <summary>
+    /// Gets the Correlations value.
+    /// </summary>
     public IReadOnlyList<ContextCorrelationReference> Correlations { get; }
+    /// <summary>
+    /// Gets the PrimitiveReferences value.
+    /// </summary>
     public IReadOnlyList<ContextProvenanceReference> PrimitiveReferences { get; }
+    /// <summary>
+    /// Gets the FacetOutcomes value.
+    /// </summary>
     public IReadOnlyList<ContextFacetOutcome> FacetOutcomes { get; }
+    /// <summary>
+    /// Gets the InlineSummaryUtf8Bytes value.
+    /// </summary>
     public int InlineSummaryUtf8Bytes { get; }
 
+    /// <summary>
+    /// Performs the ValidateAgainst contract operation.
+    /// </summary>
     public void ValidateAgainst(SupervisorContextRequest request, DelegationProgress waitingProgress)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -305,6 +476,10 @@ public sealed record SupervisorContextPackage
         }
 
         ValidateFacetConsistency();
+        foreach (var artifact in Artifacts)
+        {
+            ContextContracts.ValidateArtifact(artifact, request.DelegationId);
+        }
     }
 
     private static IReadOnlyList<T> Snapshot<T>(IReadOnlyList<T> values, string parameterName)
@@ -361,6 +536,9 @@ public sealed record SupervisorContextPackage
 /// </summary>
 public interface ISupervisorContextProvider
 {
+    /// <summary>
+    /// Performs the GetAsync contract operation.
+    /// </summary>
     ValueTask<SupervisorContextPackage> GetAsync(
         SupervisorIdentity supervisor,
         SupervisorContextRequest request,
@@ -369,19 +547,40 @@ public interface ISupervisorContextProvider
 
 internal static class ContextContracts
 {
+    /// <summary>
+    /// Provides the MaximumItems contract constant.
+    /// </summary>
     public const int MaximumItems = 128;
+    /// <summary>
+    /// Provides the MaximumInlineSummaryBytes contract constant.
+    /// </summary>
     public const int MaximumInlineSummaryBytes = 65_536;
 
+    /// <summary>
+    /// Performs the Identity contract operation.
+    /// </summary>
     public static string Identity(string? value, string parameterName, int maximumLength) => IdentityText.Require(value, parameterName, maximumLength);
+    /// <summary>
+    /// Performs the Prose contract operation.
+    /// </summary>
     public static string Prose(string? value, string parameterName, int maximumLength) => IdentityText.RequireProse(value, parameterName, maximumLength);
+    /// <summary>
+    /// Performs the RequireDelegation contract operation.
+    /// </summary>
     public static void RequireDelegation(DelegationId value, string parameterName) => IdentityText.RequireNonEmpty(value.Value, parameterName);
 
-    public static void ValidateArtifact(DelegationArtifactReference value)
+    /// <summary>
+    /// Performs the ValidateArtifact contract operation.
+    /// </summary>
+    public static void ValidateArtifact(DelegationArtifactReference value, DelegationId? expectedDelegation = null)
     {
         ArgumentNullException.ThrowIfNull(value);
-        ArtifactContracts.ValidateArtifact(value, value.DelegationId);
+        ArtifactContracts.ValidateArtifact(value, expectedDelegation ?? value.DelegationId);
     }
 
+    /// <summary>
+    /// Performs the RequireFacets contract operation.
+    /// </summary>
     public static void RequireFacets(SupervisorContextFacet value, string parameterName)
     {
         const SupervisorContextFacet all = SupervisorContextFacet.Status | SupervisorContextFacet.Summary | SupervisorContextFacet.Artifacts | SupervisorContextFacet.Correlations | SupervisorContextFacet.PrimitiveReferences;
@@ -391,6 +590,9 @@ internal static class ContextContracts
         }
     }
 
+    /// <summary>
+    /// Performs the RequireSingleFacet contract operation.
+    /// </summary>
     public static void RequireSingleFacet(SupervisorContextFacet value, string parameterName)
     {
         RequireFacets(value, parameterName);
@@ -401,6 +603,9 @@ internal static class ContextContracts
         }
     }
 
+    /// <summary>
+    /// Performs the EnumerateFacets contract operation.
+    /// </summary>
     public static IEnumerable<SupervisorContextFacet> EnumerateFacets(SupervisorContextFacet value)
     {
         foreach (var facet in new[] { SupervisorContextFacet.Status, SupervisorContextFacet.Summary, SupervisorContextFacet.Artifacts, SupervisorContextFacet.Correlations, SupervisorContextFacet.PrimitiveReferences })

@@ -3,11 +3,29 @@ namespace Marang;
 /// <summary>Bounded, integer-only units understood by the Marang budget contract.</summary>
 public enum BudgetQuantityKind
 {
+    /// <summary>
+    /// Identifies the Count enum value.
+    /// </summary>
     Count = 0,
+    /// <summary>
+    /// Identifies the Milliseconds enum value.
+    /// </summary>
     Milliseconds = 1,
+    /// <summary>
+    /// Identifies the Tokens enum value.
+    /// </summary>
     Tokens = 2,
+    /// <summary>
+    /// Identifies the MicroCredits enum value.
+    /// </summary>
     MicroCredits = 3,
+    /// <summary>
+    /// Identifies the MinorCurrencyUnits enum value.
+    /// </summary>
     MinorCurrencyUnits = 4,
+    /// <summary>
+    /// Identifies the TimeSpanTicks enum value.
+    /// </summary>
     TimeSpanTicks = 5,
 }
 
@@ -19,8 +37,14 @@ public enum BudgetQuantityKind
 /// </summary>
 public readonly record struct BudgetQuantity
 {
+    /// <summary>
+    /// Provides the MaximumValue contract constant.
+    /// </summary>
     public const long MaximumValue = 9_000_000_000_000_000;
 
+    /// <summary>
+    /// Initializes a new instance of the BudgetQuantity type.
+    /// </summary>
     public BudgetQuantity(BudgetQuantityKind kind, long value, string? currency = null)
     {
         if (!Enum.IsDefined(kind))
@@ -48,18 +72,48 @@ public readonly record struct BudgetQuantity
         Currency = currency is null ? null : RequireCurrency(currency);
     }
 
+    /// <summary>
+    /// Gets the Kind value.
+    /// </summary>
     public BudgetQuantityKind Kind { get; }
+    /// <summary>
+    /// Gets the Value value.
+    /// </summary>
     public long Value { get; }
+    /// <summary>
+    /// Gets the Currency value.
+    /// </summary>
     public string? Currency { get; }
 
+    /// <summary>
+    /// Performs the Count contract operation.
+    /// </summary>
     public static BudgetQuantity Count(long value) => new(BudgetQuantityKind.Count, value);
+    /// <summary>
+    /// Performs the Milliseconds contract operation.
+    /// </summary>
     public static BudgetQuantity Milliseconds(long value) => new(BudgetQuantityKind.Milliseconds, value);
+    /// <summary>
+    /// Performs the Tokens contract operation.
+    /// </summary>
     public static BudgetQuantity Tokens(long value) => new(BudgetQuantityKind.Tokens, value);
+    /// <summary>
+    /// Performs the MicroCredits contract operation.
+    /// </summary>
     public static BudgetQuantity MicroCredits(long value) => new(BudgetQuantityKind.MicroCredits, value);
+    /// <summary>
+    /// Performs the Ticks contract operation.
+    /// </summary>
     public static BudgetQuantity Ticks(long value) => new(BudgetQuantityKind.TimeSpanTicks, value);
+    /// <summary>
+    /// Performs the MinorCurrencyUnits contract operation.
+    /// </summary>
     public static BudgetQuantity MinorCurrencyUnits(string currency, long value) =>
         new(BudgetQuantityKind.MinorCurrencyUnits, value, currency);
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         _ = new BudgetQuantity(Kind, Value, Currency);
@@ -99,6 +153,9 @@ public readonly record struct BudgetQuantity
 /// <summary>One named, version-neutral budget ceiling.</summary>
 public sealed record BudgetLimit
 {
+    /// <summary>
+    /// Initializes a new instance of the BudgetLimit type.
+    /// </summary>
     public BudgetLimit(string dimension, BudgetQuantity maximum)
     {
         Dimension = ArtifactContracts.Version(dimension, nameof(dimension));
@@ -111,16 +168,31 @@ public sealed record BudgetLimit
         Maximum = maximum;
     }
 
+    /// <summary>
+    /// Gets the Dimension value.
+    /// </summary>
     public string Dimension { get; }
+    /// <summary>
+    /// Gets the Maximum value.
+    /// </summary>
     public BudgetQuantity Maximum { get; }
 }
 
 /// <summary>Immutable versioned ceilings accepted by one delegation.</summary>
 public sealed record BudgetDefinition
 {
+    /// <summary>
+    /// Provides the CurrentVersion contract constant.
+    /// </summary>
     public const string CurrentVersion = "budget-v1";
+    /// <summary>
+    /// Provides the MaximumLimits contract constant.
+    /// </summary>
     public const int MaximumLimits = 32;
 
+    /// <summary>
+    /// Initializes a new instance of the BudgetDefinition type.
+    /// </summary>
     public BudgetDefinition(string version, IReadOnlyList<BudgetLimit> limits)
     {
         Version = ArtifactContracts.Version(version, nameof(version));
@@ -144,9 +216,18 @@ public sealed record BudgetDefinition
         Limits = Array.AsReadOnly(copy);
     }
 
+    /// <summary>
+    /// Gets the Version value.
+    /// </summary>
     public string Version { get; }
+    /// <summary>
+    /// Gets the Limits value.
+    /// </summary>
     public IReadOnlyList<BudgetLimit> Limits { get; }
 
+    /// <summary>
+    /// Performs the TryGetLimit contract operation.
+    /// </summary>
     public bool TryGetLimit(string dimension, out BudgetLimit? limit)
     {
         var canonical = ArtifactContracts.Version(dimension, nameof(dimension));
@@ -154,6 +235,9 @@ public sealed record BudgetDefinition
         return limit is not null;
     }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         _ = new BudgetDefinition(Version, Limits);
@@ -163,6 +247,9 @@ public sealed record BudgetDefinition
 /// <summary>One exact, positive charge in a consumption receipt.</summary>
 public sealed record BudgetCharge
 {
+    /// <summary>
+    /// Initializes a new instance of the BudgetCharge type.
+    /// </summary>
     public BudgetCharge(string dimension, BudgetQuantity amount)
     {
         Dimension = ArtifactContracts.Version(dimension, nameof(dimension));
@@ -175,7 +262,13 @@ public sealed record BudgetCharge
         Amount = amount;
     }
 
+    /// <summary>
+    /// Gets the Dimension value.
+    /// </summary>
     public string Dimension { get; }
+    /// <summary>
+    /// Gets the Amount value.
+    /// </summary>
     public BudgetQuantity Amount { get; }
 }
 
@@ -185,8 +278,14 @@ public sealed record BudgetCharge
 /// </summary>
 public sealed record BudgetConsumptionReceipt
 {
+    /// <summary>
+    /// Provides the MaximumCharges contract constant.
+    /// </summary>
     public const int MaximumCharges = 32;
 
+    /// <summary>
+    /// Initializes a new instance of the BudgetConsumptionReceipt type.
+    /// </summary>
     public BudgetConsumptionReceipt(
         DelegationId delegationId,
         Guid receiptId,
@@ -228,27 +327,55 @@ public sealed record BudgetConsumptionReceipt
         Charges = Array.AsReadOnly(copy);
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the ReceiptId value.
+    /// </summary>
     public Guid ReceiptId { get; }
+    /// <summary>
+    /// Gets the DefinitionVersion value.
+    /// </summary>
     public string DefinitionVersion { get; }
+    /// <summary>
+    /// Gets the Sequence value.
+    /// </summary>
     public long Sequence { get; }
+    /// <summary>
+    /// Gets the RecordedAt value.
+    /// </summary>
     public DateTimeOffset RecordedAt { get; }
+    /// <summary>
+    /// Gets the Charges value.
+    /// </summary>
     public IReadOnlyList<BudgetCharge> Charges { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate() => _ = new BudgetConsumptionReceipt(DelegationId, ReceiptId, DefinitionVersion, Sequence, RecordedAt, Charges);
 }
 
 /// <summary>Immutable accumulated consumption, suitable for durable replay.</summary>
 public sealed record BudgetConsumptionSnapshot
 {
+    /// <summary>
+    /// Provides the MaximumReceipts contract constant.
+    /// </summary>
     public const int MaximumReceipts = 4_096;
 
+    /// <summary>
+    /// Initializes a new instance of the BudgetConsumptionSnapshot type.
+    /// </summary>
     public BudgetConsumptionSnapshot(
         DelegationId delegationId,
         string definitionVersion,
         long lastSequence,
         IReadOnlyList<BudgetCharge>? charges = null,
-        int receiptCount = 0)
+        int receiptCount = 0,
+        IReadOnlyList<Guid>? receiptIds = null)
     {
         ArtifactContracts.RequireDelegation(delegationId, nameof(delegationId));
         DefinitionVersion = ArtifactContracts.Version(definitionVersion, nameof(definitionVersion));
@@ -257,6 +384,22 @@ public sealed record BudgetConsumptionSnapshot
         if (receiptCount > MaximumReceipts)
         {
             throw new ArgumentOutOfRangeException(nameof(receiptCount));
+        }
+
+        var ids = receiptIds?.ToArray() ?? [];
+        if (ids.Length != receiptCount)
+        {
+            throw new ArgumentException("A consumption snapshot must retain exactly one receipt id per receipt.", nameof(receiptIds));
+        }
+
+        if (ids.Any(id => id == Guid.Empty))
+        {
+            throw new ArgumentException("A consumption snapshot cannot retain an empty receipt id.", nameof(receiptIds));
+        }
+
+        if (ids.Distinct().Count() != ids.Length)
+        {
+            throw new ArgumentException("A consumption snapshot cannot retain duplicate receipt ids.", nameof(receiptIds));
         }
 
         if ((receiptCount == 0 && lastSequence != 0) || (receiptCount > 0 && lastSequence == 0))
@@ -284,13 +427,31 @@ public sealed record BudgetConsumptionSnapshot
         LastSequence = lastSequence;
         ReceiptCount = receiptCount;
         Charges = Array.AsReadOnly(copy);
+        ReceiptIds = Array.AsReadOnly(ids);
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the DefinitionVersion value.
+    /// </summary>
     public string DefinitionVersion { get; }
+    /// <summary>
+    /// Gets the LastSequence value.
+    /// </summary>
     public long LastSequence { get; }
+    /// <summary>
+    /// Gets the ReceiptCount value.
+    /// </summary>
     public int ReceiptCount { get; }
+    /// <summary>
+    /// Gets the Charges value.
+    /// </summary>
     public IReadOnlyList<BudgetCharge> Charges { get; }
+    /// <summary>Bounded receipt identities retained for replay/idempotency checks.</summary>
+    public IReadOnlyList<Guid> ReceiptIds { get; }
 
     internal BudgetQuantity? Get(string dimension) => Charges.FirstOrDefault(x => x.Dimension == dimension)?.Amount;
 
@@ -304,6 +465,11 @@ public sealed record BudgetConsumptionSnapshot
         if (receipt.DefinitionVersion != DefinitionVersion)
         {
             throw new ArgumentException("The receipt uses a different budget definition version.", nameof(receipt));
+        }
+
+        if (ReceiptIds.Contains(receipt.ReceiptId))
+        {
+            throw new InvalidOperationException("A budget receipt id cannot be applied more than once.");
         }
 
         if (receipt.Sequence <= LastSequence)
@@ -335,15 +501,22 @@ public sealed record BudgetConsumptionSnapshot
             DefinitionVersion,
             receipt.Sequence,
             totals.Values.OrderBy(charge => charge.Dimension, StringComparer.Ordinal).ToArray(),
-            ReceiptCount + 1);
+            ReceiptCount + 1,
+            ReceiptIds.Append(receipt.ReceiptId).ToArray());
     }
 
-    public void Validate() => _ = new BudgetConsumptionSnapshot(DelegationId, DefinitionVersion, LastSequence, Charges, ReceiptCount);
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
+    public void Validate() => _ = new BudgetConsumptionSnapshot(DelegationId, DefinitionVersion, LastSequence, Charges, ReceiptCount, ReceiptIds);
 }
 
 /// <summary>Why a durable budget-exhaustion outcome was recorded.</summary>
 public sealed record BudgetExceededOutcome
 {
+    /// <summary>
+    /// Initializes a new instance of the BudgetExceededOutcome type.
+    /// </summary>
     public BudgetExceededOutcome(
         DelegationId delegationId,
         string definitionVersion,
@@ -382,13 +555,37 @@ public sealed record BudgetExceededOutcome
         RecordedAt = recordedAt;
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the DefinitionVersion value.
+    /// </summary>
     public string DefinitionVersion { get; }
+    /// <summary>
+    /// Gets the Charge value.
+    /// </summary>
     public BudgetCharge Charge { get; }
+    /// <summary>
+    /// Gets the Limit value.
+    /// </summary>
     public BudgetQuantity Limit { get; }
+    /// <summary>
+    /// Gets the Consumed value.
+    /// </summary>
     public BudgetQuantity Consumed { get; }
+    /// <summary>
+    /// Gets the TriggeringReceiptId value.
+    /// </summary>
     public Guid TriggeringReceiptId { get; }
+    /// <summary>
+    /// Gets the Reason value.
+    /// </summary>
     public string Reason { get; }
+    /// <summary>
+    /// Gets the RecordedAt value.
+    /// </summary>
     public DateTimeOffset RecordedAt { get; }
 }
 
@@ -397,11 +594,20 @@ public sealed record BudgetConsumptionDecision(
     BudgetConsumptionSnapshot Snapshot,
     BudgetExceededOutcome? Exceeded)
 {
+    /// <summary>
+    /// Gets the Accepted value.
+    /// </summary>
     public bool Accepted => Exceeded is null;
 }
 
+/// <summary>
+/// Represents the BudgetAccounting contract and its invariants.
+/// </summary>
 public static class BudgetAccounting
 {
+    /// <summary>
+    /// Performs the Apply contract operation.
+    /// </summary>
     public static BudgetConsumptionDecision Apply(
         BudgetDefinition definition,
         BudgetConsumptionSnapshot current,
@@ -424,14 +630,22 @@ public static class BudgetAccounting
             throw new ArgumentException("The snapshot and receipt must belong to the same delegation.", nameof(receipt));
         }
 
+        // Validate every dimension before mutating/aggregating the immutable snapshot.
+        // This keeps an unknown later charge from being masked by an earlier total or
+        // by an arithmetic failure during aggregation.
+        foreach (var charge in receipt.Charges)
+        {
+            if (!definition.TryGetLimit(charge.Dimension, out _))
+            {
+                throw new ArgumentException($"The receipt charges undefined budget dimension '{charge.Dimension}'.", nameof(receipt));
+            }
+        }
+
         var next = current.Add(receipt);
         BudgetExceededOutcome? exceeded = null;
         foreach (var charge in receipt.Charges)
         {
-            if (!definition.TryGetLimit(charge.Dimension, out var limit))
-            {
-                throw new ArgumentException($"The receipt charges undefined budget dimension '{charge.Dimension}'.", nameof(receipt));
-            }
+            definition.TryGetLimit(charge.Dimension, out var limit);
 
             var consumed = next.Get(charge.Dimension)!.Value;
             if (consumed.Value > limit!.Maximum.Value)
@@ -452,6 +666,9 @@ public static class BudgetAccounting
         return new BudgetConsumptionDecision(next, exceeded);
     }
 
+    /// <summary>
+    /// Performs the Empty contract operation.
+    /// </summary>
     public static BudgetConsumptionSnapshot Empty(BudgetDefinition definition, DelegationId delegationId)
     {
         ArgumentNullException.ThrowIfNull(definition);
@@ -464,9 +681,18 @@ public static class BudgetAccounting
 /// <summary>Provider/model/profile preferences expressed as open identities.</summary>
 public sealed record ProviderHints
 {
+    /// <summary>
+    /// Provides the MaximumPreferredProviders contract constant.
+    /// </summary>
     public const int MaximumPreferredProviders = 16;
+    /// <summary>
+    /// Provides the MaximumPreferredModels contract constant.
+    /// </summary>
     public const int MaximumPreferredModels = 16;
 
+    /// <summary>
+    /// Initializes a new instance of the ProviderHints type.
+    /// </summary>
     public ProviderHints(
         string? provider = null,
         string? model = null,
@@ -481,10 +707,25 @@ public sealed record ProviderHints
         PreferredModels = Names(preferredModels, MaximumPreferredModels, nameof(preferredModels));
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string? Provider { get; }
+    /// <summary>
+    /// Gets the Model value.
+    /// </summary>
     public string? Model { get; }
+    /// <summary>
+    /// Gets the Profile value.
+    /// </summary>
     public string? Profile { get; }
+    /// <summary>
+    /// Gets the PreferredProviders value.
+    /// </summary>
     public IReadOnlyList<string> PreferredProviders { get; }
+    /// <summary>
+    /// Gets the PreferredModels value.
+    /// </summary>
     public IReadOnlyList<string> PreferredModels { get; }
 
     private static string? Optional(string? value, string parameterName) =>
@@ -507,8 +748,14 @@ public sealed record ProviderHints
 /// <summary>An open, versioned capability advertised by an authorized provider.</summary>
 public sealed record CapabilityDescriptor
 {
+    /// <summary>
+    /// Provides the MaximumAttributes contract constant.
+    /// </summary>
     public const int MaximumAttributes = 32;
 
+    /// <summary>
+    /// Initializes a new instance of the CapabilityDescriptor type.
+    /// </summary>
     public CapabilityDescriptor(string name, int version, IReadOnlyDictionary<string, string>? attributes = null)
     {
         Name = ArtifactContracts.Version(name, nameof(name));
@@ -517,8 +764,17 @@ public sealed record CapabilityDescriptor
         Attributes = Properties(attributes, nameof(attributes));
     }
 
+    /// <summary>
+    /// Gets the Name value.
+    /// </summary>
     public string Name { get; }
+    /// <summary>
+    /// Gets the Version value.
+    /// </summary>
     public int Version { get; }
+    /// <summary>
+    /// Gets the Attributes value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Attributes { get; }
 
     private static IReadOnlyDictionary<string, string> Properties(IReadOnlyDictionary<string, string>? values, string parameterName)
@@ -544,6 +800,9 @@ public sealed record CapabilityDescriptor
 /// <summary>One open capability requirement used by deterministic matching.</summary>
 public sealed record CapabilityRequirement
 {
+    /// <summary>
+    /// Initializes a new instance of the CapabilityRequirement type.
+    /// </summary>
     public CapabilityRequirement(string name, int minimumVersion, IReadOnlyDictionary<string, string>? attributes = null)
     {
         Name = ArtifactContracts.Version(name, nameof(name));
@@ -554,14 +813,26 @@ public sealed record CapabilityRequirement
             : new CapabilityDescriptor(name, minimumVersion, attributes).Attributes;
     }
 
+    /// <summary>
+    /// Gets the Name value.
+    /// </summary>
     public string Name { get; }
+    /// <summary>
+    /// Gets the MinimumVersion value.
+    /// </summary>
     public int MinimumVersion { get; }
+    /// <summary>
+    /// Gets the Attributes value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Attributes { get; }
 }
 
 /// <summary>Host-authorized provider metadata used by the pure selector.</summary>
 public sealed record ProviderDescriptor
 {
+    /// <summary>
+    /// Initializes a new instance of the ProviderDescriptor type.
+    /// </summary>
     public ProviderDescriptor(
         string provider,
         IReadOnlyList<CapabilityDescriptor> capabilities,
@@ -594,15 +865,36 @@ public sealed record ProviderDescriptor
         if (Models.Count > 128) throw new ArgumentException("A provider cannot advertise more than 128 models.", nameof(models));
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Capabilities value.
+    /// </summary>
     public IReadOnlyList<CapabilityDescriptor> Capabilities { get; }
+    /// <summary>
+    /// Gets the Priority value.
+    /// </summary>
     public int Priority { get; }
+    /// <summary>
+    /// Gets the Enabled value.
+    /// </summary>
     public bool Enabled { get; }
+    /// <summary>
+    /// Gets the Models value.
+    /// </summary>
     public IReadOnlyList<string> Models { get; }
 }
 
+/// <summary>
+/// Represents the ProviderSelectionRequest contract and its invariants.
+/// </summary>
 public sealed record ProviderSelectionRequest
 {
+    /// <summary>
+    /// Initializes a new instance of the ProviderSelectionRequest type.
+    /// </summary>
     public ProviderSelectionRequest(IReadOnlyList<CapabilityRequirement> requiredCapabilities, ProviderHints? hints = null)
     {
         ArgumentNullException.ThrowIfNull(requiredCapabilities);
@@ -616,12 +908,24 @@ public sealed record ProviderSelectionRequest
         Hints = hints ?? new ProviderHints();
     }
 
+    /// <summary>
+    /// Gets the RequiredCapabilities value.
+    /// </summary>
     public IReadOnlyList<CapabilityRequirement> RequiredCapabilities { get; }
+    /// <summary>
+    /// Gets the Hints value.
+    /// </summary>
     public ProviderHints Hints { get; }
 }
 
+/// <summary>
+/// Represents the ProviderMatch contract and its invariants.
+/// </summary>
 public sealed record ProviderMatch
 {
+    /// <summary>
+    /// Initializes a new instance of the ProviderMatch type.
+    /// </summary>
     public ProviderMatch(ProviderDescriptor provider, IReadOnlyList<CapabilityDescriptor> capabilities, int hintScore)
     {
         ArgumentNullException.ThrowIfNull(provider);
@@ -638,14 +942,26 @@ public sealed record ProviderMatch
         HintScore = hintScore;
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public ProviderDescriptor Provider { get; }
+    /// <summary>
+    /// Gets the Capabilities value.
+    /// </summary>
     public IReadOnlyList<CapabilityDescriptor> Capabilities { get; }
+    /// <summary>
+    /// Gets the HintScore value.
+    /// </summary>
     public int HintScore { get; }
 }
 
 /// <summary>Deterministic provider matching; no vendor/model enum is involved.</summary>
 public static class ProviderSelection
 {
+    /// <summary>
+    /// Performs the Match contract operation.
+    /// </summary>
     public static IReadOnlyList<ProviderMatch> Match(
         ProviderSelectionRequest request,
         IReadOnlyList<ProviderDescriptor> providers)
@@ -698,6 +1014,9 @@ public static class ProviderSelection
             .ToArray();
     }
 
+    /// <summary>
+    /// Performs the Select contract operation.
+    /// </summary>
     public static ProviderMatch? Select(ProviderSelectionRequest request, IReadOnlyList<ProviderDescriptor> providers) =>
         Match(request, providers).FirstOrDefault();
 }

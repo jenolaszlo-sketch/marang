@@ -6,6 +6,8 @@ public sealed class InMemoryCandidateRevisionPublicationRegistry : ICandidateRev
     private readonly object gate = new();
     private readonly Dictionary<CandidateKey, CandidateRevisionReference> candidates = new();
 
+    /// <summary>Publishes a candidate revision, returning an identical replay without creating a second record.</summary>
+    /// <exception cref="CandidateRevisionConflictException">Thrown when the identity is already bound to different content.</exception>
     public ValueTask<CandidateRevisionPublication> PublishAsync(CandidateRevisionReference candidate, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

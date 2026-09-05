@@ -50,6 +50,13 @@ and provider payloads are still separate retained artifacts.
 
 - Artifact references are ownership-checked and deduplicated; no payload is
   trusted merely because a worker claims it exists.
+- Invocation input artifacts may reference any artifact in the same
+  delegation, while invocation output artifacts must belong to the exact
+  structural node and node generation that produced the invocation.
+- When an invocation carries an external-operation correlation, Marang checks
+  the exact delegation, node, generation, attempt id, and provider against the
+  provider attempt reference; an arbitrary attempt cannot be combined with a
+  different invocation owner.
 - Candidate references must belong to the same delegation, node, and
   generation as the invocation.
 - Collections and extension values are bounded and snapshotted at

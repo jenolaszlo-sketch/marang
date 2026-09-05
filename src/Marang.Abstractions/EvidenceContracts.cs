@@ -3,10 +3,25 @@ namespace Marang;
 /// <summary>Stable names for the evidence categories defined by Marang.</summary>
 public static class EvidenceKinds
 {
+    /// <summary>
+    /// Provides the AgentExecution contract constant.
+    /// </summary>
     public const string AgentExecution = "agent.execution";
+    /// <summary>
+    /// Provides the ModelExecution contract constant.
+    /// </summary>
     public const string ModelExecution = "model.execution";
+    /// <summary>
+    /// Provides the DeterministicExecution contract constant.
+    /// </summary>
     public const string DeterministicExecution = "deterministic.execution";
+    /// <summary>
+    /// Provides the Validation contract constant.
+    /// </summary>
     public const string Validation = "validation.report";
+    /// <summary>
+    /// Provides the Review contract constant.
+    /// </summary>
     public const string Review = "review.report";
 }
 
@@ -19,6 +34,9 @@ public static class EvidenceKinds
 /// </summary>
 public sealed record WorkerInvocationEvidence
 {
+    /// <summary>
+    /// Initializes a new instance of the WorkerInvocationEvidence type.
+    /// </summary>
     public WorkerInvocationEvidence(
         DelegationId delegationId,
         StructuralNodeReference structuralNode,
@@ -38,7 +56,8 @@ public sealed record WorkerInvocationEvidence
         IReadOnlyList<DelegationArtifactReference> outputArtifacts,
         CandidateRevisionReference? candidate = null,
         IReadOnlyDictionary<string, string>? usage = null,
-        IReadOnlyDictionary<string, string>? providerData = null)
+        IReadOnlyDictionary<string, string>? providerData = null,
+        ExternalOperationCorrelation? executionCorrelation = null)
     {
         ArtifactContracts.RequireDelegation(delegationId, nameof(delegationId));
         structuralNode.Validate();
@@ -70,7 +89,26 @@ public sealed record WorkerInvocationEvidence
         ResolvedModel = EvidenceContracts.OptionalIdentifier(resolvedModel, nameof(resolvedModel));
         ToolCapabilities = EvidenceContracts.Names(toolCapabilities, nameof(toolCapabilities));
         InputArtifacts = EvidenceContracts.Artifacts(inputArtifacts, delegationId, nameof(inputArtifacts));
-        OutputArtifacts = EvidenceContracts.Artifacts(outputArtifacts, delegationId, nameof(outputArtifacts));
+        OutputArtifacts = EvidenceContracts.Artifacts(
+            outputArtifacts,
+            delegationId,
+            nameof(outputArtifacts),
+            structuralNode,
+            nodeGeneration);
+        if (executionCorrelation is not null)
+        {
+            executionCorrelation.Validate();
+            if (executionCorrelation.DelegationId != delegationId
+                || executionCorrelation.StructuralNode != structuralNode
+                || executionCorrelation.NodeGeneration != nodeGeneration
+                || !string.Equals(executionCorrelation.ExecutionAttemptId, attempt.AttemptId, StringComparison.Ordinal)
+                || !string.Equals(executionCorrelation.Agent.Provider, attempt.Provider, StringComparison.Ordinal))
+            {
+                throw new ArgumentException(
+                    "Execution correlation must exactly identify the invocation owner and provider attempt.",
+                    nameof(executionCorrelation));
+            }
+        }
         if (candidate is not null)
         {
             if (candidate.DelegationId != delegationId
@@ -84,27 +122,84 @@ public sealed record WorkerInvocationEvidence
         }
 
         Candidate = candidate;
+        ExecutionCorrelation = executionCorrelation;
         Usage = EvidenceContracts.Properties(usage, nameof(usage));
         ProviderData = EvidenceContracts.Properties(providerData, nameof(providerData));
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the StructuralNode value.
+    /// </summary>
     public StructuralNodeReference StructuralNode { get; }
+    /// <summary>
+    /// Gets the NodeGeneration value.
+    /// </summary>
     public NodeGenerationId NodeGeneration { get; }
+    /// <summary>
+    /// Gets the ExecutionCategory value.
+    /// </summary>
     public string ExecutionCategory { get; }
+    /// <summary>
+    /// Gets the Attempt value.
+    /// </summary>
     public ProviderExecutionAttemptReference Attempt { get; }
+    /// <summary>
+    /// Gets the Disposition value.
+    /// </summary>
     public string Disposition { get; }
+    /// <summary>
+    /// Gets the StartedAt value.
+    /// </summary>
     public DateTimeOffset StartedAt { get; }
+    /// <summary>
+    /// Gets the CompletedAt value.
+    /// </summary>
     public DateTimeOffset? CompletedAt { get; }
+    /// <summary>
+    /// Gets the Capability value.
+    /// </summary>
     public string? Capability { get; }
+    /// <summary>
+    /// Gets the Profile value.
+    /// </summary>
     public string? Profile { get; }
+    /// <summary>
+    /// Gets the RequestedProvider value.
+    /// </summary>
     public string? RequestedProvider { get; }
+    /// <summary>
+    /// Gets the RequestedModel value.
+    /// </summary>
     public string? RequestedModel { get; }
+    /// <summary>
+    /// Gets the ResolvedModel value.
+    /// </summary>
     public string? ResolvedModel { get; }
+    /// <summary>
+    /// Gets the ToolCapabilities value.
+    /// </summary>
     public IReadOnlyList<string> ToolCapabilities { get; }
+    /// <summary>
+    /// Gets the InputArtifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> InputArtifacts { get; }
+    /// <summary>
+    /// Gets the OutputArtifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> OutputArtifacts { get; }
+    /// <summary>
+    /// Gets the Candidate value.
+    /// </summary>
     public CandidateRevisionReference? Candidate { get; }
+    /// <summary>
+    /// Optional exact external-operation correlation. When present, the
+    /// provider attempt cannot be combined with another invocation owner.
+    /// </summary>
+    public ExternalOperationCorrelation? ExecutionCorrelation { get; }
     /// <summary>
     /// Provider-reported usage measurements. Values are informational and must
     /// not contain credentials, secrets, or large payloads.
@@ -121,6 +216,9 @@ public sealed record WorkerInvocationEvidence
 /// <summary>A finding emitted by a deterministic validator or reviewer.</summary>
 public sealed record EvidenceFinding
 {
+    /// <summary>
+    /// Initializes a new instance of the EvidenceFinding type.
+    /// </summary>
     public EvidenceFinding(
         string code,
         string severity,
@@ -135,16 +233,34 @@ public sealed record EvidenceFinding
         Details = EvidenceContracts.Properties(details, nameof(details));
     }
 
+    /// <summary>
+    /// Gets the Code value.
+    /// </summary>
     public string Code { get; }
+    /// <summary>
+    /// Gets the Severity value.
+    /// </summary>
     public string Severity { get; }
+    /// <summary>
+    /// Gets the Summary value.
+    /// </summary>
     public string Summary { get; }
+    /// <summary>
+    /// Gets the Resolved value.
+    /// </summary>
     public bool Resolved { get; }
+    /// <summary>
+    /// Gets the Details value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Details { get; }
 }
 
 /// <summary>Normalized deterministic validation evidence for a candidate.</summary>
 public sealed record ValidationEvidence
 {
+    /// <summary>
+    /// Initializes a new instance of the ValidationEvidence type.
+    /// </summary>
     public ValidationEvidence(
         WorkerInvocationEvidence invocation,
         string outcome,
@@ -168,19 +284,46 @@ public sealed record ValidationEvidence
         EvidenceContracts.ValidateCandidate(Candidate, invocation, nameof(candidate));
     }
 
+    /// <summary>
+    /// Gets the Invocation value.
+    /// </summary>
     public WorkerInvocationEvidence Invocation { get; }
+    /// <summary>
+    /// Gets the Outcome value.
+    /// </summary>
     public string Outcome { get; }
+    /// <summary>
+    /// Gets the Validator value.
+    /// </summary>
     public string? Validator { get; }
+    /// <summary>
+    /// Gets the Findings value.
+    /// </summary>
     public IReadOnlyList<EvidenceFinding> Findings { get; }
+    /// <summary>
+    /// Gets the Candidate value.
+    /// </summary>
     public CandidateRevisionReference? Candidate { get; }
 }
 
 /// <summary>The evidence value of one comparison dimension for a review.</summary>
 public enum IndependenceAssessment
 {
+    /// <summary>
+    /// Identifies the Same enum value.
+    /// </summary>
     Same = 0,
+    /// <summary>
+    /// Identifies the Different enum value.
+    /// </summary>
     Different = 1,
+    /// <summary>
+    /// Identifies the Unknown enum value.
+    /// </summary>
     Unknown = 2,
+    /// <summary>
+    /// Identifies the NotApplicable enum value.
+    /// </summary>
     NotApplicable = 3,
 }
 
@@ -190,6 +333,9 @@ public enum IndependenceAssessment
 /// </summary>
 public sealed record ReviewIndependenceEvidence
 {
+    /// <summary>
+    /// Initializes a new instance of the ReviewIndependenceEvidence type.
+    /// </summary>
     public ReviewIndependenceEvidence(
         string implementationInvocationId,
         string reviewInvocationId,
@@ -226,13 +372,37 @@ public sealed record ReviewIndependenceEvidence
         }
     }
 
+    /// <summary>
+    /// Gets the ImplementationInvocationId value.
+    /// </summary>
     public string ImplementationInvocationId { get; }
+    /// <summary>
+    /// Gets the ReviewInvocationId value.
+    /// </summary>
     public string ReviewInvocationId { get; }
+    /// <summary>
+    /// Gets the Invocation value.
+    /// </summary>
     public IndependenceAssessment Invocation { get; }
+    /// <summary>
+    /// Gets the Context value.
+    /// </summary>
     public IndependenceAssessment Context { get; }
+    /// <summary>
+    /// Gets the Profile value.
+    /// </summary>
     public IndependenceAssessment Profile { get; }
+    /// <summary>
+    /// Gets the Model value.
+    /// </summary>
     public IndependenceAssessment Model { get; }
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public IndependenceAssessment Provider { get; }
+    /// <summary>
+    /// Gets the Details value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Details { get; }
 
     private static IndependenceAssessment ValidateAssessment(IndependenceAssessment value, string parameterName)
@@ -249,6 +419,9 @@ public sealed record ReviewIndependenceEvidence
 /// <summary>Normalized review evidence associated with a worker invocation.</summary>
 public sealed record ReviewEvidence
 {
+    /// <summary>
+    /// Initializes a new instance of the ReviewEvidence type.
+    /// </summary>
     public ReviewEvidence(
         WorkerInvocationEvidence invocation,
         string outcome,
@@ -298,11 +471,29 @@ public sealed record ReviewEvidence
         Reviewer = EvidenceContracts.Identifier(reviewer, nameof(reviewer));
     }
 
+    /// <summary>
+    /// Gets the Invocation value.
+    /// </summary>
     public WorkerInvocationEvidence Invocation { get; }
+    /// <summary>
+    /// Gets the Outcome value.
+    /// </summary>
     public string Outcome { get; }
+    /// <summary>
+    /// Gets the Findings value.
+    /// </summary>
     public IReadOnlyList<EvidenceFinding> Findings { get; }
+    /// <summary>
+    /// Gets the Independence value.
+    /// </summary>
     public ReviewIndependenceEvidence Independence { get; }
+    /// <summary>
+    /// Gets the Candidate value.
+    /// </summary>
     public CandidateRevisionReference Candidate { get; }
+    /// <summary>
+    /// Gets the Reviewer value.
+    /// </summary>
     public string Reviewer { get; }
 }
 
@@ -313,6 +504,9 @@ public sealed record ReviewEvidence
 /// </summary>
 public sealed record EvidenceBundle
 {
+    /// <summary>
+    /// Initializes a new instance of the EvidenceBundle type.
+    /// </summary>
     public EvidenceBundle(
         IReadOnlyList<WorkerInvocationEvidence>? invocations = null,
         IReadOnlyList<ValidationEvidence>? validations = null,
@@ -327,14 +521,26 @@ public sealed record EvidenceBundle
         EvidenceContracts.RequireUniqueReviews(Reviews, nameof(reviews));
     }
 
+    /// <summary>
+    /// Gets the Invocations value.
+    /// </summary>
     public IReadOnlyList<WorkerInvocationEvidence> Invocations { get; }
+    /// <summary>
+    /// Gets the Validations value.
+    /// </summary>
     public IReadOnlyList<ValidationEvidence> Validations { get; }
+    /// <summary>
+    /// Gets the Reviews value.
+    /// </summary>
     public IReadOnlyList<ReviewEvidence> Reviews { get; }
 }
 
 /// <summary>Semantic identity comparison for immutable evidence publications.</summary>
 public static class EvidenceBundleIdentity
 {
+    /// <summary>
+    /// Performs the SemanticallyEqual contract operation.
+    /// </summary>
     public static bool SemanticallyEqual(EvidenceBundle? left, EvidenceBundle? right)
     {
         if (ReferenceEquals(left, right))
@@ -355,10 +561,25 @@ public static class EvidenceBundleIdentity
 
 internal static class EvidenceContracts
 {
+    /// <summary>
+    /// Provides the MaximumArtifacts contract constant.
+    /// </summary>
     public const int MaximumArtifacts = 128;
+    /// <summary>
+    /// Provides the MaximumFindings contract constant.
+    /// </summary>
     public const int MaximumFindings = 128;
+    /// <summary>
+    /// Provides the MaximumProperties contract constant.
+    /// </summary>
     public const int MaximumProperties = 64;
+    /// <summary>
+    /// Provides the MaximumSummaryLength contract constant.
+    /// </summary>
     public const int MaximumSummaryLength = 8_192;
+    /// <summary>
+    /// Provides the MaximumPropertyValueLength contract constant.
+    /// </summary>
     public const int MaximumPropertyValueLength = 16_384;
 
     public static readonly IEqualityComparer<WorkerInvocationEvidence> InvocationComparer =
@@ -368,18 +589,33 @@ internal static class EvidenceContracts
     public static readonly IEqualityComparer<ReviewEvidence> ReviewComparer =
         new DelegateComparer<ReviewEvidence>(ReviewEqual);
 
+    /// <summary>
+    /// Performs the Name contract operation.
+    /// </summary>
     public static string Name(string? value, string parameterName) =>
         ArtifactContracts.Version(value, parameterName);
 
+    /// <summary>
+    /// Performs the OptionalName contract operation.
+    /// </summary>
     public static string? OptionalName(string? value, string parameterName) =>
         value is null ? null : Name(value, parameterName);
 
+    /// <summary>
+    /// Performs the Identifier contract operation.
+    /// </summary>
     public static string Identifier(string? value, string parameterName) =>
         IdentityText.Require(value, parameterName, 512);
 
+    /// <summary>
+    /// Performs the OptionalIdentifier contract operation.
+    /// </summary>
     public static string? OptionalIdentifier(string? value, string parameterName) =>
         value is null ? null : Identifier(value, parameterName);
 
+    /// <summary>
+    /// Performs the Names contract operation.
+    /// </summary>
     public static IReadOnlyList<string> Names(IReadOnlyList<string> values, string parameterName)
     {
         ArgumentNullException.ThrowIfNull(values, parameterName);
@@ -397,10 +633,15 @@ internal static class EvidenceContracts
         return Array.AsReadOnly(result);
     }
 
+    /// <summary>
+    /// Performs the Artifacts contract operation.
+    /// </summary>
     public static IReadOnlyList<DelegationArtifactReference> Artifacts(
         IReadOnlyList<DelegationArtifactReference> values,
         DelegationId delegationId,
-        string parameterName)
+        string parameterName,
+        StructuralNodeReference? expectedNode = null,
+        NodeGenerationId? expectedGeneration = null)
     {
         ArgumentNullException.ThrowIfNull(values, parameterName);
         if (values.Count > MaximumArtifacts)
@@ -412,7 +653,7 @@ internal static class EvidenceContracts
         var identities = new HashSet<(string Provider, string Repository, string ArtifactId)>();
         foreach (var artifact in result)
         {
-            ArtifactContracts.ValidateArtifact(artifact, delegationId);
+            ArtifactContracts.ValidateArtifact(artifact, delegationId, expectedNode, expectedGeneration);
             if (!identities.Add((artifact.Provider, artifact.Repository, artifact.ArtifactId)))
             {
                 throw new ArgumentException("Evidence cannot contain duplicate artifact identities.", parameterName);
@@ -422,6 +663,9 @@ internal static class EvidenceContracts
         return Array.AsReadOnly(result);
     }
 
+    /// <summary>
+    /// Performs the Findings contract operation.
+    /// </summary>
     public static IReadOnlyList<EvidenceFinding> Findings(
         IReadOnlyList<EvidenceFinding> values,
         string parameterName)
@@ -465,6 +709,9 @@ internal static class EvidenceContracts
         return Array.AsReadOnly(result);
     }
 
+    /// <summary>
+    /// Performs the RequireUniqueInvocations contract operation.
+    /// </summary>
     public static void RequireUniqueInvocations(
         IReadOnlyList<WorkerInvocationEvidence> values,
         string parameterName)
@@ -481,6 +728,9 @@ internal static class EvidenceContracts
         }
     }
 
+    /// <summary>
+    /// Performs the RequireUniqueValidations contract operation.
+    /// </summary>
     public static void RequireUniqueValidations(
         IReadOnlyList<ValidationEvidence> values,
         string parameterName)
@@ -497,6 +747,9 @@ internal static class EvidenceContracts
         }
     }
 
+    /// <summary>
+    /// Performs the RequireUniqueReviews contract operation.
+    /// </summary>
     public static void RequireUniqueReviews(
         IReadOnlyList<ReviewEvidence> values,
         string parameterName)
@@ -513,6 +766,9 @@ internal static class EvidenceContracts
         }
     }
 
+    /// <summary>
+    /// Performs the Properties contract operation.
+    /// </summary>
     public static IReadOnlyDictionary<string, string> Properties(
         IReadOnlyDictionary<string, string>? values,
         string parameterName)
@@ -541,6 +797,9 @@ internal static class EvidenceContracts
         return ReadOnlyProperties(result);
     }
 
+    /// <summary>
+    /// Performs the ValidateCandidate contract operation.
+    /// </summary>
     public static void ValidateCandidate(
         CandidateRevisionReference? candidate,
         WorkerInvocationEvidence invocation,
@@ -569,6 +828,9 @@ internal static class EvidenceContracts
         }
     }
 
+    /// <summary>
+    /// Performs the ValidateBundle contract operation.
+    /// </summary>
     public static void ValidateBundle(
         EvidenceBundle? bundle,
         CandidateRevisionReference candidate,
@@ -616,6 +878,9 @@ internal static class EvidenceContracts
         }
     }
 
+    /// <summary>
+    /// Performs the ValidateBundleForDelegation contract operation.
+    /// </summary>
     public static void ValidateBundleForDelegation(
         EvidenceBundle? bundle,
         DelegationId delegationId,
@@ -687,6 +952,7 @@ internal static class EvidenceContracts
         && left.ToolCapabilities.SequenceEqual(right.ToolCapabilities, StringComparer.Ordinal)
         && left.InputArtifacts.SequenceEqual(right.InputArtifacts)
         && left.OutputArtifacts.SequenceEqual(right.OutputArtifacts)
+        && CorrelationEqual(left.ExecutionCorrelation, right.ExecutionCorrelation)
         && CandidateRevisionIdentity.SubjectEqual(left.Candidate, right.Candidate)
         && PropertiesEqual(left.Usage, right.Usage)
         && PropertiesEqual(left.ProviderData, right.ProviderData);
@@ -731,9 +997,29 @@ internal static class EvidenceContracts
         && left.All(pair => right.TryGetValue(pair.Key, out var value)
             && string.Equals(pair.Value, value, StringComparison.Ordinal));
 
+    private static bool CorrelationEqual(
+        ExternalOperationCorrelation? left,
+        ExternalOperationCorrelation? right) =>
+        ReferenceEquals(left, right)
+        || (left is not null
+            && right is not null
+            && left.DelegationId == right.DelegationId
+            && left.WorkflowRun == right.WorkflowRun
+            && left.StructuralNode == right.StructuralNode
+            && left.NodeGeneration == right.NodeGeneration
+            && string.Equals(left.ExecutionAttemptId, right.ExecutionAttemptId, StringComparison.Ordinal)
+            && left.Agent == right.Agent
+            && left.Task == right.Task);
+
     private sealed class DelegateComparer<T>(Func<T, T, bool> equals) : IEqualityComparer<T>
     {
+        /// <summary>
+        /// Performs the Equals contract operation.
+        /// </summary>
         public bool Equals(T? x, T? y) => x is not null && y is not null && equals(x, y);
+        /// <summary>
+        /// Performs the GetHashCode contract operation.
+        /// </summary>
         public int GetHashCode(T obj) => throw new NotSupportedException("Evidence identity does not use hash-based comparisons.");
     }
 

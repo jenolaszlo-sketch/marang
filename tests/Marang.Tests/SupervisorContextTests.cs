@@ -102,6 +102,33 @@ public sealed class SupervisorContextTests
     }
 
     [Fact]
+    public void Package_rejects_artifacts_owned_by_another_delegation_at_construction()
+    {
+        var foreignArtifact = new DelegationArtifactReference(
+            new DelegationId(Id(2)),
+            new StructuralNodeReference("node"),
+            new NodeGenerationId(Id(11)),
+            "provider",
+            "repository",
+            "foreign-artifact",
+            "text",
+            1,
+            "artifact-location",
+            ArtifactContentIdentity.Sha256Bytes(Hash));
+
+        var act = () => CreatePackage(
+            artifacts: [foreignArtifact],
+            requestedFacets: SupervisorContextFacet.Status | SupervisorContextFacet.Artifacts,
+            facetOutcomes:
+            [
+                new ContextFacetOutcome(SupervisorContextFacet.Status, ContextFacetAvailability.Included, 0),
+                new ContextFacetOutcome(SupervisorContextFacet.Artifacts, ContextFacetAvailability.Included, 1),
+            ]);
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
     public async Task Provider_boundary_is_async_authorized_and_cancellation_aware()
     {
         var provider = new FakeContextProvider();

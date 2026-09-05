@@ -1,0 +1,764 @@
+#nullable enable
+abstract Marang.SupervisorAction.Kind.get -> string!
+abstract Marang.SupervisorAction.Validate() -> void
+const Marang.ArtifactContentIdentity.Sha256BytesV1 = "sha256-bytes-v1" -> string!
+const Marang.BudgetConsumptionReceipt.MaximumCharges = 32 -> int
+const Marang.BudgetConsumptionSnapshot.MaximumReceipts = 4096 -> int
+const Marang.BudgetDefinition.CurrentVersion = "budget-v1" -> string!
+const Marang.BudgetDefinition.MaximumLimits = 32 -> int
+const Marang.BudgetQuantity.MaximumValue = 9000000000000000 -> long
+const Marang.CapabilityDescriptor.MaximumAttributes = 32 -> int
+const Marang.EvidenceKinds.AgentExecution = "agent.execution" -> string!
+const Marang.EvidenceKinds.DeterministicExecution = "deterministic.execution" -> string!
+const Marang.EvidenceKinds.ModelExecution = "model.execution" -> string!
+const Marang.EvidenceKinds.Review = "review.report" -> string!
+const Marang.EvidenceKinds.Validation = "validation.report" -> string!
+const Marang.ExternalOperationProvenanceSnapshot.CurrentSchemaVersion = "v1" -> string!
+const Marang.ExternalOperationSemanticInputEnvelope.CurrentVersion = "external-start-semantics-v1" -> string!
+const Marang.ModelProvenanceSnapshot.CurrentSchemaVersion = "v1" -> string!
+const Marang.ProviderHints.MaximumPreferredModels = 16 -> int
+const Marang.ProviderHints.MaximumPreferredProviders = 16 -> int
+const Marang.ToolProvenanceSnapshot.CurrentSchemaVersion = "v1" -> string!
+const Marang.UsageProvenanceSnapshot.CurrentSchemaVersion = "v1" -> string!
+Marang.ArtifactContentIdentity
+Marang.ArtifactContentIdentity.ArtifactContentIdentity() -> void
+Marang.ArtifactContentIdentity.ArtifactContentIdentity(string! contractVersion, string! hash) -> void
+Marang.ArtifactContentIdentity.ContractVersion.get -> string!
+Marang.ArtifactContentIdentity.Hash.get -> string!
+Marang.ArtifactContentIdentity.Validate() -> void
+Marang.BudgetAccounting
+Marang.BudgetCharge
+Marang.BudgetCharge.Amount.get -> Marang.BudgetQuantity
+Marang.BudgetCharge.BudgetCharge(string! dimension, Marang.BudgetQuantity amount) -> void
+Marang.BudgetCharge.Dimension.get -> string!
+Marang.BudgetConsumptionDecision
+Marang.BudgetConsumptionDecision.Accepted.get -> bool
+Marang.BudgetConsumptionDecision.BudgetConsumptionDecision(Marang.BudgetConsumptionSnapshot! Snapshot, Marang.BudgetExceededOutcome? Exceeded) -> void
+Marang.BudgetConsumptionDecision.Exceeded.get -> Marang.BudgetExceededOutcome?
+Marang.BudgetConsumptionDecision.Exceeded.init -> void
+Marang.BudgetConsumptionDecision.Snapshot.get -> Marang.BudgetConsumptionSnapshot!
+Marang.BudgetConsumptionDecision.Snapshot.init -> void
+Marang.BudgetConsumptionReceipt
+Marang.BudgetConsumptionReceipt.BudgetConsumptionReceipt(Marang.DelegationId delegationId, System.Guid receiptId, string! definitionVersion, long sequence, System.DateTimeOffset recordedAt, System.Collections.Generic.IReadOnlyList<Marang.BudgetCharge!>! charges) -> void
+Marang.BudgetConsumptionReceipt.Charges.get -> System.Collections.Generic.IReadOnlyList<Marang.BudgetCharge!>!
+Marang.BudgetConsumptionReceipt.DefinitionVersion.get -> string!
+Marang.BudgetConsumptionReceipt.DelegationId.get -> Marang.DelegationId
+Marang.BudgetConsumptionReceipt.ReceiptId.get -> System.Guid
+Marang.BudgetConsumptionReceipt.RecordedAt.get -> System.DateTimeOffset
+Marang.BudgetConsumptionReceipt.Sequence.get -> long
+Marang.BudgetConsumptionReceipt.Validate() -> void
+Marang.BudgetConsumptionSnapshot
+Marang.BudgetConsumptionSnapshot.BudgetConsumptionSnapshot(Marang.DelegationId delegationId, string! definitionVersion, long lastSequence, System.Collections.Generic.IReadOnlyList<Marang.BudgetCharge!>? charges = null, int receiptCount = 0, System.Collections.Generic.IReadOnlyList<System.Guid>? receiptIds = null) -> void
+Marang.BudgetConsumptionSnapshot.Charges.get -> System.Collections.Generic.IReadOnlyList<Marang.BudgetCharge!>!
+Marang.BudgetConsumptionSnapshot.DefinitionVersion.get -> string!
+Marang.BudgetConsumptionSnapshot.DelegationId.get -> Marang.DelegationId
+Marang.BudgetConsumptionSnapshot.LastSequence.get -> long
+Marang.BudgetConsumptionSnapshot.ReceiptCount.get -> int
+Marang.BudgetConsumptionSnapshot.ReceiptIds.get -> System.Collections.Generic.IReadOnlyList<System.Guid>!
+Marang.BudgetConsumptionSnapshot.Validate() -> void
+Marang.BudgetDefinition
+Marang.BudgetDefinition.BudgetDefinition(string! version, System.Collections.Generic.IReadOnlyList<Marang.BudgetLimit!>! limits) -> void
+Marang.BudgetDefinition.Limits.get -> System.Collections.Generic.IReadOnlyList<Marang.BudgetLimit!>!
+Marang.BudgetDefinition.TryGetLimit(string! dimension, out Marang.BudgetLimit? limit) -> bool
+Marang.BudgetDefinition.Validate() -> void
+Marang.BudgetDefinition.Version.get -> string!
+Marang.BudgetExceededOutcome
+Marang.BudgetExceededOutcome.BudgetExceededOutcome(Marang.DelegationId delegationId, string! definitionVersion, Marang.BudgetCharge! charge, Marang.BudgetQuantity limit, Marang.BudgetQuantity consumed, System.Guid triggeringReceiptId, string! reason, System.DateTimeOffset recordedAt) -> void
+Marang.BudgetExceededOutcome.Charge.get -> Marang.BudgetCharge!
+Marang.BudgetExceededOutcome.Consumed.get -> Marang.BudgetQuantity
+Marang.BudgetExceededOutcome.DefinitionVersion.get -> string!
+Marang.BudgetExceededOutcome.DelegationId.get -> Marang.DelegationId
+Marang.BudgetExceededOutcome.Limit.get -> Marang.BudgetQuantity
+Marang.BudgetExceededOutcome.Reason.get -> string!
+Marang.BudgetExceededOutcome.RecordedAt.get -> System.DateTimeOffset
+Marang.BudgetExceededOutcome.TriggeringReceiptId.get -> System.Guid
+Marang.BudgetLimit
+Marang.BudgetLimit.BudgetLimit(string! dimension, Marang.BudgetQuantity maximum) -> void
+Marang.BudgetLimit.Dimension.get -> string!
+Marang.BudgetLimit.Maximum.get -> Marang.BudgetQuantity
+Marang.BudgetQuantity
+Marang.BudgetQuantity.BudgetQuantity() -> void
+Marang.BudgetQuantity.BudgetQuantity(Marang.BudgetQuantityKind kind, long value, string? currency = null) -> void
+Marang.BudgetQuantity.Currency.get -> string?
+Marang.BudgetQuantity.Kind.get -> Marang.BudgetQuantityKind
+Marang.BudgetQuantity.Validate() -> void
+Marang.BudgetQuantity.Value.get -> long
+Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.Count = 0 -> Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.MicroCredits = 3 -> Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.Milliseconds = 1 -> Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.MinorCurrencyUnits = 4 -> Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.TimeSpanTicks = 5 -> Marang.BudgetQuantityKind
+Marang.BudgetQuantityKind.Tokens = 2 -> Marang.BudgetQuantityKind
+Marang.CandidateId
+Marang.CandidateId.CandidateId() -> void
+Marang.CandidateId.CandidateId(System.Guid value) -> void
+Marang.CandidateId.Validate() -> void
+Marang.CandidateId.Value.get -> System.Guid
+Marang.CandidateRevisionConflictException
+Marang.CandidateRevisionConflictException.CandidateRevisionConflictException(string! message) -> void
+Marang.CandidateRevisionIdentity
+Marang.CandidateRevisionPublication
+Marang.CandidateRevisionPublication.Candidate.get -> Marang.CandidateRevisionReference!
+Marang.CandidateRevisionPublication.Candidate.init -> void
+Marang.CandidateRevisionPublication.CandidateRevisionPublication(Marang.CandidateRevisionReference! Candidate, bool IsNew) -> void
+Marang.CandidateRevisionPublication.IsNew.get -> bool
+Marang.CandidateRevisionPublication.IsNew.init -> void
+Marang.CandidateRevisionReference
+Marang.CandidateRevisionReference.Artifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.CandidateRevisionReference.CandidateId.get -> Marang.CandidateId
+Marang.CandidateRevisionReference.CandidateRevisionReference(Marang.DelegationId delegationId, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, Marang.CandidateId candidateId, int revision, Marang.ArtifactContentIdentity contentIdentity, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! artifacts, Marang.EvidenceBundle? evidence = null) -> void
+Marang.CandidateRevisionReference.ContentIdentity.get -> Marang.ArtifactContentIdentity
+Marang.CandidateRevisionReference.DelegationId.get -> Marang.DelegationId
+Marang.CandidateRevisionReference.Evidence.get -> Marang.EvidenceBundle?
+Marang.CandidateRevisionReference.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.CandidateRevisionReference.Revision.get -> int
+Marang.CandidateRevisionReference.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.CapabilityDescriptor
+Marang.CapabilityDescriptor.Attributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.CapabilityDescriptor.CapabilityDescriptor(string! name, int version, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? attributes = null) -> void
+Marang.CapabilityDescriptor.Name.get -> string!
+Marang.CapabilityDescriptor.Version.get -> int
+Marang.CapabilityRequirement
+Marang.CapabilityRequirement.Attributes.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.CapabilityRequirement.CapabilityRequirement(string! name, int minimumVersion, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? attributes = null) -> void
+Marang.CapabilityRequirement.MinimumVersion.get -> int
+Marang.CapabilityRequirement.Name.get -> string!
+Marang.ContextCorrelationReference
+Marang.ContextCorrelationReference.ContextCorrelationReference(string! provider, string! kind, string! identifier, string? revision = null) -> void
+Marang.ContextCorrelationReference.Identifier.get -> string!
+Marang.ContextCorrelationReference.Kind.get -> string!
+Marang.ContextCorrelationReference.Provider.get -> string!
+Marang.ContextCorrelationReference.Revision.get -> string?
+Marang.ContextFacetAvailability
+Marang.ContextFacetAvailability.Included = 0 -> Marang.ContextFacetAvailability
+Marang.ContextFacetAvailability.Omitted = 2 -> Marang.ContextFacetAvailability
+Marang.ContextFacetAvailability.Truncated = 1 -> Marang.ContextFacetAvailability
+Marang.ContextFacetOutcome
+Marang.ContextFacetOutcome.Availability.get -> Marang.ContextFacetAvailability
+Marang.ContextFacetOutcome.ContextFacetOutcome(Marang.SupervisorContextFacet facet, Marang.ContextFacetAvailability availability, int itemCount, string? reason = null) -> void
+Marang.ContextFacetOutcome.Facet.get -> Marang.SupervisorContextFacet
+Marang.ContextFacetOutcome.ItemCount.get -> int
+Marang.ContextFacetOutcome.Reason.get -> string?
+Marang.ContextProvenanceReference
+Marang.ContextProvenanceReference.ContentHash.get -> string?
+Marang.ContextProvenanceReference.ContextProvenanceReference(string! provider, string! kind, string! identifier, string? revision = null, string? contentHash = null) -> void
+Marang.ContextProvenanceReference.Identifier.get -> string!
+Marang.ContextProvenanceReference.Kind.get -> string!
+Marang.ContextProvenanceReference.Provider.get -> string!
+Marang.ContextProvenanceReference.Revision.get -> string?
+Marang.DelegationArtifactReference
+Marang.DelegationArtifactReference.ArtifactId.get -> string!
+Marang.DelegationArtifactReference.ContentIdentity.get -> Marang.ArtifactContentIdentity
+Marang.DelegationArtifactReference.DelegationArtifactReference(Marang.DelegationId delegationId, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, string! provider, string! repository, string! artifactId, string! kind, int schemaVersion, string! location, Marang.ArtifactContentIdentity contentIdentity) -> void
+Marang.DelegationArtifactReference.DelegationId.get -> Marang.DelegationId
+Marang.DelegationArtifactReference.Kind.get -> string!
+Marang.DelegationArtifactReference.Location.get -> string!
+Marang.DelegationArtifactReference.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.DelegationArtifactReference.Provider.get -> string!
+Marang.DelegationArtifactReference.Repository.get -> string!
+Marang.DelegationArtifactReference.SchemaVersion.get -> int
+Marang.DelegationArtifactReference.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.DelegationBudget
+Marang.DelegationBudget.DelegationBudget(int MaximumWorkerCalls = 8, int MaximumRetries = 1, System.TimeSpan? MaximumDuration = null, int MaximumParallelWorkers = 2) -> void
+Marang.DelegationBudget.MaximumDuration.get -> System.TimeSpan?
+Marang.DelegationBudget.MaximumDuration.init -> void
+Marang.DelegationBudget.MaximumParallelWorkers.get -> int
+Marang.DelegationBudget.MaximumParallelWorkers.init -> void
+Marang.DelegationBudget.MaximumRetries.get -> int
+Marang.DelegationBudget.MaximumRetries.init -> void
+Marang.DelegationBudget.MaximumWorkerCalls.get -> int
+Marang.DelegationBudget.MaximumWorkerCalls.init -> void
+Marang.DelegationBudget.Validate() -> void
+Marang.DelegationCallerScope
+Marang.DelegationCallerScope.DelegationCallerScope(string! identifier) -> void
+Marang.DelegationCallerScope.Identifier.get -> string!
+Marang.DelegationEvidence
+Marang.DelegationEvidence.ChangedFiles.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationEvidence.Commands.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationEvidence.DelegationEvidence(System.Collections.Generic.IReadOnlyList<string!>! changedFiles, System.Collections.Generic.IReadOnlyList<string!>! commands, int testsPassed, int testsFailed, bool? reviewApproved, int reviewFindingsResolved) -> void
+Marang.DelegationEvidence.ReviewApproved.get -> bool?
+Marang.DelegationEvidence.ReviewFindingsResolved.get -> int
+Marang.DelegationEvidence.TestsFailed.get -> int
+Marang.DelegationEvidence.TestsPassed.get -> int
+Marang.DelegationHandle
+Marang.DelegationHandle.DelegationHandle(Marang.DelegationId DelegationId, Marang.WorkflowReference! Workflow, Marang.DelegationState State) -> void
+Marang.DelegationHandle.DelegationId.get -> Marang.DelegationId
+Marang.DelegationHandle.DelegationId.init -> void
+Marang.DelegationHandle.State.get -> Marang.DelegationState
+Marang.DelegationHandle.State.init -> void
+Marang.DelegationHandle.Workflow.get -> Marang.WorkflowReference!
+Marang.DelegationHandle.Workflow.init -> void
+Marang.DelegationId
+Marang.DelegationId.DelegationId() -> void
+Marang.DelegationId.DelegationId(System.Guid Value) -> void
+Marang.DelegationId.Value.get -> System.Guid
+Marang.DelegationId.Value.init -> void
+Marang.DelegationProgress
+Marang.DelegationProgress.Checkpoint.get -> Marang.SupervisorCheckpointDescriptor?
+Marang.DelegationProgress.CompletedSteps.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationProgress.CurrentSteps.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationProgress.DelegationId.get -> Marang.DelegationId
+Marang.DelegationProgress.DelegationProgress(Marang.DelegationId delegationId, Marang.DelegationState state, long revision, System.Collections.Generic.IReadOnlyList<string!>! currentSteps, System.Collections.Generic.IReadOnlyList<string!>! completedSteps, int workerCalls, int retries, System.DateTimeOffset updatedAt, Marang.SupervisorCheckpointDescriptor? checkpoint = null) -> void
+Marang.DelegationProgress.Retries.get -> int
+Marang.DelegationProgress.Revision.get -> long
+Marang.DelegationProgress.State.get -> Marang.DelegationState
+Marang.DelegationProgress.UpdatedAt.get -> System.DateTimeOffset
+Marang.DelegationProgress.WorkerCalls.get -> int
+Marang.DelegationRequest
+Marang.DelegationRequest.AcceptanceCriteria.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationRequest.Budget.get -> Marang.DelegationBudget!
+Marang.DelegationRequest.Constraints.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationRequest.DelegationRequest(string! requestKey, string! objective, Marang.WorkspaceReference! workspace, System.Collections.Generic.IReadOnlyList<string!>! acceptanceCriteria, System.Collections.Generic.IReadOnlyList<string!>! constraints, Marang.DelegationBudget! budget, Marang.DelegationStrategy strategy = Marang.DelegationStrategy.Implement, Marang.WorkflowPlanRevisionReference? planRevision = null) -> void
+Marang.DelegationRequest.Objective.get -> string!
+Marang.DelegationRequest.PlanRevision.get -> Marang.WorkflowPlanRevisionReference?
+Marang.DelegationRequest.RequestKey.get -> string!
+Marang.DelegationRequest.Strategy.get -> Marang.DelegationStrategy
+Marang.DelegationRequest.Workspace.get -> Marang.WorkspaceReference!
+Marang.DelegationResult
+Marang.DelegationResult.Artifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.DelegationResult.BudgetExceeded.get -> Marang.BudgetExceededOutcome?
+Marang.DelegationResult.CompletedAt.get -> System.DateTimeOffset
+Marang.DelegationResult.DelegationId.get -> Marang.DelegationId
+Marang.DelegationResult.DelegationResult(Marang.DelegationId delegationId, Marang.DelegationState state, string! summary, Marang.DelegationEvidence! evidence, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! artifacts, System.Collections.Generic.IReadOnlyList<string!>! unresolvedConcerns, System.DateTimeOffset completedAt, Marang.EvidenceBundle? normalizedEvidence = null, Marang.BudgetExceededOutcome? budgetExceeded = null) -> void
+Marang.DelegationResult.Evidence.get -> Marang.DelegationEvidence!
+Marang.DelegationResult.NormalizedEvidence.get -> Marang.EvidenceBundle?
+Marang.DelegationResult.State.get -> Marang.DelegationState
+Marang.DelegationResult.Summary.get -> string!
+Marang.DelegationResult.UnresolvedConcerns.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.DelegationResultId
+Marang.DelegationResultId.DelegationResultId() -> void
+Marang.DelegationResultId.DelegationResultId(System.Guid value) -> void
+Marang.DelegationResultId.Validate() -> void
+Marang.DelegationResultId.Value.get -> System.Guid
+Marang.DelegationResultReference
+Marang.DelegationResultReference.Artifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.DelegationResultReference.Candidate.get -> Marang.CandidateRevisionReference!
+Marang.DelegationResultReference.DelegationId.get -> Marang.DelegationId
+Marang.DelegationResultReference.DelegationResultReference(Marang.DelegationId delegationId, Marang.DelegationResultId resultId, Marang.CandidateRevisionReference! candidate, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! artifacts, Marang.EvidenceBundle? evidence = null) -> void
+Marang.DelegationResultReference.Evidence.get -> Marang.EvidenceBundle?
+Marang.DelegationResultReference.ResultId.get -> Marang.DelegationResultId
+Marang.DelegationState
+Marang.DelegationState.BudgetExceeded = 5 -> Marang.DelegationState
+Marang.DelegationState.Cancelled = 4 -> Marang.DelegationState
+Marang.DelegationState.Completed = 2 -> Marang.DelegationState
+Marang.DelegationState.Failed = 3 -> Marang.DelegationState
+Marang.DelegationState.NeedsSupervisor = 6 -> Marang.DelegationState
+Marang.DelegationState.Queued = 0 -> Marang.DelegationState
+Marang.DelegationState.Running = 1 -> Marang.DelegationState
+Marang.DelegationState.WaitingForSupervisor = 7 -> Marang.DelegationState
+Marang.DelegationStrategy
+Marang.DelegationStrategy.Fix = 3 -> Marang.DelegationStrategy
+Marang.DelegationStrategy.Implement = 0 -> Marang.DelegationStrategy
+Marang.DelegationStrategy.Investigate = 1 -> Marang.DelegationStrategy
+Marang.DelegationStrategy.Review = 2 -> Marang.DelegationStrategy
+Marang.EvidenceBundle
+Marang.EvidenceBundle.EvidenceBundle(System.Collections.Generic.IReadOnlyList<Marang.WorkerInvocationEvidence!>? invocations = null, System.Collections.Generic.IReadOnlyList<Marang.ValidationEvidence!>? validations = null, System.Collections.Generic.IReadOnlyList<Marang.ReviewEvidence!>? reviews = null) -> void
+Marang.EvidenceBundle.Invocations.get -> System.Collections.Generic.IReadOnlyList<Marang.WorkerInvocationEvidence!>!
+Marang.EvidenceBundle.Reviews.get -> System.Collections.Generic.IReadOnlyList<Marang.ReviewEvidence!>!
+Marang.EvidenceBundle.Validations.get -> System.Collections.Generic.IReadOnlyList<Marang.ValidationEvidence!>!
+Marang.EvidenceBundleIdentity
+Marang.EvidenceFinding
+Marang.EvidenceFinding.Code.get -> string!
+Marang.EvidenceFinding.Details.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.EvidenceFinding.EvidenceFinding(string! code, string! severity, string! summary, bool resolved, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? details = null) -> void
+Marang.EvidenceFinding.Resolved.get -> bool
+Marang.EvidenceFinding.Severity.get -> string!
+Marang.EvidenceFinding.Summary.get -> string!
+Marang.EvidenceKinds
+Marang.ExecutionIdentityRules
+Marang.ExecutorProfileReference
+Marang.ExecutorProfileReference.ExecutorProfileReference(string! provider, string! profile) -> void
+Marang.ExecutorProfileReference.Profile.get -> string!
+Marang.ExecutorProfileReference.Provider.get -> string!
+Marang.ExecutorProfileReference.Validate() -> void
+Marang.ExternalAgentReference
+Marang.ExternalAgentReference.ExternalAgentReference(string! provider, string! identifier, string! protocolVersion) -> void
+Marang.ExternalAgentReference.Identifier.get -> string!
+Marang.ExternalAgentReference.ProtocolVersion.get -> string!
+Marang.ExternalAgentReference.Provider.get -> string!
+Marang.ExternalAgentReference.Validate() -> void
+Marang.ExternalOperationBudgetHint
+Marang.ExternalOperationBudgetHint.ExternalOperationBudgetHint(int? maximumTokens = null, System.TimeSpan? maximumDuration = null) -> void
+Marang.ExternalOperationBudgetHint.MaximumDuration.get -> System.TimeSpan?
+Marang.ExternalOperationBudgetHint.MaximumTokens.get -> int?
+Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationDisposition.AlreadyTerminal = 2 -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationDisposition.ConfirmedCancelled = 1 -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationDisposition.Rejected = 3 -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationDisposition.Requested = 0 -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationDisposition.Unknown = 4 -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationReceipt
+Marang.ExternalOperationCancellationReceipt.CancellationKey.get -> string!
+Marang.ExternalOperationCancellationReceipt.Disposition.get -> Marang.ExternalOperationCancellationDisposition
+Marang.ExternalOperationCancellationReceipt.ExternalOperationCancellationReceipt(Marang.ExternalOperationHandle! handle, string! cancellationKey, Marang.ExternalOperationCancellationDisposition disposition, Marang.ExternalOperationState state, System.DateTimeOffset recordedAt, Marang.ExternalOperationFailure? failure = null) -> void
+Marang.ExternalOperationCancellationReceipt.Failure.get -> Marang.ExternalOperationFailure?
+Marang.ExternalOperationCancellationReceipt.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationCancellationReceipt.RecordedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationCancellationReceipt.State.get -> Marang.ExternalOperationState
+Marang.ExternalOperationCancelRequest
+Marang.ExternalOperationCancelRequest.CancellationKey.get -> string!
+Marang.ExternalOperationCancelRequest.ExternalOperationCancelRequest(Marang.ExternalOperationHandle! handle, string! cancellationKey, string! reason) -> void
+Marang.ExternalOperationCancelRequest.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationCancelRequest.Reason.get -> string!
+Marang.ExternalOperationCorrelation
+Marang.ExternalOperationCorrelation.Agent.get -> Marang.ExternalAgentReference!
+Marang.ExternalOperationCorrelation.DelegationId.get -> Marang.DelegationId
+Marang.ExternalOperationCorrelation.EnsureTaskCaptured() -> void
+Marang.ExternalOperationCorrelation.ExecutionAttemptId.get -> string!
+Marang.ExternalOperationCorrelation.ExternalOperationCorrelation(Marang.DelegationId delegationId, Marang.WorkflowRunExecutionReference! workflowRun, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, string! executionAttemptId, Marang.ExternalAgentReference! agent, Marang.ExternalTaskReference? task = null) -> void
+Marang.ExternalOperationCorrelation.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.ExternalOperationCorrelation.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.ExternalOperationCorrelation.Task.get -> Marang.ExternalTaskReference?
+Marang.ExternalOperationCorrelation.Validate() -> void
+Marang.ExternalOperationCorrelation.WorkflowRun.get -> Marang.WorkflowRunExecutionReference!
+Marang.ExternalOperationFailure
+Marang.ExternalOperationFailure.Code.get -> string!
+Marang.ExternalOperationFailure.ExternalOperationFailure(Marang.ExternalOperationFailureKind kind, string! code, string! summary, bool retryable, string? providerCode = null) -> void
+Marang.ExternalOperationFailure.Kind.get -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailure.ProviderCode.get -> string?
+Marang.ExternalOperationFailure.Retryable.get -> bool
+Marang.ExternalOperationFailure.Summary.get -> string!
+Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.Cancellation = 2 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.Rejection = 4 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.Remote = 1 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.ResultValidation = 5 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.Timeout = 3 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationFailureKind.Transport = 0 -> Marang.ExternalOperationFailureKind
+Marang.ExternalOperationHandle
+Marang.ExternalOperationHandle.Correlation.get -> Marang.ExternalOperationCorrelation!
+Marang.ExternalOperationHandle.ExternalOperationHandle(string! provider, string! value, string! protocolVersion, Marang.ExternalOperationCorrelation! correlation) -> void
+Marang.ExternalOperationHandle.ProtocolVersion.get -> string!
+Marang.ExternalOperationHandle.Provider.get -> string!
+Marang.ExternalOperationHandle.ToProviderAttemptReference() -> Marang.ProviderExecutionAttemptReference!
+Marang.ExternalOperationHandle.Validate() -> void
+Marang.ExternalOperationHandle.Value.get -> string!
+Marang.ExternalOperationHandleCapture
+Marang.ExternalOperationHandleCapture.CapturedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationHandleCapture.ExternalOperationHandleCapture(Marang.ExternalOperationHandle! handle, System.DateTimeOffset capturedAt) -> void
+Marang.ExternalOperationHandleCapture.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationObservation
+Marang.ExternalOperationObservation.ExternalOperationObservation(Marang.ExternalOperationHandle! handle, long revision, Marang.ExternalOperationState state, System.DateTimeOffset observedAt, string? providerStatus = null, Marang.ExternalOperationFailure? failure = null, bool resultAvailable = false) -> void
+Marang.ExternalOperationObservation.Failure.get -> Marang.ExternalOperationFailure?
+Marang.ExternalOperationObservation.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationObservation.ObservedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationObservation.ProviderStatus.get -> string?
+Marang.ExternalOperationObservation.ResultAvailable.get -> bool
+Marang.ExternalOperationObservation.Revision.get -> long
+Marang.ExternalOperationObservation.State.get -> Marang.ExternalOperationState
+Marang.ExternalOperationObservationRules
+Marang.ExternalOperationProvenanceSnapshot
+Marang.ExternalOperationProvenanceSnapshot.ExternalOperationProvenanceSnapshot(Marang.ModelProvenanceSnapshot? model, Marang.ToolProvenanceSnapshot! tools, Marang.UsageProvenanceSnapshot! usage, string! schemaVersion = "v1") -> void
+Marang.ExternalOperationProvenanceSnapshot.Model.get -> Marang.ModelProvenanceSnapshot?
+Marang.ExternalOperationProvenanceSnapshot.SchemaVersion.get -> string!
+Marang.ExternalOperationProvenanceSnapshot.Tools.get -> Marang.ToolProvenanceSnapshot!
+Marang.ExternalOperationProvenanceSnapshot.Usage.get -> Marang.UsageProvenanceSnapshot!
+Marang.ExternalOperationResult
+Marang.ExternalOperationResult.Artifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.ExternalOperationResult.CompletedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationResult.ExternalOperationResult(Marang.ExternalOperationHandle! handle, Marang.ExternalOperationState state, System.DateTimeOffset completedAt, string! summary, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! artifacts, Marang.ExternalOperationProvenanceSnapshot? provenance = null, Marang.ExternalOperationFailure? failure = null) -> void
+Marang.ExternalOperationResult.Failure.get -> Marang.ExternalOperationFailure?
+Marang.ExternalOperationResult.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationResult.Provenance.get -> Marang.ExternalOperationProvenanceSnapshot?
+Marang.ExternalOperationResult.State.get -> Marang.ExternalOperationState
+Marang.ExternalOperationResult.Summary.get -> string!
+Marang.ExternalOperationResumeReceipt
+Marang.ExternalOperationResumeReceipt.AcceptedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationResumeReceipt.Disposition.get -> Marang.ExternalOperationStartDisposition
+Marang.ExternalOperationResumeReceipt.ExternalOperationResumeReceipt(Marang.ExternalOperationHandle! previousHandle, string! resumeKey, Marang.ExternalOperationHandle! handle, Marang.ExternalOperationStartDisposition disposition, Marang.ExternalOperationState state, System.DateTimeOffset acceptedAt) -> void
+Marang.ExternalOperationResumeReceipt.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationResumeReceipt.PreviousHandle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationResumeReceipt.ResumeKey.get -> string!
+Marang.ExternalOperationResumeReceipt.State.get -> Marang.ExternalOperationState
+Marang.ExternalOperationResumeRequest
+Marang.ExternalOperationResumeRequest.CorrectionArtifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.ExternalOperationResumeRequest.ExternalOperationResumeRequest(Marang.ExternalOperationHandle! handle, string! resumeKey, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>? correctionArtifacts = null, string? reason = null) -> void
+Marang.ExternalOperationResumeRequest.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationResumeRequest.Reason.get -> string?
+Marang.ExternalOperationResumeRequest.ResumeKey.get -> string!
+Marang.ExternalOperationSemanticInputEnvelope
+Marang.ExternalOperationSemanticInputEnvelope.Agent.get -> Marang.ExternalAgentReference!
+Marang.ExternalOperationSemanticInputEnvelope.Budget.get -> Marang.ExternalOperationBudgetHint?
+Marang.ExternalOperationSemanticInputEnvelope.Capability.get -> string!
+Marang.ExternalOperationSemanticInputEnvelope.Deadline.get -> System.DateTimeOffset?
+Marang.ExternalOperationSemanticInputEnvelope.DelegationId.get -> Marang.DelegationId
+Marang.ExternalOperationSemanticInputEnvelope.ExternalOperationSemanticInputEnvelope(Marang.DelegationId delegationId, Marang.ExternalAgentReference! agent, string! capability, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! inputArtifacts, Marang.ExternalOperationBudgetHint? budget, System.DateTimeOffset? deadline) -> void
+Marang.ExternalOperationSemanticInputEnvelope.InputArtifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.ExternalOperationSemanticInputEnvelope.SchemaVersion.get -> string!
+Marang.ExternalOperationStartDisposition
+Marang.ExternalOperationStartDisposition.Created = 0 -> Marang.ExternalOperationStartDisposition
+Marang.ExternalOperationStartDisposition.Existing = 1 -> Marang.ExternalOperationStartDisposition
+Marang.ExternalOperationStartIdentity
+Marang.ExternalOperationStartIdentity.DelegationId.get -> Marang.DelegationId
+Marang.ExternalOperationStartIdentity.ExecutionAttemptId.get -> string!
+Marang.ExternalOperationStartIdentity.ExternalOperationStartIdentity(Marang.DelegationId delegationId, Marang.WorkflowRunExecutionReference! workflowRun, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, string! executionAttemptId, string! idempotencyKey, string! semanticFingerprint) -> void
+Marang.ExternalOperationStartIdentity.IdempotencyKey.get -> string!
+Marang.ExternalOperationStartIdentity.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.ExternalOperationStartIdentity.SemanticFingerprint.get -> string!
+Marang.ExternalOperationStartIdentity.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.ExternalOperationStartIdentity.Validate() -> void
+Marang.ExternalOperationStartIdentity.WorkflowRun.get -> Marang.WorkflowRunExecutionReference!
+Marang.ExternalOperationStartReceipt
+Marang.ExternalOperationStartReceipt.AcceptedAt.get -> System.DateTimeOffset
+Marang.ExternalOperationStartReceipt.Disposition.get -> Marang.ExternalOperationStartDisposition
+Marang.ExternalOperationStartReceipt.ExternalOperationStartReceipt(Marang.ExternalOperationStartIdentity! identity, Marang.ExternalOperationHandle! handle, Marang.ExternalOperationStartDisposition disposition, Marang.ExternalOperationState state, System.DateTimeOffset acceptedAt) -> void
+Marang.ExternalOperationStartReceipt.Handle.get -> Marang.ExternalOperationHandle!
+Marang.ExternalOperationStartReceipt.Identity.get -> Marang.ExternalOperationStartIdentity!
+Marang.ExternalOperationStartReceipt.State.get -> Marang.ExternalOperationState
+Marang.ExternalOperationStartRequest
+Marang.ExternalOperationStartRequest.Budget.get -> Marang.ExternalOperationBudgetHint?
+Marang.ExternalOperationStartRequest.Capability.get -> string!
+Marang.ExternalOperationStartRequest.Correlation.get -> Marang.ExternalOperationCorrelation!
+Marang.ExternalOperationStartRequest.Deadline.get -> System.DateTimeOffset?
+Marang.ExternalOperationStartRequest.ExternalOperationStartRequest(Marang.ExternalOperationStartIdentity! identity, Marang.ExternalOperationCorrelation! correlation, string! capability, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! inputArtifacts, Marang.ExternalOperationBudgetHint? budget = null, System.DateTimeOffset? deadline = null) -> void
+Marang.ExternalOperationStartRequest.Identity.get -> Marang.ExternalOperationStartIdentity!
+Marang.ExternalOperationStartRequest.InputArtifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.ExternalOperationStartRequest.SemanticInput.get -> Marang.ExternalOperationSemanticInputEnvelope!
+Marang.ExternalOperationStartRequest.VerifySemanticFingerprint(Marang.IExternalOperationSemanticFingerprintVerifier! verifier) -> void
+Marang.ExternalOperationState
+Marang.ExternalOperationState.Accepted = 0 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.CancellationRequested = 5 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Cancelled = 6 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Failed = 4 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Rejected = 8 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Running = 1 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Succeeded = 3 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.TimedOut = 7 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Unknown = 9 -> Marang.ExternalOperationState
+Marang.ExternalOperationState.Waiting = 2 -> Marang.ExternalOperationState
+Marang.ExternalTaskReference
+Marang.ExternalTaskReference.ExternalTaskReference(string! provider, string! identifier) -> void
+Marang.ExternalTaskReference.Identifier.get -> string!
+Marang.ExternalTaskReference.Provider.get -> string!
+Marang.ExternalTaskReference.Validate() -> void
+Marang.HongxianSessionReference
+Marang.HongxianSessionReference.HongxianSessionReference() -> void
+Marang.HongxianSessionReference.HongxianSessionReference(string! identifier) -> void
+Marang.HongxianSessionReference.Identifier.get -> string!
+Marang.HongxianSessionReference.Validate() -> void
+Marang.ICandidateRevisionPublicationRegistry
+Marang.ICandidateRevisionPublicationRegistry.PublishAsync(Marang.CandidateRevisionReference! candidate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.CandidateRevisionPublication!>
+Marang.IDelegationService
+Marang.IDelegationService.CancelAsync(Marang.DelegationId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Marang.IDelegationService.DelegateAsync(Marang.DelegationCallerScope! caller, Marang.DelegationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Marang.DelegationHandle!>!
+Marang.IDelegationService.GetResultAsync(Marang.DelegationId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Marang.DelegationResult?>!
+Marang.IDelegationService.GetStatusAsync(Marang.DelegationId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Marang.DelegationProgress?>!
+Marang.IExternalOperationHandleCaptureSink
+Marang.IExternalOperationHandleCaptureSink.CaptureAsync(Marang.ExternalOperationHandleCapture! capture, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Marang.IExternalOperationProvider
+Marang.IExternalOperationProvider.CancelAsync(Marang.ExternalOperationCancelRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.ExternalOperationCancellationReceipt!>
+Marang.IExternalOperationProvider.GetResultAsync(Marang.ExternalOperationHandle! handle, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.ExternalOperationResult!>
+Marang.IExternalOperationProvider.ObserveAsync(Marang.ExternalOperationHandle! handle, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.ExternalOperationObservation!>
+Marang.IExternalOperationProvider.ResumeAsync(Marang.ExternalOperationResumeRequest! request, Marang.IExternalOperationHandleCaptureSink! handleSink, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.ExternalOperationResumeReceipt!>
+Marang.IExternalOperationProvider.StartAsync(Marang.ExternalOperationStartRequest! request, Marang.IExternalOperationHandleCaptureSink! handleSink, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.ExternalOperationStartReceipt!>
+Marang.IExternalOperationSemanticFingerprintVerifier
+Marang.IExternalOperationSemanticFingerprintVerifier.Matches(Marang.ExternalOperationStartIdentity! identity, Marang.ExternalOperationSemanticInputEnvelope! semanticInput) -> bool
+Marang.IndependenceAssessment
+Marang.IndependenceAssessment.Different = 1 -> Marang.IndependenceAssessment
+Marang.IndependenceAssessment.NotApplicable = 3 -> Marang.IndependenceAssessment
+Marang.IndependenceAssessment.Same = 0 -> Marang.IndependenceAssessment
+Marang.IndependenceAssessment.Unknown = 2 -> Marang.IndependenceAssessment
+Marang.ISupervisorContextProvider
+Marang.ISupervisorContextProvider.GetAsync(Marang.SupervisorIdentity! supervisor, Marang.SupervisorContextRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.SupervisorContextPackage!>
+Marang.ModelProvenanceSnapshot
+Marang.ModelProvenanceSnapshot.Model.get -> string!
+Marang.ModelProvenanceSnapshot.ModelProvenanceSnapshot(string! provider, string! model, string? modelRevision = null, string? profile = null, string! schemaVersion = "v1") -> void
+Marang.ModelProvenanceSnapshot.ModelRevision.get -> string?
+Marang.ModelProvenanceSnapshot.Profile.get -> string?
+Marang.ModelProvenanceSnapshot.Provider.get -> string!
+Marang.ModelProvenanceSnapshot.SchemaVersion.get -> string!
+Marang.NodeGenerationId
+Marang.NodeGenerationId.NodeGenerationId() -> void
+Marang.NodeGenerationId.NodeGenerationId(System.Guid value) -> void
+Marang.NodeGenerationId.Validate() -> void
+Marang.NodeGenerationId.Value.get -> System.Guid
+Marang.ProviderDescriptor
+Marang.ProviderDescriptor.Capabilities.get -> System.Collections.Generic.IReadOnlyList<Marang.CapabilityDescriptor!>!
+Marang.ProviderDescriptor.Enabled.get -> bool
+Marang.ProviderDescriptor.Models.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.ProviderDescriptor.Priority.get -> int
+Marang.ProviderDescriptor.Provider.get -> string!
+Marang.ProviderDescriptor.ProviderDescriptor(string! provider, System.Collections.Generic.IReadOnlyList<Marang.CapabilityDescriptor!>! capabilities, int priority = 0, bool enabled = true, System.Collections.Generic.IReadOnlyList<string!>? models = null) -> void
+Marang.ProviderExecutionAttemptReference
+Marang.ProviderExecutionAttemptReference.AttemptId.get -> string!
+Marang.ProviderExecutionAttemptReference.Handle.get -> string!
+Marang.ProviderExecutionAttemptReference.Provider.get -> string!
+Marang.ProviderExecutionAttemptReference.ProviderExecutionAttemptReference(string! provider, string! attemptId, string! handle) -> void
+Marang.ProviderExecutionAttemptReference.Validate() -> void
+Marang.ProviderHints
+Marang.ProviderHints.Model.get -> string?
+Marang.ProviderHints.PreferredModels.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.ProviderHints.PreferredProviders.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.ProviderHints.Profile.get -> string?
+Marang.ProviderHints.Provider.get -> string?
+Marang.ProviderHints.ProviderHints(string? provider = null, string? model = null, string? profile = null, System.Collections.Generic.IReadOnlyList<string!>? preferredProviders = null, System.Collections.Generic.IReadOnlyList<string!>? preferredModels = null) -> void
+Marang.ProviderMatch
+Marang.ProviderMatch.Capabilities.get -> System.Collections.Generic.IReadOnlyList<Marang.CapabilityDescriptor!>!
+Marang.ProviderMatch.HintScore.get -> int
+Marang.ProviderMatch.Provider.get -> Marang.ProviderDescriptor!
+Marang.ProviderMatch.ProviderMatch(Marang.ProviderDescriptor! provider, System.Collections.Generic.IReadOnlyList<Marang.CapabilityDescriptor!>! capabilities, int hintScore) -> void
+Marang.ProviderSelection
+Marang.ProviderSelectionRequest
+Marang.ProviderSelectionRequest.Hints.get -> Marang.ProviderHints!
+Marang.ProviderSelectionRequest.ProviderSelectionRequest(System.Collections.Generic.IReadOnlyList<Marang.CapabilityRequirement!>! requiredCapabilities, Marang.ProviderHints? hints = null) -> void
+Marang.ProviderSelectionRequest.RequiredCapabilities.get -> System.Collections.Generic.IReadOnlyList<Marang.CapabilityRequirement!>!
+Marang.ReviewEvidence
+Marang.ReviewEvidence.Candidate.get -> Marang.CandidateRevisionReference!
+Marang.ReviewEvidence.Findings.get -> System.Collections.Generic.IReadOnlyList<Marang.EvidenceFinding!>!
+Marang.ReviewEvidence.Independence.get -> Marang.ReviewIndependenceEvidence!
+Marang.ReviewEvidence.Invocation.get -> Marang.WorkerInvocationEvidence!
+Marang.ReviewEvidence.Outcome.get -> string!
+Marang.ReviewEvidence.Reviewer.get -> string!
+Marang.ReviewEvidence.ReviewEvidence(Marang.WorkerInvocationEvidence! invocation, string! outcome, System.Collections.Generic.IReadOnlyList<Marang.EvidenceFinding!>! findings, Marang.ReviewIndependenceEvidence! independence, Marang.CandidateRevisionReference! candidate, string! reviewer) -> void
+Marang.ReviewIndependenceEvidence
+Marang.ReviewIndependenceEvidence.Context.get -> Marang.IndependenceAssessment
+Marang.ReviewIndependenceEvidence.Details.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.ReviewIndependenceEvidence.ImplementationInvocationId.get -> string!
+Marang.ReviewIndependenceEvidence.Invocation.get -> Marang.IndependenceAssessment
+Marang.ReviewIndependenceEvidence.Model.get -> Marang.IndependenceAssessment
+Marang.ReviewIndependenceEvidence.Profile.get -> Marang.IndependenceAssessment
+Marang.ReviewIndependenceEvidence.Provider.get -> Marang.IndependenceAssessment
+Marang.ReviewIndependenceEvidence.ReviewIndependenceEvidence(string! implementationInvocationId, string! reviewInvocationId, Marang.IndependenceAssessment invocation, Marang.IndependenceAssessment context, Marang.IndependenceAssessment profile, Marang.IndependenceAssessment model, Marang.IndependenceAssessment provider, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? details = null) -> void
+Marang.ReviewIndependenceEvidence.ReviewInvocationId.get -> string!
+Marang.StructuralNodeReference
+Marang.StructuralNodeReference.Identifier.get -> string!
+Marang.StructuralNodeReference.StructuralNodeReference() -> void
+Marang.StructuralNodeReference.StructuralNodeReference(string! identifier) -> void
+Marang.StructuralNodeReference.Validate() -> void
+Marang.SupervisorAction
+Marang.SupervisorAction.AddConstraint
+Marang.SupervisorAction.AddConstraint.AddConstraint(string! constraint) -> void
+Marang.SupervisorAction.AddConstraint.Constraint.get -> string!
+Marang.SupervisorAction.Approve
+Marang.SupervisorAction.Approve.Approve(string? rationale = null) -> void
+Marang.SupervisorAction.Approve.Rationale.get -> string?
+Marang.SupervisorAction.Cancel
+Marang.SupervisorAction.Cancel.Cancel(string! reason) -> void
+Marang.SupervisorAction.Cancel.Reason.get -> string!
+Marang.SupervisorAction.ChangeExecutor
+Marang.SupervisorAction.ChangeExecutor.ChangeExecutor(Marang.ExecutorProfileReference! profile, string! reason) -> void
+Marang.SupervisorAction.ChangeExecutor.Profile.get -> Marang.ExecutorProfileReference!
+Marang.SupervisorAction.ChangeExecutor.Reason.get -> string!
+Marang.SupervisorAction.Escalate
+Marang.SupervisorAction.Escalate.Escalate(string! reason) -> void
+Marang.SupervisorAction.Escalate.Reason.get -> string!
+Marang.SupervisorAction.ReexecuteNode
+Marang.SupervisorAction.ReexecuteNode.Reason.get -> string!
+Marang.SupervisorAction.ReexecuteNode.ReexecuteNode(Marang.StructuralNodeReference target, string! reason) -> void
+Marang.SupervisorAction.ReexecuteNode.Target.get -> Marang.StructuralNodeReference
+Marang.SupervisorAction.ReexecuteSubgraph
+Marang.SupervisorAction.ReexecuteSubgraph.Reason.get -> string!
+Marang.SupervisorAction.ReexecuteSubgraph.ReexecuteSubgraph(Marang.StructuralNodeReference root, string! reason) -> void
+Marang.SupervisorAction.ReexecuteSubgraph.Root.get -> Marang.StructuralNodeReference
+Marang.SupervisorAction.Reject
+Marang.SupervisorAction.Reject.Reason.get -> string!
+Marang.SupervisorAction.Reject.Reject(string! reason) -> void
+Marang.SupervisorAction.Respond
+Marang.SupervisorAction.Respond.Respond(string! response) -> void
+Marang.SupervisorAction.Respond.Response.get -> string!
+Marang.SupervisorAction.Retry
+Marang.SupervisorAction.Retry.Reason.get -> string!
+Marang.SupervisorAction.Retry.Retry(string! reason) -> void
+Marang.SupervisorAction.SelectAlternative
+Marang.SupervisorAction.SelectAlternative.AlternativeId.get -> string!
+Marang.SupervisorAction.SelectAlternative.Rationale.get -> string!
+Marang.SupervisorAction.SelectAlternative.SelectAlternative(string! alternativeId, string! rationale) -> void
+Marang.SupervisorCheckpointDescriptor
+Marang.SupervisorCheckpointDescriptor.CheckpointId.get -> Marang.SupervisorCheckpointId
+Marang.SupervisorCheckpointDescriptor.DelegationId.get -> Marang.DelegationId
+Marang.SupervisorCheckpointDescriptor.DependentProgressGated.get -> bool
+Marang.SupervisorCheckpointDescriptor.ExpectedObservableRevision.get -> long
+Marang.SupervisorCheckpointDescriptor.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.SupervisorCheckpointDescriptor.PlanRevision.get -> Marang.WorkflowPlanRevisionReference!
+Marang.SupervisorCheckpointDescriptor.Session.get -> Marang.HongxianSessionReference
+Marang.SupervisorCheckpointDescriptor.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.SupervisorCheckpointDescriptor.SupervisorCheckpointDescriptor(Marang.SupervisorCheckpointId checkpointId, Marang.HongxianSessionReference session, Marang.DelegationId delegationId, Marang.WorkflowPlanRevisionReference! planRevision, Marang.WorkflowRunExecutionReference! workflowRun, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, long expectedObservableRevision, bool dependentProgressGated) -> void
+Marang.SupervisorCheckpointDescriptor.Validate() -> void
+Marang.SupervisorCheckpointDescriptor.WorkflowRun.get -> Marang.WorkflowRunExecutionReference!
+Marang.SupervisorCheckpointId
+Marang.SupervisorCheckpointId.SupervisorCheckpointId() -> void
+Marang.SupervisorCheckpointId.SupervisorCheckpointId(System.Guid value) -> void
+Marang.SupervisorCheckpointId.Validate() -> void
+Marang.SupervisorCheckpointId.Value.get -> System.Guid
+Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.Artifacts = 4 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.Correlations = 8 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.None = 0 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.PrimitiveReferences = 16 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.Status = 1 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextFacet.Summary = 2 -> Marang.SupervisorContextFacet
+Marang.SupervisorContextItem
+Marang.SupervisorContextItem.Facet.get -> Marang.SupervisorContextFacet
+Marang.SupervisorContextItem.Key.get -> string!
+Marang.SupervisorContextItem.SupervisorContextItem(Marang.SupervisorContextFacet facet, string! key, string! text) -> void
+Marang.SupervisorContextItem.Text.get -> string!
+Marang.SupervisorContextItem.Utf8ByteCount.get -> int
+Marang.SupervisorContextLimits
+Marang.SupervisorContextLimits.MaxInlineSummaryBytes.get -> int
+Marang.SupervisorContextLimits.MaxItems.get -> int
+Marang.SupervisorContextLimits.SupervisorContextLimits(int maxItems, int maxInlineSummaryBytes) -> void
+Marang.SupervisorContextPackage
+Marang.SupervisorContextPackage.AppliedLimits.get -> Marang.SupervisorContextLimits!
+Marang.SupervisorContextPackage.Artifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.SupervisorContextPackage.CheckpointId.get -> Marang.SupervisorCheckpointId
+Marang.SupervisorContextPackage.Correlations.get -> System.Collections.Generic.IReadOnlyList<Marang.ContextCorrelationReference!>!
+Marang.SupervisorContextPackage.DelegationId.get -> Marang.DelegationId
+Marang.SupervisorContextPackage.FacetOutcomes.get -> System.Collections.Generic.IReadOnlyList<Marang.ContextFacetOutcome!>!
+Marang.SupervisorContextPackage.InlineSummaryUtf8Bytes.get -> int
+Marang.SupervisorContextPackage.Items.get -> System.Collections.Generic.IReadOnlyList<Marang.SupervisorContextItem!>!
+Marang.SupervisorContextPackage.PrimitiveReferences.get -> System.Collections.Generic.IReadOnlyList<Marang.ContextProvenanceReference!>!
+Marang.SupervisorContextPackage.RequestedFacets.get -> Marang.SupervisorContextFacet
+Marang.SupervisorContextPackage.Revision.get -> long
+Marang.SupervisorContextPackage.SupervisorContextPackage(Marang.DelegationId delegationId, Marang.SupervisorCheckpointId checkpointId, long revision, Marang.SupervisorContextFacet requestedFacets, Marang.SupervisorContextLimits! appliedLimits, System.Collections.Generic.IReadOnlyList<Marang.SupervisorContextItem!>! items, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! artifacts, System.Collections.Generic.IReadOnlyList<Marang.ContextCorrelationReference!>! correlations, System.Collections.Generic.IReadOnlyList<Marang.ContextProvenanceReference!>! primitiveReferences, System.Collections.Generic.IReadOnlyList<Marang.ContextFacetOutcome!>! facetOutcomes) -> void
+Marang.SupervisorContextPackage.ValidateAgainst(Marang.SupervisorContextRequest! request, Marang.DelegationProgress! waitingProgress) -> void
+Marang.SupervisorContextRequest
+Marang.SupervisorContextRequest.CheckpointId.get -> Marang.SupervisorCheckpointId
+Marang.SupervisorContextRequest.DelegationId.get -> Marang.DelegationId
+Marang.SupervisorContextRequest.ExpectedRevision.get -> long
+Marang.SupervisorContextRequest.Limits.get -> Marang.SupervisorContextLimits!
+Marang.SupervisorContextRequest.RequestedFacets.get -> Marang.SupervisorContextFacet
+Marang.SupervisorContextRequest.SupervisorContextRequest(Marang.DelegationId delegationId, Marang.SupervisorCheckpointId checkpointId, long expectedRevision, Marang.SupervisorContextFacet requestedFacets, Marang.SupervisorContextLimits! limits) -> void
+Marang.SupervisorContextRequest.ValidateAgainst(Marang.DelegationProgress! waitingProgress) -> void
+Marang.SupervisorIdentity
+Marang.SupervisorIdentity.AuthorityScope.get -> string!
+Marang.SupervisorIdentity.Subject.get -> string!
+Marang.SupervisorIdentity.SupervisorIdentity(string! authorityScope, string! subject) -> void
+Marang.SupervisorIdentity.Validate() -> void
+Marang.SupervisorIntervention
+Marang.SupervisorIntervention.Action.get -> Marang.SupervisorAction!
+Marang.SupervisorIntervention.CheckpointId.get -> Marang.SupervisorCheckpointId
+Marang.SupervisorIntervention.DelegationId.get -> Marang.DelegationId
+Marang.SupervisorIntervention.ExpectedRevision.get -> long
+Marang.SupervisorIntervention.InterventionKey.get -> string!
+Marang.SupervisorIntervention.SupervisorIntervention(Marang.DelegationId delegationId, Marang.SupervisorCheckpointId checkpointId, string! interventionKey, long expectedRevision, Marang.SupervisorAction! action) -> void
+Marang.SupervisorIntervention.Validate() -> void
+Marang.ToolProvenance
+Marang.ToolProvenance.ContentIdentity.get -> Marang.ArtifactContentIdentity?
+Marang.ToolProvenance.Name.get -> string!
+Marang.ToolProvenance.ToolProvenance(string! name, string? version = null, Marang.ArtifactContentIdentity? contentIdentity = null) -> void
+Marang.ToolProvenance.Version.get -> string?
+Marang.ToolProvenanceSnapshot
+Marang.ToolProvenanceSnapshot.SchemaVersion.get -> string!
+Marang.ToolProvenanceSnapshot.ToolProvenanceSnapshot(System.Collections.Generic.IReadOnlyList<Marang.ToolProvenance!>! tools, string! schemaVersion = "v1") -> void
+Marang.ToolProvenanceSnapshot.Tools.get -> System.Collections.Generic.IReadOnlyList<Marang.ToolProvenance!>!
+Marang.UsageProvenanceSnapshot
+Marang.UsageProvenanceSnapshot.Measurements.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.UsageProvenanceSnapshot.SchemaVersion.get -> string!
+Marang.UsageProvenanceSnapshot.UsageProvenanceSnapshot(System.Collections.Generic.IReadOnlyDictionary<string!, string!>? measurements = null, string! schemaVersion = "v1") -> void
+Marang.ValidationEvidence
+Marang.ValidationEvidence.Candidate.get -> Marang.CandidateRevisionReference?
+Marang.ValidationEvidence.Findings.get -> System.Collections.Generic.IReadOnlyList<Marang.EvidenceFinding!>!
+Marang.ValidationEvidence.Invocation.get -> Marang.WorkerInvocationEvidence!
+Marang.ValidationEvidence.Outcome.get -> string!
+Marang.ValidationEvidence.ValidationEvidence(Marang.WorkerInvocationEvidence! invocation, string! outcome, System.Collections.Generic.IReadOnlyList<Marang.EvidenceFinding!>! findings, string? validator = null, Marang.CandidateRevisionReference? candidate = null) -> void
+Marang.ValidationEvidence.Validator.get -> string?
+Marang.WakeHint
+Marang.WakeHint.AfterRevision.get -> long
+Marang.WakeHint.CheckpointId.get -> Marang.SupervisorCheckpointId?
+Marang.WakeHint.DelegationId.get -> Marang.DelegationId
+Marang.WakeHint.ExpiresAt.get -> System.DateTimeOffset?
+Marang.WakeHint.Reason.get -> string!
+Marang.WakeHint.WakeHint(Marang.DelegationId delegationId, Marang.SupervisorCheckpointId? checkpointId, string! reason, long afterRevision, System.DateTimeOffset? expiresAt = null) -> void
+Marang.WorkerInvocationEvidence
+Marang.WorkerInvocationEvidence.Attempt.get -> Marang.ProviderExecutionAttemptReference!
+Marang.WorkerInvocationEvidence.Candidate.get -> Marang.CandidateRevisionReference?
+Marang.WorkerInvocationEvidence.Capability.get -> string?
+Marang.WorkerInvocationEvidence.CompletedAt.get -> System.DateTimeOffset?
+Marang.WorkerInvocationEvidence.DelegationId.get -> Marang.DelegationId
+Marang.WorkerInvocationEvidence.Disposition.get -> string!
+Marang.WorkerInvocationEvidence.ExecutionCategory.get -> string!
+Marang.WorkerInvocationEvidence.ExecutionCorrelation.get -> Marang.ExternalOperationCorrelation?
+Marang.WorkerInvocationEvidence.InputArtifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.WorkerInvocationEvidence.NodeGeneration.get -> Marang.NodeGenerationId
+Marang.WorkerInvocationEvidence.OutputArtifacts.get -> System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>!
+Marang.WorkerInvocationEvidence.Profile.get -> string?
+Marang.WorkerInvocationEvidence.ProviderData.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.WorkerInvocationEvidence.RequestedModel.get -> string?
+Marang.WorkerInvocationEvidence.RequestedProvider.get -> string?
+Marang.WorkerInvocationEvidence.ResolvedModel.get -> string?
+Marang.WorkerInvocationEvidence.StartedAt.get -> System.DateTimeOffset
+Marang.WorkerInvocationEvidence.StructuralNode.get -> Marang.StructuralNodeReference
+Marang.WorkerInvocationEvidence.ToolCapabilities.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Marang.WorkerInvocationEvidence.Usage.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+Marang.WorkerInvocationEvidence.WorkerInvocationEvidence(Marang.DelegationId delegationId, Marang.StructuralNodeReference structuralNode, Marang.NodeGenerationId nodeGeneration, string! executionCategory, Marang.ProviderExecutionAttemptReference! attempt, string! disposition, System.DateTimeOffset startedAt, System.DateTimeOffset? completedAt, string? capability, string? profile, string? requestedProvider, string? requestedModel, string? resolvedModel, System.Collections.Generic.IReadOnlyList<string!>! toolCapabilities, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! inputArtifacts, System.Collections.Generic.IReadOnlyList<Marang.DelegationArtifactReference!>! outputArtifacts, Marang.CandidateRevisionReference? candidate = null, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? usage = null, System.Collections.Generic.IReadOnlyDictionary<string!, string!>? providerData = null, Marang.ExternalOperationCorrelation? executionCorrelation = null) -> void
+Marang.WorkflowPlanReferenceKind
+Marang.WorkflowPlanReferenceKind.BuiltInPreset = 0 -> Marang.WorkflowPlanReferenceKind
+Marang.WorkflowPlanReferenceKind.FuwenDefinition = 1 -> Marang.WorkflowPlanReferenceKind
+Marang.WorkflowPlanRevisionReference
+Marang.WorkflowPlanRevisionReference.CanonicalFingerprint.get -> string?
+Marang.WorkflowPlanRevisionReference.Identifier.get -> string!
+Marang.WorkflowPlanRevisionReference.Kind.get -> Marang.WorkflowPlanReferenceKind
+Marang.WorkflowPlanRevisionReference.Revision.get -> string!
+Marang.WorkflowPlanRevisionReference.Validate() -> void
+Marang.WorkflowPlanRevisionReference.WorkflowPlanRevisionReference(Marang.WorkflowPlanReferenceKind kind, string! identifier, string! revision, string? canonicalFingerprint) -> void
+Marang.WorkflowReference
+Marang.WorkflowReference.Identifier.get -> string!
+Marang.WorkflowReference.Identifier.init -> void
+Marang.WorkflowReference.Provider.get -> string!
+Marang.WorkflowReference.Provider.init -> void
+Marang.WorkflowReference.Validate() -> void
+Marang.WorkflowReference.WorkflowReference(string! Provider, string! Identifier) -> void
+Marang.WorkflowRunExecutionReference
+Marang.WorkflowRunExecutionReference.ExecutionEpoch.get -> string!
+Marang.WorkflowRunExecutionReference.Provider.get -> string!
+Marang.WorkflowRunExecutionReference.Validate() -> void
+Marang.WorkflowRunExecutionReference.WorkflowRunExecutionReference(string! provider, string! workflowRunId, string! executionEpoch) -> void
+Marang.WorkflowRunExecutionReference.WorkflowRunId.get -> string!
+Marang.WorkspaceReference
+Marang.WorkspaceReference.Identifier.get -> string!
+Marang.WorkspaceReference.Identifier.init -> void
+Marang.WorkspaceReference.Provider.get -> string!
+Marang.WorkspaceReference.Provider.init -> void
+Marang.WorkspaceReference.Revision.get -> string?
+Marang.WorkspaceReference.Revision.init -> void
+Marang.WorkspaceReference.Validate() -> void
+Marang.WorkspaceReference.WorkspaceReference(string! Provider, string! Identifier, string? Revision = null) -> void
+override Marang.CandidateId.ToString() -> string!
+override Marang.DelegationId.ToString() -> string!
+override Marang.DelegationResultId.ToString() -> string!
+override Marang.SupervisorAction.AddConstraint.Kind.get -> string!
+override Marang.SupervisorAction.AddConstraint.Validate() -> void
+override Marang.SupervisorAction.Approve.Kind.get -> string!
+override Marang.SupervisorAction.Approve.Validate() -> void
+override Marang.SupervisorAction.Cancel.Kind.get -> string!
+override Marang.SupervisorAction.Cancel.Validate() -> void
+override Marang.SupervisorAction.ChangeExecutor.Kind.get -> string!
+override Marang.SupervisorAction.ChangeExecutor.Validate() -> void
+override Marang.SupervisorAction.Escalate.Kind.get -> string!
+override Marang.SupervisorAction.Escalate.Validate() -> void
+override Marang.SupervisorAction.ReexecuteNode.Kind.get -> string!
+override Marang.SupervisorAction.ReexecuteNode.Validate() -> void
+override Marang.SupervisorAction.ReexecuteSubgraph.Kind.get -> string!
+override Marang.SupervisorAction.ReexecuteSubgraph.Validate() -> void
+override Marang.SupervisorAction.Reject.Kind.get -> string!
+override Marang.SupervisorAction.Reject.Validate() -> void
+override Marang.SupervisorAction.Respond.Kind.get -> string!
+override Marang.SupervisorAction.Respond.Validate() -> void
+override Marang.SupervisorAction.Retry.Kind.get -> string!
+override Marang.SupervisorAction.Retry.Validate() -> void
+override Marang.SupervisorAction.SelectAlternative.Kind.get -> string!
+override Marang.SupervisorAction.SelectAlternative.Validate() -> void
+static Marang.ArtifactContentIdentity.Sha256Bytes(string! hash) -> Marang.ArtifactContentIdentity
+static Marang.BudgetAccounting.Apply(Marang.BudgetDefinition! definition, Marang.BudgetConsumptionSnapshot! current, Marang.BudgetConsumptionReceipt! receipt, string? exceededReason = null) -> Marang.BudgetConsumptionDecision!
+static Marang.BudgetAccounting.Empty(Marang.BudgetDefinition! definition, Marang.DelegationId delegationId) -> Marang.BudgetConsumptionSnapshot!
+static Marang.BudgetQuantity.Count(long value) -> Marang.BudgetQuantity
+static Marang.BudgetQuantity.MicroCredits(long value) -> Marang.BudgetQuantity
+static Marang.BudgetQuantity.Milliseconds(long value) -> Marang.BudgetQuantity
+static Marang.BudgetQuantity.MinorCurrencyUnits(string! currency, long value) -> Marang.BudgetQuantity
+static Marang.BudgetQuantity.Ticks(long value) -> Marang.BudgetQuantity
+static Marang.BudgetQuantity.Tokens(long value) -> Marang.BudgetQuantity
+static Marang.CandidateRevisionIdentity.SemanticallyEqual(Marang.CandidateRevisionReference! left, Marang.CandidateRevisionReference! right) -> bool
+static Marang.CandidateRevisionIdentity.SubjectEqual(Marang.CandidateRevisionReference? left, Marang.CandidateRevisionReference? right) -> bool
+static Marang.ContextProvenanceReference.CangjieSnapshot(string! identifier, string? contentHash = null) -> Marang.ContextProvenanceReference!
+static Marang.ContextProvenanceReference.HetuIndexPublication(string! repositoryIdentifier, string! indexRunIdentifier, string? indexIdentity = null) -> Marang.ContextProvenanceReference!
+static Marang.DelegationId.New() -> Marang.DelegationId
+static Marang.EvidenceBundleIdentity.SemanticallyEqual(Marang.EvidenceBundle? left, Marang.EvidenceBundle? right) -> bool
+static Marang.ExecutionIdentityRules.EnsureReopenedWorkNewRunAndEpoch(Marang.WorkflowRunExecutionReference! previous, Marang.WorkflowRunExecutionReference! candidate) -> void
+static Marang.ExecutionIdentityRules.EnsureRetryOrReconnectSameGeneration(Marang.NodeGenerationId original, Marang.NodeGenerationId candidate) -> void
+static Marang.ExecutionIdentityRules.EnsureSemanticReexecutionNewGeneration(Marang.NodeGenerationId previous, Marang.NodeGenerationId candidate) -> void
+static Marang.ExternalOperationObservationRules.ValidateProgression(Marang.ExternalOperationObservation! previous, Marang.ExternalOperationObservation! current) -> void
+static Marang.ProviderSelection.Match(Marang.ProviderSelectionRequest! request, System.Collections.Generic.IReadOnlyList<Marang.ProviderDescriptor!>! providers) -> System.Collections.Generic.IReadOnlyList<Marang.ProviderMatch!>!
+static Marang.ProviderSelection.Select(Marang.ProviderSelectionRequest! request, System.Collections.Generic.IReadOnlyList<Marang.ProviderDescriptor!>! providers) -> Marang.ProviderMatch?
+static Marang.WorkflowPlanRevisionReference.BuiltInPreset(string! identifier, string! version) -> Marang.WorkflowPlanRevisionReference!
+static Marang.WorkflowPlanRevisionReference.FuwenDefinition(string! definitionIdentifier, string! revision, string! canonicalFingerprint) -> Marang.WorkflowPlanRevisionReference!

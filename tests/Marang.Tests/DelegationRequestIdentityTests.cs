@@ -152,15 +152,13 @@ public sealed class DelegationRequestIdentityTests
         string identifier,
         string revision)
     {
-        var request = new DelegationRequest(
+        var act = () => DelegationRequestIdentity.Compute(new DelegationRequest(
             requestKey,
             "Do the work",
             new WorkspaceReference(provider, identifier, revision),
             ["Criteria"],
             ["Constraint"],
-            new DelegationBudget(MaximumDuration: TimeSpan.FromSeconds(12)));
-
-        var act = () => DelegationRequestIdentity.Compute(request);
+            new DelegationBudget(MaximumDuration: TimeSpan.FromSeconds(12))));
 
         act.Should().Throw<ArgumentException>();
     }

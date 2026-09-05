@@ -1,10 +1,14 @@
 namespace Marang;
 
+/// <summary>Validates the bounded, canonical request contract accepted by Marang.</summary>
 public static class DelegationRequestValidator
 {
     private const int MaximumListItems = 256;
     private const int MaximumTotalTextLength = 1_048_576;
 
+    /// <summary>Validates request identity, content, budgets, and supported strategy.</summary>
+    /// <exception cref="ArgumentException">Thrown when required text is missing or non-canonical.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the strategy is not implemented.</exception>
     public static void Validate(DelegationRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);

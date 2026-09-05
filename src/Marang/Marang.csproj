@@ -7,7 +7,13 @@
     <Description>Delegation policy and orchestration for durable supervised model work.</Description>
     <PackageTags>mcp;delegation;supervision;agents;workflow;ai</PackageTags>
     <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Marang.Abstractions\Marang.Abstractions.csproj" />

@@ -3,6 +3,7 @@ namespace Marang;
 /// <summary>Raised when a delegation snapshot violates the lifecycle contract.</summary>
 public sealed class DelegationLifecycleViolationException : InvalidOperationException
 {
+    /// <summary>Initializes an exception describing an invalid lifecycle operation.</summary>
     public DelegationLifecycleViolationException(string message)
         : base(message)
     {
@@ -16,6 +17,7 @@ public sealed class DelegationLifecycleViolationException : InvalidOperationExce
 /// </summary>
 public static class DelegationLifecycle
 {
+    /// <summary>Returns whether the supplied state is terminal under the fixed strategy.</summary>
     public static bool IsTerminal(DelegationState state)
     {
         EnsureDefined(state);
@@ -27,6 +29,7 @@ public static class DelegationLifecycle
             or DelegationState.NeedsSupervisor;
     }
 
+    /// <summary>Returns whether a direct transition between two defined states is allowed.</summary>
     public static bool CanTransition(DelegationState current, DelegationState next)
     {
         EnsureDefined(current);
@@ -54,6 +57,8 @@ public static class DelegationLifecycle
         };
     }
 
+    /// <summary>Validates a direct state transition.</summary>
+    /// <exception cref="DelegationLifecycleViolationException">Thrown when the transition is not allowed.</exception>
     public static void EnsureTransition(DelegationState current, DelegationState next)
     {
         if (!CanTransition(current, next))
@@ -69,6 +74,7 @@ public static class DelegationLifecycle
     /// allowed only for an identical snapshot; a changed snapshot needs a new
     /// revision. Counters and timestamps never move backwards.
     /// </summary>
+    /// <summary>Validates a progress snapshot and its optional predecessor.</summary>
     public static void ValidateProgress(DelegationProgress progress, DelegationProgress? previous = null)
     {
         ArgumentNullException.ThrowIfNull(progress);
@@ -136,6 +142,7 @@ public static class DelegationLifecycle
     /// `NeedsSupervisor` is terminal for the fixed strategy, not an implicit
     /// continuation request.
     /// </summary>
+    /// <summary>Validates a terminal result and its immutable evidence.</summary>
     public static void ValidateResult(DelegationResult result)
     {
         ArgumentNullException.ThrowIfNull(result);
@@ -193,6 +200,7 @@ public static class DelegationLifecycle
     /// A result is available exactly when the current snapshot is terminal and
     /// has a matching, valid result. Non-terminal snapshots must not expose one.
     /// </summary>
+    /// <summary>Ensures result presence agrees with the terminal state of a progress snapshot.</summary>
     public static void ValidateResultAvailability(DelegationProgress progress, DelegationResult? result)
     {
         ArgumentNullException.ThrowIfNull(progress);
@@ -235,6 +243,7 @@ public static class DelegationLifecycle
     /// replacement is rejected so terminal evidence cannot be rewritten.
     /// Durable stores must enforce this check atomically with terminal state.
     /// </summary>
+    /// <summary>Validates first-write, idempotent replay, and immutable replacement semantics for results.</summary>
     public static void ValidateResultPublication(DelegationResult? existing, DelegationResult candidate)
     {
         ArgumentNullException.ThrowIfNull(candidate);

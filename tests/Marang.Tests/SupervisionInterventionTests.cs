@@ -107,6 +107,27 @@ public sealed class SupervisionInterventionTests
     }
 
     [Fact]
+    public async Task Activation_caps_authorized_supervisors_per_checkpoint()
+    {
+        var registry = await CreateRegistry();
+        for (var index = 2; index <= 32; index++)
+        {
+            await registry.ActivateAsync(
+                new SupervisorIdentity($"authority-{index}", $"supervisor-{index}"),
+                CreateWaitingProgress(),
+                TestContext.Current.CancellationToken);
+        }
+
+        var overLimit = () => registry.ActivateAsync(
+            new SupervisorIdentity("authority-33", "supervisor-33"),
+            CreateWaitingProgress(),
+            TestContext.Current.CancellationToken).AsTask();
+
+        (await overLimit.Should().ThrowAsync<SupervisorInterventionRejectedException>())
+            .Which.Reason.Should().Be(SupervisorInterventionRejectionReason.AuthorizedSupervisorLimitExceeded);
+    }
+
+    [Fact]
     public async Task Cancellation_is_honored_by_activation_and_acceptance()
     {
         var registry = new InMemorySupervisorInterventionAcceptanceRegistry(); using var cancellation = new CancellationTokenSource(); cancellation.Cancel();

@@ -3,6 +3,9 @@ namespace Marang;
 /// <summary>Stable identity of the external agent selected for one operation.</summary>
 public sealed record ExternalAgentReference
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalAgentReference type.
+    /// </summary>
     public ExternalAgentReference(string provider, string identifier, string protocolVersion)
     {
         Provider = IdentityText.Require(provider, nameof(provider), 128);
@@ -10,10 +13,22 @@ public sealed record ExternalAgentReference
         ProtocolVersion = ArtifactContracts.Version(protocolVersion, nameof(protocolVersion));
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Identifier value.
+    /// </summary>
     public string Identifier { get; }
+    /// <summary>
+    /// Gets the ProtocolVersion value.
+    /// </summary>
     public string ProtocolVersion { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         IdentityText.Require(Provider, nameof(Provider), 128);
@@ -25,15 +40,27 @@ public sealed record ExternalAgentReference
 /// <summary>Provider-issued stable task identity. This is not a transient connection id.</summary>
 public sealed record ExternalTaskReference
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalTaskReference type.
+    /// </summary>
     public ExternalTaskReference(string provider, string identifier)
     {
         Provider = IdentityText.Require(provider, nameof(provider), 128);
         Identifier = IdentityText.Require(identifier, nameof(identifier), 2_048);
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Identifier value.
+    /// </summary>
     public string Identifier { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         IdentityText.Require(Provider, nameof(Provider), 128);
@@ -48,6 +75,9 @@ public sealed record ExternalTaskReference
 /// </summary>
 public sealed record ExternalOperationCorrelation
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationCorrelation type.
+    /// </summary>
     public ExternalOperationCorrelation(
         DelegationId delegationId,
         WorkflowRunExecutionReference workflowRun,
@@ -79,14 +109,38 @@ public sealed record ExternalOperationCorrelation
         Task = task;
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the WorkflowRun value.
+    /// </summary>
     public WorkflowRunExecutionReference WorkflowRun { get; }
+    /// <summary>
+    /// Gets the StructuralNode value.
+    /// </summary>
     public StructuralNodeReference StructuralNode { get; }
+    /// <summary>
+    /// Gets the NodeGeneration value.
+    /// </summary>
     public NodeGenerationId NodeGeneration { get; }
+    /// <summary>
+    /// Gets the ExecutionAttemptId value.
+    /// </summary>
     public string ExecutionAttemptId { get; }
+    /// <summary>
+    /// Gets the Agent value.
+    /// </summary>
     public ExternalAgentReference Agent { get; }
+    /// <summary>
+    /// Gets the Task value.
+    /// </summary>
     public ExternalTaskReference? Task { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         ArtifactContracts.RequireDelegation(DelegationId, nameof(DelegationId));
@@ -102,6 +156,9 @@ public sealed record ExternalOperationCorrelation
         }
     }
 
+    /// <summary>
+    /// Performs the EnsureTaskCaptured contract operation.
+    /// </summary>
     public void EnsureTaskCaptured()
     {
         if (Task is null)
@@ -118,6 +175,9 @@ public sealed record ExternalOperationCorrelation
 /// </summary>
 public sealed record ExternalOperationStartIdentity
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationStartIdentity type.
+    /// </summary>
     public ExternalOperationStartIdentity(
         DelegationId delegationId,
         WorkflowRunExecutionReference workflowRun,
@@ -141,14 +201,38 @@ public sealed record ExternalOperationStartIdentity
         NodeGeneration = nodeGeneration;
     }
 
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
     public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the WorkflowRun value.
+    /// </summary>
     public WorkflowRunExecutionReference WorkflowRun { get; }
+    /// <summary>
+    /// Gets the StructuralNode value.
+    /// </summary>
     public StructuralNodeReference StructuralNode { get; }
+    /// <summary>
+    /// Gets the NodeGeneration value.
+    /// </summary>
     public NodeGenerationId NodeGeneration { get; }
+    /// <summary>
+    /// Gets the ExecutionAttemptId value.
+    /// </summary>
     public string ExecutionAttemptId { get; }
+    /// <summary>
+    /// Gets the IdempotencyKey value.
+    /// </summary>
     public string IdempotencyKey { get; }
+    /// <summary>
+    /// Gets the SemanticFingerprint value.
+    /// </summary>
     public string SemanticFingerprint { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         ArtifactContracts.RequireDelegation(DelegationId, nameof(DelegationId));
@@ -164,6 +248,9 @@ public sealed record ExternalOperationStartIdentity
 /// <summary>Bounded start hints. Providers may ignore unsupported hints.</summary>
 public sealed record ExternalOperationBudgetHint
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationBudgetHint type.
+    /// </summary>
     public ExternalOperationBudgetHint(int? maximumTokens = null, TimeSpan? maximumDuration = null)
     {
         if (maximumTokens is < 1)
@@ -180,7 +267,13 @@ public sealed record ExternalOperationBudgetHint
         MaximumDuration = maximumDuration;
     }
 
+    /// <summary>
+    /// Gets the MaximumTokens value.
+    /// </summary>
     public int? MaximumTokens { get; }
+    /// <summary>
+    /// Gets the MaximumDuration value.
+    /// </summary>
     public TimeSpan? MaximumDuration { get; }
 }
 
@@ -191,6 +284,9 @@ public sealed record ExternalOperationBudgetHint
 /// </summary>
 public sealed record ExternalOperationStartRequest
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationStartRequest type.
+    /// </summary>
     public ExternalOperationStartRequest(
         ExternalOperationStartIdentity identity,
         ExternalOperationCorrelation correlation,
@@ -230,19 +326,164 @@ public sealed record ExternalOperationStartRequest
         InputArtifacts = Array.AsReadOnly(snapshot);
         Budget = budget;
         Deadline = deadline;
+        SemanticInput = new ExternalOperationSemanticInputEnvelope(
+            identity.DelegationId,
+            correlation.Agent,
+            Capability,
+            InputArtifacts,
+            Budget,
+            Deadline);
     }
 
+    /// <summary>
+    /// Gets the Identity value.
+    /// </summary>
     public ExternalOperationStartIdentity Identity { get; }
+    /// <summary>
+    /// Gets the Correlation value.
+    /// </summary>
     public ExternalOperationCorrelation Correlation { get; }
+    /// <summary>
+    /// Gets the Capability value.
+    /// </summary>
     public string Capability { get; }
+    /// <summary>
+    /// Gets the InputArtifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> InputArtifacts { get; }
+    /// <summary>
+    /// Gets the Budget value.
+    /// </summary>
     public ExternalOperationBudgetHint? Budget { get; }
+    /// <summary>
+    /// Gets the Deadline value.
+    /// </summary>
     public DateTimeOffset? Deadline { get; }
+    /// <summary>
+    /// Exact semantic envelope whose canonical SHA-256 is carried by
+    /// <see cref="ExternalOperationStartIdentity.SemanticFingerprint"/>. The
+    /// envelope intentionally excludes transport details and is exposed so the
+    /// Siming adapter can verify it without Marang duplicating canonicalization.
+    /// </summary>
+    public ExternalOperationSemanticInputEnvelope SemanticInput { get; }
+
+    /// <summary>
+    /// Verifies the opaque semantic fingerprint through the Siming adapter
+    /// seam. Hosts must call this successfully before invoking StartAsync.
+    /// </summary>
+    public void VerifySemanticFingerprint(IExternalOperationSemanticFingerprintVerifier verifier)
+    {
+        ArgumentNullException.ThrowIfNull(verifier);
+        if (!verifier.Matches(Identity, SemanticInput))
+        {
+            throw new InvalidOperationException(
+                "The start semantic fingerprint does not match the exact semantic input envelope.");
+        }
+    }
+}
+
+/// <summary>
+/// Versioned semantic inputs for an external start. Siming owns the canonical
+/// serialization and hashing contract; Marang owns this bounded input shape.
+/// </summary>
+public sealed record ExternalOperationSemanticInputEnvelope
+{
+    /// <summary>
+    /// Provides the CurrentVersion contract constant.
+    /// </summary>
+    public const string CurrentVersion = "external-start-semantics-v1";
+
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationSemanticInputEnvelope type.
+    /// </summary>
+    public ExternalOperationSemanticInputEnvelope(
+        DelegationId delegationId,
+        ExternalAgentReference agent,
+        string capability,
+        IReadOnlyList<DelegationArtifactReference> inputArtifacts,
+        ExternalOperationBudgetHint? budget,
+        DateTimeOffset? deadline)
+    {
+        ArtifactContracts.RequireDelegation(delegationId, nameof(delegationId));
+        ArgumentNullException.ThrowIfNull(agent);
+        agent.Validate();
+        SchemaVersion = ArtifactContracts.Version(CurrentVersion, nameof(SchemaVersion));
+        Capability = ArtifactContracts.Version(capability, nameof(capability));
+        ArgumentNullException.ThrowIfNull(inputArtifacts);
+        if (inputArtifacts.Count > ArtifactContracts.MaximumCollectionItems)
+        {
+            throw new ArgumentException("A semantic input envelope contains too many input artifacts.", nameof(inputArtifacts));
+        }
+
+        var snapshot = inputArtifacts.ToArray();
+        var identities = new HashSet<(string Provider, string Repository, string ArtifactId)>();
+        foreach (var artifact in snapshot)
+        {
+            ArgumentNullException.ThrowIfNull(artifact);
+            ArtifactContracts.ValidateArtifact(artifact, delegationId);
+            if (!identities.Add((artifact.Provider, artifact.Repository, artifact.ArtifactId)))
+            {
+                throw new ArgumentException(
+                    "A semantic input envelope cannot contain duplicate artifact identities.",
+                    nameof(inputArtifacts));
+            }
+        }
+
+        DelegationId = delegationId;
+        Agent = agent;
+        InputArtifacts = Array.AsReadOnly(snapshot);
+        Budget = budget;
+        Deadline = deadline;
+    }
+
+    /// <summary>
+    /// Gets the SchemaVersion value.
+    /// </summary>
+    public string SchemaVersion { get; }
+    /// <summary>
+    /// Gets the DelegationId value.
+    /// </summary>
+    public DelegationId DelegationId { get; }
+    /// <summary>
+    /// Gets the Agent value.
+    /// </summary>
+    public ExternalAgentReference Agent { get; }
+    /// <summary>
+    /// Gets the Capability value.
+    /// </summary>
+    public string Capability { get; }
+    /// <summary>
+    /// Gets the InputArtifacts value.
+    /// </summary>
+    public IReadOnlyList<DelegationArtifactReference> InputArtifacts { get; }
+    /// <summary>
+    /// Gets the Budget value.
+    /// </summary>
+    public ExternalOperationBudgetHint? Budget { get; }
+    /// <summary>
+    /// Gets the Deadline value.
+    /// </summary>
+    public DateTimeOffset? Deadline { get; }
+}
+
+/// <summary>
+/// Verification seam for the Siming canonical-fingerprint adapter. Marang
+/// deliberately does not implement canonical JSON or hash serialization here.
+/// </summary>
+public interface IExternalOperationSemanticFingerprintVerifier
+{
+    /// <summary>
+    /// Performs the Matches contract operation.
+    /// </summary>
+    bool Matches(ExternalOperationStartIdentity identity, ExternalOperationSemanticInputEnvelope semanticInput);
 }
 
 /// <summary>Provider-issued reconnectable operation handle.</summary>
 public sealed record ExternalOperationHandle
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationHandle type.
+    /// </summary>
     public ExternalOperationHandle(
         string provider,
         string value,
@@ -272,11 +513,26 @@ public sealed record ExternalOperationHandle
         Correlation = correlation;
     }
 
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Value value.
+    /// </summary>
     public string Value { get; }
+    /// <summary>
+    /// Gets the ProtocolVersion value.
+    /// </summary>
     public string ProtocolVersion { get; }
+    /// <summary>
+    /// Gets the Correlation value.
+    /// </summary>
     public ExternalOperationCorrelation Correlation { get; }
 
+    /// <summary>
+    /// Validates this contract value and throws when an invariant is violated.
+    /// </summary>
     public void Validate()
     {
         IdentityText.Require(Provider, nameof(Provider), 128);
@@ -296,6 +552,9 @@ public sealed record ExternalOperationHandle
         }
     }
 
+    /// <summary>
+    /// Performs the ToProviderAttemptReference contract operation.
+    /// </summary>
     public ProviderExecutionAttemptReference ToProviderAttemptReference() =>
         new(Provider, Correlation.ExecutionAttemptId, Value);
 }
@@ -303,6 +562,9 @@ public sealed record ExternalOperationHandle
 /// <summary>Durable receipt of the earliest provider handle capture.</summary>
 public sealed record ExternalOperationHandleCapture
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationHandleCapture type.
+    /// </summary>
     public ExternalOperationHandleCapture(ExternalOperationHandle handle, DateTimeOffset capturedAt)
     {
         ArgumentNullException.ThrowIfNull(handle);
@@ -316,7 +578,13 @@ public sealed record ExternalOperationHandleCapture
         CapturedAt = capturedAt;
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the CapturedAt value.
+    /// </summary>
     public DateTimeOffset CapturedAt { get; }
 }
 
@@ -326,17 +594,35 @@ public sealed record ExternalOperationHandleCapture
 /// </summary>
 public interface IExternalOperationHandleCaptureSink
 {
+    /// <summary>
+    /// Performs the CaptureAsync contract operation.
+    /// </summary>
     ValueTask CaptureAsync(ExternalOperationHandleCapture capture, CancellationToken cancellationToken = default);
 }
 
+/// <summary>
+/// Represents the ExternalOperationStartDisposition contract and its invariants.
+/// </summary>
 public enum ExternalOperationStartDisposition
 {
+    /// <summary>
+    /// Identifies the Created enum value.
+    /// </summary>
     Created = 0,
+    /// <summary>
+    /// Identifies the Existing enum value.
+    /// </summary>
     Existing = 1,
 }
 
+/// <summary>
+/// Represents the ExternalOperationStartReceipt contract and its invariants.
+/// </summary>
 public sealed record ExternalOperationStartReceipt
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationStartReceipt type.
+    /// </summary>
     public ExternalOperationStartReceipt(
         ExternalOperationStartIdentity identity,
         ExternalOperationHandle handle,
@@ -367,41 +653,110 @@ public sealed record ExternalOperationStartReceipt
         AcceptedAt = acceptedAt;
     }
 
+    /// <summary>
+    /// Gets the Identity value.
+    /// </summary>
     public ExternalOperationStartIdentity Identity { get; }
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the Disposition value.
+    /// </summary>
     public ExternalOperationStartDisposition Disposition { get; }
+    /// <summary>
+    /// Gets the State value.
+    /// </summary>
     public ExternalOperationState State { get; }
+    /// <summary>
+    /// Gets the AcceptedAt value.
+    /// </summary>
     public DateTimeOffset AcceptedAt { get; }
 }
 
+/// <summary>
+/// Represents the ExternalOperationState contract and its invariants.
+/// </summary>
 public enum ExternalOperationState
 {
+    /// <summary>
+    /// Identifies the Accepted enum value.
+    /// </summary>
     Accepted = 0,
+    /// <summary>
+    /// Identifies the Running enum value.
+    /// </summary>
     Running = 1,
+    /// <summary>
+    /// Identifies the Waiting enum value.
+    /// </summary>
     Waiting = 2,
+    /// <summary>
+    /// Identifies the Succeeded enum value.
+    /// </summary>
     Succeeded = 3,
+    /// <summary>
+    /// Identifies the Failed enum value.
+    /// </summary>
     Failed = 4,
+    /// <summary>
+    /// Identifies the CancellationRequested enum value.
+    /// </summary>
     CancellationRequested = 5,
+    /// <summary>
+    /// Identifies the Cancelled enum value.
+    /// </summary>
     Cancelled = 6,
+    /// <summary>
+    /// Identifies the TimedOut enum value.
+    /// </summary>
     TimedOut = 7,
+    /// <summary>
+    /// Identifies the Rejected enum value.
+    /// </summary>
     Rejected = 8,
     /// <summary>The provider response is ambiguous; the operation may still be running.</summary>
     Unknown = 9,
 }
 
+/// <summary>
+/// Represents the ExternalOperationFailureKind contract and its invariants.
+/// </summary>
 public enum ExternalOperationFailureKind
 {
+    /// <summary>
+    /// Identifies the Transport enum value.
+    /// </summary>
     Transport = 0,
+    /// <summary>
+    /// Identifies the Remote enum value.
+    /// </summary>
     Remote = 1,
+    /// <summary>
+    /// Identifies the Cancellation enum value.
+    /// </summary>
     Cancellation = 2,
+    /// <summary>
+    /// Identifies the Timeout enum value.
+    /// </summary>
     Timeout = 3,
+    /// <summary>
+    /// Identifies the Rejection enum value.
+    /// </summary>
     Rejection = 4,
+    /// <summary>
+    /// Identifies the ResultValidation enum value.
+    /// </summary>
     ResultValidation = 5,
 }
 
 /// <summary>Stable, policy-readable classification of an external failure.</summary>
 public sealed record ExternalOperationFailure
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationFailure type.
+    /// </summary>
     public ExternalOperationFailure(
         ExternalOperationFailureKind kind,
         string code,
@@ -421,15 +776,36 @@ public sealed record ExternalOperationFailure
         Retryable = retryable;
     }
 
+    /// <summary>
+    /// Gets the Kind value.
+    /// </summary>
     public ExternalOperationFailureKind Kind { get; }
+    /// <summary>
+    /// Gets the Code value.
+    /// </summary>
     public string Code { get; }
+    /// <summary>
+    /// Gets the Summary value.
+    /// </summary>
     public string Summary { get; }
+    /// <summary>
+    /// Gets the Retryable value.
+    /// </summary>
     public bool Retryable { get; }
+    /// <summary>
+    /// Gets the ProviderCode value.
+    /// </summary>
     public string? ProviderCode { get; }
 }
 
+/// <summary>
+/// Represents the ExternalOperationObservation contract and its invariants.
+/// </summary>
 public sealed record ExternalOperationObservation
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationObservation type.
+    /// </summary>
     public ExternalOperationObservation(
         ExternalOperationHandle handle,
         long revision,
@@ -488,17 +864,44 @@ public sealed record ExternalOperationObservation
         ResultAvailable = resultAvailable;
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the Revision value.
+    /// </summary>
     public long Revision { get; }
+    /// <summary>
+    /// Gets the State value.
+    /// </summary>
     public ExternalOperationState State { get; }
+    /// <summary>
+    /// Gets the ObservedAt value.
+    /// </summary>
     public DateTimeOffset ObservedAt { get; }
+    /// <summary>
+    /// Gets the ProviderStatus value.
+    /// </summary>
     public string? ProviderStatus { get; }
+    /// <summary>
+    /// Gets the Failure value.
+    /// </summary>
     public ExternalOperationFailure? Failure { get; }
+    /// <summary>
+    /// Gets the ResultAvailable value.
+    /// </summary>
     public bool ResultAvailable { get; }
 }
 
+/// <summary>
+/// Represents the ExternalOperationObservationRules contract and its invariants.
+/// </summary>
 public static class ExternalOperationObservationRules
 {
+    /// <summary>
+    /// Performs the ValidateProgression contract operation.
+    /// </summary>
     public static void ValidateProgression(ExternalOperationObservation previous, ExternalOperationObservation current)
     {
         ArgumentNullException.ThrowIfNull(previous);
@@ -540,8 +943,14 @@ public static class ExternalOperationObservationRules
     }
 }
 
+/// <summary>
+/// Represents the ExternalOperationResult contract and its invariants.
+/// </summary>
 public sealed record ExternalOperationResult
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationResult type.
+    /// </summary>
     public ExternalOperationResult(
         ExternalOperationHandle handle,
         ExternalOperationState state,
@@ -575,7 +984,11 @@ public sealed record ExternalOperationResult
         foreach (var artifact in snapshot)
         {
             ArgumentNullException.ThrowIfNull(artifact);
-            ArtifactContracts.ValidateArtifact(artifact, handle.Correlation.DelegationId);
+            ArtifactContracts.ValidateArtifact(
+                artifact,
+                handle.Correlation.DelegationId,
+                handle.Correlation.StructuralNode,
+                handle.Correlation.NodeGeneration);
             if (!identities.Add((artifact.Provider, artifact.Repository, artifact.ArtifactId)))
             {
                 throw new ArgumentException("An external result cannot contain duplicate artifacts.", nameof(artifacts));
@@ -607,26 +1020,71 @@ public sealed record ExternalOperationResult
         Failure = failure;
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the State value.
+    /// </summary>
     public ExternalOperationState State { get; }
+    /// <summary>
+    /// Gets the CompletedAt value.
+    /// </summary>
     public DateTimeOffset CompletedAt { get; }
+    /// <summary>
+    /// Gets the Summary value.
+    /// </summary>
     public string Summary { get; }
+    /// <summary>
+    /// Gets the Artifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> Artifacts { get; }
+    /// <summary>
+    /// Gets the Provenance value.
+    /// </summary>
     public ExternalOperationProvenanceSnapshot? Provenance { get; }
+    /// <summary>
+    /// Gets the Failure value.
+    /// </summary>
     public ExternalOperationFailure? Failure { get; }
 }
 
+/// <summary>
+/// Represents the ExternalOperationCancellationDisposition contract and its invariants.
+/// </summary>
 public enum ExternalOperationCancellationDisposition
 {
+    /// <summary>
+    /// Identifies the Requested enum value.
+    /// </summary>
     Requested = 0,
+    /// <summary>
+    /// Identifies the ConfirmedCancelled enum value.
+    /// </summary>
     ConfirmedCancelled = 1,
+    /// <summary>
+    /// Identifies the AlreadyTerminal enum value.
+    /// </summary>
     AlreadyTerminal = 2,
+    /// <summary>
+    /// Identifies the Rejected enum value.
+    /// </summary>
     Rejected = 3,
+    /// <summary>
+    /// Identifies the Unknown enum value.
+    /// </summary>
     Unknown = 4,
 }
 
+/// <summary>
+/// Represents the ExternalOperationCancelRequest contract and its invariants.
+/// </summary>
 public sealed record ExternalOperationCancelRequest
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationCancelRequest type.
+    /// </summary>
     public ExternalOperationCancelRequest(ExternalOperationHandle handle, string cancellationKey, string reason)
     {
         ArgumentNullException.ThrowIfNull(handle);
@@ -636,15 +1094,31 @@ public sealed record ExternalOperationCancelRequest
         Reason = IdentityText.RequireProse(reason, nameof(reason), 4_096);
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the CancellationKey value.
+    /// </summary>
     public string CancellationKey { get; }
+    /// <summary>
+    /// Gets the Reason value.
+    /// </summary>
     public string Reason { get; }
 }
 
+/// <summary>
+/// Represents the ExternalOperationCancellationReceipt contract and its invariants.
+/// </summary>
 public sealed record ExternalOperationCancellationReceipt
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationCancellationReceipt type.
+    /// </summary>
     public ExternalOperationCancellationReceipt(
         ExternalOperationHandle handle,
+        string cancellationKey,
         ExternalOperationCancellationDisposition disposition,
         ExternalOperationState state,
         DateTimeOffset recordedAt,
@@ -652,6 +1126,7 @@ public sealed record ExternalOperationCancellationReceipt
     {
         ArgumentNullException.ThrowIfNull(handle);
         handle.Validate();
+        CancellationKey = IdentityText.Require(cancellationKey, nameof(cancellationKey), 512);
         if (!Enum.IsDefined(disposition))
         {
             throw new ArgumentOutOfRangeException(nameof(disposition));
@@ -707,10 +1182,29 @@ public sealed record ExternalOperationCancellationReceipt
         Failure = failure;
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the CancellationKey value.
+    /// </summary>
+    public string CancellationKey { get; }
+    /// <summary>
+    /// Gets the Disposition value.
+    /// </summary>
     public ExternalOperationCancellationDisposition Disposition { get; }
+    /// <summary>
+    /// Gets the State value.
+    /// </summary>
     public ExternalOperationState State { get; }
+    /// <summary>
+    /// Gets the RecordedAt value.
+    /// </summary>
     public DateTimeOffset RecordedAt { get; }
+    /// <summary>
+    /// Gets the Failure value.
+    /// </summary>
     public ExternalOperationFailure? Failure { get; }
 }
 
@@ -720,6 +1214,9 @@ public sealed record ExternalOperationCancellationReceipt
 /// </summary>
 public sealed record ExternalOperationResumeRequest
 {
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationResumeRequest type.
+    /// </summary>
     public ExternalOperationResumeRequest(
         ExternalOperationHandle handle,
         string resumeKey,
@@ -752,16 +1249,98 @@ public sealed record ExternalOperationResumeRequest
         Reason = reason is null ? null : IdentityText.RequireProse(reason, nameof(reason), 4_096);
     }
 
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
     public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the ResumeKey value.
+    /// </summary>
     public string ResumeKey { get; }
+    /// <summary>
+    /// Gets the CorrectionArtifacts value.
+    /// </summary>
     public IReadOnlyList<DelegationArtifactReference> CorrectionArtifacts { get; }
+    /// <summary>
+    /// Gets the Reason value.
+    /// </summary>
     public string? Reason { get; }
+}
+
+/// <summary>Durable, idempotency-keyed receipt for one resume request.</summary>
+public sealed record ExternalOperationResumeReceipt
+{
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationResumeReceipt type.
+    /// </summary>
+    public ExternalOperationResumeReceipt(
+        ExternalOperationHandle previousHandle,
+        string resumeKey,
+        ExternalOperationHandle handle,
+        ExternalOperationStartDisposition disposition,
+        ExternalOperationState state,
+        DateTimeOffset acceptedAt)
+    {
+        ArgumentNullException.ThrowIfNull(previousHandle);
+        ArgumentNullException.ThrowIfNull(handle);
+        previousHandle.Validate();
+        handle.Validate();
+        ResumeKey = IdentityText.Require(resumeKey, nameof(resumeKey), 512);
+        if (previousHandle.Correlation != handle.Correlation)
+        {
+            throw new ArgumentException("A resume receipt must preserve the exact external operation correlation.", nameof(handle));
+        }
+
+        ExternalOperationContracts.RequireKnownState(state);
+        if (!Enum.IsDefined(disposition))
+        {
+            throw new ArgumentOutOfRangeException(nameof(disposition));
+        }
+
+        if (acceptedAt == default)
+        {
+            throw new ArgumentException("A resume receipt must have an acceptance timestamp.", nameof(acceptedAt));
+        }
+
+        PreviousHandle = previousHandle;
+        Handle = handle;
+        Disposition = disposition;
+        State = state;
+        AcceptedAt = acceptedAt;
+    }
+
+    /// <summary>
+    /// Gets the PreviousHandle value.
+    /// </summary>
+    public ExternalOperationHandle PreviousHandle { get; }
+    /// <summary>
+    /// Gets the ResumeKey value.
+    /// </summary>
+    public string ResumeKey { get; }
+    /// <summary>
+    /// Gets the Handle value.
+    /// </summary>
+    public ExternalOperationHandle Handle { get; }
+    /// <summary>
+    /// Gets the Disposition value.
+    /// </summary>
+    public ExternalOperationStartDisposition Disposition { get; }
+    /// <summary>
+    /// Gets the State value.
+    /// </summary>
+    public ExternalOperationState State { get; }
+    /// <summary>
+    /// Gets the AcceptedAt value.
+    /// </summary>
+    public DateTimeOffset AcceptedAt { get; }
 }
 
 /// <summary>Provider-neutral durable external-operation adapter seam.</summary>
 public interface IExternalOperationProvider
 {
     /// <remarks>
+    /// Hosts MUST call <see cref="ExternalOperationStartRequest.VerifySemanticFingerprint"/>
+    /// with their Siming-backed verifier before invoking this method.
     /// The provider must invoke <paramref name="handleSink"/> immediately
     /// after learning the task handle, before waiting for final acceptance or
     /// result data. Losing the return value is therefore recoverable.
@@ -771,19 +1350,31 @@ public interface IExternalOperationProvider
         IExternalOperationHandleCaptureSink handleSink,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Performs the ObserveAsync contract operation.
+    /// </summary>
     ValueTask<ExternalOperationObservation> ObserveAsync(
         ExternalOperationHandle handle,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Performs the GetResultAsync contract operation.
+    /// </summary>
     ValueTask<ExternalOperationResult> GetResultAsync(
         ExternalOperationHandle handle,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Performs the CancelAsync contract operation.
+    /// </summary>
     ValueTask<ExternalOperationCancellationReceipt> CancelAsync(
         ExternalOperationCancelRequest request,
         CancellationToken cancellationToken = default);
 
-    ValueTask<ExternalOperationStartReceipt> ResumeAsync(
+    /// <summary>
+    /// Performs the ResumeAsync contract operation.
+    /// </summary>
+    ValueTask<ExternalOperationResumeReceipt> ResumeAsync(
         ExternalOperationResumeRequest request,
         IExternalOperationHandleCaptureSink handleSink,
         CancellationToken cancellationToken = default);
@@ -792,8 +1383,14 @@ public interface IExternalOperationProvider
 /// <summary>Versioned model identity captured at invocation time.</summary>
 public sealed record ModelProvenanceSnapshot
 {
+    /// <summary>
+    /// Provides the CurrentSchemaVersion contract constant.
+    /// </summary>
     public const string CurrentSchemaVersion = "v1";
 
+    /// <summary>
+    /// Initializes a new instance of the ModelProvenanceSnapshot type.
+    /// </summary>
     public ModelProvenanceSnapshot(
         string provider,
         string model,
@@ -808,15 +1405,36 @@ public sealed record ModelProvenanceSnapshot
         Profile = profile is null ? null : IdentityText.Require(profile, nameof(profile), 512);
     }
 
+    /// <summary>
+    /// Gets the SchemaVersion value.
+    /// </summary>
     public string SchemaVersion { get; }
+    /// <summary>
+    /// Gets the Provider value.
+    /// </summary>
     public string Provider { get; }
+    /// <summary>
+    /// Gets the Model value.
+    /// </summary>
     public string Model { get; }
+    /// <summary>
+    /// Gets the ModelRevision value.
+    /// </summary>
     public string? ModelRevision { get; }
+    /// <summary>
+    /// Gets the Profile value.
+    /// </summary>
     public string? Profile { get; }
 }
 
+/// <summary>
+/// Represents the ToolProvenance contract and its invariants.
+/// </summary>
 public sealed record ToolProvenance
 {
+    /// <summary>
+    /// Initializes a new instance of the ToolProvenance type.
+    /// </summary>
     public ToolProvenance(string name, string? version = null, ArtifactContentIdentity? contentIdentity = null)
     {
         Name = IdentityText.Require(name, nameof(name), 512);
@@ -825,16 +1443,31 @@ public sealed record ToolProvenance
         ContentIdentity = contentIdentity;
     }
 
+    /// <summary>
+    /// Gets the Name value.
+    /// </summary>
     public string Name { get; }
+    /// <summary>
+    /// Gets the Version value.
+    /// </summary>
     public string? Version { get; }
+    /// <summary>
+    /// Gets the ContentIdentity value.
+    /// </summary>
     public ArtifactContentIdentity? ContentIdentity { get; }
 }
 
 /// <summary>Versioned immutable tool capability snapshot.</summary>
 public sealed record ToolProvenanceSnapshot
 {
+    /// <summary>
+    /// Provides the CurrentSchemaVersion contract constant.
+    /// </summary>
     public const string CurrentSchemaVersion = "v1";
 
+    /// <summary>
+    /// Initializes a new instance of the ToolProvenanceSnapshot type.
+    /// </summary>
     public ToolProvenanceSnapshot(
         IReadOnlyList<ToolProvenance> tools,
         string schemaVersion = CurrentSchemaVersion)
@@ -860,7 +1493,13 @@ public sealed record ToolProvenanceSnapshot
         Tools = Array.AsReadOnly(snapshot);
     }
 
+    /// <summary>
+    /// Gets the SchemaVersion value.
+    /// </summary>
     public string SchemaVersion { get; }
+    /// <summary>
+    /// Gets the Tools value.
+    /// </summary>
     public IReadOnlyList<ToolProvenance> Tools { get; }
 }
 
@@ -872,8 +1511,14 @@ public sealed record ToolProvenanceSnapshot
 /// </summary>
 public sealed record UsageProvenanceSnapshot
 {
+    /// <summary>
+    /// Provides the CurrentSchemaVersion contract constant.
+    /// </summary>
     public const string CurrentSchemaVersion = "v1";
 
+    /// <summary>
+    /// Initializes a new instance of the UsageProvenanceSnapshot type.
+    /// </summary>
     public UsageProvenanceSnapshot(
         IReadOnlyDictionary<string, string>? measurements = null,
         string schemaVersion = CurrentSchemaVersion)
@@ -882,15 +1527,27 @@ public sealed record UsageProvenanceSnapshot
         Measurements = ExternalOperationContracts.SafeProperties(measurements, nameof(measurements));
     }
 
+    /// <summary>
+    /// Gets the SchemaVersion value.
+    /// </summary>
     public string SchemaVersion { get; }
+    /// <summary>
+    /// Gets the Measurements value.
+    /// </summary>
     public IReadOnlyDictionary<string, string> Measurements { get; }
 }
 
 /// <summary>Atomic versioned provenance envelope attached to an operation result.</summary>
 public sealed record ExternalOperationProvenanceSnapshot
 {
+    /// <summary>
+    /// Provides the CurrentSchemaVersion contract constant.
+    /// </summary>
     public const string CurrentSchemaVersion = "v1";
 
+    /// <summary>
+    /// Initializes a new instance of the ExternalOperationProvenanceSnapshot type.
+    /// </summary>
     public ExternalOperationProvenanceSnapshot(
         ModelProvenanceSnapshot? model,
         ToolProvenanceSnapshot tools,
@@ -903,14 +1560,29 @@ public sealed record ExternalOperationProvenanceSnapshot
         Model = model;
     }
 
+    /// <summary>
+    /// Gets the SchemaVersion value.
+    /// </summary>
     public string SchemaVersion { get; }
+    /// <summary>
+    /// Gets the Model value.
+    /// </summary>
     public ModelProvenanceSnapshot? Model { get; }
+    /// <summary>
+    /// Gets the Tools value.
+    /// </summary>
     public ToolProvenanceSnapshot Tools { get; }
+    /// <summary>
+    /// Gets the Usage value.
+    /// </summary>
     public UsageProvenanceSnapshot Usage { get; }
 }
 
 internal static class ExternalOperationContracts
 {
+    /// <summary>
+    /// Performs the IsTerminal contract operation.
+    /// </summary>
     public static bool IsTerminal(ExternalOperationState state) => state is
         ExternalOperationState.Succeeded
         or ExternalOperationState.Failed
@@ -918,6 +1590,9 @@ internal static class ExternalOperationContracts
         or ExternalOperationState.TimedOut
         or ExternalOperationState.Rejected;
 
+    /// <summary>
+    /// Performs the CanTransition contract operation.
+    /// </summary>
     public static bool CanTransition(ExternalOperationState current, ExternalOperationState next)
     {
         RequireKnownState(current);
@@ -965,11 +1640,14 @@ internal static class ExternalOperationContracts
                 or ExternalOperationState.TimedOut
                 or ExternalOperationState.Rejected
                 or ExternalOperationState.Unknown,
-            ExternalOperationState.Unknown => true,
+            ExternalOperationState.Unknown => next != ExternalOperationState.Accepted,
             _ => false,
         };
     }
 
+    /// <summary>
+    /// Performs the RequireKnownState contract operation.
+    /// </summary>
     public static void RequireKnownState(ExternalOperationState state)
     {
         if (!Enum.IsDefined(state))
@@ -978,6 +1656,9 @@ internal static class ExternalOperationContracts
         }
     }
 
+    /// <summary>
+    /// Performs the RequireMatchingIdentity contract operation.
+    /// </summary>
     public static void RequireMatchingIdentity(
         ExternalOperationStartIdentity identity,
         ExternalOperationCorrelation correlation)
@@ -992,6 +1673,9 @@ internal static class ExternalOperationContracts
         }
     }
 
+    /// <summary>
+    /// Performs the RequireFailureMatchesState contract operation.
+    /// </summary>
     public static void RequireFailureMatchesState(ExternalOperationState state, ExternalOperationFailure failure)
     {
         ArgumentNullException.ThrowIfNull(failure);
@@ -1011,6 +1695,9 @@ internal static class ExternalOperationContracts
         }
     }
 
+    /// <summary>
+    /// Performs the SafeProperties contract operation.
+    /// </summary>
     public static IReadOnlyDictionary<string, string> SafeProperties(
         IReadOnlyDictionary<string, string>? values,
         string parameterName)

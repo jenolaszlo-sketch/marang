@@ -93,15 +93,15 @@ durable supervisory slice; pure Marang tests may use fakes.
 
 ## Gate 4 — Marang control plane
 
-Status: **in progress — control-plane Batches 1–6 complete; Batch 7 next**
+Status: **contract freeze complete — Siming preview.4 consumption remains; in-memory slice next**
 
 Marang CI is green, and the required dependency versions are available for
 exact-version restore. This gate covers the control-plane implementation; it
 does not require gallery search or symbol indexing to complete.
 
-Complete the remaining Marang Batches 5–7 in the Marang roadmap in order. These are
-provider-neutral contract work and do not by themselves require new releases
-of Fuwen, Zhinu, Hongxian, Hetu, Cangjie, or Baize.
+Marang Batches 1–7 are implemented and the public contract is frozen. Consume
+Siming preview.4 for the remaining Batch 5B canonical-fingerprint adapter after
+that exact package is published, then implement the in-memory supervision slice.
 
 The Gate 0.5 capability audit is the only reason to open an upstream package
 gate: if an audited semantic is generally reusable, implement, test, and

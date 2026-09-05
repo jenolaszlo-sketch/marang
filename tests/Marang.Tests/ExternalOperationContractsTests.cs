@@ -155,12 +155,14 @@ public sealed class ExternalOperationContractsTests
         var cancel = new ExternalOperationCancelRequest(handle, "cancel-key-1", "Supervisor requested cancellation.");
         var receipt = new ExternalOperationCancellationReceipt(
             handle,
+            "cancel-key-1",
             ExternalOperationCancellationDisposition.ConfirmedCancelled,
             ExternalOperationState.Cancelled,
             At(4));
         var resume = new ExternalOperationResumeRequest(handle, "resume-key-1", [], "Continue after reconnect.");
 
         cancel.CancellationKey.Should().Be("cancel-key-1");
+        receipt.CancellationKey.Should().Be("cancel-key-1");
         receipt.Disposition.Should().Be(ExternalOperationCancellationDisposition.ConfirmedCancelled);
         resume.ResumeKey.Should().Be("resume-key-1");
         resume.CorrectionArtifacts.Should().BeEmpty();
@@ -246,20 +248,170 @@ public sealed class ExternalOperationContractsTests
             "The provider rejected cancellation.",
             false);
 
-        new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Requested, ExternalOperationState.CancellationRequested, At(1));
-        new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.ConfirmedCancelled, ExternalOperationState.Cancelled, At(2));
-        new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Unknown, ExternalOperationState.Unknown, At(3), cancellationFailure);
-        new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Running, At(4), cancellationFailure);
-        new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.AlreadyTerminal, ExternalOperationState.Succeeded, At(5));
+        new ExternalOperationCancellationReceipt(handle, "cancel-1", ExternalOperationCancellationDisposition.Requested, ExternalOperationState.CancellationRequested, At(1));
+        new ExternalOperationCancellationReceipt(handle, "cancel-2", ExternalOperationCancellationDisposition.ConfirmedCancelled, ExternalOperationState.Cancelled, At(2));
+        new ExternalOperationCancellationReceipt(handle, "cancel-3", ExternalOperationCancellationDisposition.Unknown, ExternalOperationState.Unknown, At(3), cancellationFailure);
+        new ExternalOperationCancellationReceipt(handle, "cancel-4", ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Running, At(4), cancellationFailure);
+        new ExternalOperationCancellationReceipt(handle, "cancel-5", ExternalOperationCancellationDisposition.AlreadyTerminal, ExternalOperationState.Succeeded, At(5));
 
-        var requestedWrongState = () => new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Requested, ExternalOperationState.Running, At(6));
-        var rejectedWithoutFailure = () => new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Running, At(7));
-        var terminalAsRejected = () => new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Cancelled, At(8), cancellationFailure);
-        var unknownWithoutFailure = () => new ExternalOperationCancellationReceipt(handle, ExternalOperationCancellationDisposition.Unknown, ExternalOperationState.Unknown, At(9));
+        var requestedWrongState = () => new ExternalOperationCancellationReceipt(handle, "cancel-6", ExternalOperationCancellationDisposition.Requested, ExternalOperationState.Running, At(6));
+        var rejectedWithoutFailure = () => new ExternalOperationCancellationReceipt(handle, "cancel-7", ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Running, At(7));
+        var terminalAsRejected = () => new ExternalOperationCancellationReceipt(handle, "cancel-8", ExternalOperationCancellationDisposition.Rejected, ExternalOperationState.Cancelled, At(8), cancellationFailure);
+        var unknownWithoutFailure = () => new ExternalOperationCancellationReceipt(handle, "cancel-9", ExternalOperationCancellationDisposition.Unknown, ExternalOperationState.Unknown, At(9));
         requestedWrongState.Should().Throw<ArgumentException>();
         rejectedWithoutFailure.Should().Throw<ArgumentException>();
         terminalAsRejected.Should().Throw<ArgumentException>();
         unknownWithoutFailure.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Unknown_cannot_regress_to_accepted_and_external_results_own_artifacts()
+    {
+        var handle = CreateHandle();
+        var unknown = new ExternalOperationObservation(
+            handle,
+            1,
+            ExternalOperationState.Unknown,
+            At(1),
+            failure: new ExternalOperationFailure(ExternalOperationFailureKind.Transport, "transport.lost", "Connection lost.", true));
+        var accepted = new ExternalOperationObservation(handle, 2, ExternalOperationState.Accepted, At(2));
+
+        var regression = () => ExternalOperationObservationRules.ValidateProgression(unknown, accepted);
+        regression.Should().Throw<InvalidOperationException>();
+
+        var wrongNode = new DelegationArtifactReference(
+            DelegationIdValue,
+            new StructuralNodeReference("other-node"),
+            Generation,
+            "provider",
+            "repository",
+            "artifact-2",
+            "result",
+            1,
+            "artifact-location",
+            ArtifactContentIdentity.Sha256Bytes(Hash));
+        var result = () => new ExternalOperationResult(handle, ExternalOperationState.Succeeded, At(3), "done", [wrongNode]);
+        result.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Resume_receipt_retains_key_and_exact_correlation()
+    {
+        var handle = CreateHandle();
+        var receipt = new ExternalOperationResumeReceipt(
+            handle,
+            "resume-key-1",
+            handle,
+            ExternalOperationStartDisposition.Existing,
+            ExternalOperationState.Running,
+            At(5));
+
+        receipt.ResumeKey.Should().Be("resume-key-1");
+        receipt.PreviousHandle.Correlation.Should().Be(receipt.Handle.Correlation);
+
+        var other = CreateHandle(CreateCorrelation(new ExternalTaskReference("a2a", "task-1"), "attempt-2"));
+        var mismatch = () => new ExternalOperationResumeReceipt(
+            handle,
+            "resume-key-2",
+            other,
+            ExternalOperationStartDisposition.Created,
+            ExternalOperationState.Running,
+            At(6));
+        mismatch.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Semantic_fingerprint_verifier_seam_rejects_changed_input_envelopes()
+    {
+        var request = new ExternalOperationStartRequest(
+            CreateIdentity(),
+            CreateCorrelation(),
+            "implement-code",
+            [CreateArtifact()],
+            new ExternalOperationBudgetHint(maximumTokens: 20),
+            At(20));
+        var verifier = new InMemorySemanticFingerprintVerifier();
+        verifier.Register(request.Identity, request.SemanticInput);
+
+        verifier.Matches(request.Identity, request.SemanticInput).Should().BeTrue();
+        request.VerifySemanticFingerprint(verifier);
+
+        var changedEnvelopes = new[]
+        {
+            new ExternalOperationSemanticInputEnvelope(
+                request.SemanticInput.DelegationId,
+                request.SemanticInput.Agent,
+                "review-code",
+                request.InputArtifacts,
+                request.Budget,
+                request.Deadline),
+            new ExternalOperationSemanticInputEnvelope(
+                request.SemanticInput.DelegationId,
+                new ExternalAgentReference("process", "agent-2", "process-v1"),
+                request.Capability,
+                request.InputArtifacts,
+                request.Budget,
+                request.Deadline),
+            new ExternalOperationSemanticInputEnvelope(
+                request.SemanticInput.DelegationId,
+                request.SemanticInput.Agent,
+                request.Capability,
+                [CreateArtifact("artifact-2")],
+                request.Budget,
+                request.Deadline),
+            new ExternalOperationSemanticInputEnvelope(
+                request.SemanticInput.DelegationId,
+                request.SemanticInput.Agent,
+                request.Capability,
+                request.InputArtifacts,
+                new ExternalOperationBudgetHint(maximumTokens: 21),
+                request.Deadline),
+            new ExternalOperationSemanticInputEnvelope(
+                request.SemanticInput.DelegationId,
+                request.SemanticInput.Agent,
+                request.Capability,
+                request.InputArtifacts,
+                request.Budget,
+                At(21)),
+        };
+
+        foreach (var changed in changedEnvelopes)
+        {
+            verifier.Matches(request.Identity, changed).Should().BeFalse();
+        }
+
+        var rejectingVerifier = new InMemorySemanticFingerprintVerifier();
+        rejectingVerifier.Register(request.Identity, changedEnvelopes[0]);
+        var rejected = () => request.VerifySemanticFingerprint(rejectingVerifier);
+        rejected.Should().Throw<InvalidOperationException>();
+
+        var duplicate = () => new ExternalOperationSemanticInputEnvelope(
+            request.SemanticInput.DelegationId,
+            request.SemanticInput.Agent,
+            request.Capability,
+            [CreateArtifact(), CreateArtifact()],
+            request.Budget,
+            request.Deadline);
+        var wrongDelegation = new DelegationArtifactReference(
+            OtherDelegationId,
+            Node,
+            Generation,
+            "provider",
+            "repository",
+            "foreign-artifact",
+            "input",
+            1,
+            "foreign-location",
+            ArtifactContentIdentity.Sha256Bytes(Hash));
+        var ownership = () => new ExternalOperationSemanticInputEnvelope(
+            request.SemanticInput.DelegationId,
+            request.SemanticInput.Agent,
+            request.Capability,
+            [wrongDelegation],
+            request.Budget,
+            request.Deadline);
+        duplicate.Should().Throw<ArgumentException>();
+        ownership.Should().Throw<ArgumentException>();
     }
 
     private static ExternalOperationStartIdentity CreateIdentity() => new(
@@ -288,16 +440,18 @@ public sealed class ExternalOperationContractsTests
 
     private static DateTimeOffset At(int seconds) => DateTimeOffset.Parse($"2026-01-01T00:00:{seconds:00}Z");
 
-    private static DelegationArtifactReference CreateArtifact() => new(
-        DelegationIdValue,
+    private static DelegationArtifactReference CreateArtifact(
+        string artifactId = "artifact-1",
+        DelegationId? delegationId = null) => new(
+        delegationId ?? DelegationIdValue,
         Node,
         Generation,
         "provider",
         "repository",
-        "artifact-1",
+        artifactId,
         "evidence",
         1,
-        "artifact-location",
+        $"artifact-location/{artifactId}",
         ArtifactContentIdentity.Sha256Bytes(Hash));
 
     private sealed class RecordingHandleSink : IExternalOperationHandleCaptureSink
@@ -312,7 +466,20 @@ public sealed class ExternalOperationContractsTests
         }
     }
 
+    private sealed class InMemorySemanticFingerprintVerifier : IExternalOperationSemanticFingerprintVerifier
+    {
+        private readonly Dictionary<string, ExternalOperationSemanticInputEnvelope> envelopes = new(StringComparer.Ordinal);
+
+        public void Register(ExternalOperationStartIdentity identity, ExternalOperationSemanticInputEnvelope envelope) =>
+            envelopes[identity.SemanticFingerprint] = envelope;
+
+        public bool Matches(ExternalOperationStartIdentity identity, ExternalOperationSemanticInputEnvelope semanticInput) =>
+            envelopes.TryGetValue(identity.SemanticFingerprint, out var expected)
+            && Equals(expected, semanticInput);
+    }
+
     private static readonly DelegationId DelegationIdValue = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+    private static readonly DelegationId OtherDelegationId = new(Guid.Parse("00000000-0000-0000-0000-000000000002"));
     private static readonly WorkflowRunExecutionReference Workflow = new("zhinu", "run-1", "epoch-1");
     private static readonly StructuralNodeReference Node = new("implement");
     private static readonly NodeGenerationId Generation = new(Guid.Parse("00000000-0000-0000-0000-000000000011"));

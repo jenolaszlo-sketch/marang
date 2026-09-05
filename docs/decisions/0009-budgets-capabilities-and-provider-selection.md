@@ -39,6 +39,9 @@ authorization; the host supplies the authorized provider set.
   mutate receipts, definitions, descriptors, or selection results afterward.
 - Receipt sequence ordering and definition-version equality make replay and
   accidental cross-definition accounting explicit failures.
+- Budget snapshots retain a bounded set of receipt ids. A receipt id is
+  rejected even when replayed with a newer sequence, and every charge
+  dimension is validated against the definition before aggregation begins.
 - Checked integer addition rejects overflow before a durable snapshot can be
   published.
 - Capability claims are discovery input only. Host authorization and endpoint

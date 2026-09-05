@@ -1,0 +1,87 @@
+#nullable enable
+const Marang.DelegationRequestFingerprint.CurrentVersion = "v1" -> string!
+const Marang.DelegationRequestFingerprint.PlanBoundVersion = "v2" -> string!
+const Marang.SupervisorInterventionFingerprint.CurrentVersion = "v1" -> string!
+Marang.DelegationAcceptance
+Marang.DelegationAcceptance.DelegationAcceptance(Marang.DelegationId DelegationId, Marang.DelegationRequestFingerprint Fingerprint, bool IsNew) -> void
+Marang.DelegationAcceptance.DelegationId.get -> Marang.DelegationId
+Marang.DelegationAcceptance.DelegationId.init -> void
+Marang.DelegationAcceptance.Fingerprint.get -> Marang.DelegationRequestFingerprint
+Marang.DelegationAcceptance.Fingerprint.init -> void
+Marang.DelegationAcceptance.IsNew.get -> bool
+Marang.DelegationAcceptance.IsNew.init -> void
+Marang.DelegationLifecycle
+Marang.DelegationLifecycleViolationException
+Marang.DelegationLifecycleViolationException.DelegationLifecycleViolationException(string! message) -> void
+Marang.DelegationRequestFingerprint
+Marang.DelegationRequestFingerprint.DelegationRequestFingerprint() -> void
+Marang.DelegationRequestFingerprint.DelegationRequestFingerprint(string! version, string! hash) -> void
+Marang.DelegationRequestFingerprint.Hash.get -> string!
+Marang.DelegationRequestFingerprint.Validate() -> void
+Marang.DelegationRequestFingerprint.Version.get -> string!
+Marang.DelegationRequestIdentity
+Marang.DelegationRequestKeyConflictException
+Marang.DelegationRequestKeyConflictException.Caller.get -> Marang.DelegationCallerScope!
+Marang.DelegationRequestKeyConflictException.DelegationRequestKeyConflictException(Marang.DelegationCallerScope! caller, string! requestKey, Marang.DelegationRequestFingerprint existingFingerprint, Marang.DelegationRequestFingerprint suppliedFingerprint) -> void
+Marang.DelegationRequestKeyConflictException.ExistingFingerprint.get -> Marang.DelegationRequestFingerprint
+Marang.DelegationRequestKeyConflictException.RequestKey.get -> string!
+Marang.DelegationRequestKeyConflictException.SuppliedFingerprint.get -> Marang.DelegationRequestFingerprint
+Marang.DelegationRequestValidator
+Marang.IDelegationAcceptanceRegistry
+Marang.IDelegationAcceptanceRegistry.AcceptAsync(Marang.DelegationCallerScope! caller, Marang.DelegationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.DelegationAcceptance!>
+Marang.InMemoryCandidateRevisionPublicationRegistry
+Marang.InMemoryCandidateRevisionPublicationRegistry.InMemoryCandidateRevisionPublicationRegistry() -> void
+Marang.InMemoryCandidateRevisionPublicationRegistry.PublishAsync(Marang.CandidateRevisionReference! candidate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.CandidateRevisionPublication!>
+Marang.InMemoryDelegationAcceptanceRegistry
+Marang.InMemoryDelegationAcceptanceRegistry.AcceptAsync(Marang.DelegationCallerScope! caller, Marang.DelegationRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.DelegationAcceptance!>
+Marang.InMemoryDelegationAcceptanceRegistry.InMemoryDelegationAcceptanceRegistry() -> void
+Marang.InMemorySupervisorInterventionAcceptanceRegistry
+Marang.InMemorySupervisorInterventionAcceptanceRegistry.AcceptAsync(Marang.SupervisorIdentity! supervisor, Marang.SupervisorIntervention! intervention, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.SupervisorInterventionAcceptance!>
+Marang.InMemorySupervisorInterventionAcceptanceRegistry.ActivateAsync(Marang.SupervisorIdentity! supervisor, Marang.DelegationProgress! waitingProgress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Marang.InMemorySupervisorInterventionAcceptanceRegistry.InMemorySupervisorInterventionAcceptanceRegistry() -> void
+Marang.ISupervisorInterventionAcceptanceRegistry
+Marang.ISupervisorInterventionAcceptanceRegistry.AcceptAsync(Marang.SupervisorIdentity! supervisor, Marang.SupervisorIntervention! intervention, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Marang.SupervisorInterventionAcceptance!>
+Marang.ISupervisorInterventionAcceptanceRegistry.ActivateAsync(Marang.SupervisorIdentity! supervisor, Marang.DelegationProgress! waitingProgress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Marang.SupervisorInterventionAcceptance
+Marang.SupervisorInterventionAcceptance.CheckpointId.get -> Marang.SupervisorCheckpointId
+Marang.SupervisorInterventionAcceptance.DelegationId.get -> Marang.DelegationId
+Marang.SupervisorInterventionAcceptance.ExpectedRevision.get -> long
+Marang.SupervisorInterventionAcceptance.Fingerprint.get -> Marang.SupervisorInterventionFingerprint
+Marang.SupervisorInterventionAcceptance.IsNew.get -> bool
+Marang.SupervisorInterventionAcceptance.ReceiptId.get -> System.Guid
+Marang.SupervisorInterventionAcceptance.Supervisor.get -> Marang.SupervisorIdentity!
+Marang.SupervisorInterventionAcceptance.SupervisorInterventionAcceptance(System.Guid receiptId, Marang.DelegationId delegationId, Marang.SupervisorCheckpointId checkpointId, long expectedRevision, Marang.SupervisorIdentity! supervisor, Marang.SupervisorInterventionFingerprint fingerprint, bool isNew) -> void
+Marang.SupervisorInterventionFingerprint
+Marang.SupervisorInterventionFingerprint.Hash.get -> string!
+Marang.SupervisorInterventionFingerprint.SupervisorInterventionFingerprint() -> void
+Marang.SupervisorInterventionFingerprint.SupervisorInterventionFingerprint(string! version, string! hash) -> void
+Marang.SupervisorInterventionFingerprint.Validate() -> void
+Marang.SupervisorInterventionFingerprint.Version.get -> string!
+Marang.SupervisorInterventionIdentity
+Marang.SupervisorInterventionRejectedException
+Marang.SupervisorInterventionRejectedException.Reason.get -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectedException.SupervisorInterventionRejectedException(Marang.SupervisorInterventionRejectionReason reason, string! message) -> void
+Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.AuthorizedSupervisorLimitExceeded = 7 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.CheckpointAlreadyDecided = 4 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.CheckpointNotActive = 0 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.CheckpointRevisionRegression = 6 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.ConflictingCheckpointActivation = 5 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.ConflictingInterventionKey = 3 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.StaleRevision = 2 -> Marang.SupervisorInterventionRejectionReason
+Marang.SupervisorInterventionRejectionReason.UnauthorizedCheckpoint = 1 -> Marang.SupervisorInterventionRejectionReason
+override Marang.DelegationRequestFingerprint.ToString() -> string!
+override Marang.SupervisorInterventionFingerprint.ToString() -> string!
+static Marang.DelegationLifecycle.CanTransition(Marang.DelegationState current, Marang.DelegationState next) -> bool
+static Marang.DelegationLifecycle.EnsureTransition(Marang.DelegationState current, Marang.DelegationState next) -> void
+static Marang.DelegationLifecycle.IsTerminal(Marang.DelegationState state) -> bool
+static Marang.DelegationLifecycle.ValidateProgress(Marang.DelegationProgress! progress, Marang.DelegationProgress? previous = null) -> void
+static Marang.DelegationLifecycle.ValidateResult(Marang.DelegationResult! result) -> void
+static Marang.DelegationLifecycle.ValidateResultAvailability(Marang.DelegationProgress! progress, Marang.DelegationResult? result) -> void
+static Marang.DelegationLifecycle.ValidateResultPublication(Marang.DelegationResult? existing, Marang.DelegationResult! candidate) -> void
+static Marang.DelegationRequestIdentity.Canonicalize(Marang.DelegationRequest! request) -> string!
+static Marang.DelegationRequestIdentity.Compute(Marang.DelegationRequest! request) -> Marang.DelegationRequestFingerprint
+static Marang.DelegationRequestIdentity.NormalizeText(string! value) -> string!
+static Marang.DelegationRequestValidator.Validate(Marang.DelegationRequest! request) -> void
+static Marang.SupervisorInterventionIdentity.Canonicalize(Marang.SupervisorIntervention! intervention) -> string!
+static Marang.SupervisorInterventionIdentity.Compute(Marang.SupervisorIntervention! intervention) -> Marang.SupervisorInterventionFingerprint

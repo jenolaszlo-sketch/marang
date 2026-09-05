@@ -147,21 +147,17 @@ public sealed class DelegationLifecycleTests
     }
 
     [Fact]
-    public void Invalid_progress_revision_counts_and_timestamp_are_rejected()
+    public void Progress_constructor_rejects_invalid_revision_counts_and_timestamp()
     {
-        var cases = new[]
-        {
-            CreateProgress(DelegationState.Queued, revision: -1),
-            CreateProgress(DelegationState.Queued, workerCalls: -1),
-            CreateProgress(DelegationState.Queued, retries: -1),
-            CreateProgress(DelegationState.Queued, timestamp: DateTimeOffset.MinValue),
-        };
+        var negativeRevision = () => CreateProgress(DelegationState.Queued, revision: -1);
+        var negativeWorkerCalls = () => CreateProgress(DelegationState.Queued, workerCalls: -1);
+        var negativeRetries = () => CreateProgress(DelegationState.Queued, retries: -1);
+        var defaultTimestamp = () => CreateProgress(DelegationState.Queued, timestamp: DateTimeOffset.MinValue);
 
-        foreach (var progress in cases)
-        {
-            var act = () => DelegationLifecycle.ValidateProgress(progress);
-            act.Should().Throw<DelegationLifecycleViolationException>();
-        }
+        negativeRevision.Should().Throw<ArgumentOutOfRangeException>();
+        negativeWorkerCalls.Should().Throw<ArgumentOutOfRangeException>();
+        negativeRetries.Should().Throw<ArgumentOutOfRangeException>();
+        defaultTimestamp.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -344,19 +340,92 @@ public sealed class DelegationLifecycleTests
     public void Result_validation_rejects_invalid_state_summary_counts_and_timestamp()
     {
         var id = DelegationId.New();
-        var invalid = new[]
-        {
-            new DelegationResult(id, DelegationState.Running, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow),
-            new DelegationResult(id, DelegationState.Completed, "", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow),
-            new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], -1, 0, null, 0), [], [], DateTimeOffset.UtcNow),
-            new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], default),
-        };
+        var nonterminal = new DelegationResult(id, DelegationState.Running, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow);
+        var nonterminalAct = () => DelegationLifecycle.ValidateResult(nonterminal);
+        nonterminalAct.Should().Throw<DelegationLifecycleViolationException>();
 
-        foreach (var result in invalid)
-        {
-            var act = () => DelegationLifecycle.ValidateResult(result);
-            act.Should().Throw<DelegationLifecycleViolationException>();
-        }
+        var emptySummary = () => new DelegationResult(id, DelegationState.Completed, "", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow);
+        var defaultTimestamp = () => new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], default);
+        var nullEvidence = () => new DelegationResult(id, DelegationState.Completed, "summary", null!, [], [], DateTimeOffset.UtcNow);
+        emptySummary.Should().Throw<ArgumentException>();
+        defaultTimestamp.Should().Throw<ArgumentException>();
+        nullEvidence.Should().Throw<ArgumentNullException>();
+
+        var negativeEvidence = () => new DelegationEvidence([], [], -1, 0, null, 0);
+        negativeEvidence.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public void Progress_constructor_rejects_invalid_identity_state_bounds_steps_and_timestamp()
+    {
+        var validId = new DelegationId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+        var emptyId = () => new DelegationProgress(default, DelegationState.Queued, 0, [], [], 0, 0, DateTimeOffset.UtcNow);
+        var unknownState = () => new DelegationProgress(validId, (DelegationState)99, 0, [], [], 0, 0, DateTimeOffset.UtcNow);
+        var negativeRevision = () => new DelegationProgress(validId, DelegationState.Queued, -1, [], [], 0, 0, DateTimeOffset.UtcNow);
+        var hugeRevision = () => new DelegationProgress(validId, DelegationState.Queued, 1_000_000_001, [], [], 0, 0, DateTimeOffset.UtcNow);
+        var negativeCounter = () => new DelegationProgress(validId, DelegationState.Queued, 0, [], [], -1, 0, DateTimeOffset.UtcNow);
+        var oversizedSteps = () => new DelegationProgress(validId, DelegationState.Queued, 0, [new string('x', 4_097)], [], 0, 0, DateTimeOffset.UtcNow);
+        var defaultTimestamp = () => new DelegationProgress(validId, DelegationState.Queued, 0, [], [], 0, 0, default);
+
+        emptyId.Should().Throw<ArgumentException>();
+        unknownState.Should().Throw<ArgumentOutOfRangeException>();
+        negativeRevision.Should().Throw<ArgumentOutOfRangeException>();
+        hugeRevision.Should().Throw<ArgumentOutOfRangeException>();
+        negativeCounter.Should().Throw<ArgumentOutOfRangeException>();
+        oversizedSteps.Should().Throw<ArgumentException>();
+        defaultTimestamp.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Terminal_result_rejects_cross_delegation_null_duplicate_and_oversized_artifacts()
+    {
+        var id = new DelegationId(Guid.Parse("00000000-0000-0000-0000-000000000001"));
+        var other = new DelegationId(Guid.Parse("00000000-0000-0000-0000-000000000002"));
+        var artifact = CreateArtifact(id, "artifact-1");
+        var crossDelegation = CreateArtifact(other, "artifact-2");
+
+        var wrongOwner = () => new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [crossDelegation], [], DateTimeOffset.UtcNow);
+        var nullArtifact = () => new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [null!], [], DateTimeOffset.UtcNow);
+        var duplicate = () => new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [artifact, artifact], [], DateTimeOffset.UtcNow);
+        var oversized = () => new DelegationResult(id, DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), Enumerable.Range(0, 129).Select(index => CreateArtifact(id, $"artifact-{index}")).ToArray(), [], DateTimeOffset.UtcNow);
+
+        wrongOwner.Should().Throw<ArgumentException>();
+        nullArtifact.Should().Throw<ArgumentNullException>();
+        duplicate.Should().Throw<ArgumentException>();
+        oversized.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Legacy_evidence_and_concerns_are_snapshotted_and_bounded()
+    {
+        var changedFiles = new List<string> { "a.cs" };
+        var commands = new List<string> { "dotnet test" };
+        var concerns = new List<string> { "needs follow-up" };
+        var result = new DelegationResult(
+            DelegationId.New(),
+            DelegationState.Completed,
+            "summary",
+            new DelegationEvidence(changedFiles, commands, 1, 0, true, 0),
+            [],
+            concerns,
+            DateTimeOffset.UtcNow);
+
+        changedFiles.Add("later.cs");
+        commands.Add("later");
+        concerns.Add("later");
+        result.Evidence.ChangedFiles.Should().ContainSingle();
+        result.Evidence.Commands.Should().ContainSingle();
+        result.UnresolvedConcerns.Should().ContainSingle();
+
+        var tooManyFiles = () => new DelegationEvidence(Enumerable.Repeat("a.cs", 129).ToArray(), [], 0, 0, null, 0);
+        var oversizedCommand = () => new DelegationEvidence([], [new string('x', 4_097)], 0, 0, null, 0);
+        var oversizedConcern = () => new DelegationResult(DelegationId.New(), DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [new string('x', 4_097)], DateTimeOffset.UtcNow);
+        var duplicateConcern = () => new DelegationResult(DelegationId.New(), DelegationState.Completed, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], ["same", "same"], DateTimeOffset.UtcNow);
+
+        tooManyFiles.Should().Throw<ArgumentException>();
+        oversizedCommand.Should().Throw<ArgumentException>();
+        oversizedConcern.Should().Throw<ArgumentException>();
+        duplicateConcern.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -396,21 +465,15 @@ public sealed class DelegationLifecycleTests
     [Fact]
     public void Invalid_predecessor_progress_is_rejected_too()
     {
-        var predecessor = CreateProgress(DelegationState.Running, revision: -1);
-        var next = CreateProgress(DelegationState.Running, revision: 2);
+        var act = () => CreateProgress(DelegationState.Running, revision: -1);
 
-        var act = () => DelegationLifecycle.ValidateProgress(next, predecessor);
-
-        act.Should().Throw<DelegationLifecycleViolationException>();
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void Unknown_states_are_rejected_consistently()
     {
         var unknown = (DelegationState)99;
-        var id = DelegationId.New();
-        var progress = new DelegationProgress(id, unknown, 1, [], [], 0, 0, DateTimeOffset.UtcNow);
-        var result = new DelegationResult(id, unknown, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow);
 
         var actions = new Action[]
         {
@@ -418,8 +481,8 @@ public sealed class DelegationLifecycleTests
             () => DelegationLifecycle.CanTransition(unknown, DelegationState.Queued),
             () => DelegationLifecycle.CanTransition(DelegationState.Queued, unknown),
             () => DelegationLifecycle.EnsureTransition(unknown, DelegationState.Queued),
-            () => DelegationLifecycle.ValidateProgress(progress),
-            () => DelegationLifecycle.ValidateResult(result),
+            () => new DelegationProgress(DelegationId.New(), unknown, 1, [], [], 0, 0, DateTimeOffset.UtcNow),
+            () => new DelegationResult(DelegationId.New(), unknown, "summary", new DelegationEvidence([], [], 0, 0, null, 0), [], [], DateTimeOffset.UtcNow),
         };
 
         foreach (var action in actions)
@@ -468,6 +531,18 @@ public sealed class DelegationLifecycleTests
         [],
         [],
         completedAt);
+
+    private static DelegationArtifactReference CreateArtifact(DelegationId delegationId, string artifactId) => new(
+        delegationId,
+        new StructuralNodeReference("implement"),
+        new NodeGenerationId(Guid.Parse("00000000-0000-0000-0000-000000000011")),
+        "provider",
+        "repository",
+        artifactId,
+        "text",
+        1,
+        "artifact-location",
+        ArtifactContentIdentity.Sha256Bytes("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"));
 
     private static bool IsExpectedTransition(DelegationState current, DelegationState next) =>
         (current, next) switch

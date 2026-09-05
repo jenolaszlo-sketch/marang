@@ -66,6 +66,11 @@ public sealed class BudgetCapabilityContractsTests
 
         var replay = () => BudgetAccounting.Apply(definition, first.Snapshot, Receipt([new BudgetCharge("worker.calls", BudgetQuantity.Count(1))], sequence: 1));
         replay.Should().Throw<InvalidOperationException>();
+        var duplicateWithNewSequence = () => BudgetAccounting.Apply(
+            definition,
+            first.Snapshot,
+            Receipt([new BudgetCharge("worker.calls", BudgetQuantity.Count(1))], sequence: 2, receiptId: first.Snapshot.ReceiptIds[0]));
+        duplicateWithNewSequence.Should().Throw<InvalidOperationException>();
         var unknown = () => BudgetAccounting.Apply(definition, empty, Receipt([new BudgetCharge("unknown", BudgetQuantity.Count(1))]));
         unknown.Should().Throw<ArgumentException>();
 
@@ -75,6 +80,22 @@ public sealed class BudgetCapabilityContractsTests
             empty,
             Receipt([new BudgetCharge("worker.calls", BudgetQuantity.Count(1))], delegationId: otherDelegation));
         crossDelegation.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void Accounting_prevalidates_all_dimensions_before_aggregation()
+    {
+        var definition = new BudgetDefinition(
+            BudgetDefinition.CurrentVersion,
+            [new BudgetLimit("worker.calls", BudgetQuantity.Count(2))]);
+        var receipt = Receipt(
+            [
+                new BudgetCharge("worker.calls", BudgetQuantity.Count(1)),
+                new BudgetCharge("not-defined", BudgetQuantity.Count(1)),
+            ]);
+
+        var apply = () => BudgetAccounting.Apply(definition, BudgetAccounting.Empty(definition, Delegation), receipt);
+        apply.Should().Throw<ArgumentException>().WithMessage("*undefined budget dimension*");
     }
 
     [Fact]
@@ -180,8 +201,9 @@ public sealed class BudgetCapabilityContractsTests
     private static BudgetConsumptionReceipt Receipt(
         IReadOnlyList<BudgetCharge> charges,
         long sequence = 1,
-        DelegationId? delegationId = null) =>
-        new(delegationId ?? Delegation, Guid.NewGuid(), BudgetDefinition.CurrentVersion, sequence, RecordedAt, charges);
+        DelegationId? delegationId = null,
+        Guid? receiptId = null) =>
+        new(delegationId ?? Delegation, receiptId ?? Guid.NewGuid(), BudgetDefinition.CurrentVersion, sequence, RecordedAt, charges);
 
     private static DelegationEvidence Evidence() => new([], [], 0, 0, null, 0);
 }

@@ -90,7 +90,7 @@ Status: **complete**
 
 ## Milestone 1 — Contract and identity freeze
 
-Status: **in progress — Batches 1–4 complete; Batches 5–7 pending**
+Status: **complete — Batches 1–7 implemented and contract surface frozen**
 
 Batches 1 and 2 are implemented and tested: canonical request identity,
 caller-scoped idempotent acceptance, immutable public inputs, fixed lifecycle
@@ -225,13 +225,17 @@ provider result validation, cancellation, timeout, and provenance tests.
 Exit: a provider can be started and recovered through a durable handle while
 Marang preserves cost, capability, failure, and provenance semantics.
 
-### Batch 7 — Public API baseline and contract freeze
+### Batch 7 — Public API baseline and contract freeze (complete)
 
-- [ ] Review all public contracts for ownership, authority, security, and
+- [x] Review all public contracts for ownership, authority, security, and
       provider neutrality.
-- [ ] Generate/update public API baselines for all target frameworks.
-- [ ] Run package/API compatibility checks and review XML documentation.
-- [ ] Consolidate ADRs and mark deferred semantics explicitly.
+- [x] Generate/update public API baselines for all target frameworks.
+- [x] Run package/API compatibility checks and review XML documentation.
+- [x] Consolidate ADRs and mark deferred semantics explicitly.
+
+See [ADR 0011](decisions/0011-public-api-and-contract-freeze.md) and the
+ownership/bounds hardening in
+[ADR 0012](decisions/0012-contract-bounds-and-ownership.md).
 
 Tests and checks: Release tests on `net8.0` and `net10.0` where applicable,
 format verification, pack, API review, link/diff checks, and roadmap update.
@@ -264,7 +268,7 @@ provider-specific UI.
 
 ## Milestone 2 — In-memory supervision vertical slice
 
-Status: **planned — starts after Batch 7**
+Status: **next — contract freeze complete**
 
 - [ ] Keep `marang_delegate` as a simple predefined `Implement` preset.
 - [ ] Add the advanced workflow-selection seam for compiled Fuwen plans.
