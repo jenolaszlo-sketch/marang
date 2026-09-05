@@ -278,7 +278,7 @@ Zhinu durability.
 1. **M2.1 — Plan/preset resolution (complete):** resolve a planless request to the stable
    built-in `Implement` revision, represent the fixed structured preset, and
    keep advanced Fuwen definitions behind a host-verification seam.
-2. **M2.2 — Provider policy and reconnect state (in progress):** add an immutable provider
+2. **M2.2 — Provider policy and reconnect state (complete):** add an immutable provider
    registry snapshot, deterministic explicit selection outcomes, authorized
    adapter lookup, and conflict-safe in-memory external-handle capture.
 3. **M2.3 — Deterministic coordinator:** accept a request, publish monotonic
@@ -305,8 +305,7 @@ Provider capability claims are selection input, not authorization. Wake hints
 never resume work or extend authority, reconnect never creates a new semantic
 generation, and deterministic validation cannot be overridden by model review.
 
-M2.1 and the registry/reconnect-state portion of M2.2 are implemented and
-verified. Planless requests are bound to the same v2 identity as explicit
+M2.1 and M2.2 are implemented and verified. Planless requests are bound to the same v2 identity as explicit
 `Implement/1` requests; the fixed definition encodes one conditional repair
 without becoming a caller-authored graph. Provider registration is bounded,
 immutable, and host-authorized; selection uses one revisioned snapshot and an
@@ -315,9 +314,17 @@ can be recovered from task-less pre-acceptance correlation without exposing
 opaque handle values in conflict diagnostics. See
 [ADR 0013](decisions/0013-in-memory-plan-and-provider-resolution.md).
 
+The atomic in-memory execution store required by M2.3 is also complete. It
+publishes monotonic progress through expected-revision fences and makes terminal
+progress plus its immutable result visible as one operation. The executable
+adapter catalog remains internal: only trusted host composition registers
+authority, and the coordinator must resolve the exact match from its captured
+provider snapshot. See
+[ADR 0014](decisions/0014-in-memory-execution-state-and-adapter-authority.md).
+
 - [x] Keep `marang_delegate` as a simple predefined `Implement` preset.
 - [x] Add the advanced workflow-selection seam for compiled Fuwen plans.
-- [ ] Define provider registry, capability selection, and policy decision
+- [x] Define provider registry, capability selection, and policy decision
       contracts.
 - [ ] Implement the fixed strategy with fake agent, model, deterministic, and
       context providers.
