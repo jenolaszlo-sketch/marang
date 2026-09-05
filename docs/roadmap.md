@@ -270,8 +270,53 @@ provider-specific UI.
 
 Status: **next — contract freeze complete**
 
-- [ ] Keep `marang_delegate` as a simple predefined `Implement` preset.
-- [ ] Add the advanced workflow-selection seam for compiled Fuwen plans.
+Implementation is split into dependency-ordered, independently reviewable
+batches. This slice is an in-memory coordinator over the frozen contracts; it
+is not a second workflow engine and does not interpret Fuwen or reproduce
+Zhinu durability.
+
+1. **M2.1 — Plan/preset resolution (complete):** resolve a planless request to the stable
+   built-in `Implement` revision, represent the fixed structured preset, and
+   keep advanced Fuwen definitions behind a host-verification seam.
+2. **M2.2 — Provider policy and reconnect state (in progress):** add an immutable provider
+   registry snapshot, deterministic explicit selection outcomes, authorized
+   adapter lookup, and conflict-safe in-memory external-handle capture.
+3. **M2.3 — Deterministic coordinator:** accept a request, publish monotonic
+   progress, advance through an explicit testable pump, and publish exactly one
+   immutable terminal result.
+4. **M2.4 — External-operation proof:** use bounded fake providers to prove
+   early handle capture, ambiguous acceptance, observation, result retrieval,
+   cancellation, and reconnect without duplicate work.
+5. **M2.5 — Supervision proof:** reach a stable checkpoint, emit a
+   non-authorizing wake hint, assemble bounded re-entry context, and apply one
+   authorized revision-fenced intervention exactly once.
+6. **M2.6 — Candidate and evidence proof:** seal one candidate before parallel
+   deterministic Test and independent Review, both against the exact immutable
+   candidate revision.
+7. **M2.7 — Bounded correction:** evaluate the independent outcomes and allow
+   at most one semantic fix using a new `NodeGeneration` and candidate revision.
+8. **M2.8 — Outcome matrix:** aggregate immutable evidence and cover success,
+   rejection, cancellation, budget exhaustion, provider error,
+   `NeedsSupervisor`, and planned waiting.
+
+Fuwen definition references are never interpreted by this slice: the host must
+authorize and verify the exact identifier, revision, and canonical fingerprint.
+Provider capability claims are selection input, not authorization. Wake hints
+never resume work or extend authority, reconnect never creates a new semantic
+generation, and deterministic validation cannot be overridden by model review.
+
+M2.1 and the registry/reconnect-state portion of M2.2 are implemented and
+verified. Planless requests are bound to the same v2 identity as explicit
+`Implement/1` requests; the fixed definition encodes one conditional repair
+without becoming a caller-authored graph. Provider registration is bounded,
+immutable, and host-authorized; selection uses one revisioned snapshot and an
+explicit no-match outcome. Early external handles are captured idempotently and
+can be recovered from task-less pre-acceptance correlation without exposing
+opaque handle values in conflict diagnostics. See
+[ADR 0013](decisions/0013-in-memory-plan-and-provider-resolution.md).
+
+- [x] Keep `marang_delegate` as a simple predefined `Implement` preset.
+- [x] Add the advanced workflow-selection seam for compiled Fuwen plans.
 - [ ] Define provider registry, capability selection, and policy decision
       contracts.
 - [ ] Implement the fixed strategy with fake agent, model, deterministic, and

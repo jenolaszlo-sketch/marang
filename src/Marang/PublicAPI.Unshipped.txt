@@ -1,1 +1,78 @@
 #nullable enable
+Marang.ExternalOperationHandleCaptureConflictKind
+Marang.ExternalOperationHandleCaptureConflictKind.ExecutionIdentity = 0 -> Marang.ExternalOperationHandleCaptureConflictKind
+Marang.ExternalOperationHandleCaptureConflictKind.ReusedHandle = 1 -> Marang.ExternalOperationHandleCaptureConflictKind
+Marang.ExternalOperationHandleCaptureConflictException
+Marang.ExternalOperationHandleCaptureConflictException.ExternalOperationHandleCaptureConflictException(Marang.ExternalOperationHandleCaptureConflictKind kind) -> void
+Marang.ExternalOperationHandleCaptureConflictException.Kind.get -> Marang.ExternalOperationHandleCaptureConflictKind
+Marang.ExternalOperationHandleCaptureRegistrySnapshot
+Marang.ExternalOperationHandleCaptureRegistrySnapshot.Captures.get -> System.Collections.Generic.IReadOnlyList<Marang.ExternalOperationHandleCapture!>!
+Marang.ExternalOperationHandleCaptureRegistrySnapshot.Count.get -> int
+Marang.ExternalOperationHandleCaptureRegistrySnapshot.TryGet(Marang.ExternalOperationCorrelation! correlation, out Marang.ExternalOperationHandleCapture? capture) -> bool
+Marang.ExternalOperationHandleCaptureRegistrySnapshot.TryGet(Marang.ExternalOperationHandle! handle, out Marang.ExternalOperationHandleCapture? capture) -> bool
+Marang.InMemoryExternalOperationHandleCaptureRegistry
+Marang.InMemoryExternalOperationHandleCaptureRegistry.Capacity.get -> int
+Marang.InMemoryExternalOperationHandleCaptureRegistry.CaptureAsync(Marang.ExternalOperationHandleCapture! capture, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Marang.InMemoryExternalOperationHandleCaptureRegistry.GetSnapshot() -> Marang.ExternalOperationHandleCaptureRegistrySnapshot!
+Marang.InMemoryExternalOperationHandleCaptureRegistry.InMemoryExternalOperationHandleCaptureRegistry() -> void
+Marang.InMemoryExternalOperationHandleCaptureRegistry.InMemoryExternalOperationHandleCaptureRegistry(int maximumEntries) -> void
+const Marang.InMemoryExternalOperationHandleCaptureRegistry.MaximumEntries = 256 -> int
+Marang.InMemoryExternalOperationHandleCaptureRegistry.TryGet(Marang.ExternalOperationCorrelation! correlation, out Marang.ExternalOperationHandleCapture? capture) -> bool
+Marang.InMemoryExternalOperationHandleCaptureRegistry.TryGet(Marang.ExternalOperationHandle! handle, out Marang.ExternalOperationHandleCapture? capture) -> bool
+Marang.InMemoryProviderRegistry
+Marang.InMemoryProviderRegistry.InMemoryProviderRegistry() -> void
+const Marang.InMemoryProviderRegistry.MaximumProviders = 128 -> int
+const Marang.InMemoryProviderRegistry.MaximumUtf8Bytes = 4194304 -> int
+const Marang.InMemoryProviderRegistry.MaximumCapabilities = 2048 -> int
+const Marang.InMemoryProviderRegistry.MaximumCapabilityAttributes = 8192 -> int
+Marang.InMemoryProviderRegistry.GetSnapshot() -> Marang.ProviderRegistrySnapshot!
+Marang.InMemoryProviderRegistry.Match(Marang.ProviderSelectionRequest! request) -> System.Collections.Generic.IReadOnlyList<Marang.ProviderMatch!>!
+Marang.InMemoryProviderRegistry.Register(Marang.ProviderDescriptor! provider) -> Marang.ProviderRegistration!
+Marang.InMemoryProviderRegistry.Select(Marang.ProviderSelectionRequest! request) -> Marang.ProviderSelectionResult!
+Marang.IProviderRegistry
+Marang.IProviderRegistry.GetSnapshot() -> Marang.ProviderRegistrySnapshot!
+Marang.IProviderRegistry.Match(Marang.ProviderSelectionRequest! request) -> System.Collections.Generic.IReadOnlyList<Marang.ProviderMatch!>!
+Marang.IProviderRegistry.Register(Marang.ProviderDescriptor! provider) -> Marang.ProviderRegistration!
+Marang.IProviderRegistry.Select(Marang.ProviderSelectionRequest! request) -> Marang.ProviderSelectionResult!
+Marang.ProviderRegistration
+Marang.ProviderRegistration.IsNew.get -> bool
+Marang.ProviderRegistration.Provider.get -> Marang.ProviderDescriptor!
+Marang.ProviderRegistration.Revision.get -> long
+Marang.ProviderRegistrationConflictException
+Marang.ProviderRegistrationConflictException.Existing.get -> Marang.ProviderDescriptor!
+Marang.ProviderRegistrationConflictException.Provider.get -> string!
+Marang.ProviderRegistrationConflictException.ProviderRegistrationConflictException(string! provider, Marang.ProviderDescriptor! existing, Marang.ProviderDescriptor! supplied) -> void
+Marang.ProviderRegistrationConflictException.Supplied.get -> Marang.ProviderDescriptor!
+Marang.ProviderRegistrySnapshot
+Marang.ProviderRegistrySnapshot.Match(Marang.ProviderSelectionRequest! request) -> System.Collections.Generic.IReadOnlyList<Marang.ProviderMatch!>!
+Marang.ProviderRegistrySnapshot.Providers.get -> System.Collections.Generic.IReadOnlyList<Marang.ProviderDescriptor!>!
+Marang.ProviderRegistrySnapshot.Revision.get -> long
+Marang.ProviderRegistrySnapshot.Select(Marang.ProviderSelectionRequest! request) -> Marang.ProviderSelectionResult!
+Marang.ProviderSelectionResult
+Marang.ProviderSelectionResult.IsMatch.get -> bool
+Marang.ProviderSelectionResult.Match.get -> Marang.ProviderMatch?
+static Marang.ProviderSelectionResult.Matched(Marang.ProviderMatch! match) -> Marang.ProviderSelectionResult!
+static Marang.ProviderSelectionResult.NoCompatibleProvider() -> Marang.ProviderSelectionResult!
+Marang.ProviderSelectionResult.Status.get -> Marang.ProviderSelectionStatus
+Marang.ProviderSelectionStatus
+Marang.ProviderSelectionStatus.Matched = 0 -> Marang.ProviderSelectionStatus
+Marang.ProviderSelectionStatus.NoCompatibleProvider = 1 -> Marang.ProviderSelectionStatus
+Marang.IWorkflowPlanHostVerifier
+Marang.IWorkflowPlanHostVerifier.Verify(Marang.WorkflowPlanVerificationContext! context) -> Marang.WorkflowPlanVerificationResult!
+Marang.WorkflowPlanVerificationContext
+Marang.WorkflowPlanVerificationContext.Caller.get -> Marang.DelegationCallerScope!
+Marang.WorkflowPlanVerificationContext.PlanRevision.get -> Marang.WorkflowPlanRevisionReference!
+Marang.WorkflowPlanVerificationContext.Workspace.get -> Marang.WorkspaceReference!
+Marang.WorkflowPlanVerificationContext.WorkflowPlanVerificationContext(Marang.DelegationCallerScope! caller, Marang.WorkflowPlanRevisionReference! planRevision, Marang.WorkspaceReference! workspace) -> void
+Marang.WorkflowPlanVerificationResult
+Marang.WorkflowPlanVerificationResult.WorkflowPlanVerificationResult(Marang.WorkflowPlanVerificationStatus status) -> void
+Marang.WorkflowPlanVerificationResult.IsVerified.get -> bool
+Marang.WorkflowPlanVerificationResult.Status.get -> Marang.WorkflowPlanVerificationStatus
+static Marang.WorkflowPlanVerificationResult.Rejected(Marang.WorkflowPlanVerificationStatus status) -> Marang.WorkflowPlanVerificationResult!
+static Marang.WorkflowPlanVerificationResult.Verified() -> Marang.WorkflowPlanVerificationResult!
+Marang.WorkflowPlanVerificationStatus
+Marang.WorkflowPlanVerificationStatus.FingerprintMismatch = 4 -> Marang.WorkflowPlanVerificationStatus
+Marang.WorkflowPlanVerificationStatus.Stale = 3 -> Marang.WorkflowPlanVerificationStatus
+Marang.WorkflowPlanVerificationStatus.Unauthorized = 2 -> Marang.WorkflowPlanVerificationStatus
+Marang.WorkflowPlanVerificationStatus.Unknown = 1 -> Marang.WorkflowPlanVerificationStatus
+Marang.WorkflowPlanVerificationStatus.Verified = 0 -> Marang.WorkflowPlanVerificationStatus
