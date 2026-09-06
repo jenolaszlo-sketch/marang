@@ -1,535 +1,255 @@
-# Marang roadmap
+# Marang and Qingniao roadmap
 
 ## Goal
 
-Provide a durable supervisory execution environment for coding agents and
-other bounded artifact-producing work: supervisors can select or author a
-workflow, leave, return at planned or emergent checkpoints, inspect bounded
-re-entry context, intervene, and selectively re-execute affected work.
-
-Progress is marked here so development can resume without relying on chat
-history.
-
-The cross-project order and primitive release gates are recorded in the
-[dependency release plan](dependency-release-plan.md).
-
-## Current product direction
-
-Marang is evolving from a one-shot delegation wrapper into a durable
-supervisory execution environment. A supervisor may select or author a Fuwen
-workflow, leave, return at planned or emergent checkpoints, inspect bounded
-re-entry context, intervene, and selectively re-execute affected work. The
-simple `marang_delegate` preset remains the easy path.
-
-The implementation sequence is:
-
-1. Freeze identity, lifecycle, evidence, budget, provider, and intervention
-   contracts.
-2. Prove the preset and advanced Fuwen workflow seam in memory, including
-   waiting, wake hints, bounded re-entry, and one new `NodeGeneration`.
-3. Prove a bounded Codex provider in an isolated workspace.
-4. Map the proven semantics to Zhinu durable execution and recovery, then
-   integrate context, evidence, MCP, and dogfooding.
-
-Fuwen owns workflow semantics/compiler; Zhinu owns durable execution;
-Hongxian owns session continuity and audit for the real durable slice; Hetu,
-Cangjie, and Baize own code context, retrieval, and model execution. Marang
-coordinates supervision, attention, budgets, context policy, interventions, and
-result aggregation.
-
-## Gate 0.5 — Primitive capability audit
-
-Status: **complete — all six primitive capability rows audited**
-
-Audit date: **2026-09-04**. The audit covered the local source repositories
-under `C:\Users\Laszlos\source\repos` and the released dependency state known
-to this repository: Zhinu `0.1.0-preview.12`, Hongxian `0.1.0-preview.2`, and
-Siming SQLite `0.1.0-preview.3`; Fuwen `0.1.0-preview.1`, Hetu
-`0.2.0-preview.3`, Cangjie `0.1.0-preview.3`, and Baize `0.3.0-preview.5`
-were inspected as local source states, not assumed to be published releases.
-
-This is not a claim that the audit is complete. Before adding a Marang
-abstraction or workaround, inspect the released/current APIs and roadmaps
-below. Record each result in the owning primitive's roadmap and in the
-[dependency release plan](dependency-release-plan.md). If a missing semantic is
-generally reusable, implement, test, and release it in the owning primitive
-first; Marang then consumes the clean public contract.
-
-| Needed capability | Authority | Evidence to inspect or test | Outcome |
-| --- | --- | --- | --- |
-| Durable waiting, idempotent signals, selective restart, artifact mechanics | [Zhinu](https://github.com/jenolaszlo-sketch/penghou-zhinu) | Released API/package, restart and signal tests, artifact/replay behavior | **Audited:** use existing waits, idempotent send receipts, selective restart, artifacts/identities, and cancellation. **Upstream before M4:** signal-consumption fencing, stale artifact-publication fencing, and generic external-operation handle persistence. |
-| Plan fingerprints, immutable revisions, structured supervisor nodes, context requirements | [Fuwen](https://github.com/jenolaszlo-sketch/penghou-fuwen) | Compiler/IR contracts, canonical serialization, definition-store verification, validation and cycle/termination tests | **Audited:** existing canonical plan fingerprints, structural IDs, and verified content-addressed definition storage are usable. **Fuwen P0 before advanced-plan acceptance:** deep immutability, authoritative reference/binding/type/acyclicity/resource validation, explicit revision lineage, supervisor/checkpoint external-input nodes, and typed context-snapshot requirements. Fuwen execution ports and a Fuwen-to-Zhinu adapter are P1 before advanced-plan execution; the adapter may be a separate package, while Marang does not define Fuwen runtime semantics. |
-| Session/correlation identity and append-only reconciliation outbox | [Hongxian](https://github.com/jenolaszlo-sketch/penghou-hongxian) | Session append/concurrency API, ExpectedHead/idempotency, projections, decisions/incidents/recovery, lease fencing, outbox/reconciliation tests | **Audited:** existing session/event identity, ExpectedHead/idempotency, projections, decisions/incidents/recovery, lease fencing, and outbox/reconciliation are usable. Marang owns typed supervised-work/checkpoint/intervention mapping. Indexed/as-of/re-entry queries are later upstream; cross-DB integration is an idempotent saga/reconciliation, not a distributed transaction. |
-| Context snapshots and code-graph revision identities | Cangjie / Hetu | Snapshot/revision APIs, impact/ownership queries, restart reproducibility tests | **Audited:** Marang can use reference-only adapters for current snapshot, repository, and index-publication identities. Their P1 upstream gaps remain in the owning roadmaps and are required before richer impact/re-entry integration; they do not block the provider-neutral context seam. |
-| Model execution, tool usage, structured output, and provenance | Baize | Provider/tool contracts, malformed-output handling, usage/provenance tests | **Audited:** reusable for bounded in-memory model work and provenance. Two Baize P0 tool-integrity gaps block authoritative complex-tool integration; durable ordinary completion also requires provider-native external-operation handles. |
-
-No downstream batch may silently work around an unaudited primitive capability.
-Gate 0.5 is complete for the current package surfaces; future just-in-time
-integration audits still record any newly discovered release blocker in the
-owning roadmap and dependency plan.
-
-## Milestone 0 — Project and boundary scaffold
-
-Status: **complete**
-
-- [x] Create multi-target .NET solution and package boundaries.
-- [x] Add initial provider-neutral delegation contracts.
-- [x] Add request validation and contract tests.
-- [x] Add CI build, format, test, and pack checks.
-- [x] Document architecture, security posture, non-goals, and design review.
-- [x] Correct Hongxian's role to temporal session/evidence rather than worker
-      execution.
-- [x] Accept agent runtimes as opaque execution providers rather than rebuilding
-      their native delegation and repository loops.
-- [x] Verify that the official Codex SDK and non-interactive surfaces can support
-      an initial Codex execution adapter.
-- [x] Establish MCP northbound, A2A-preferred southbound, and provider adapters
-      as external protocol boundaries.
-- [x] Record the invariant that protocols are adapters while Marang owns the
-      durable outcome model.
-
-## Milestone 1 — Contract and identity freeze
-
-Status: **complete — Batches 1–7 implemented and contract surface frozen**
-
-Batches 1 and 2 are implemented and tested: canonical request identity,
-caller-scoped idempotent acceptance, immutable public inputs, fixed lifecycle
-transitions, monotonic progress, and immutable terminal-result publication.
-See [ADR 0002](decisions/0002-request-identity.md) and
-[ADR 0003](decisions/0003-delegation-lifecycle.md).
-
-The remaining work is intentionally ordered. Each batch ends with its own
-review and does not smuggle provider execution or persistence into the core.
-
-### Batch 3 — Supervisory lifecycle and identities — complete
-
-- [x] Define planned nonterminal `WaitingForSupervisor` and terminal
-      `NeedsSupervisor` semantics.
-- [x] Define `SupervisorCheckpointId`, top-level wait gating, and independent
-      branch progress, including `Queued` entry and stable checkpoint identity
-      across waiting revisions.
-- [x] Bind request identity to a canonical workflow-plan fingerprint and
-      immutable `PlanRevision` for a versioned built-in preset reference or a
-      host-approved Fuwen definition reference; host policy must verify it
-      before execution.
-- [x] Keep acceptance of supervisor-authored/advanced Fuwen plans blocked until
-      Fuwen P0 validation and binding semantics are released and audited.
-- [x] Freeze the identity hierarchy: Hongxian Session, Marang SupervisedWork /
-      Delegation, Fuwen PlanRevision, Zhinu WorkflowRun / ExecutionEpoch,
-      structural Node, NodeGeneration, provider ExecutionAttempt / handle.
-- [x] Define retry/reconnect versus semantic node re-execution and linked runs.
-
-Tests: table-driven state/identity tests, exact v1/v2 fingerprint fixtures,
-unknown or stale identity rejection, exact checkpoint fencing, checkpoint
-consistency, and terminal immutability cases. Release tests passed for
-`net8.0` and `net10.0`.
-
-Exit: every pause, run, node generation, attempt, and accepted plan revision
-has a stable non-overloaded identity and an unambiguous lifecycle meaning;
-advanced Fuwen-plan acceptance is explicitly gated on Fuwen P0.
-
-### Batch 4 — Intervention, wake, and context contracts — complete
-
-- [x] Define revision-fenced, caller-authorized intervention acceptance and
-      idempotency behavior, including async storage-ready activation.
-- [x] Define wake/attention scheduling as bounded non-authorizing hints with
-      an explicit `ExpiresAt` and normalized prose reason.
-- [x] Define a closed typed action hierarchy (no arbitrary payload), global
-      single-assignment per checkpoint, rich immutable receipts, and rejection
-      taxonomy. `Respond` remains bounded normalized prose; artifact-bound
-      responses and richer typed evidence are deferred to Batch 5.
-- [x] Define bounded, demand-driven checkpoint re-entry context and provenance
-      references to Cangjie/Hetu snapshots when used, with explicit
-      truncation/omission and UTF-8 byte limits.
-
-Tests: stale revision, duplicate/conflicting intervention, unauthorized action,
-typed action bounds, competing authorized supervisors, concurrent acceptance,
-activation refresh/regression, cancellation, bounded context, exact
-checkpoint/delegation/revision binding, UTF-8 byte limits, explicit
-truncation/omission, independent-branch, and wake-hint tests. Release tests
-pass on `net8.0` and `net10.0` (188 tests per target).
-
-Exit: host-authenticated intervention intent can be accepted atomically and
-idempotently without overwriting newer decisions, extending authority, or
-performing a side effect; a supervisor can request and receive a bounded,
-explicitly delimited context package for the exact waiting checkpoint fence.
-
-See [ADR 0005](decisions/0005-intervention-acceptance.md) for the acceptance
-contract and [ADR 0006](decisions/0006-checkpoint-context.md) for bounded
-checkpoint re-entry context.
-
-### Batch 5 — Artifacts, evidence, and candidate identity (in progress)
-
-#### Batch 5A — Artifact/content identity and candidate references (complete)
-
-- [x] Define immutable artifact references with provider/repository identity,
-      kind/schema version, opaque location, required versioned content identity,
-      and exact SHA-256-bytes-v1 validation.
-- [x] Define node-generation ownership, strong candidate/revision identities,
-      aggregate result references, and an asynchronous in-memory idempotent
-      publication proof.
-
-See [ADR 0007](decisions/0007-artifact-and-candidate-identity.md).
-
-#### Batch 5B — Logical JSON content identity (upstream complete; package pending)
-
-- [x] Define the separately versioned `penghou-canonical-json-v2` contract in
-      Siming without changing or reinterpreting persisted v1 identities.
-- [x] Add type-independent canonicalization and SHA-256 verification from
-      persisted JSON, duplicate-property rejection, exact number handling, and
-      independent cross-runtime golden vectors in Siming.
-- [ ] Consume the released Siming preview.4 contract in Marang artifact
-      references after the package is published; do not copy the canonicalizer
-      or add a temporary Marang hash contract.
-
-#### Remaining Batch 5
-
-- [x] Define normalized evidence for agent, model, deterministic execution,
-      validation, and review without forcing one lowest-common-denominator API.
-- [x] Define worker invocation and review-independence evidence, including
-      candidate subject and reviewer identity.
-- [x] Integrate the richer evidence records into immutable candidate/result
-      publication without weakening existing terminal-result equality.
-
-Tests: canonical payload/file hashes, schema compatibility, duplicate
-publication, conflicting references, missing/invalid evidence, and immutable
-candidate/result tests. Batch 5C additionally covers provider/model identity,
-bounded extension data, ownership, deterministic validation, review subject
-identity, and adversarial independence claims. Batch 5D adds bounded evidence
-bundles, publication ownership checks, evidence-aware candidate conflicts, and
-terminal-result replay/replacement checks.
-
-Exit: every accepted output is verifiable, attributable to a node generation,
-and safely referenced by the eventual immutable aggregate result.
-
-### Batch 6 — Budgets, capabilities, providers, and provenance (complete)
-
-- [x] Define budget consumption receipts, provider hints, telemetry, and
-      `BudgetExceeded` as a durable outcome.
-- [x] Define open capability descriptors and deterministic matching without a
-      closed provider/model enum.
-- [x] Define the durable external-operation protocol: idempotent start, handle
-      capture, observe, cancel, result retrieval, and resume.
-- [x] Define stable external agent/task identities and correlation with
-      delegation, workflow step, and execution attempt.
-- [x] Separate transport failure, remote failure, cancellation, timeout,
-      rejection, and result-validation failure.
-- [x] Define versioned capability snapshots and model/tool/usage provenance.
-
-See [ADR 0009](decisions/0009-budgets-capabilities-and-provider-selection.md)
-and [ADR 0010](decisions/0010-durable-external-operation-protocol.md).
-
-Tests: budget accounting, capability matching, ambiguous start/reconnect,
-provider result validation, cancellation, timeout, and provenance tests.
-
-Exit: a provider can be started and recovered through a durable handle while
-Marang preserves cost, capability, failure, and provenance semantics.
-
-### Batch 7 — Public API baseline and contract freeze (complete)
-
-- [x] Review all public contracts for ownership, authority, security, and
-      provider neutrality.
-- [x] Generate/update public API baselines for all target frameworks.
-- [x] Run package/API compatibility checks and review XML documentation.
-- [x] Consolidate ADRs and mark deferred semantics explicitly.
-
-See [ADR 0011](decisions/0011-public-api-and-contract-freeze.md) and the
-ownership/bounds hardening in
-[ADR 0012](decisions/0012-contract-bounds-and-ownership.md).
-
-Tests and checks: Release tests on `net8.0` and `net10.0` where applicable,
-format verification, pack, API review, link/diff checks, and roadmap update.
-
-Exit: the reviewed core contracts are frozen for the in-memory vertical slice;
-future breaking changes require an explicit roadmap decision.
-
-### Batch discipline
-
-At every batch boundary, run the relevant test matrix on `net8.0` and
-`net10.0`, format verification, pack, API review, and `git diff --check`; update
-the roadmap and owning ADR. Commit and push only at an explicitly requested
-checkpoint. Upstream primitive changes are separate release gates; Marang
-pauses only when a required dependency is a real blocker.
-
-## First usable end-to-end definition
-
-The first usable product is a local, in-memory supervisory slice: a host
-submits the simple `marang_delegate` preset or selects a validated compiled
-Fuwen plan; a bounded fake/provider executes one artifact-producing node; the
-workflow reaches a checkpoint; the host can leave without polling, inspect
-bounded context, issue one authorized revision-fenced intervention, resume,
-and retrieve immutable evidence plus one aggregate result. This proves the
-product seam before real Codex, Zhinu persistence, or MCP transport.
-
-Deliberately deferred until later milestones: durable Zhinu/Hongxian storage,
-real Codex execution, repository mutation, full Cangjie/Hetu/Baize adapters,
-MCP/A2A transport, unbounded workflow graphs, collaboration, archival, and
-provider-specific UI.
-
-## Milestone 2 — In-memory supervision vertical slice
-
-Status: **next — contract freeze complete**
-
-Implementation is split into dependency-ordered, independently reviewable
-batches. This slice is an in-memory coordinator over the frozen contracts; it
-is not a second workflow engine and does not interpret Fuwen or reproduce
-Zhinu durability.
-
-1. **M2.1 — Plan/preset resolution (complete):** resolve a planless request to the stable
-   built-in `Implement` revision, represent the fixed structured preset, and
-   keep advanced Fuwen definitions behind a host-verification seam.
-2. **M2.2 — Provider policy and reconnect state (complete):** add an immutable provider
-   registry snapshot, deterministic explicit selection outcomes, authorized
-   adapter lookup, and conflict-safe in-memory external-handle capture.
-3. **M2.3 — Deterministic coordinator:** accept a request, publish monotonic
-   progress, advance through an explicit testable pump, and publish exactly one
-   immutable terminal result.
-4. **M2.4 — External-operation proof:** use bounded fake providers to prove
-   early handle capture, ambiguous acceptance, observation, result retrieval,
-   cancellation, and reconnect without duplicate work.
-5. **M2.5 — Supervision proof:** reach a stable checkpoint, emit a
-   non-authorizing wake hint, assemble bounded re-entry context, and apply one
-   authorized revision-fenced intervention exactly once.
-6. **M2.6 — Candidate and evidence proof:** seal one candidate before parallel
-   deterministic Test and independent Review, both against the exact immutable
-   candidate revision.
-7. **M2.7 — Bounded correction:** evaluate the independent outcomes and allow
-   at most one semantic fix using a new `NodeGeneration` and candidate revision.
-8. **M2.8 — Outcome matrix:** aggregate immutable evidence and cover success,
-   rejection, cancellation, budget exhaustion, provider error,
-   `NeedsSupervisor`, and planned waiting.
-
-Fuwen definition references are never interpreted by this slice: the host must
-authorize and verify the exact identifier, revision, and canonical fingerprint.
-Provider capability claims are selection input, not authorization. Wake hints
-never resume work or extend authority, reconnect never creates a new semantic
-generation, and deterministic validation cannot be overridden by model review.
-
-M2.1 and M2.2 are implemented and verified. Planless requests are bound to the same v2 identity as explicit
-`Implement/1` requests; the fixed definition encodes one conditional repair
-without becoming a caller-authored graph. Provider registration is bounded,
-immutable, and host-authorized; selection uses one revisioned snapshot and an
-explicit no-match outcome. Early external handles are captured idempotently and
-can be recovered from task-less pre-acceptance correlation without exposing
-opaque handle values in conflict diagnostics. See
-[ADR 0013](decisions/0013-in-memory-plan-and-provider-resolution.md).
-
-The atomic in-memory execution store required by M2.3 is also complete. It
-publishes monotonic progress through expected-revision fences and makes terminal
-progress plus its immutable result visible as one operation. The executable
-adapter catalog remains internal: only trusted host composition registers
-authority, and the coordinator must resolve the exact match from its captured
-provider snapshot. See
-[ADR 0014](decisions/0014-in-memory-execution-state-and-adapter-authority.md).
-
-- [x] Keep `marang_delegate` as a simple predefined `Implement` preset.
-- [x] Add the advanced workflow-selection seam for compiled Fuwen plans.
-- [x] Define provider registry, capability selection, and policy decision
-      contracts.
-- [ ] Implement the fixed strategy with fake agent, model, deterministic, and
-      context providers.
-- [ ] Exercise wake, bounded re-entry context, intervention, and one selective
-      `NodeGeneration` re-execution.
-- [ ] Simulate ambiguous provider acceptance and reconnect through its external
-      handle.
-- [ ] Seal a candidate revision before parallel Test and Review.
-- [ ] Evaluate deterministic test results separately from reviewer judgment.
-- [ ] Support one bounded fix cycle.
-- [ ] Aggregate a concise `DelegationResult` with artifact references.
-- [ ] Cover success, rejection, cancellation, budget exhaustion, worker error,
-      `NeedsSupervisor`, and planned `WaitingForSupervisor` paths.
-
-Exit: the complete policy can be tested without MCP, real models, shells, or a
-workflow database, including waiting, intervention, and selective
-re-execution.
-
-Go/no-go: proceed to Codex feasibility only if duplicate acceptance, bounded
-context, checkpoint intervention, terminal immutability, and all outcome paths
-pass with deterministic fakes. Otherwise stop and revise the contracts.
-
-## Milestone 3 — Codex execution capability slice
+Deliver Marang as an ASP.NET Core MVC MCP service for remote supervisors while
+extracting its already-proven delegation contracts and runtime into reusable
+Penghou.Qingniao packages that Marang, Guyabano, and future products can consume.
+
+Progress lives here so the work can resume without chat history. Detailed work
+completed before the ownership correction is preserved in the
+[Qingniao runtime roadmap](qingniao-runtime-roadmap.md).
+
+## Current state
+
+- The original Marang-named delegation contracts, lifecycle, evidence,
+  provider selection, reconnect store, plan resolution, and atomic in-memory
+  execution store are implemented and tested.
+- Their public surface was frozen only as a pre-release baseline. They now form
+  the extraction source for Qingniao rather than the Marang service API.
+- Siming `0.1.0-preview.4` is published and unblocks Qingniao's canonical JSON
+  fingerprint adapter.
+- The executable coordinator has not yet been completed.
+- The ASP.NET Core `Marang.Server` host has not yet been scaffolded.
+- The independent `Penghou.Qingniao` repository is created and verified. The
+  old source remains temporarily frozen here only until the first Qingniao
+  preview is published; it is not a second implementation line.
+- Fuwen remains the active ecosystem implementation priority until its compiled
+  artifact-workflow path is usable. The shared-code-graph work below is a
+  recorded subsequent proving sequence, not an interruption of that work.
+
+## Shared code graph and delegation pivot
+
+Marang is the coding-specific composition and MCP boundary. Qingniao coordinates
+one delegated execution, Hongxian preserves session continuity and immutable
+evidence, Hetu owns structural code facts, Fuwen defines workflow semantics, and
+Zhinu owns durable workflow execution. Marang composes those capabilities
+without moving coding vocabulary into the reusable primitives.
+
+The hypothesis to test is:
+
+> Delegation becomes materially more economical when the supervisor can compare
+> an exact structural state it already understood with the exact state produced
+> by delegated work, then inspect only the risky source changes.
+
+This is not yet a proven product claim. Git remains authoritative for textual
+change, source remains authoritative for behavior, Hetu is a deterministic
+structural projection, Hongxian is temporal evidence, and worker summaries are
+interpretation.
+
+Architectural constraints:
+
+- Marang owns coding-specific MCP. Do not add a standalone Hetu MCP surface or
+  code-specific Qingniao tools.
+- A Marang coding session may explicitly enable Hetu-backed code memory, but
+  Hongxian and Qingniao must remain usable with zero Hetu dependencies.
+- Do not assume `Penghou.Hongxian.Hosting`, `Penghou.Hongxian.Hetu`, or a
+  separate `Marang.Mcp` package until their reusable/package boundaries are
+  proven. Package names do not define architecture.
+- Qingniao does not own workflows or dependency graphs. It coordinates one
+  bounded delegation; Fuwen and Zhinu own workflow semantics and durability.
+- Parallel workers produce independent candidate revisions/publications. A
+  later integration/promotion produces a new authoritative source and workspace
+  publication; unrelated branches must not be collapsed into an imaginary
+  combined state.
+- MCP requests are authenticated and workspace-authorized, and every graph,
+  delta, artifact, and source result is bounded, redacted, and publication-bound.
+
+## Milestone 0 — Correct the ownership boundary
+
+Status: **complete — architecture decision recorded; source migration next**
+
+- [x] Define Marang as the deployable ASP.NET Core MVC/MCP service.
+- [x] Define Qingniao as the reusable delegated-execution runtime, not a
+      general workflow runtime.
+- [x] Assign workflow durability to Zhinu and workflow semantics to Fuwen.
+- [x] Define direct Guyabano-to-Qingniao and remote Marang deployment models.
+- [x] Supersede the old Marang package boundary without promising pre-release
+      compatibility.
+
+See
+[ADR 0015](decisions/0015-qingniao-extraction-and-marang-service-boundary.md).
+
+## Milestone 1 — Extract and rename Qingniao
+
+Status: **implementation complete in the Qingniao repository; package handoff pending**
+
+- [x] Rename `Marang.Abstractions` to `Penghou.Qingniao.Abstractions`.
+- [x] Rename the reusable `Marang` delegated-execution project to
+      `Penghou.Qingniao`.
+- [x] Move namespaces, assembly/package metadata, XML docs, API baselines, and
+      tests without changing the reviewed semantics.
+- [x] Rename `Marang.Tests` to `Penghou.Qingniao.Tests`.
+- [ ] Remove or fold the empty `Marang.Hosting` and `Marang.Mcp` scaffolds into
+      the future service after the first Qingniao package is published.
+- [x] Add architecture/dependency tests proving Qingniao has no reference to
+      Marang, ASP.NET Core, MCP transport DTOs, or product configuration.
+- [x] Keep the old `Marang` and `Marang.Abstractions` preview packages
+      superseded; do not publish forwarding packages without a real consumer.
+
+Exit: all reusable delegation code builds and tests under Penghou.Qingniao
+names, with no Marang product dependency.
+
+## Milestone 2 — Complete the Qingniao in-memory delegated-execution runtime
+
+Status: **planned after extraction**
+
+- [ ] Reference `Penghou.Siming` `0.1.0-preview.4`.
+- [ ] Implement the Siming-backed canonical semantic-fingerprint producer and
+      verifier; do not copy canonicalization logic.
+- [ ] Complete the deterministic in-memory coordinator using the existing plan
+      resolver, acceptance registry, provider snapshot, authorized adapter
+      catalog, early-handle store, and atomic execution store.
+- [ ] Make submission return `Queued` before provider execution and advance
+      through an explicit deterministic pump rather than timing-sensitive
+      background tasks.
+- [ ] Prove captured-handle recovery after ambiguous start without duplicate
+      work or a new semantic generation.
+- [ ] Seal a candidate before parallel deterministic Test and independent
+      Review.
+- [ ] Exercise a stable supervisor checkpoint, bounded re-entry context, one
+      revision-fenced intervention, and at most one new-generation repair.
+- [ ] Cover success, no provider, unauthorized adapter, rejection,
+      cancellation, budget exhaustion, transport ambiguity, worker failure,
+      `WaitingForSupervisor`, and `NeedsSupervisor`.
+
+Exit: Qingniao can be embedded and tested without MCP, ASP.NET Core, real
+providers, or a workflow database.
+
+## Milestone 3 — Scaffold Marang.Server
 
 Status: **planned**
 
-- [ ] Implement an approved-workspace resolver and disposable candidate
-      provider for a sample repository.
-- [ ] Implement a process-isolated adapter around `codex exec --json` with an
-      output schema, explicit sandbox, bounded output, and early thread-ID
-      capture.
-- [ ] Prove that a known Codex thread can be observed or resumed without
-      starting duplicate work.
-- [ ] Prove bounded implement-code execution without exposing Marang MCP or
-      credentials to the subordinate task.
-- [ ] Record resolved model/tool/usage provenance.
-- [ ] Compare the CLI spike with an SDK/app-server bridge for cancellation,
-      progress, approvals, and long-lived support.
-- [ ] Verify local authentication and subscription/API-key behavior without
-      claiming unavailable cost precision.
+- [ ] Create a non-packable ASP.NET Core MVC executable.
+- [ ] Reference Qingniao and make Marang.Server the composition root.
+- [ ] Add configuration validation, health/readiness endpoints, structured
+      diagnostics, graceful shutdown, and bounded background dispatch.
+- [ ] Define remote caller/tenant identity and authentication extension points.
+- [ ] Resolve workspace references, provider profiles, disclosure policy, and
+      budget ceilings under server authorization.
+- [ ] Keep transport DTOs independent from Qingniao domain contracts.
+- [ ] Add service-level request, response, concurrency, and rate limits.
 
-Exit: one economical Codex agent can reliably change a tiny disposable project,
-return structured evidence, reconnect after interruption, and remain inside
-host policy.
+Exit: Marang hosts the fake Qingniao vertical slice as a secure local service.
 
-Go/no-go: continue only if the provider exposes a durable handle early,
-reconnects without duplicate work, stays inside workspace/credential policy,
-and produces verifiable evidence. Stop and hold a product-design review if any
-of those conditions fails; do not add more workflow infrastructure to hide the
-failure.
-
-## Milestone 4 — Durable Zhinu execution and supervision
-
-Status: **planned**
-
-- [ ] Inspect and pin the minimum supported Zhinu API/version.
-- [ ] Map the fixed and amended lifecycle to durable workflow steps, signals,
-      waits, and selective restart.
-- [ ] Persist Marang `SupervisedWork` / `Delegation` and link each Fuwen
-      `PlanRevision` to a Zhinu `WorkflowRun` / `ExecutionEpoch`.
-- [ ] Integrate Hongxian as the session/correlation authority for the durable
-      slice; keep Zhinu authoritative for execution state and reconcile
-      cross-authority evidence through idempotent saga/forward-reconciliation
-      steps. Each outbox is atomic only with its owning store; no outbox spans
-      the Zhinu and Hongxian SQLite databases.
-- [ ] Persist external provider handles before awaiting their terminal results.
-- [ ] Map Zhinu cancellation without pretending it rolls back effects.
-- [ ] Restore waiting, intervention, status, and result after process restart.
-- [ ] Test crash windows around acceptance, publication, intervention, and
-      terminal result completion.
-
-Exit: a delegation can wait for supervision, resume by fenced intervention,
-survive host restart, and return exactly one immutable aggregate result per
-terminal Zhinu `WorkflowRun` / `ExecutionEpoch`; individual `NodeGeneration`s
-retain their own immutable artifacts and evidence.
-
-Go/no-go: advance to evidence/context work only when Zhinu remains authoritative
-for execution state, Hongxian preserves session/correlation narrative through
-crash windows, and reconciliation/outbox tests cover ambiguous outcomes.
-
-## Milestone 5 — Evidence, validation, and bounded repair
-
-Status: **planned**
-
-- [ ] Publish typed inspection, plan, implementation, test, review, and result
-      artifacts.
-- [ ] Run Test and Review against the same immutable candidate revision.
-- [ ] Use a deterministic executor for tests and diff inspection; agent claims
-      never override its receipts.
-- [ ] Record the review-independence dimensions.
-- [ ] Implement evaluator policy and one repair revision.
-- [ ] Return unresolved findings rather than suppressing them.
-- [ ] Record session-linked decisions, incidents, recovery, and
-      unusual-but-recovered events in the evidence model.
-- [ ] Record Cangjie context snapshots, Hetu graph revisions, Baize provenance,
-      and wake/re-entry rationale only when demanded by the activity.
-
-Exit: the supervisor can judge the result without raw worker transcripts, with
-session-linked evidence and demand-driven context references.
-
-Go/no-go: advance to MCP only when artifacts, evidence, Cangjie/Hetu context
-identities, Baize provenance, and immutable aggregate results are independently
-verifiable.
-
-## Milestone 6 — MCP vertical slice
+## Milestone 4 — MCP and HTTP supervision surface
 
 Status: **planned**
 
 - [ ] Expose `marang_delegate`, `marang_status`, `marang_result`, and
-      `marang_cancel`.
-- [ ] Expose `marang_execute_workflow`, `marang_wait`, `marang_intervene`, and
-      `marang_inspect` with bounded context and revision-fenced semantics.
-- [ ] Expose bounded `marang_get_artifact` metadata/content retrieval with
-      authorization, retention, and response-size policy.
-- [ ] Add workflow selection, future-attention hints, bounded re-entry, and
-      revision-fenced intervention without exposing arbitrary low-level graphs.
-- [ ] Keep transport DTOs separate from domain contracts.
-- [ ] Define host authentication and workspace authorization.
-- [ ] Add compact status revision/cursor behavior.
-- [ ] Bound MCP response and artifact payload sizes.
-- [ ] Add transport contract and ambiguous-response retry tests.
-- [ ] Ensure subordinate agent environments cannot recursively call Marang.
+      `marang_cancel` over MCP.
+- [ ] Expose bounded `marang_wait`, `marang_intervene`, `marang_inspect`, and
+      `marang_get_artifact` only after their authorization/fencing tests pass.
+- [ ] Add HTTP endpoints only where health, operations, or non-MCP clients need
+      them.
+- [ ] Test ambiguous client retries, caller-scoped idempotency, stale revisions,
+      authentication, authorization, redaction, and response bounds.
+- [ ] Ensure subordinate providers cannot recursively call Marang by default.
 
-Exit: Codex can submit or select a validated workflow, leave while work waits
-without polling, receive bounded checkpoint context, make a revision-fenced
-intervention, resume, inspect evidence, and retrieve one immutable result.
+Exit: Codex can safely submit, leave, return, inspect, intervene, cancel, and
+retrieve one immutable result through the service.
 
-Go/no-go: expose the public MCP surface only after authentication,
-authorization, response bounds, stale-revision handling, and ambiguous-request
-retries pass transport tests.
-
-## Milestone 7 — Dogfood and hardening
+## Milestone 5 — Real provider and durable workflow integration
 
 Status: **planned**
 
-- [ ] Delegate one small Marang improvement to Marang.
-- [ ] Measure supervisor context avoided, worker calls, retries, duration,
-      model usage, wake frequency, and `NodeGeneration`s.
-- [ ] Add adversarial repository prompt-injection and malicious-path tests.
-- [ ] Add restart, cancellation, stale-revision, and partial-artifact tests.
-- [ ] Review package boundaries and graduate only packages with a stable use.
+- [ ] Prove one bounded Codex process/app-server provider in an isolated
+      candidate workspace and reconnect through its durable handle.
+- [ ] Map Qingniao activities into released Zhinu steps, waits, signals,
+      fencing, cancellation, and restart.
+- [ ] Integrate Hongxian/Siming for session correlation and append-only audit;
+      retain Zhinu as execution truth and reconcile cross-store effects through
+      idempotent forward recovery rather than distributed transactions.
+- [ ] Add Fuwen plan consumption only after its validation/binding gate is
+      released and audited.
+- [ ] Add Baize and Cangjie adapters without leaking their types into Qingniao's
+      core contracts. Add Hetu only through the optional Hongxian/Hetu boundary
+      and Marang's coding-specific composition after its dependency and failure
+      acceptance tests pass.
 
-Go/no-go: continue to A2A or additional providers only if dogfood confirms
-recoverable failures, auditable unusual events, bounded supervisor context,
-and no hidden dependency-specific workaround is required.
+Exit: a remote delegation survives service restart and produces verifiable,
+session-linked evidence without duplicate external work.
 
-## Milestone 8 — A2A execution adapter
+## Milestone 6 — Marang + Hetu structural catch-up dogfood
 
-Status: **deferred until Milestone 7 go/no-go**
+Status: **planned after Fuwen usability, Hongxian optional-capability, and Hetu
+historical-publication gates**
 
-- [ ] Select and pin a tested A2A protocol version and conforming client.
-- [ ] Discover capabilities from host-authorized Agent Cards; never accept
-      arbitrary caller-supplied endpoints.
-- [ ] Map one execution attempt to one durable external A2A Task.
-- [ ] Persist agent, task, protocol-version, and capability-snapshot identities.
-- [ ] Map working, completed, failed, rejected, cancelled, and
-      input/authorization-required states without leaking protocol types into
-      core.
-- [ ] Normalize A2A Artifacts and Parts into Marang artifacts with provenance
-      and integrity checks.
-- [ ] Support reconnect through Task observation/subscription after restart.
-- [ ] Add conformance, malformed-response, SSRF, remote-artifact, cancellation,
-      version-negotiation, and data-disclosure tests.
-- [ ] Keep push notifications disabled until authenticated callback and replay
-      protection are available.
+- [ ] Configure one Marang coding session with optional Hetu synchronization and
+      prove an otherwise equivalent non-code Qingniao/Hongxian consumer has no
+      Hetu package in its resolved dependency graph.
+- [ ] Consume Hetu's immutable multi-repository workspace composition without
+      flattening repository identity or assuming cross-repository resolution.
+- [ ] Pin delegations to exact base source and workspace publications. After
+      accepted integration, correlate the exact result source/publication and a
+      bounded structural-delta reference in Hongxian evidence.
+- [ ] Expose a minimal direct code-query MCP subset: workspace/repository list,
+      index/freshness status, exact symbol/declaration lookup, bounded
+      neighborhood/impact, current workspace publication, and changes since an
+      exact publication. Names remain provisional until transport design.
+- [ ] Add one higher-level preparation operation combining authorized workspace
+      state, bounded Hetu impact, and Qingniao capability without automatically
+      delegating or treating impact as an execution plan.
+- [ ] Add one higher-level result-review operation combining the immutable
+      Qingniao result, Hongxian evidence, factual Hetu delta, derived impact, and
+      selected source/Git evidence without claiming the graph replaces review.
+- [ ] Evaluate paired baseline and Hetu-assisted tasks on identical pinned code
+      states. Record source reads/searches, relationships found and missed,
+      accepted false facts, supervisor catch-up cost, and observable token use.
+- [ ] Validate at least one non-Roslyn language plugin by comparing independently
+      reviewed source facts with MCP results. Codex is an evaluator, not the
+      oracle; confirmed parser/extractor/resolver/graph defects become tests.
+- [ ] Exercise concurrent delegations as separate candidates followed by an
+      explicit integration publication. Test stale, missing-history, failed
+      synchronization, partial indexing, ambiguous identity, and oversized
+      delta behavior.
 
-Exit: the fixed workflow can replace its process agent with a conforming A2A
-agent without changing Marang workflow semantics or its MCP contract.
+Exit: Codex can resume after one real delegated code change from exact,
+verifiable evidence and a bounded structural delta, with meaningfully less
+source reconstruction and no loss of correctness. If the evidence does not show
+material benefit, stop expanding federation and reassess the hypothesis.
 
-Go/no-go: pursue A2A only after dogfood demonstrates a stable provider-neutral
-contract and a concrete interoperability need; otherwise keep it deferred.
+## Milestone 7 — Guyabano dogfood and package hardening
 
-## Later, evidence-driven integrations
+Status: **planned**
 
-- Cross-session collaboration, branching, and long-lived session archival after
-  the durable Hongxian integration is proven.
-- Richer projection/query surfaces for pending decisions, incidents, and
-  supervisor attention history.
-- Deeper Hetu impact-driven selective re-execution and ownership analysis after
-  the first graph-revision integration.
-- Advanced Cangjie retrieval ranking, context budgeting, and snapshot
-  compaction after demand-driven retrieval is operational.
-- Fuwen compiler diagnostics and plan optimization after the validated plan
-  boundary is stable.
-- More predefined strategies: Investigate, Review, and Fix.
-- Additional bounded-execution providers.
-- Deeper visibility into opaque provider subagent trees only when cancellation,
-  cost, traceability, or policy demonstrates a need.
-- Optional A2A bridges for valuable non-A2A agents, only where the bridge adds
-  real interoperability value.
+- [ ] Consume Qingniao directly from Guyabano for one bounded activity.
+- [ ] Verify that the embedded API does not require Marang service concepts.
+- [ ] Exercise the same operation remotely through Marang and compare semantics.
+- [ ] Refine Qingniao from both consumers before publishing its first preview.
+- [ ] Publish `Penghou.Qingniao.Abstractions` and `Penghou.Qingniao` only after
+      package/API compatibility, XML docs, multi-target tests, and isolated
+      consumer tests pass.
+- [ ] Add `Marang.Client` only if Guyabano or another real consumer needs a
+      typed non-MCP remote client.
+
+## Later, evidence-driven work
+
+- Additional provider packages after at least two consumers need them.
+- A2A integration after the provider-neutral contract is proven with a real
+  interoperable agent.
+- Multi-tenant operation, richer projections, collaboration, branching, and
+  archival after the single-host durable slice works.
+- Service UI and operator dashboards after MCP/HTTP behavior is stable.
 
 ## Non-goals
 
-- Replacing Codex or becoming a general autonomous coding agent.
-- A workflow DSL or caller-supplied arbitrary workflow graph.
-- Unbounded self-reflection, retries, fan-out, or recursive delegation.
-- Recreating native Codex/Claude Code/OpenCode subagent scheduling, repository
-  exploration, or prompt iteration.
-- Owning workflow durability, model-provider clients, memory, code graphs,
-  session history, or JSON repair.
-- Letting model output grant itself tools, filesystem scope, budgets, or model
-  escalation.
-- Direct commits, pushes, publication, credential access, or primary-workspace
-  mutation by default.
-- Implementing a generic A2A framework, registry, gateway, or protocol stack.
-- Treating Agent Card capability claims as authorization or automatically
-  transmitting repository contents to remote agents.
-- Returning complete worker transcripts in normal MCP results.
+- Publishing `Marang.Core` or `Marang.Abstractions` as the reusable capability.
+- Making Qingniao a general workflow runtime, MCP gateway, session ledger,
+  model SDK, or product-specific service.
+- Letting remote or model-generated input grant provider, tool, filesystem,
+  credential, budget, or promotion authority.
+- Creating compatibility shims, client libraries, provider packages, or
+  persistence packages before a demonstrated consumer requires them.
+- Replacing the execution, workflow, session, memory, code-graph, or model
+  primitives already owned elsewhere in Penghou.

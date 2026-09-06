@@ -1,5 +1,8 @@
 # ADR 0001: Keep Marang a delegation composition layer
 
+> **Superseded by ADR 0015:** the delegation composition semantics migrate to
+> Penghou.Qingniao; Marang owns the MVC/MCP service boundary.
+
 Status: accepted for the initial vertical slice; expanded by the planned
 supervisory lifecycle in [product direction](../product-direction.md).
 

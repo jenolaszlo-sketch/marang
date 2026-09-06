@@ -1,4 +1,9 @@
-# Simple Implement preset
+# Qingniao simple Implement preset (pre-extraction)
+
+> This delegation-kernel contract migrates to `Penghou.Qingniao` under
+> [ADR 0015](decisions/0015-qingniao-extraction-and-marang-service-boundary.md).
+> `marang_delegate` remains the MCP operation that maps to it; Marang does not
+> own the reusable strategy or workflow semantics.
 
 This document describes the current `marang_delegate` preset and remains a
 small, opinionated bootstrap slice. It is not the complete product

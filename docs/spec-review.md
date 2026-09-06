@@ -1,5 +1,10 @@
 # Initial specification review
 
+> **Superseded product boundary:** the semantic findings remain useful, but
+> delegation-kernel ownership has moved to Qingniao and Marang is now the
+> ASP.NET Core MVC/MCP service. See
+> [ADR 0015](decisions/0015-qingniao-extraction-and-marang-service-boundary.md).
+
 > Historical review note: this document records the initial fixed-slice
 > decision. The revised product direction keeps that slice as the simple
 > `marang_delegate` preset and now plans advanced supervisor-selected or

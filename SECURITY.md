@@ -1,10 +1,16 @@
 # Security
 
-Marang treats repository content and worker-model output as untrusted. A model
-can propose work; it cannot enlarge its own authority.
+Marang treats every remote request, repository value, provider response, and
+model output as untrusted. A caller or model can propose work; it cannot enlarge
+its own authority. Marang enforces the remote service boundary, while Qingniao
+enforces delegated-execution invariants.
 
 ## Initial security invariants
 
+- Marang authenticates remote callers and derives caller/tenant scope before
+  mapping requests into Qingniao contracts.
+- Marang applies endpoint, request, response, concurrency, rate, and
+  diagnostic-redaction limits independently of provider budgets.
 - MCP requests refer to host-approved workspaces by opaque identity.
 - Path resolution stays within configured roots after canonicalization and link
   resolution.
@@ -13,10 +19,14 @@ can propose work; it cannot enlarge its own authority.
   size, and concurrency are granted by host policy.
 - Credentials and unrelated host files are unavailable to workers.
 - Destructive commands, commits, pushes, and publication are denied by default.
+- Qingniao accepts only host-registered executable providers; advertised
+  capabilities are discovery input, never authorization.
 - Subordinate agent providers do not receive the Marang MCP endpoint, preventing
   recursive delegation by default.
 - External agent handles and provider events are persisted without copying
   authentication material into workflow artifacts.
+- Opaque provider handles are reconnect identifiers, not credential containers,
+  and must be redacted from service diagnostics.
 - A2A Agent Cards are discovery metadata, not authorization. Endpoints and
   credentials come from host-controlled configuration, not delegation input.
 - Remote artifact references are constrained by scheme, host, size, media type,

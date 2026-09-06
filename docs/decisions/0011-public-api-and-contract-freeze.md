@@ -1,5 +1,9 @@
 # ADR 0011: Public API Baselines and Contract Freeze
 
+> **Superseded package ownership:** the frozen pre-release surface is the
+> extraction baseline for Penghou.Qingniao, not the long-term Marang service
+> API. See ADR 0015.
+
 Status: Accepted for Batch 7.
 
 ## Decision

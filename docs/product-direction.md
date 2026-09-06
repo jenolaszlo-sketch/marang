@@ -1,108 +1,57 @@
 # Marang product direction
 
-## What Marang is becoming
+## Product
 
-Marang is a durable supervisory execution environment for coding agents and
-other bounded artifact-producing work. A supervisor can author or select a
-workflow, start it, schedule future attention, leave, return at a planned or
-emergent checkpoint, inspect bounded re-entry context, intervene, and
-selectively re-execute affected work. Marang owns who acts, when supervision is
-needed, what context and budget may be used, and how a result is aggregated.
+Marang is the remotely accessible product: an ASP.NET Core MVC service with an
+MCP interface for Codex and other supervising agents. A caller can submit work,
+leave, return, inspect bounded progress/evidence, intervene at a fenced
+checkpoint, cancel, and retrieve an immutable result.
 
-The simple `marang_delegate` preset remains the easiest entry point. Advanced
-users may select or author workflows represented by Fuwen. Marang does not
-become a second workflow language or expose arbitrary caller-authored graphs as
-an execution shortcut.
+Marang succeeds when this interaction is secure, understandable, recoverable,
+and operable. Its differentiators are the quality of its MCP supervision
+surface, service policy, diagnostics, and composition of reusable Penghou
+capabilities—not ownership of another general workflow runtime.
 
-## Responsibility split
+## Reusable capability
 
-| Component | Owns |
-| --- | --- |
-| Marang | supervisor identity, wake/attention policy, budget and context policy, interventions, provider coordination, validation gates, and result aggregation |
-| Fuwen | workflow semantics, typing, compilation, and the artifact-driven workflow representation |
-| Zhinu | durable execution, waiting, signals, retries, leases/fencing, recovery, and selective restart |
-| Hongxian | session continuity, participant attribution, correlation, incidents, decisions, and immutable audit narrative; the session authority for the real durable slice |
-| Hetu | code graph indexing, structural code context, impact analysis, and ownership mapping |
-| Cangjie | demand-driven memory/context retrieval and immutable context snapshots |
-| Baize | bounded model execution, tool calls, structured output, usage, and provenance |
+Penghou.Qingniao is the reusable delegated-execution runtime used by
+Marang. It owns provider-neutral request/result contracts, identity, lifecycle,
+routing, budgets, external-operation reconnect, evidence, supervision, bounded
+repair, and aggregation. Guyabano can use Qingniao directly without running
+Marang.
 
-These are aligned dependencies, not subsystems Marang duplicates. Integration
-adapters preserve each primitive's authority and keep their protocol types out
-of Marang's core contracts where possible.
+Qingniao is not a general workflow runtime. Fuwen owns compiled workflow
+semantics and Zhinu owns durable execution. Hongxian and Siming retain temporal
+session/audit evidence. Baize, Cangjie, and Hetu retain their existing model,
+memory, and code-graph responsibilities.
 
-## Identity and immutability
+## Initial experience
 
-The identity hierarchy is deliberately explicit:
+The first Marang experience remains deliberately small:
 
 ```text
-Hongxian Session
-  -> Marang SupervisedWork / Delegation
-    -> Fuwen PlanRevision
-      -> Zhinu WorkflowRun / ExecutionEpoch
-        -> structural Node
-          -> NodeGeneration
-            -> provider ExecutionAttempt / handle
-              -> immutable artifacts
+MCP submit
+  -> authenticated and authorized service request
+  -> Qingniao delegation
+  -> bounded provider execution and evidence
+  -> status / optional supervisor interaction
+  -> immutable result
 ```
 
-Hongxian owns session continuity and correlation; Zhinu remains execution
-truth. The supervised-work identity is stable and user-visible, and a
-caller-scoped request key plus canonical workflow-plan fingerprint is
-idempotent for that identity. A retry/reconnect
-stays in the same `NodeGeneration` and may create a new provider attempt only
-where policy permits, with the same semantic input. Semantic node re-execution
-creates a new `NodeGeneration`. Reopening completed supervised work creates a
-new linked Zhinu `WorkflowRun`/`ExecutionEpoch`; it never mutates terminal
-results. All interventions are idempotent and revision-fenced so stale
-supervisor actions cannot overwrite newer decisions.
+The simple `marang_delegate` MCP operation maps to Qingniao's built-in
+`Implement/1` preset. Advanced Fuwen workflows remain host-validated and are
+not interpreted by Marang.
 
-## Supervision and context
+## Direct and remote consumers
 
-The current fixed lifecycle uses `NeedsSupervisor` as a terminal escalation
-outcome. The planned lifecycle amendment adds `WaitingForSupervisor` as a
-durable, resumable state for a workflow that is intentionally paused. It is not
-an error and does not reopen a terminal execution. A later supervisor decision
-or intervention resumes the waiting work under an explicit expected revision.
+- Guyabano first exercises Qingniao as an embedded library.
+- Codex exercises the same behavior remotely through Marang's MCP surface.
+- A typed `Marang.Client` is deferred until a real remote non-MCP consumer
+  demonstrates the need.
 
-Each pause is addressed by a stable `SupervisorCheckpointId` scoped to the
-session, supervised work, workflow run/epoch, plan revision, structural node,
-and checkpoint address. A top-level waiting state gates progress that depends
-on that decision; independent eligible branches may continue. Intervention
-targets the checkpoint ID, expected current revision, and caller-scoped
-idempotency key.
+## Non-goals
 
-Wake and notification values are hints only. A notification may request the
-supervisor's attention, but it cannot authorize work, change state, extend a
-budget, or replace a result. The durable state and revision remain authoritative.
-
-Context is demand-driven. A worker receives only the context required for its
-current activity, with Cangjie snapshot identities and Hetu revisions recorded
-for reproducibility. Marang does not preload an entire session, repository, or
-conversation merely because it exists.
-
-## Provider boundary
-
-The durable provider contract remains non-blocking and handle-based:
-
-```text
-Start(request, idempotency identity) -> external handle
-Observe(handle)                    -> progress/state
-GetResult(handle)                  -> normalized result/evidence
-Cancel(handle)                     -> idempotent cancellation request
-Resume(handle, optional input)      -> continued execution
-```
-
-The provider must reveal a durable handle before an acknowledgement can be
-considered safe. A blocking `ExecuteAsync` alone cannot recover from an
-ambiguous acknowledgement and is not the foundational contract.
-
-## Scope and non-goals
-
-Marang is not a replacement for Codex, a general autonomous coding agent, a
-workflow engine, a session database, a memory or code-graph implementation, a
-model SDK, or a generic MCP/A2A gateway. It does not duplicate Fuwen's compiler,
-Zhinu's durable mechanics, Hongxian's ledger, or Baize's model execution.
-
-Marang also does not promise unbounded autonomous retries, recursive
-delegation, automatic promotion/merge, or complete transcript replay. The
-supervisor remains the authority for intent, policy, and final disposition.
+Marang is not a reusable `Marang.Core`, workflow engine, provider SDK, model,
+session ledger, memory, or code graph. Qingniao is not an MVC/MCP service or a
+replacement for Zhinu. Neither component grants tools, workspaces, credentials,
+budgets, or publishing authority based on remote or model-generated claims.

@@ -1,4 +1,9 @@
-# Agent execution as a durable capability
+# Qingniao agent execution as a durable capability (pre-extraction)
+
+> This kernel design migrates from the original Marang namespace to
+> `Penghou.Qingniao` under [ADR 0015](decisions/0015-qingniao-extraction-and-marang-service-boundary.md).
+> References to Marang owning provider execution below are historical until the
+> source rename; the Marang product owns only the remote service boundary.
 
 ## Decision
 

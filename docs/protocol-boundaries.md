@@ -1,186 +1,77 @@
-# Protocol boundaries
+# Marang protocol boundaries
 
 ## Decision
 
-Marang uses standard protocols at external boundaries where they preserve the
-product's semantics:
+Marang is the northbound service boundary. Qingniao is the provider-neutral
+delegated-execution runtime behind it, not a general workflow runtime.
 
 ```text
 supervising agent
       |
      MCP
       v
-    Marang
+Marang ASP.NET Core service
+  auth / authorization / DTO mapping / limits
       |
-    Zhinu
+      v
+Penghou.Qingniao
       |
-      +--> A2A --------> interoperable external agents
-      +--> process ----> local/headless agents
-      +--> Baize ------> bounded model execution
-      +--> host --------> deterministic tools
+      +--> A2A provider
+      +--> process or SDK provider
+      +--> Baize model provider
+      +--> deterministic executor
 ```
 
-- **MCP is the primary northbound agent interface.** A supervising agent asks
-  Marang for an outcome and observes its lifecycle.
-- **A2A is the preferred southbound external-agent interface.** Marang delegates
-  one bounded activity to an independently implemented agent.
-- **Zhinu owns durable workflow execution.** Protocol state is evidence and an
-  integration concern; it is not Marang's outcome model.
-
-> Protocols are adapters. The durable outcome model is Marang.
-
-Health, configuration, authentication, and operator administration may use
-host-native interfaces. “MCP northbound” does not mean every operational API
-must be exposed as an agent tool.
+- MCP is Marang's primary agent-facing protocol.
+- HTTP is used where operations, health, or a real non-MCP client benefits.
+- A2A, process, SDK, and Baize integrations are Qingniao provider adapters.
+- Zhinu owns durable workflow execution around Qingniao activities.
+- Protocol types never become Qingniao's lifecycle or outcome model.
 
 ## Northbound MCP
 
-Marang does not identify or special-case the supervising product. Codex, Claude
-Code, OpenCode, Cursor, or another MCP-capable agent uses the same outcome API:
+The intended bounded surface is:
 
 - `marang_delegate`
-- `marang_execute_workflow` (validated compiled Fuwen plan/revision)
-- `marang_wait` (schedule or observe a supervisory checkpoint)
-- `marang_intervene` (revision-fenced supervisor response)
-- `marang_inspect` (bounded checkpoint re-entry context)
 - `marang_status`
 - `marang_result`
 - `marang_cancel`
-- `marang_get_artifact`
+- later, after authorization/fencing proof: `marang_wait`,
+  `marang_intervene`, `marang_inspect`, and `marang_get_artifact`.
 
-Requests contain an objective, acceptance criteria, constraints, budget, and
-required evidence. Advanced execution accepts a selected or host-validated
-compiled Fuwen plan/revision, not an arbitrary low-level graph. Artifact
-retrieval is bounded and authorization-aware. Large or sensitive artifacts
-return metadata and an approved reference rather than being copied into the
-model context by default.
+Marang authenticates the caller, derives a caller/tenant scope, authorizes the
+workspace and requested disclosure, applies request/response/budget limits, and
+maps transport DTOs to Qingniao contracts. An MCP request cannot introduce an
+arbitrary provider endpoint, workspace path, credential, tool grant, or
+publishing authority.
 
-## Southbound A2A
+## Southbound providers
 
-A2A is a natural adapter because its standard concepts already include Agent
-Cards, stateful Tasks, Messages, Parts, Artifacts, lifecycle updates, streaming,
-and cancellation. This design was reviewed against the official
-[A2A 0.3.0 specification](https://a2a-protocol.org/v0.3.0/specification/), but
-an implementation must explicitly pin and test its supported version. Marang
-does not implement A2A itself; it uses a conforming client behind the
-execution-provider boundary.
+Qingniao selects only host-registered providers. Advertised capabilities are
+discovery input, never authority. External work uses an idempotent start and a
+durable handle so a lost acknowledgement can reconnect instead of launching a
+duplicate task.
 
-Marang maps one workflow activity to one external A2A Task. Internal workers or
-subagents remain opaque:
+A2A is preferred where it provides real interoperability, but it is not
+required. Process, SDK, HTTP, Baize, and deterministic adapters remain valid.
+Provider-specific wire data stays outside Qingniao contracts and Marang MCP
+DTOs.
 
-```text
-Marang -> A2A Task -> external coding agent -> private worker tree
-```
+## Artifact and workspace safety
 
-An A2A task receives only the minimum objective, criteria, constraints,
-workspace capability, and artifact references required for that activity. Its
-reported success means the external execution finished; Marang still validates
-the resulting candidate and decides whether the delegation succeeded.
+Remote artifact references are untrusted. The service/provider boundary
+enforces authorized schemes and hosts, bounded length, media type, hashes where
+available, redirect/time limits, and safe materialization. Marang resolves
+opaque workspace references under service policy; it never forwards an ambient
+local path as though it were portable authority.
 
-```text
-A2A task completed != Marang outcome accepted
-```
+Large or sensitive artifacts return bounded metadata and an authorized
+reference rather than being copied into model context. Credentials never enter
+workflow artifacts, provider handle values, or diagnostic logs.
 
-## Capability discovery and selection
+## Versioning
 
-Agent Cards can advertise skills and protocol capabilities. They are discovery
-input, not authority. Initial routing performs simple matching:
-
-```text
-execution requirement
-    -> configured, authorized providers
-    -> advertised compatible capability
-    -> deterministic policy selection
-```
-
-Host configuration owns endpoint allowlists, logical agent identity,
-authentication, execution profiles, data-disclosure policy, and priority. A
-request cannot introduce an arbitrary Agent Card URL or elevate an agent merely
-because it claims a skill.
-
-Suggested Marang-side concepts are `AgentId`, endpoint reference, capability
-snapshot, protocol/version profile, execution policy reference, and
-authentication reference. Credentials never enter workflow artifacts.
-
-## Durable task correlation
-
-A2A work may outlive a connection or Marang process. Persist the relationship:
-
-```text
-SupervisedWorkId / DelegationId
-FuwenPlanRevision
-ZhinuWorkflowRunId / ExecutionEpoch
-StructuralNodeId
-NodeGenerationId
-WorkflowReference
-WorkflowStepId
-ExecutionAttemptId
-ExternalAgentId
-ExternalTaskId
-ProtocolVersion
-```
-
-The provider must expose the A2A Task identity before Marang treats submission
-as safely reconnectable. Recovery uses Task observation or subscription rather
-than starting another task. A direct A2A Message with no durable Task identity
-may be accepted for short, read-only work, but it is not sufficient for the
-initial restart-safe coding activity.
-
-A2A status remains available in provider receipts while Marang maps it onto a
-small execution state. Transport failure, authentication failure, unsupported
-capability, remote task rejection/failure/cancellation, timeout, and invalid
-result remain distinguishable for retry and escalation policy.
-
-If an agent requests more input, authorization, or interaction, the current
-fixed strategy maps that condition to terminal `NeedsSupervisor` with evidence.
-The planned supervisory lifecycle adds `WaitingForSupervisor` for intentional
-durable pauses and explicit revision-fenced intervention. Marang does not
-invent an answer or silently enlarge the task, and never reopens a terminal
-execution or result.
-
-## Artifact normalization
-
-A2A Artifacts and Parts are normalized into Marang artifact envelopes containing
-producer, schema, media type, immutable content identity, candidate revision,
-and provenance. The workflow does not depend on protocol-native object shapes.
-
-Remote file references are untrusted. Adapters enforce scheme and host policy,
-content length, media type, content hash where available, timeouts, redirect
-limits, and safe filenames before materialization. Repository data is never
-uploaded solely because an agent advertises a compatible capability.
-
-## Workspace semantics
-
-A2A does not imply shared filesystem access. An execution profile declares one
-of the host-supported workspace exchanges:
-
-- a local bridge resolves an opaque workspace capability;
-- a remote agent receives an authorized immutable repository revision and
-  publishes a patch/candidate artifact;
-- a bounded artifact bundle is disclosed under explicit policy.
-
-Marang must never send an ambient local path to a remote agent and assume it has
-the same meaning or authority.
-
-## Versioning and delivery
-
-The A2A adapter pins a tested protocol version and records it per execution.
-Protocol upgrades require conformance tests for task-state mapping, artifact
-normalization, streaming order, cancellation, errors, and authentication.
-
-Initial delivery should prefer authenticated polling or streaming under the
-existing outbound connection. Push notifications are deferred until Marang can
-authenticate callbacks, prevent replay, correlate tenant/session identity, and
-operate a safely exposed callback endpoint.
-
-## Alternative providers
-
-A2A is preferred, not universal. Process, SDK, HTTP, library, Baize, and
-deterministic adapters remain valid where they provide the narrowest practical
-integration. Vendor-specific code stays outside Marang core.
-
-A Codex process adapter is still the shortest first dogfood path. A future A2A
-bridge may wrap a valuable non-A2A agent, but only if it provides genuine
-interoperability value. Possible packages, created only when proven necessary,
-would follow the product namespace: `Marang.Execution.A2A`,
-`Marang.Execution.Process`, or `Marang.Execution.Codex`.
+Marang versions its MCP/HTTP contract as a service. Qingniao versions its NuGet
+API and semantic contracts independently. Provider protocol versions are pinned
+and recorded per execution. `Marang.Client` and provider-specific packages are
+created only after real consumers prove their boundaries.

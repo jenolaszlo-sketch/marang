@@ -1,231 +1,140 @@
-# Marang architecture
+# Marang service architecture
 
 ## Product boundary
 
-Marang is the supervisory execution environment around bounded artifact-
-producing work. It accepts or selects a workflow, coordinates durable worker
-activities, schedules future supervisory attention, supports bounded
-intervention and selective re-execution, and returns evidence. It is a
-composition and policy layer, not a model SDK, session ledger, workflow
-compiler, or general coding agent.
+Marang is a deployable ASP.NET Core MVC service that exposes controlled
+delegation to Codex and other MCP-capable supervisors. It owns the remote
+service boundary: MCP and HTTP transport, authentication, authorization,
+configuration, dependency composition, background dispatch, diagnostics, and
+service lifecycle.
+
+Marang does not own the reusable delegation model. That capability is
+`Penghou.Qingniao`.
 
 ```text
-supervisor
-    | MCP: objective, workflow/preset, constraints, budget, attention policy
-    v
-Marang: supervised-work identity, wake/context policy, intervention, result
-    |
-    v
-Fuwen: workflow semantics and compilation
-    |
-    v
-Zhinu: durable execution, retries, recovery, cancellation
-    |
-    +--> A2A provider: interoperable external agent task
-    +--> process provider: bounded local/headless agent
-    +--> Baize: provider-neutral bounded model execution
-    +--> deterministic provider: tests, builds, diff and static analysis
-    +--> artifact repository: typed reports and immutable evidence
-    +--> Hongxian: session continuity, correlation, and audit narrative
+Codex or another MCP supervisor
+              |
+          MCP / HTTP
+              v
+     Marang ASP.NET Core service
+       auth, policy, DTO mapping,
+       operations and diagnostics
+              |
+              v
+       Penghou.Qingniao
+    delegated-execution runtime
+              |
+     +--------+---------+
+     |        |         |
+   agent    model   deterministic
+  provider provider    executor
 ```
 
-Dependencies point inward: neither the abstractions package nor core domain
-contracts expose MCP, Zhinu, Baize, or a filesystem path.
+The dependency direction is always `Marang -> Penghou.Qingniao`. Qingniao
+never references Marang transport or hosting types.
 
-Hongxian is the session and correlation authority for the real durable
-supervisory slice, although pure core/in-memory tests and simple preset policy
-evaluation may run with fakes. Hongxian is not an executor or sandbox.
+## Responsibility split
 
-MCP is the primary agent-facing northbound protocol. A2A is the preferred
-southbound protocol when an external agent supports it. Both remain adapters;
-Marang's lifecycle and evidence contracts do not expose their wire models. See
-[protocol boundaries](protocol-boundaries.md).
+| Component | Authority |
+| --- | --- |
+| Marang | ASP.NET Core MVC/MCP service, remote identity, authentication, authorization, request limits, configuration, composition, operations, and service diagnostics |
+| `Penghou.Qingniao.Abstractions` | Reusable delegation requests/results, identities, lifecycle, evidence, receipts, provider and supervision contracts |
+| `Penghou.Qingniao` | Delegation acceptance, routing, budgets, provider coordination, cancellation, reconnect, bounded repair, evidence normalization, and result aggregation |
+| Penghou.Zhinu | Durable workflow execution, steps, waits, signals, fencing, restart, and recovery |
+| Penghou.Fuwen | Typed artifact-driven workflow semantics and compilation |
+| Penghou.Hongxian | Session continuity, correlation, decisions, incidents, recovery, and append-only audit narrative |
+| Penghou.Siming | Canonical payload identity and cryptographically verifiable append-only evidence |
+| Penghou.Baize | Provider-neutral model calls, tools, structured output, usage, and provenance |
+| Penghou.Cangjie / Penghou.Hetu | Memory/context snapshots and code-graph identity, impact, and ownership |
 
-## Delegation identity and idempotency
+Qingniao is a delegated-execution runtime, not a general workflow runtime.
+Zhinu answers which workflow step executes and how it resumes. Qingniao
+answers who receives one delegated activity, under what authority and budget,
+and what evidence/result returned. Marang answers how a remote supervisor can
+access that capability safely.
 
-`DelegationId` is the stable identity shown to callers. `WorkflowReference` is
-an opaque provider-qualified execution reference and may change if the workflow
-implementation changes.
+## Two supported deployment models
 
-Every submission has a caller-scoped `RequestKey`. The durable implementation
-must enforce:
-
-1. first use creates one delegation;
-2. retrying the same key with the same normalized request returns that handle;
-3. reusing the key with different semantics returns a conflict;
-4. a response lost after durable acceptance is safe to retry.
-
-This contract is distinct from Zhinu step idempotency.
-
-The identity hierarchy is:
+Qingniao is intentionally useful without Marang:
 
 ```text
-Hongxian Session
-  -> Marang SupervisedWork / Delegation
-    -> Fuwen PlanRevision
-      -> Zhinu WorkflowRun / ExecutionEpoch
-        -> structural Node
-          -> NodeGeneration
-            -> provider ExecutionAttempt / handle
-              -> immutable artifacts
+Embedded                             Remote
+
+Guyabano                             Guyabano or Codex
+    |                                      |
+    v                                Marang.Client or MCP
+Penghou.Qingniao                            |
+                                           v
+                                      Marang.Server
+                                           |
+                                           v
+                                    Penghou.Qingniao
 ```
 
-The Hongxian session is the temporal/correlation authority; Zhinu remains the
-execution truth. The supervised-work identity is stable and user-visible. A
-retry/reconnect stays in the same `NodeGeneration` and may create a new
-provider attempt only where policy permits, using the same semantic input.
-Semantic node re-execution creates a new `NodeGeneration`. Reopening completed
-supervised work creates a new linked Zhinu `WorkflowRun`/`ExecutionEpoch`; it
-never mutates terminal results. Interventions are idempotent and
-revision-fenced so stale actions cannot overwrite newer decisions.
+`Marang.Client` is deferred until a real non-MCP remote client is exercised.
+Guyabano should first dogfood Qingniao directly so the reusable API is shaped by
+a second consumer rather than by Marang alone.
 
-When a workflow is selected or authored, its canonical plan fingerprint and
-immutable Fuwen `PlanRevision` are part of supervised-work acceptance. Changing
-workflow semantics therefore creates a new plan revision rather than silently
-reinterpreting an accepted request key.
+## Request path
 
-## Lifecycle
+1. Marang authenticates the remote caller and resolves its tenant/client scope.
+2. Service policy authorizes the requested workspace capability, disclosure,
+   provider profile, budget ceiling, and operation.
+3. Transport DTOs are mapped to Qingniao contracts; transport credentials and
+   ambient paths never cross that boundary.
+4. Qingniao accepts the request idempotently, delegates the bounded activity,
+   and returns lifecycle, evidence, and result contracts.
+5. Zhinu supplies durability when the selected workflow requires it;
+   Hongxian/Siming preserve session and audit evidence without becoming
+   execution truth.
+6. Marang maps bounded status, result, intervention, and artifact views back to
+   MCP or HTTP responses and records operational diagnostics.
 
-The current fixed lifecycle is intentionally smaller than internal workflow
-detail:
+## Target solution boundary
 
 ```text
-Queued -> Running -> Completed
-                  -> Failed
-                  -> Cancelled
-                  -> BudgetExceeded
-                  -> NeedsSupervisor
+src/
+  Penghou.Qingniao.Abstractions/  reusable, packable contracts
+  Penghou.Qingniao/               reusable delegated-execution runtime
+  Marang.Server/                  non-packable ASP.NET Core MVC/MCP executable
+
+tests/
+  Penghou.Qingniao.Tests/
+  Marang.Server.Tests/
 ```
 
-For version 1, `BudgetExceeded` and `NeedsSupervisor` are normal terminal
-results with accumulated evidence. `NeedsSupervisor` represents
-unrecoverable/current-policy escalation; Marang will not silently resume
-unbounded work. Status has a monotonic revision so MCP clients can suppress
-duplicate updates. A planned lifecycle amendment adds `WaitingForSupervisor`
-as a durable resumable state for an intentional pause. It is not implemented by
-the current enum and will not reopen terminal state.
+Provider and persistence integrations remain in these projects until multiple
+consumers or implementations justify separate packages. Possible later
+packages include `Penghou.Qingniao.Codex`, `Penghou.Qingniao.Zhinu`, and
+`Marang.Client`; none is created speculatively.
 
-Cancellation stops future work. It is not rollback: the candidate workspace,
-completed artifacts, unusual events, and diagnostic evidence remain available.
+## Security boundary
 
-## Execution capability and workflow ownership
+Marang authenticates remote callers and performs service-level authorization,
+rate/size limiting, tenant isolation, endpoint hardening, and safe diagnostic
+redaction. Qingniao enforces delegation invariants, capability/budget bounds,
+workspace references, provider authorization, idempotency, immutable evidence,
+and reconnect semantics. Neither layer treats provider capability claims as
+authority or places credentials inside workflow artifacts or opaque handles.
 
-Agentic runtimes may explore, plan, edit, test, iterate, and delegate internally.
-Marang treats those mechanics as opaque execution-provider behavior. Marang
-still determines when the activity runs, its input and budget, required
-evidence, dependencies, acceptance, retry, escalation, and durable lifecycle.
+## Migration state
 
-Providers are selected by semantic capability rather than vendor or model name.
-An external execution has its own durable handle. Zhinu replay re-observes or
-resumes that handle instead of launching duplicate work after an ambiguous
-failure. See [agent execution](agent-execution.md).
+The initial delegated-execution contract/runtime work was implemented and released under the
+pre-release names `Marang.Abstractions` and `Marang`. Those packages are not a
+compatibility commitment and will be superseded by
+`Penghou.Qingniao.Abstractions` and `Penghou.Qingniao`; no compatibility shim is
+planned while there are no external consumers. The detailed pre-extraction
+runtime design remains in
+[qingniao-runtime-architecture.md](qingniao-runtime-architecture.md).
 
-## Current Implement preset
+## Non-goals
 
-```text
-Execute agent -> Candidate revision N
-                   |             |
-                   v             v
-                 Test          Review
-                   +------v------+
-                        Evaluate
-                     success | problems
-                             v
-                  Correct -> revision N+1
-                              |       |
-                             Test   Review
-```
-
-`Test` and `Review` may run concurrently only against the same sealed candidate
-revision. A fix creates a new revision; it never mutates evidence that was
-already reviewed. The evaluator consumes structured reports plus deterministic
-test outcomes. A model may explain test output but cannot change whether a
-command succeeded.
-
-The preset remains the simple `marang_delegate` entry point. Advanced callers
-may select or author an artifact-driven Fuwen workflow. Marang coordinates who
-acts, what context and budget are allowed, when the supervisor should be
-notified, and how outcomes are accepted; Fuwen owns workflow semantics and
-Zhinu owns durable execution.
-
-## Supervision and context
-
-Wake and notification values are hints only. They request attention but cannot
-authorize work, change state, extend a budget, or replace a result. Durable
-state and revision checks remain authoritative.
-
-Each planned pause is addressed by a stable `SupervisorCheckpointId` scoped to
-the session, supervised work, workflow run/epoch, plan revision, structural
-node, and checkpoint address. A top-level wait gates only progress that depends
-on its decision; other eligible independent branches may continue. An
-intervention targets the checkpoint ID, expected current revision, and a
-caller-scoped idempotency key.
-
-Re-entry is demand-driven: a supervisor receives bounded context for the
-checkpoint being inspected, including relevant artifact references and
-correlation identities. Cangjie snapshots and Hetu revisions are referenced for
-reproducibility rather than loading an entire conversation or repository.
-
-Retry reconnects to an accepted external operation or repeats a failed
-transient observation under the same `NodeGeneration` (with a new provider
-attempt only where policy permits). Semantic node re-execution is a deliberate
-new `NodeGeneration`; reopening completed supervised work creates a new linked
-Zhinu `WorkflowRun`/`ExecutionEpoch`.
-
-## Workspace and mutation boundary
-
-An MCP caller supplies an opaque `WorkspaceReference`, not an unrestricted
-filesystem path. The host resolves it against configured projects and allowed
-roots. Initial adapters may support local paths internally, but must canonicalize
-the path, reject traversal and links that escape the root, and execute in an
-isolated candidate workspace.
-
-Execution providers cannot commit, push, publish, access credentials, or modify the primary
-checkout by default. A successful delegation means “candidate ready for
-supervisor disposition,” not “change merged.” Promotion is a separate explicit
-capability.
-
-Agent providers may expose rich internal tools, but only inside the granted
-sandbox. Deterministic providers remain host-controlled. Both return normalized
-receipts rather than granting Marang a general unrestricted shell.
-
-## Artifacts and evidence
-
-Initial artifact kinds are:
-
-- `InspectionReport`
-- `ImplementationPlan`
-- `ImplementationResult`
-- `TestReport`
-- `ReviewReport`
-- `DelegationResult`
-
-Each artifact needs a kind, schema version, delegation and producer identity,
-creation time, immutable content identity, and candidate revision where
-applicable. A result references artifacts instead of embedding transcripts.
-Sensitive raw prompts and command output follow explicit retention and
-redaction policy.
-
-## Profiles and provenance
-
-Requests select a semantic profile such as `fast`, `coding`, or `review`, not a
-provider model ID. Host configuration resolves profiles to Baize models. Every
-worker receipt records the resolved provider/model, invocation identity, usage,
-profile, tool capabilities, and input artifact identities so routing remains
-auditable.
-
-Review independence is evidence, not a boolean promise. The result should state
-whether implementation and review used a different invocation, context,
-profile, model, and provider. Policy decides the minimum acceptable level.
-
-## Public package boundary
-
-- `Marang.Abstractions`: stable contracts and `IDelegationService`.
-- `Marang`: orchestration, policies, validation, and aggregation.
-- `Marang.Hosting`: DI and concrete adapter composition; not packable
-  until it has a useful host-neutral surface.
-- `Marang.Mcp`: MCP DTO mapping and tools; no domain policy.
-
-Fuwen, Zhinu, Baize, Hongxian, Hetu, and Cangjie adapters may become separate
-packages if they are useful
-without forcing those dependencies on the core.
+- Marang is not a reusable orchestration library or provider SDK.
+- Qingniao is not an MCP/HTTP service, general workflow runtime, or session
+  database.
+- Marang and Qingniao do not replace Codex, Fuwen, Zhinu, Hongxian, Siming,
+  Baize, Cangjie, or Hetu.
+- Remote requests cannot grant themselves providers, tools, filesystem scope,
+  credentials, budgets, or promotion authority.
+- `Marang.Client` and provider-specific packages are not created until real use
+  demonstrates a stable reusable boundary.
