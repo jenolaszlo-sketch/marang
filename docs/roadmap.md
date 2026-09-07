@@ -28,6 +28,25 @@ completed before the ownership correction is preserved in the
   artifact-workflow path is usable. The shared-code-graph work below is a
   recorded subsequent proving sequence, not an interruption of that work.
 
+## Adaptive planning supervision direction
+
+Marang is a natural first supervisor for adaptive workflow evolution, but it
+does not own the underlying semantics. A Codex or other participant may observe
+execution and propose `Accept`, `Retry`, or `Replan`; Fuwen compiles and admits
+an immutable candidate revision; Zhinu previews and durably activates a new
+execution generation; Hongxian records the complete causal timeline.
+
+Marang should eventually expose bounded MCP/HTTP operations to propose a replan,
+inspect a transition preview, approve or reject activation, and explain reused
+or invalidated work. It must consume authoritative receipts from Fuwen/Zhinu and
+must not edit a running graph, infer activation from chat, treat model output as
+authorization, or recreate workflow-instance/generation storage.
+
+This work follows Fuwen admission plus plan comparison and Zhinu's atomic
+generation-cutover foundation. The initial Marang policy should require Codex or
+human supervision; automatic low-impact activation is later evidence-driven
+policy.
+
 ## Shared code graph and delegation pivot
 
 Marang is the coding-specific composition and MCP boundary. Qingniao coordinates
@@ -241,6 +260,8 @@ Status: **planned**
 - Multi-tenant operation, richer projections, collaboration, branching, and
   archival after the single-host durable slice works.
 - Service UI and operator dashboards after MCP/HTTP behavior is stable.
+- Adaptive-plan proposal, transition-preview, approval, and explanation tools
+  after Fuwen and Zhinu publish the required authoritative contracts.
 
 ## Non-goals
 
@@ -253,3 +274,4 @@ Status: **planned**
   persistence packages before a demonstrated consumer requires them.
 - Replacing the execution, workflow, session, memory, code-graph, or model
   primitives already owned elsewhere in Penghou.
+- Mutating an active Zhinu graph or letting an AI proposal activate itself.
