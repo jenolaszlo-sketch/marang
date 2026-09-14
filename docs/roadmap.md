@@ -252,6 +252,39 @@ Status: **planned**
 - [ ] Add `Marang.Client` only if Guyabano or another real consumer needs a
       typed non-MCP remote client.
 
+## Milestone 8 — Curated planning and checkpoint decision surfaces
+
+Status: **planned after the durable supervision vertical and upstream recall
+contracts**
+
+Marang is the agent-facing façade, not the owner of memory, execution evidence,
+pricing, reputation, or workflow state. Its MCP/HTTP views compose bounded
+snapshots from authoritative providers and return their provenance and
+freshness.
+
+- [ ] Expose an enriched model-catalog view combining Baize capabilities and
+  current availability/economics with Hongxian-derived contextual experience,
+  sample size, recency, and evidence references.
+- [ ] Expose bounded relevant-experience, similar-run, workflow-history, and
+  model-usage-guidance views after Hongxian publishes the corresponding
+  portable recall contracts.
+- [ ] Expose a checkpoint decision package combining authoritative Zhinu state,
+  revision-bound artifact/validation evidence, a delta-oriented Cangjie
+  snapshot, relevant historical recovery experience, and explicit budgets.
+- [ ] Return source snapshot/checkpoint identities, policy versions,
+  truncation, staleness, degradation, and unsupported capabilities. Never merge
+  conflicting claims into an unexplained answer.
+- [ ] Record which returned context was actually supplied to a supervisor and
+  which decision referenced it through Hongxian receipts.
+- [ ] Enforce authentication, tenant/workspace scope, disclosure policy, and
+  resource budgets before querying or returning cross-system context.
+
+Names such as `GetAvailableModels`, `GetRelevantExperience`,
+`GetSimilarRuns`, and `GetCheckpointContext` remain illustrative until the
+portable upstream queries stabilize. Marang does not calculate reputation,
+promote knowledge, execute model routing policy, or become a generic data
+federation/query engine.
+
 ## Later, evidence-driven work
 
 - Additional provider packages after at least two consumers need them.
