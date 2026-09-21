@@ -1,5 +1,7 @@
 namespace Marang;
 
+using Penghou.Qingniao;
+
 /// <summary>Describes the outcome of host verification for an opaque plan reference.</summary>
 public enum WorkflowPlanVerificationStatus
 {
@@ -296,49 +298,31 @@ internal sealed class ImplementWorkflowPlanDefinition
     }
 }
 
-/// <summary>One resolved plan reference and its optional Marang-owned structure.</summary>
+/// <summary>One resolved plan reference, its optional Marang-owned structure, and the request it was resolved for.</summary>
 internal sealed class WorkflowPlanResolution
 {
-    private WorkflowPlanResolution(
+    internal WorkflowPlanResolution(
         WorkflowPlanRevisionReference planRevision,
         ImplementWorkflowPlanDefinition? definition,
-        DelegationRequest? boundRequest)
+        DelegationRequest request)
     {
         PlanRevision = planRevision ?? throw new ArgumentNullException(nameof(planRevision));
         PlanRevision.Validate();
         Definition = definition;
-        BoundRequest = boundRequest;
-    }
-
-    internal WorkflowPlanResolution(
-        WorkflowPlanRevisionReference planRevision,
-        ImplementWorkflowPlanDefinition? definition)
-        : this(planRevision, definition, boundRequest: null)
-    {
+        Request = request ?? throw new ArgumentNullException(nameof(request));
     }
 
     public WorkflowPlanRevisionReference PlanRevision { get; }
     public ImplementWorkflowPlanDefinition? Definition { get; }
-    public DelegationRequest? BoundRequest { get; }
+    public DelegationRequest Request { get; }
     public bool HasMarangStructure => Definition is not null;
-
-    public WorkflowPlanResolution Bind(DelegationRequest boundRequest)
-    {
-        ArgumentNullException.ThrowIfNull(boundRequest);
-        if (boundRequest.PlanRevision != PlanRevision)
-        {
-            throw new InvalidOperationException("A resolved request must be bound to the resolved plan revision.");
-        }
-
-        return new WorkflowPlanResolution(PlanRevision, Definition, boundRequest);
-    }
 }
 
 /// <summary>Catalog boundary for immutable workflow plan revisions.</summary>
 internal interface IWorkflowPlanCatalog
 {
-    /// <summary>Returns the catalog entry for an exact built-in reference, when present.</summary>
-    bool TryGet(WorkflowPlanRevisionReference reference, out WorkflowPlanResolution? resolution);
+    /// <summary>Returns the fixed definition for an exact built-in reference, when present.</summary>
+    bool TryGet(WorkflowPlanRevisionReference reference, out ImplementWorkflowPlanDefinition? definition);
 }
 
 /// <summary>
@@ -351,11 +335,11 @@ internal sealed class InMemoryWorkflowPlanCatalog : IWorkflowPlanCatalog
     public static WorkflowPlanRevisionReference ImplementRevision =>
         WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1");
 
-    private static readonly WorkflowPlanResolution ImplementResolution =
-        new(ImplementRevision, ImplementWorkflowPlanDefinition.Create());
+    private static readonly ImplementWorkflowPlanDefinition ImplementDefinition =
+        ImplementWorkflowPlanDefinition.Create();
 
     /// <summary>Looks up only the exact built-in Implement/1 reference.</summary>
-    public bool TryGet(WorkflowPlanRevisionReference reference, out WorkflowPlanResolution? resolution)
+    public bool TryGet(WorkflowPlanRevisionReference reference, out ImplementWorkflowPlanDefinition? definition)
     {
         ArgumentNullException.ThrowIfNull(reference);
         reference.Validate();
@@ -364,11 +348,11 @@ internal sealed class InMemoryWorkflowPlanCatalog : IWorkflowPlanCatalog
             && string.Equals(reference.Identifier, "Implement", StringComparison.Ordinal)
             && string.Equals(reference.Revision, "1", StringComparison.Ordinal))
         {
-            resolution = ImplementResolution;
+            definition = ImplementDefinition;
             return true;
         }
 
-        resolution = null;
+        definition = null;
         return false;
     }
 
@@ -377,8 +361,14 @@ internal sealed class InMemoryWorkflowPlanCatalog : IWorkflowPlanCatalog
 /// <summary>Resolves northbound requests to immutable workflow plan revisions.</summary>
 internal interface IWorkflowPlanResolver
 {
-    /// <summary>Validates and resolves a caller-scoped request before any execution begins.</summary>
-    WorkflowPlanResolution Resolve(DelegationCallerScope caller, DelegationRequest request);
+    /// <summary>
+    /// Validates and resolves a caller-scoped request before any execution
+    /// begins. A null plan reference selects the fixed Implement preset.
+    /// </summary>
+    WorkflowPlanResolution Resolve(
+        DelegationCallerScope caller,
+        DelegationRequest request,
+        WorkflowPlanRevisionReference? planReference = null);
 }
 
 /// <summary>
@@ -403,13 +393,16 @@ internal sealed class InMemoryWorkflowPlanResolver : IWorkflowPlanResolver
         this.hostVerifier = hostVerifier;
     }
 
-    public WorkflowPlanResolution Resolve(DelegationCallerScope caller, DelegationRequest request)
+    public WorkflowPlanResolution Resolve(
+        DelegationCallerScope caller,
+        DelegationRequest request,
+        WorkflowPlanRevisionReference? planReference = null)
     {
         ArgumentNullException.ThrowIfNull(caller);
         ArgumentNullException.ThrowIfNull(request);
         DelegationRequestValidator.Validate(request);
 
-        var requested = request.PlanRevision ?? InMemoryWorkflowPlanCatalog.ImplementRevision;
+        var requested = planReference ?? InMemoryWorkflowPlanCatalog.ImplementRevision;
         requested.Validate();
 
         // Branch on kind before catalog lookup. A custom catalog must never
@@ -434,8 +427,7 @@ internal sealed class InMemoryWorkflowPlanResolver : IWorkflowPlanResolver
                 throw Reject(requested, verification.Status, $"The host rejected workflow plan reference '{requested.Identifier}' at revision '{requested.Revision}'.");
             }
 
-            return new WorkflowPlanResolution(requested, definition: null)
-                .Bind(BindRequest(request, requested));
+            return new WorkflowPlanResolution(requested, definition: null, request);
         }
 
         if (requested.Kind != WorkflowPlanReferenceKind.BuiltInPreset)
@@ -443,40 +435,22 @@ internal sealed class InMemoryWorkflowPlanResolver : IWorkflowPlanResolver
             throw Reject(requested, WorkflowPlanVerificationStatus.Unknown, "The workflow plan reference kind is not supported.");
         }
 
-        if (!catalog.TryGet(requested, out var resolution) || resolution is null)
+        if (!catalog.TryGet(requested, out var definition) || definition is null)
         {
             throw Reject(requested, WorkflowPlanVerificationStatus.Unknown, "The requested built-in workflow plan revision is not registered.");
         }
 
-        if (resolution.PlanRevision != requested || resolution.Definition is null)
-        {
-            throw Reject(requested, WorkflowPlanVerificationStatus.Unknown, "The workflow plan catalog returned a malformed entry.");
-        }
-
         try
         {
-            resolution.Definition.Validate();
+            definition.Validate();
         }
         catch (InvalidOperationException exception)
         {
             throw Reject(requested, WorkflowPlanVerificationStatus.Unknown, "The workflow plan catalog returned an invalid fixed definition.", exception);
         }
 
-        return resolution.Bind(BindRequest(request, requested));
+        return new WorkflowPlanResolution(requested, definition, request);
     }
-
-    private static DelegationRequest BindRequest(
-        DelegationRequest request,
-        WorkflowPlanRevisionReference planRevision) =>
-        new(
-            request.RequestKey,
-            request.Objective,
-            request.Workspace,
-            request.AcceptanceCriteria,
-            request.Constraints,
-            request.Budget,
-            request.Strategy,
-            planRevision);
 
     private static WorkflowPlanResolutionException Reject(
         WorkflowPlanRevisionReference reference,

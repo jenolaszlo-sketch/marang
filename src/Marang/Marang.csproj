@@ -13,10 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Marang.Abstractions\Marang.Abstractions.csproj" />
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.2" />
   </ItemGroup>
 
   <ItemGroup>

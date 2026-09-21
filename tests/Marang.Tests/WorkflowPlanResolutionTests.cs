@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Penghou.Qingniao;
 
 namespace Marang.Tests;
 
@@ -15,8 +16,7 @@ public sealed class WorkflowPlanResolutionTests
         resolution.PlanRevision.Should().Be(
             WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1"));
         resolution.HasMarangStructure.Should().BeTrue();
-        resolution.BoundRequest!.PlanRevision.Should().Be(resolution.PlanRevision);
-        DelegationRequestIdentity.Compute(resolution.BoundRequest).Version.Should().Be(DelegationRequestFingerprint.PlanBoundVersion);
+        resolution.Request.Should().BeSameAs(request);
     }
 
     [Fact]
@@ -49,14 +49,14 @@ public sealed class WorkflowPlanResolutionTests
     [Fact]
     public void Explicit_builtin_revision_resolves_to_the_same_catalog_entry()
     {
-        var request = CreateRequest(WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1"));
+        var reference = WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1");
+        var request = CreateRequest();
 
-        var resolution = new InMemoryWorkflowPlanResolver().Resolve(Caller(), request);
+        var resolution = new InMemoryWorkflowPlanResolver().Resolve(Caller(), request, reference);
 
         resolution.PlanRevision.Should().Be(InMemoryWorkflowPlanCatalog.ImplementRevision);
         resolution.Definition.Should().NotBeNull();
-        DelegationRequestIdentity.Compute(resolution.BoundRequest!).Should().Be(
-            DelegationRequestIdentity.Compute(new InMemoryWorkflowPlanResolver().Resolve(Caller(), CreateRequest()).BoundRequest!));
+        resolution.Request.Should().BeSameAs(request);
     }
 
     [Fact]
@@ -66,7 +66,8 @@ public sealed class WorkflowPlanResolutionTests
 
         new InMemoryWorkflowPlanResolver(verifier).Resolve(
             Caller(),
-            CreateRequest(WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1")));
+            CreateRequest(),
+            WorkflowPlanRevisionReference.BuiltInPreset("Implement", "1"));
 
         verifier.Seen.Should().BeEmpty();
     }
@@ -78,9 +79,9 @@ public sealed class WorkflowPlanResolutionTests
         string identifier,
         string revision)
     {
-        var request = CreateRequest(WorkflowPlanRevisionReference.BuiltInPreset(identifier, revision));
+        var reference = WorkflowPlanRevisionReference.BuiltInPreset(identifier, revision);
 
-        var act = () => new InMemoryWorkflowPlanResolver().Resolve(Caller(), request);
+        var act = () => new InMemoryWorkflowPlanResolver().Resolve(Caller(), CreateRequest(), reference);
 
         act.Should().Throw<WorkflowPlanResolutionException>()
             .Which.Status.Should().Be(WorkflowPlanVerificationStatus.Unknown);
@@ -91,7 +92,7 @@ public sealed class WorkflowPlanResolutionTests
     {
         var reference = FuwenReference();
 
-        var act = () => new InMemoryWorkflowPlanResolver().Resolve(Caller(), CreateRequest(reference));
+        var act = () => new InMemoryWorkflowPlanResolver().Resolve(Caller(), CreateRequest(), reference);
 
         act.Should().Throw<WorkflowPlanResolutionException>()
             .Which.Status.Should().Be(WorkflowPlanVerificationStatus.Unknown);
@@ -102,10 +103,10 @@ public sealed class WorkflowPlanResolutionTests
     {
         var catalog = new StubCatalog
         {
-            Resolution = new WorkflowPlanResolution(FuwenReference(), ImplementWorkflowPlanDefinition.Create()),
+            Definition = ImplementWorkflowPlanDefinition.Create(),
         };
 
-        var act = () => new InMemoryWorkflowPlanResolver(catalog).Resolve(Caller(), CreateRequest(FuwenReference()));
+        var act = () => new InMemoryWorkflowPlanResolver(catalog).Resolve(Caller(), CreateRequest(), FuwenReference());
 
         act.Should().Throw<WorkflowPlanResolutionException>()
             .Which.Status.Should().Be(WorkflowPlanVerificationStatus.Unknown);
@@ -123,7 +124,7 @@ public sealed class WorkflowPlanResolutionTests
         var verifier = new StubVerifier(new WorkflowPlanVerificationResult(status));
         var resolver = new InMemoryWorkflowPlanResolver(verifier);
 
-        var act = () => resolver.Resolve(Caller(), CreateRequest(FuwenReference()));
+        var act = () => resolver.Resolve(Caller(), CreateRequest(), FuwenReference());
 
         act.Should().Throw<WorkflowPlanResolutionException>()
             .Which.Status.Should().Be(status);
@@ -137,14 +138,14 @@ public sealed class WorkflowPlanResolutionTests
         var reference = FuwenReference();
         var verifier = new StubVerifier(WorkflowPlanVerificationResult.Verified());
 
-        var request = CreateRequest(reference);
+        var request = CreateRequest();
         var caller = Caller();
-        var resolution = new InMemoryWorkflowPlanResolver(verifier).Resolve(caller, request);
+        var resolution = new InMemoryWorkflowPlanResolver(verifier).Resolve(caller, request, reference);
 
         resolution.PlanRevision.Should().Be(reference);
         resolution.HasMarangStructure.Should().BeFalse();
         resolution.Definition.Should().BeNull();
-        resolution.BoundRequest!.PlanRevision.Should().Be(reference);
+        resolution.Request.Should().BeSameAs(request);
         verifier.Seen.Should().ContainSingle();
         verifier.Seen[0].PlanRevision.Should().Be(reference);
         verifier.Seen[0].PlanRevision.Should().BeSameAs(reference);
@@ -159,18 +160,18 @@ public sealed class WorkflowPlanResolutionTests
         var unknown = WorkflowPlanRevisionReference.BuiltInPreset("Implement", "2");
         var fuwen = FuwenReference();
 
-        catalog.TryGet(unknown, out var unknownResolution).Should().BeFalse();
-        unknownResolution.Should().BeNull();
-        catalog.TryGet(fuwen, out var fuwenResolution).Should().BeFalse();
-        fuwenResolution.Should().BeNull();
+        catalog.TryGet(unknown, out var unknownDefinition).Should().BeFalse();
+        unknownDefinition.Should().BeNull();
+        catalog.TryGet(fuwen, out var fuwenDefinition).Should().BeFalse();
+        fuwenDefinition.Should().BeNull();
     }
 
     [Fact]
-    public void Malformed_catalog_output_is_rejected()
+    public void Null_catalog_definition_is_rejected()
     {
         var catalog = new StubCatalog
         {
-            Resolution = new WorkflowPlanResolution(InMemoryWorkflowPlanCatalog.ImplementRevision, definition: null),
+            Definition = null,
         };
 
         var act = () => new InMemoryWorkflowPlanResolver(catalog).Resolve(Caller(), CreateRequest());
@@ -202,7 +203,7 @@ public sealed class WorkflowPlanResolutionTests
             new WorkflowPlanAction("result", WorkflowPlanStageKind.Result));
         var catalog = new StubCatalog
         {
-            Resolution = new WorkflowPlanResolution(InMemoryWorkflowPlanCatalog.ImplementRevision, duplicate),
+            Definition = duplicate,
         };
 
         var act = () => new InMemoryWorkflowPlanResolver(catalog).Resolve(Caller(), CreateRequest());
@@ -223,14 +224,14 @@ public sealed class WorkflowPlanResolutionTests
 
     private static DelegationCallerScope Caller() => new("caller-1");
 
-    private static DelegationRequest CreateRequest(WorkflowPlanRevisionReference? planRevision = null) => new(
+    private static DelegationRequest CreateRequest() => new(
         "request-1",
         "Implement the objective",
+        "test-provider",
         new WorkspaceReference("local", "workspace", "revision"),
         ["The result is correct"],
         [],
-        new DelegationBudget(),
-        planRevision: planRevision);
+        new DelegationBudget());
 
     private static WorkflowPlanRevisionReference FuwenReference() =>
         WorkflowPlanRevisionReference.FuwenDefinition(
@@ -251,14 +252,14 @@ public sealed class WorkflowPlanResolutionTests
 
     private sealed class StubCatalog : IWorkflowPlanCatalog
     {
-        public WorkflowPlanResolution? Resolution { get; init; }
+        public ImplementWorkflowPlanDefinition? Definition { get; init; }
         public bool Called { get; private set; }
 
-        public bool TryGet(WorkflowPlanRevisionReference reference, out WorkflowPlanResolution? resolution)
+        public bool TryGet(WorkflowPlanRevisionReference reference, out ImplementWorkflowPlanDefinition? definition)
         {
             Called = true;
-            resolution = Resolution;
-            return Resolution is not null;
+            definition = Definition;
+            return Definition is not null;
         }
     }
 }
