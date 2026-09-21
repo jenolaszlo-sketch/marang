@@ -30,3 +30,10 @@ Marang.WorkflowPlanRevisionReference.CanonicalFingerprint.get -> string?
 static Marang.WorkflowPlanRevisionReference.BuiltInPreset(string! identifier, string! version) -> Marang.WorkflowPlanRevisionReference!
 static Marang.WorkflowPlanRevisionReference.FuwenDefinition(string! definitionIdentifier, string! revision, string! canonicalFingerprint) -> Marang.WorkflowPlanRevisionReference!
 Marang.WorkflowPlanRevisionReference.Validate() -> void
+Marang.MarangAdmissionVerifier
+Marang.MarangAdmissionVerifier.MarangAdmissionVerifier() -> void
+Marang.MarangAdmissionVerifier.Verify(Penghou.Qingniao.DelegationAdmissionContext! context) -> Penghou.Qingniao.DelegationAdmissionDecision!
+Marang.ImplementVerificationPolicy
+Marang.ImplementVerificationPolicy.ImplementVerificationPolicy() -> void
+Marang.ImplementVerificationPolicy.MaxVerificationRounds.get -> int
+Marang.ImplementVerificationPolicy.Decide(Penghou.Qingniao.CandidateVerificationInput! input) -> Penghou.Qingniao.CandidateVerificationDecision!
