@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" Version="2.2.0" />
     <ProjectReference Include="..\Marang\Marang.csproj" />
   </ItemGroup>
 
