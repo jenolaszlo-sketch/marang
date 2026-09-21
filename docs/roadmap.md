@@ -178,6 +178,47 @@ Status: **planned**
 Exit: Codex can safely submit, leave, return, inspect, intervene, cancel, and
 retrieve one immutable result through the service.
 
+## Milestone 4b — MCP authentication and authorization
+
+Status: **planned**
+
+Localhost development runs without auth. Anything reachable beyond loopback
+requires it. Auth is enforced at the HTTP/MCP boundary in `Marang.Server`;
+Qingniao stays transport-unaware.
+
+Stage 1 — API key (single operator, first remote deployments):
+
+- [ ] Accept the key in the `Authorization` header only; never query string.
+- [ ] Validate with constant-time comparison; missing or wrong key returns
+      401 without touching delegation state.
+- [ ] Read keys exclusively from environment (`.env` files, never committed
+      or logged); support key rotation without code changes.
+- [ ] Derive the caller identity from the presented key and attach it to
+      `DelegationCallerScope` and diagnostics.
+- [ ] Authorize every workspace reference against the caller's configured
+      allowed roots before delegation starts.
+- [ ] Verify OpenCode interop: `headers: { Authorization: ... }` on a
+      `remote` MCP entry against a running server.
+
+Stage 2 — OAuth (multi-user, enterprise):
+
+- [ ] OAuth 2.1 with Dynamic Client Registration, compatible with OpenCode's
+      automatic `mcp auth` flow; use the auth integration in
+      `ModelContextProtocol.AspNetCore` rather than hand-rolled validation.
+- [ ] Separate scopes for delegating vs supervising operations, so a client
+      authorized to submit and poll cannot intervene or cancel.
+- [ ] Per-caller rate limits, concurrency ceilings, and budget ceilings,
+      reusing the Milestone 3 server limits.
+- [ ] Audit every authentication decision (accept, reject, scope) into
+      diagnostics without recording key material.
+
+Tests (both stages): unauthenticated requests rejected before any state
+change; wrong/rotated keys rejected; caller A cannot touch caller B's
+delegations or workspaces; scoped tokens cannot exceed their scope.
+
+Exit: the same delegation suite passes against an authenticated server,
+and an unauthenticated client cannot observe or affect any delegation.
+
 ## Milestone 5 — Real provider and durable workflow integration
 
 Status: **planned**
