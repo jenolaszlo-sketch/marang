@@ -47,6 +47,14 @@ generation-cutover foundation. The initial Marang policy should require Codex or
 human supervision; automatic low-impact activation is later evidence-driven
 policy.
 
+The reusable planning mechanics this direction depends on are scoped in the
+`Penghou.Guihua` kernel (patches and preservation, stage catalogue, planning
+graph, bounded loop, decisions). Marang is not yet integrated with Guihua: its
+current plan surface is a deliberately sealed `Implement/1` preset plus an
+opaque Fuwen reference. The uncovered seam — provider-neutral patch admission,
+transition preview, and reuse/invalidation explanation — is recorded in the
+[Guihua roadmap](https://github.com/jenolaszlo-sketch/penghou-guihua/blob/main/ROADMAP.md).
+
 ## Shared code graph and delegation pivot
 
 Marang is the coding-specific composition and MCP boundary. Qingniao coordinates
