@@ -69,12 +69,43 @@ Zhinu decides what workflow step runs and how it resumes. Qingniao decides who
 performs one delegated activity and what evidence came back. Marang makes that
 capability safely accessible to a remote supervisor.
 
+## MCP tools
+
+`Marang.Server` exposes these tools over MCP (`/mcp`), backed by the composed
+Qingniao runtime:
+
+- `marang_ping` — connectivity probe.
+- `marang_delegate` — accept one bounded unit of work and pump it bounded steps.
+- `marang_status`, `marang_result`, `marang_cancel` — null-safe reads and
+  fenced cancellation.
+- `marang_wait`, `marang_intervene`, `marang_inspect`, `marang_get_artifact` —
+  supervisor-gated tools fenced on exact checkpoint and revision; stale
+  actions are reported, never retried.
+
+## Authentication
+
+Loopback requests skip authentication for local development. Everything else
+requires an API key in the `Authorization` header (`Bearer <key>`); a missing
+or wrong key returns 401 without touching delegation state. Keys and per-caller
+workspace roots come exclusively from host configuration and are never
+committed or logged:
+
+```powershell
+$env:MARANG__APIKEYS__ALICE = "<key-material>"
+$env:MARANG__ALLOWEDWORKSPACEROOTS__ALICE__0 = "workspace"
+```
+
+Rotation is an environment change plus restart; no code change. The caller
+identity derived from the presented key is what reaches delegation scopes —
+tools take no caller argument.
+
 ## Migration status
 
 The initial delegated-execution runtime was implemented under the pre-release project names
-`Marang.Abstractions` and `Marang`. Those packages are being superseded, not
-maintained as compatibility contracts. The next change renames and extracts
-them as Qingniao, then adds the `Marang.Server` executable.
+`Marang.Abstractions` and `Marang`. Those packages are superseded, not
+maintained as compatibility contracts: the runtime now lives in
+`Penghou.Qingniao` (published previews, consumed by `Marang.Server`), and the
+`Marang.Server` executable serves MCP plus health.
 
 See the [service architecture](docs/architecture.md), active
 [roadmap](docs/roadmap.md), detailed pre-extraction
