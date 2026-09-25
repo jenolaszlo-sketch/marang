@@ -37,3 +37,40 @@ Marang.ImplementVerificationPolicy
 Marang.ImplementVerificationPolicy.ImplementVerificationPolicy() -> void
 Marang.ImplementVerificationPolicy.MaxVerificationRounds.get -> int
 Marang.ImplementVerificationPolicy.Decide(Penghou.Qingniao.CandidateVerificationInput! input) -> Penghou.Qingniao.CandidateVerificationDecision!
+const Marang.MarangHttpContextKeys.CallerIdentity = "Marang.CallerIdentity" -> string!
+Marang.MarangApiKeyAuthenticator
+Marang.MarangApiKeyAuthenticator.Authenticate(string? authorizationHeader) -> string?
+Marang.MarangApiKeyAuthenticator.MarangApiKeyAuthenticator(System.Collections.Generic.IReadOnlyDictionary<string!, string!>! apiKeys) -> void
+Marang.MarangAuthenticationOptions
+Marang.MarangAuthenticationOptions.<Clone>$() -> Marang.MarangAuthenticationOptions!
+Marang.MarangAuthenticationOptions.AllowedWorkspaceRoots.get -> System.Collections.Generic.Dictionary<string!, string![]!>!
+Marang.MarangAuthenticationOptions.AllowedWorkspaceRoots.init -> void
+Marang.MarangAuthenticationOptions.ApiKeys.get -> System.Collections.Generic.Dictionary<string!, string!>!
+Marang.MarangAuthenticationOptions.ApiKeys.init -> void
+Marang.MarangAuthenticationOptions.BypassLoopback.get -> bool
+Marang.MarangAuthenticationOptions.BypassLoopback.init -> void
+Marang.MarangAuthenticationOptions.Equals(Marang.MarangAuthenticationOptions? other) -> bool
+Marang.MarangAuthenticationOptions.LocalCallerIdentity.get -> string!
+Marang.MarangAuthenticationOptions.LocalCallerIdentity.init -> void
+Marang.MarangAuthenticationOptions.MarangAuthenticationOptions() -> void
+Marang.MarangHttpContextKeys
+Marang.WorkflowPlanRevisionReference.<Clone>$() -> Marang.WorkflowPlanRevisionReference!
+Marang.WorkflowPlanRevisionReference.Equals(Marang.WorkflowPlanRevisionReference? other) -> bool
+Marang.WorkflowPlanVerificationResult.<Clone>$() -> Marang.WorkflowPlanVerificationResult!
+Marang.WorkflowPlanVerificationResult.Equals(Marang.WorkflowPlanVerificationResult? other) -> bool
+override Marang.MarangAuthenticationOptions.Equals(object? obj) -> bool
+override Marang.MarangAuthenticationOptions.GetHashCode() -> int
+override Marang.MarangAuthenticationOptions.ToString() -> string!
+override Marang.WorkflowPlanRevisionReference.Equals(object? obj) -> bool
+override Marang.WorkflowPlanRevisionReference.GetHashCode() -> int
+override Marang.WorkflowPlanRevisionReference.ToString() -> string!
+override Marang.WorkflowPlanVerificationResult.Equals(object? obj) -> bool
+override Marang.WorkflowPlanVerificationResult.GetHashCode() -> int
+override Marang.WorkflowPlanVerificationResult.ToString() -> string!
+static Marang.MarangApiKeyAuthenticator.IsWorkspaceAuthorized(System.Collections.Generic.IReadOnlyDictionary<string!, string![]!>! allowedRoots, string! caller, string! workspace) -> bool
+static Marang.MarangAuthenticationOptions.operator !=(Marang.MarangAuthenticationOptions? left, Marang.MarangAuthenticationOptions? right) -> bool
+static Marang.MarangAuthenticationOptions.operator ==(Marang.MarangAuthenticationOptions? left, Marang.MarangAuthenticationOptions? right) -> bool
+static Marang.WorkflowPlanRevisionReference.operator !=(Marang.WorkflowPlanRevisionReference? left, Marang.WorkflowPlanRevisionReference? right) -> bool
+static Marang.WorkflowPlanRevisionReference.operator ==(Marang.WorkflowPlanRevisionReference? left, Marang.WorkflowPlanRevisionReference? right) -> bool
+static Marang.WorkflowPlanVerificationResult.operator !=(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool
+static Marang.WorkflowPlanVerificationResult.operator ==(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool

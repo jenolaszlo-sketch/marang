@@ -1,36 +1,55 @@
 using System.ComponentModel;
+using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol.Server;
 using Penghou.Qingniao;
 
 namespace Marang.Mcp;
 
 /// <summary>
-/// Delegation lifecycle over the composed Qingniao runtime. Accept submits
-/// one bounded unit of work and pumps it a bounded number of steps; status,
-/// result, and cancel are reads against the same runtime. Intervention,
-/// wait, inspect, and artifact tools stay out until their
+/// Delegation lifecycle over the composed Qingniao runtime. The caller
+/// identity always comes from the authenticated HTTP context (set by the
+/// boundary middleware), never from a client-supplied argument. Accept
+/// submits one bounded unit of work and pumps it a bounded number of steps;
+/// status, result, and cancel are reads against the same runtime.
+/// Intervention, wait, inspect, and artifact tools stay out until their
 /// authorization/fencing tests pass.
 /// </summary>
 [McpServerToolType]
-public sealed class MarangDelegationTools(DelegationRuntime runtime)
+public sealed class MarangDelegationTools(
+    DelegationRuntime runtime,
+    IHttpContextAccessor httpContext,
+    IOptions<MarangAuthenticationOptions> authentication)
 {
     /// <summary>Accepts one bounded unit of work and pumps it bounded steps.</summary>
     [McpServerTool(Name = "marang_delegate")]
-    [Description("Accept one bounded unit of delegated work and advance it up to maxSteps coordinator steps. Returns the delegation id and current state.")]
+    [Description("Accept one bounded unit of delegated work and advance it up to maxSteps coordinator steps. Returns the delegation id, caller, and current state.")]
     public async Task<string> DelegateAsync(
-        [Description("Caller identity.")] string caller,
         [Description("Caller-scoped idempotency key. Reuse returns the accepted handle.")] string requestKey,
         [Description("Work objective.")] string objective,
         [Description("Provider identity resolved by the runtime.")] string provider,
+        [Description("Workspace identifier, authorized against the caller.")] string workspace = "workspace",
         [Description("Maximum coordinator pump steps.")] int maxSteps = 20,
         CancellationToken cancellationToken = default)
     {
+        var caller = CurrentCaller();
+        if (!MarangApiKeyAuthenticator.IsWorkspaceAuthorized(
+                authentication.Value.AllowedWorkspaceRoots, caller, workspace))
+        {
+            return JsonSerializer.Serialize(new
+            {
+                error = "workspace not authorized for caller",
+                caller,
+            });
+        }
+
         var request = new DelegationRequest(
             requestKey,
             objective,
             provider,
-            new WorkspaceReference("local", "workspace", null),
+            new WorkspaceReference("local", workspace, null),
             ["Done"],
             [],
             new DelegationBudget(MaximumWorkerCalls: 8, MaximumRetries: 2));
@@ -49,6 +68,7 @@ public sealed class MarangDelegationTools(DelegationRuntime runtime)
         return JsonSerializer.Serialize(new
         {
             delegationId = handle.DelegationId.Value.ToString("D"),
+            caller,
             state = snapshot.Progress.State.ToString(),
         });
     }
@@ -107,4 +127,8 @@ public sealed class MarangDelegationTools(DelegationRuntime runtime)
             return "unknown delegation";
         }
     }
+
+    private string CurrentCaller() =>
+        httpContext.HttpContext?.Items[MarangHttpContextKeys.CallerIdentity] as string
+        ?? authentication.Value.LocalCallerIdentity;
 }

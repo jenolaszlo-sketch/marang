@@ -206,15 +206,20 @@ Qingniao stays transport-unaware.
 
 Stage 1 — API key (single operator, first remote deployments):
 
-- [ ] Accept the key in the `Authorization` header only; never query string.
-- [ ] Validate with constant-time comparison; missing or wrong key returns
-      401 without touching delegation state.
-- [ ] Read keys exclusively from environment (`.env` files, never committed
-      or logged); support key rotation without code changes.
-- [ ] Derive the caller identity from the presented key and attach it to
-      `DelegationCallerScope` and diagnostics.
-- [ ] Authorize every workspace reference against the caller's configured
-      allowed roots before delegation starts.
+- [x] Accept the key in the `Authorization` header only; never query string
+      (`Bearer` scheme; anything else is rejected).
+- [x] Validate with constant-time comparison; missing or wrong key returns
+      401 without touching delegation state (middleware short-circuits
+      before any endpoint).
+- [x] Read keys exclusively from environment (`Marang__ApiKeys__<caller>`;
+      never committed or logged); support key rotation without code changes
+      (env change plus restart).
+- [x] Derive the caller identity from the presented key and attach it to
+      `DelegationCallerScope` and diagnostics (middleware sets it on
+      `HttpContext.Items`; tools never take a caller argument).
+- [x] Authorize every workspace reference against the caller's configured
+      allowed roots before delegation starts (`Marang__AllowedWorkspaceRoots`;
+      loopback dev identity pre-authorized for the default workspace).
 - [ ] Verify OpenCode interop: `headers: { Authorization: ... }` on a
       `remote` MCP entry against a running server.
 
