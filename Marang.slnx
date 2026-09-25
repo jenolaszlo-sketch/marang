@@ -2,7 +2,6 @@
   <Folder Name="/src/">
     <Project Path="src/Marang/Marang.csproj" />
     <Project Path="src/Marang.Server/Marang.Server.csproj" />
-    <Project Path="src/Marang.Hosting/Marang.Hosting.csproj" />
     <Project Path="src/Marang.Mcp/Marang.Mcp.csproj" />
   </Folder>
   <Folder Name="/tests/">

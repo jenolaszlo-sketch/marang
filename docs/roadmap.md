@@ -121,8 +121,8 @@ Status: **implementation complete in the Qingniao repository; package handoff pe
 - [x] Rename `Marang.Tests` to `Penghou.Qingniao.Tests`.
 - [x] Grow `Marang.Mcp` into the real MCP project (connectivity probe,
       referenced by `Marang.Server`). The first Qingniao package is published.
-- [ ] Decide `Marang.Hosting`: still an empty assembly-marker seam and
-      unreferenced. Fold it into the future service composition or remove it.
+- [x] Remove the empty `Marang.Hosting` scaffold (unreferenced
+      assembly-marker only; `Marang.Mcp` is the real MCP project).
 - [x] Add architecture/dependency tests proving Qingniao has no reference to
       Marang, ASP.NET Core, MCP transport DTOs, or product configuration.
 - [x] Keep the old `Marang` and `Marang.Abstractions` preview packages
