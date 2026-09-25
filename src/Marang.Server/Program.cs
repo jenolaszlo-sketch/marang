@@ -25,8 +25,9 @@ builder.Services
     })
     .WithToolsFromAssembly(typeof(MarangConnectivityTools).Assembly);
 
-// Delegation tools land here as Marang.Mcp tool types are implemented:
-// .WithTools<MarangDelegationTools>()
+// MarangDelegationTools is discovered from the assembly above. Wait,
+// inspect, intervene, and artifact tools land here only after their
+// authorization/fencing tests pass.
 
 var app = builder.Build();
 

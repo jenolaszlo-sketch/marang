@@ -15,7 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Marang\Marang.csproj" />
+    <ProjectReference Include="..\..\src\Marang.Mcp\Marang.Mcp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

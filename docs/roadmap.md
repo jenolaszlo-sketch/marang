@@ -182,8 +182,9 @@ Exit: Marang hosts the fake Qingniao vertical slice as a secure local service.
 
 Status: **planned**
 
-- [ ] Expose `marang_delegate`, `marang_status`, `marang_result`, and
-      `marang_cancel` over MCP.
+- [x] Expose `marang_delegate`, `marang_status`, `marang_result`, and
+      `marang_cancel` over MCP (backed by the composed runtime; delegate
+      pumps bounded steps, reads are null-safe, cancel is fenced).
 - [ ] Expose bounded `marang_wait`, `marang_intervene`, `marang_inspect`, and
       `marang_get_artifact` only after their authorization/fencing tests pass.
 - [ ] Add HTTP endpoints only where health, operations, or non-MCP clients need
