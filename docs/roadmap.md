@@ -165,7 +165,9 @@ Status: **partially complete — host scaffolded with probe; composition pending
       controllers yet).
 - [x] Add a health endpoint (`/healthz`) and an MCP transport probe
       (`marang_ping`).
-- [ ] Reference Qingniao and make Marang.Server the composition root.
+- [x] Reference Qingniao and make Marang.Server the composition root
+      (`DelegationRuntime` singleton with `MarangAdmissionVerifier` and
+      `ImplementVerificationPolicy`; no providers registered yet).
 - [ ] Add configuration validation, readiness, structured
       diagnostics, graceful shutdown, and bounded background dispatch.
 - [ ] Define remote caller/tenant identity and authentication extension points.
