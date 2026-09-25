@@ -20,7 +20,9 @@ completed before the ownership correction is preserved in the
 - Siming `0.1.0-preview.4` is published and unblocks Qingniao's canonical JSON
   fingerprint adapter.
 - The executable coordinator has not yet been completed.
-- The ASP.NET Core `Marang.Server` host has not yet been scaffolded.
+- The ASP.NET Core `Marang.Server` host is scaffolded with a connectivity
+  probe (`marang_ping`) and a health endpoint; Qingniao runtime composition
+  into the server is pending.
 - The independent `Penghou.Qingniao` repository is created and verified. The
   old source remains temporarily frozen here only until the first Qingniao
   preview is published; it is not a second implementation line.
@@ -117,8 +119,10 @@ Status: **implementation complete in the Qingniao repository; package handoff pe
 - [x] Move namespaces, assembly/package metadata, XML docs, API baselines, and
       tests without changing the reviewed semantics.
 - [x] Rename `Marang.Tests` to `Penghou.Qingniao.Tests`.
-- [ ] Remove or fold the empty `Marang.Hosting` and `Marang.Mcp` scaffolds into
-      the future service after the first Qingniao package is published.
+- [x] Grow `Marang.Mcp` into the real MCP project (connectivity probe,
+      referenced by `Marang.Server`). The first Qingniao package is published.
+- [ ] Decide `Marang.Hosting`: still an empty assembly-marker seam and
+      unreferenced. Fold it into the future service composition or remove it.
 - [x] Add architecture/dependency tests proving Qingniao has no reference to
       Marang, ASP.NET Core, MCP transport DTOs, or product configuration.
 - [x] Keep the old `Marang` and `Marang.Abstractions` preview packages
@@ -155,11 +159,14 @@ providers, or a workflow database.
 
 ## Milestone 3 — Scaffold Marang.Server
 
-Status: **planned**
+Status: **partially complete — host scaffolded with probe; composition pending**
 
-- [ ] Create a non-packable ASP.NET Core MVC executable.
+- [x] Create a non-packable ASP.NET Core executable (minimal-API style; no MVC
+      controllers yet).
+- [x] Add a health endpoint (`/healthz`) and an MCP transport probe
+      (`marang_ping`).
 - [ ] Reference Qingniao and make Marang.Server the composition root.
-- [ ] Add configuration validation, health/readiness endpoints, structured
+- [ ] Add configuration validation, readiness, structured
       diagnostics, graceful shutdown, and bounded background dispatch.
 - [ ] Define remote caller/tenant identity and authentication extension points.
 - [ ] Resolve workspace references, provider profiles, disclosure policy, and
