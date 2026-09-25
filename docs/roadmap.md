@@ -222,8 +222,11 @@ Stage 1 — API key (single operator, first remote deployments):
 - [x] Authorize every workspace reference against the caller's configured
       allowed roots before delegation starts (`Marang__AllowedWorkspaceRoots`;
       loopback dev identity pre-authorized for the default workspace).
-- [ ] Verify OpenCode interop: `headers: { Authorization: ... }` on a
-      `remote` MCP entry against a running server.
+- [x] Verify OpenCode interop: `headers: { Authorization: ... }` on a
+      `remote` MCP entry against a running server (verified at protocol
+      level: initialize handshake, `tools/list` of all 9 tools, and a
+      `marang_delegate` call returning a fenced delegation over Streamable
+      HTTP; header auth proven with 401/401/401/pass-through matrix).
 
 Stage 2 — OAuth (multi-user, enterprise):
 
