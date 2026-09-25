@@ -355,6 +355,23 @@ federation/query engine.
 - Adaptive-plan proposal, transition-preview, approval, and explanation tools
   after Fuwen and Zhinu publish the required authoritative contracts.
 
+## Cross-consumer extraction watchlist
+
+Reusable patterns both Guyabano and Marang need. None is extracted until two
+consumers show near-identical code; until then each keeps its own copy:
+
+- Qingniao composition (`DelegationRuntime` plus in-memory registries and
+  product policy): `Marang.Server` wires it now; Guyabano's embedded-Qingniao
+  dogfood will wire it next. Extract a hosting helper only on convergence.
+- MCP delegation-tool patterns (bounded pump, null-safe reads, fenced
+  cancel): `MarangDelegationTools` now; compare with Guyabano's Codex web
+  gateway before sharing anything.
+- Hongxian session mapping: Guyabano's `HongxianGuyabanoSessionStore` is
+  done; compare when Marang lands its M5 session correlation.
+- Approved-root validation: the Codex adapter, Marang workspace
+  authorization, and Guyabano staging each check containment independently;
+  share only if a third copy appears.
+
 ## Non-goals
 
 - Publishing `Marang.Core` or `Marang.Abstractions` as the reusable capability.
