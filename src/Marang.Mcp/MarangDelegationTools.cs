@@ -75,18 +75,28 @@ public sealed class MarangDelegationTools(
 
     /// <summary>Reads the current delegation state.</summary>
     [McpServerTool(Name = "marang_status")]
-    [Description("Read the current state of one delegation, or unknown when the id is not known.")]
+    [Description("Read the current state, revision, and waiting checkpoint of one delegation.")]
     public async Task<string> GetStatusAsync(
         [Description("Delegation id.")] string delegationId,
         CancellationToken cancellationToken = default)
     {
         if (!Guid.TryParse(delegationId, out var id))
         {
-            return "unknown delegation id";
+            return Error("unknown delegation id");
         }
 
         var status = await runtime.GetStatusAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
-        return status is null ? "unknown delegation" : status.State.ToString();
+        if (status is null)
+        {
+            return Error("unknown delegation");
+        }
+
+        return JsonSerializer.Serialize(new
+        {
+            state = status.State.ToString(),
+            revision = status.Revision,
+            checkpoint = status.Checkpoint?.CheckpointId.Value.ToString("D"),
+        });
     }
 
     /// <summary>Reads the terminal result summary.</summary>
@@ -98,11 +108,11 @@ public sealed class MarangDelegationTools(
     {
         if (!Guid.TryParse(delegationId, out var id))
         {
-            return "unknown delegation id";
+            return Error("unknown delegation id");
         }
 
         var result = await runtime.GetResultAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
-        return result?.Summary ?? "not terminal or unknown delegation";
+        return result is null ? Error("not terminal or unknown delegation") : result.Summary;
     }
 
     /// <summary>Requests durable cancellation.</summary>
@@ -124,11 +134,14 @@ public sealed class MarangDelegationTools(
         }
         catch (InvalidOperationException)
         {
-            return "unknown delegation";
+            return Error("unknown delegation");
         }
     }
 
     private string CurrentCaller() =>
         httpContext.HttpContext?.Items[MarangHttpContextKeys.CallerIdentity] as string
         ?? authentication.Value.LocalCallerIdentity;
+
+    private static string Error(string message) =>
+        JsonSerializer.Serialize(new { error = message });
 }

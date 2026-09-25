@@ -185,8 +185,10 @@ Status: **planned**
 - [x] Expose `marang_delegate`, `marang_status`, `marang_result`, and
       `marang_cancel` over MCP (backed by the composed runtime; delegate
       pumps bounded steps, reads are null-safe, cancel is fenced).
-- [ ] Expose bounded `marang_wait`, `marang_intervene`, `marang_inspect`, and
-      `marang_get_artifact` only after their authorization/fencing tests pass.
+- [x] Expose bounded `marang_wait`, `marang_intervene`, `marang_inspect`, and
+      `marang_get_artifact` with authorization and fencing tests (fenced
+      checkpoint/revision actions report rejections; supervisor identity
+      comes from the authenticated context).
 - [ ] Add HTTP endpoints only where health, operations, or non-MCP clients need
       them.
 - [ ] Test ambiguous client retries, caller-scoped idempotency, stale revisions,

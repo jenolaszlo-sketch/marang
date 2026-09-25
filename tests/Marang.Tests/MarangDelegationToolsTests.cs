@@ -67,10 +67,14 @@ public sealed class MarangDelegationToolsTests
         var ct = TestContext.Current.CancellationToken;
         var unknown = Guid.NewGuid().ToString("D");
 
-        (await tools.GetStatusAsync(unknown, ct)).Should().Be("unknown delegation");
-        (await tools.GetResultAsync(unknown, ct)).Should().Be("not terminal or unknown delegation");
-        (await tools.CancelAsync(unknown, ct)).Should().Be("unknown delegation");
-        (await tools.GetStatusAsync("not-a-guid", ct)).Should().Be("unknown delegation id");
+        JsonDocument.Parse(await tools.GetStatusAsync(unknown, ct))
+            .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation");
+        JsonDocument.Parse(await tools.GetResultAsync(unknown, ct))
+            .RootElement.GetProperty("error").GetString().Should().Contain("not terminal");
+        JsonDocument.Parse(await tools.CancelAsync(unknown, ct))
+            .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation");
+        JsonDocument.Parse(await tools.GetStatusAsync("not-a-guid", ct))
+            .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation id");
     }
 
     [Fact]
@@ -94,7 +98,8 @@ public sealed class MarangDelegationToolsTests
 
         var delegationId = handle.DelegationId.Value.ToString("D");
         (await tools.CancelAsync(delegationId, ct)).Should().Be("cancellation requested");
-        (await tools.GetStatusAsync(delegationId, ct)).Should().Be("Cancelled");
+        JsonDocument.Parse(await tools.GetStatusAsync(delegationId, ct))
+            .RootElement.GetProperty("state").GetString().Should().Be("Cancelled");
     }
 
     private static MarangDelegationTools CreateTools(string caller)
