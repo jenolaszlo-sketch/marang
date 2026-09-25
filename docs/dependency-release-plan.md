@@ -43,14 +43,15 @@ Qingniao extraction or its deterministic in-memory proof.
 
 ## Gate 2 — Qingniao extraction
 
-Status: **implementation complete; first Qingniao preview publication pending**
+Status: **complete — `0.1.0-preview.2` published and consumed by Marang**
 
 - Renamed the reusable projects, namespaces, packages, tests, and API baselines.
 - Proved no dependency on Marang, ASP.NET Core, or MCP with explicit boundary
   tests.
 - Treat the existing Marang-named preview packages as superseded; do not create
   compatibility shims without a consumer.
-- Publish Qingniao `0.1.0-preview.1`, then remove the frozen duplicate sources
+- Publish Qingniao `0.1.0-preview.1` (`0.1.0-preview.2` published with the
+  `DelegationRuntime` facade), then remove the frozen duplicate sources
   from Marang and scaffold the service boundary.
 - Consume Siming preview.4 and close canonical-fingerprint integration in the
   next Qingniao batch.

@@ -303,10 +303,10 @@ Status: **planned**
 - [ ] Consume Qingniao directly from Guyabano for one bounded activity.
 - [ ] Verify that the embedded API does not require Marang service concepts.
 - [ ] Exercise the same operation remotely through Marang and compare semantics.
-- [ ] Refine Qingniao from both consumers before publishing its first preview.
-- [ ] Publish `Penghou.Qingniao.Abstractions` and `Penghou.Qingniao` only after
-      package/API compatibility, XML docs, multi-target tests, and isolated
-      consumer tests pass.
+- [x] Publish `Penghou.Qingniao.Abstractions` and `Penghou.Qingniao`
+      (`0.1.0-preview.2` with API baselines, XML docs, multi-target tests,
+      and isolated consumer tests).
+- [ ] Refine Qingniao from both consumers before any stable release.
 - [ ] Add `Marang.Client` only if Guyabano or another real consumer needs a
       typed non-MCP remote client.
 
