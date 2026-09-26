@@ -11,6 +11,12 @@ builder.Services.Configure<MarangAuthenticationOptions>(
     builder.Configuration.GetSection("Marang"));
 builder.Services.AddHttpContextAccessor();
 
+// Fail fast on malformed authentication configuration.
+var authenticationSection = builder.Configuration.GetSection("Marang");
+var earlyAuthentication = authenticationSection.Get<MarangAuthenticationOptions>()
+    ?? new MarangAuthenticationOptions();
+earlyAuthentication.Validate();
+
 // Composition root: Marang product policy (admission + verification) over
 // the Qingniao delegated-execution runtime. No execution providers are
 // registered yet, so delegations honestly wait for supervision until the
@@ -72,6 +78,7 @@ app.Use(async (context, next) =>
 });
 
 app.MapGet("/healthz", () => Results.Ok("marang"));
+app.MapGet("/readyz", (DelegationRuntime _) => Results.Ok("ready"));
 app.MapMcp("/mcp");
 
 app.Run();

@@ -32,6 +32,28 @@ public sealed record MarangAuthenticationOptions
 
     /// <summary>Caller identity used when authentication is bypassed.</summary>
     public string LocalCallerIdentity { get; init; } = "local-operator";
+
+    /// <summary>Validates the bound configuration, failing fast on bad values.</summary>
+    public void Validate()
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(LocalCallerIdentity);
+        foreach (var (caller, key) in ApiKeys)
+        {
+            if (string.IsNullOrWhiteSpace(caller) || string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException("API key callers and key material must be non-empty.");
+            }
+        }
+
+        foreach (var (caller, roots) in AllowedWorkspaceRoots)
+        {
+            if (string.IsNullOrWhiteSpace(caller) || roots is null || roots.Length == 0 ||
+                roots.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException($"Workspace roots for caller '{caller}' must be non-empty.");
+            }
+        }
+    }
 }
 
 /// <summary>

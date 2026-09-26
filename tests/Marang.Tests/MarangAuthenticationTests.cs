@@ -67,4 +67,31 @@ public sealed class MarangAuthenticationTests
                 options.AllowedWorkspaceRoots, "local-operator", "workspace")
             .Should().BeTrue();
     }
+
+    [Fact]
+    public void Validate_accepts_sane_configuration()
+    {
+        var act = () => new MarangAuthenticationOptions
+        {
+            ApiKeys = new Dictionary<string, string> { ["alice"] = "secret" },
+            AllowedWorkspaceRoots = new Dictionary<string, string[]> { ["alice"] = ["workspace"] },
+        }.Validate();
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void Validate_rejects_blank_material_and_roots()
+    {
+        var blankKey = () => new MarangAuthenticationOptions
+        {
+            ApiKeys = new Dictionary<string, string> { ["alice"] = "  " },
+        }.Validate();
+        blankKey.Should().Throw<ArgumentException>();
+
+        var emptyRoots = () => new MarangAuthenticationOptions
+        {
+            AllowedWorkspaceRoots = new Dictionary<string, string[]> { ["alice"] = [] },
+        }.Validate();
+        emptyRoots.Should().Throw<ArgumentException>();
+    }
 }

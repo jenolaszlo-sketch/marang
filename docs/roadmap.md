@@ -168,8 +168,11 @@ Status: **partially complete — host scaffolded with probe; composition pending
 - [x] Reference Qingniao and make Marang.Server the composition root
       (`DelegationRuntime` singleton with `MarangAdmissionVerifier` and
       `ImplementVerificationPolicy`; no providers registered yet).
-- [ ] Add configuration validation, readiness, structured
-      diagnostics, graceful shutdown, and bounded background dispatch.
+- [x] Add configuration validation (fail-fast authentication options),
+      health (`/healthz`) and readiness (`/readyz`, proves the runtime
+      resolves) endpoints.
+- [ ] Add structured diagnostics, graceful shutdown tuning, and bounded
+      background dispatch (no background work exists yet).
 - [ ] Define remote caller/tenant identity and authentication extension points.
 - [ ] Resolve workspace references, provider profiles, disclosure policy, and
       budget ceilings under server authorization.

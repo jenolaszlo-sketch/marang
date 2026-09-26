@@ -74,3 +74,4 @@ static Marang.WorkflowPlanRevisionReference.operator !=(Marang.WorkflowPlanRevis
 static Marang.WorkflowPlanRevisionReference.operator ==(Marang.WorkflowPlanRevisionReference? left, Marang.WorkflowPlanRevisionReference? right) -> bool
 static Marang.WorkflowPlanVerificationResult.operator !=(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool
 static Marang.WorkflowPlanVerificationResult.operator ==(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool
+Marang.MarangAuthenticationOptions.Validate() -> void
