@@ -116,8 +116,9 @@ public sealed class MarangSupervisionToolsTests
 
     private static (MarangSupervisionTools Supervision, MarangDelegationTools Delegation) CreateTools(string caller)
     {
+        var catalog = new MarangDelegationCatalog();
         var runtime = new DelegationRuntime(
-            new InMemoryDelegationAcceptanceRegistry(),
+            catalog,
             new MarangAdmissionVerifier(),
             new InMemoryProviderRegistry(),
             new InMemoryExternalOperationProviderCatalog());
@@ -131,7 +132,7 @@ public sealed class MarangSupervisionToolsTests
                 [caller] = ["workspace"],
             },
         });
-        return (new MarangSupervisionTools(runtime, accessor, options),
-            new MarangDelegationTools(runtime, accessor, options));
+        return (new MarangSupervisionTools(runtime, catalog, accessor, options),
+            new MarangDelegationTools(runtime, catalog, accessor, options));
     }
 }

@@ -47,10 +47,11 @@ public sealed class MarangDelegationToolsTests
     [Fact]
     public async Task Missing_context_falls_back_to_local_operator()
     {
-        var runtime = CreateRuntime();
+        var catalog = new MarangDelegationCatalog();
+        var runtime = CreateRuntime(catalog);
         var accessor = new HttpContextAccessor();
         var tools = new MarangDelegationTools(
-            runtime, accessor, Options.Create(new MarangAuthenticationOptions()));
+            runtime, catalog, accessor, Options.Create(new MarangAuthenticationOptions()));
         var ct = TestContext.Current.CancellationToken;
 
         var json = await tools.DelegateAsync(
@@ -70,7 +71,7 @@ public sealed class MarangDelegationToolsTests
         JsonDocument.Parse(await tools.GetStatusAsync(unknown, ct))
             .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation");
         JsonDocument.Parse(await tools.GetResultAsync(unknown, ct))
-            .RootElement.GetProperty("error").GetString().Should().Contain("not terminal");
+            .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation");
         JsonDocument.Parse(await tools.CancelAsync(unknown, ct))
             .RootElement.GetProperty("error").GetString().Should().Contain("unknown delegation");
         JsonDocument.Parse(await tools.GetStatusAsync("not-a-guid", ct))
@@ -80,9 +81,10 @@ public sealed class MarangDelegationToolsTests
     [Fact]
     public async Task Cancel_before_execution_terminates()
     {
-        var runtime = CreateRuntime();
+        var catalog = new MarangDelegationCatalog();
+        var runtime = CreateRuntime(catalog);
         var tools = new MarangDelegationTools(
-            runtime, Context("tester"), Options.Create(new MarangAuthenticationOptions()));
+            runtime, catalog, Context("tester"), Options.Create(new MarangAuthenticationOptions()));
         var ct = TestContext.Current.CancellationToken;
         var handle = await runtime.DelegateAsync(
             new DelegationCallerScope("tester"),
@@ -102,8 +104,43 @@ public sealed class MarangDelegationToolsTests
             .RootElement.GetProperty("state").GetString().Should().Be("Cancelled");
     }
 
+    [Fact]
+    public async Task Other_caller_cannot_read_or_cancel_a_delegation()
+    {
+        var catalog = new MarangDelegationCatalog();
+        var runtime = CreateRuntime(catalog);
+        var options = Options.Create(new MarangAuthenticationOptions
+        {
+            AllowedWorkspaceRoots = new Dictionary<string, string[]>
+            {
+                ["alice"] = ["workspace"],
+                ["bob"] = ["workspace"],
+            },
+        });
+        var context = new DefaultHttpContext();
+        context.Items[MarangHttpContextKeys.CallerIdentity] = "alice";
+        var accessor = new HttpContextAccessor { HttpContext = context };
+        var tools = new MarangDelegationTools(runtime, catalog, accessor, options);
+        var ct = TestContext.Current.CancellationToken;
+        var created = await tools.DelegateAsync($"key-{Guid.NewGuid():N}",
+            "Do the work", "no-such-provider", "workspace", 1, ct);
+        var id = JsonDocument.Parse(created).RootElement.GetProperty("delegationId").GetString()!;
+
+        context.Items[MarangHttpContextKeys.CallerIdentity] = "bob";
+        JsonDocument.Parse(await tools.GetStatusAsync(id, ct)).RootElement
+            .GetProperty("error").GetString().Should().Be("unknown delegation");
+        JsonDocument.Parse(await tools.GetResultAsync(id, ct)).RootElement
+            .GetProperty("error").GetString().Should().Be("unknown delegation");
+        JsonDocument.Parse(await tools.CancelAsync(id, ct)).RootElement
+            .GetProperty("error").GetString().Should().Be("unknown delegation");
+        context.Items[MarangHttpContextKeys.CallerIdentity] = "alice";
+        JsonDocument.Parse(await tools.GetStatusAsync(id, ct)).RootElement
+            .GetProperty("state").GetString().Should().NotBeNullOrWhiteSpace();
+    }
+
     private static MarangDelegationTools CreateTools(string caller)
     {
+        var catalog = new MarangDelegationCatalog();
         var options = new MarangAuthenticationOptions
         {
             AllowedWorkspaceRoots = new Dictionary<string, string[]>
@@ -111,7 +148,7 @@ public sealed class MarangDelegationToolsTests
                 [caller] = ["workspace"],
             },
         };
-        return new MarangDelegationTools(CreateRuntime(), Context(caller), Options.Create(options));
+        return new MarangDelegationTools(CreateRuntime(catalog), catalog, Context(caller), Options.Create(options));
     }
 
     private static IHttpContextAccessor Context(string caller)
@@ -121,8 +158,8 @@ public sealed class MarangDelegationToolsTests
         return new HttpContextAccessor { HttpContext = context };
     }
 
-    private static DelegationRuntime CreateRuntime() => new(
-        new InMemoryDelegationAcceptanceRegistry(),
+    private static DelegationRuntime CreateRuntime(MarangDelegationCatalog catalog) => new(
+        catalog,
         new MarangAdmissionVerifier(),
         new InMemoryProviderRegistry(),
         new InMemoryExternalOperationProviderCatalog());

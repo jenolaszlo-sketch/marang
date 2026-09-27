@@ -20,6 +20,7 @@ namespace Marang.Mcp;
 [McpServerToolType]
 public sealed class MarangDelegationTools(
     DelegationRuntime runtime,
+    MarangDelegationCatalog catalog,
     IHttpContextAccessor httpContext,
     IOptions<MarangAuthenticationOptions> authentication)
 {
@@ -85,6 +86,11 @@ public sealed class MarangDelegationTools(
             return Error("unknown delegation id");
         }
 
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
+        }
+
         var status = await runtime.GetStatusAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
         if (status is null)
         {
@@ -111,6 +117,11 @@ public sealed class MarangDelegationTools(
             return Error("unknown delegation id");
         }
 
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
+        }
+
         var result = await runtime.GetResultAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
         return result is null ? Error("not terminal or unknown delegation") : result.Summary;
     }
@@ -125,6 +136,11 @@ public sealed class MarangDelegationTools(
         if (!Guid.TryParse(delegationId, out var id))
         {
             return "unknown delegation id";
+        }
+
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
         }
 
         try

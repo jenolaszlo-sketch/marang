@@ -57,6 +57,139 @@ opaque Fuwen reference. The uncovered seam — provider-neutral patch admission,
 transition preview, and reuse/invalidation explanation — is recorded in the
 [Guihua roadmap](https://github.com/jenolaszlo-sketch/penghou-guihua/blob/main/ROADMAP.md).
 
+## V1 release track — Live workflow visibility and product experience
+
+Status: **planned; required for V1 release**. Added 2026-09-27.
+
+Reviewed specification and acceptance contract:
+[Live workflow visibility and product experience](progress-workflow-observability-v1.md).
+UI execution handoff: [Sol implementation plan](ui-implementation-plan-sol.md).
+The [original proposal](progress-workflow-observability-proposal.md) is preserved
+for traceability; the reviewed specification resolves its architecture and
+recovery gaps. These are planned capabilities, not completed implementation.
+
+The workflow UI moves out of the later-work bucket. Its first impression is a
+product requirement: users must quickly understand the goal, current work,
+attention state, changes of plan, and outcome. Visual polish, stable interaction,
+and truthful failure/reconnect behavior are release gates alongside the API.
+
+This track spans Milestones 3–5. UI fixtures and contract design can start now
+without interrupting Fuwen's active implementation priority. Real activation,
+durable recovery, and end-to-end release evidence depend on the released
+Fuwen/Zhinu/Qingniao/Hongxian boundaries in Milestone 5. V1 observes admitted and
+activated revisions; new adaptive proposal/approval tools and experiments remain
+in the later supervision/V2 track. Do not relabel a fixture as live integration
+or silently remove revision visibility if an upstream dependency is late.
+
+### V1.1 — Product storyboard and representative UI
+Implementation note (2026-09-27): UI-01 is underway in `src/Marang.Ui` with a
+labeled sample graph, concurrent activity state, checkpoint/revision example,
+inspector, and mobile list. The first live slice now lists and polls
+caller-scoped Qingniao delegations through `/api/delegations`; it does not
+present them as workflow graphs. MCP reads and actions now enforce the same
+caller ownership. The server still has no execution provider, durable run
+projection, or remote browser session. Build and initial browser review passed. See
+[UI validation](ui-validation.md) and the [missing backend contract features](ui-contract.md).
+The sample preview and integrated V1 gates remain open.
+
+- [ ] Define Marang typography, spacing, semantic state colors/icons, node
+  treatments, focus behavior, and restrained motion; build one coherent theme.
+- [ ] Build the run list, direct run view, summary header, primary workflow
+  graph, activity inspector, and checkpoint/revision milestone strip against
+  deterministic fixtures. A fresh install offers a clearly labeled sample and
+  guidance for starting real work through MCP.
+- [ ] Cover parallel work, retry, checkpoint evaluation, superseded branches,
+  waiting for a supervisor, failure, cancellation, and a useful completed result.
+- [ ] Review the first impression before completing the backend: the user sees
+  the goal, what is happening, whether attention is needed, and resulting evidence.
+
+Exit: a coherent sample can be explored from plan to artifacts, including one
+explained revision, with custom Marang styling and no decorative dead controls.
+
+### V1.2 — Semantic events, identities, and durable projection
+
+- [ ] Define transport-neutral progress reporting with distinct run, node,
+  activity, execution attempt, revision, checkpoint, and edge identities;
+  explicitly map upstream instance/generation and receipt identities.
+- [ ] Consume authoritative receipts: Fuwen owns workflow semantics, Zhinu
+  execution/activation, Qingniao delegation, Hongxian continuity/evidence.
+  Marang owns the authorized product projection, not another workflow engine.
+- [ ] Add versioned event identities/payloads, run ordering, separate durable
+  recovery cursor, attempt/generation fencing, and idempotent ingestion.
+- [ ] Project concurrent active executions, honest nullable progress, separate
+  execution outcome and superseded membership, checkpoint reasons/results,
+  immutable attempt history, and atomically applied revisions.
+- [ ] Persist event/projection watermarks consistently; recover from durable
+  source receipts after restart. Bound transient queues and isolate slow sinks.
+  Keep execution independent of browser/MCP observers and report projection lag.
+
+Exit: deterministic events produce the correct graph and attempt history;
+duplicates, late old-generation events, restart, and dropped telemetry cannot
+corrupt current state. Reusable cores have no Marang/HTTP/SignalR/UI dependency.
+
+### V1.3 — Authorized HTTP, journals, and live recovery
+
+- [ ] Expose bounded run list/snapshot, workflow, revision list/detail, durable
+  event history, activity detail, and cursor-paginated journal reads under
+  `/api/marang/runs`; reuse authorized artifact retrieval.
+- [ ] Add stable journal entry IDs, attempt linkage, meaningful summaries,
+  evidence references, disclosure/redaction, retention, and truncation indicators.
+- [ ] Add typed SignalR deltas at `/hubs/marang/runs`, authorized run subscription,
+  rejoin, a race-free subscribe/snapshot barrier, duplicate suppression, durable
+  catch-up, watermark reconciliation, and explicit expired-cursor resnapshot.
+- [ ] Extend the current MCP-only authentication boundary to HTTP and hub
+  access; implement a browser-compatible authenticated session without exposing
+  service API keys. Enforce run/workspace scope, session expiry, and read bounds.
+- [ ] Correlate MCP request/progress/task identities when supplied with the same
+  run; preserve token types. Progress cancellation/disconnection cannot cancel
+  execution. Correlate operational telemetry without using it as run truth.
+
+Exit: an independently connected browser reconstructs and follows a run,
+including one that finishes during disconnect or initial subscription; missing
+transient events never cause an endless durable-recovery loop. Unauthorized
+reads and subscriptions disclose nothing.
+
+### V1.4 — Finished live workflow experience
+
+- [ ] Replace fixture transport with the real projection and stream using the
+  same state reducer. Show all concurrent work and explain checkpoint/revision
+  changes, retained work, superseded paths, and the next steps.
+- [ ] Preserve viewport, node positions where possible, selection, and journal
+  scroll during updates. Provide fit/focus controls, node search, branch
+  expansion, new-update indicators, and accessible list navigation.
+- [ ] Provide Summary, Journal, Evidence, and Attempts inspection with bounded
+  tool output; distinguish worker claims, validation evidence, and final outcome.
+- [ ] Design loading, empty, unavailable, partial, failed, cancelled, stale,
+  reconnecting, and completed states. Display connection health separately from
+  execution health; show percentages, cost, or ETA only with supporting data.
+- [ ] Make keyboard access, screen-reader labels, contrast, reduced motion,
+  200% zoom/reflow, and narrow-screen list/inspector layouts part of the design.
+- [ ] Surface supervisor actions only where an authorized, fenced server
+  capability exists; otherwise identify the MCP supervision path explicitly.
+
+Exit: live updates improve understanding without moving the user's reading
+position; the completed view presents usable outcomes and evidence.
+
+### V1.5 — Release demonstration and UX acceptance
+
+- [ ] Demonstrate one real provider run through parallel work, retry, checkpoint,
+  authoritative revision, retained superseded branch, browser disconnect/recovery,
+  and final artifacts. Exercise a separate failure/waiting scenario.
+- [ ] Meet the reviewed spec's first-impression and comprehension gates with
+  unfamiliar users (at least 4 of 5 succeed); retain findings and fixes.
+- [ ] Review screenshots and browser interactions for every major state at
+  desktop, compact, and narrow widths; verify keyboard/screen-reader flows.
+- [ ] Measure the specified responsiveness and bounded-load budgets on a
+  recorded reference setup; treat targets as acceptance criteria, not claims
+  of measured performance until results exist.
+- [ ] Prove restart, mixed durable/transient gaps, duplicate/out-of-order events,
+  offline completion, atomic revision updates, history expiry, slow consumers,
+  authorization isolation, and safe journal rendering.
+
+Exit: both the visible product experience and real execution/recovery satisfy
+the reviewed acceptance contract. V1 is not complete with only a static graph,
+a polished fixture, or a working MCP/API surface.
+
 ## Shared code graph and delegation pivot
 
 Marang is the coding-specific composition and MCP boundary. Qingniao coordinates
@@ -192,8 +325,8 @@ Status: **planned**
       `marang_get_artifact` with authorization and fencing tests (fenced
       checkpoint/revision actions report rejections; supervisor identity
       comes from the authenticated context).
-- [ ] Add HTTP endpoints only where health, operations, or non-MCP clients need
-      them.
+- [ ] Add the bounded run-observation HTTP endpoints and SignalR stream in the
+      V1 release track, alongside health and operational endpoints.
 - [ ] Test ambiguous client retries, caller-scoped idempotency, stale revisions,
       authentication, authorization, redaction, and response bounds.
 - [ ] Ensure subordinate providers cannot recursively call Marang by default.
@@ -364,7 +497,8 @@ federation/query engine.
   interoperable agent.
 - Multi-tenant operation, richer projections, collaboration, branching, and
   archival after the single-host durable slice works.
-- Service UI and operator dashboards after MCP/HTTP behavior is stable.
+- Advanced operator dashboards and fleet analytics after the V1 workflow UI;
+  the live run viewer, journals, checkpoints, and revisions are V1 release gates.
 - Adaptive-plan proposal, transition-preview, approval, and explanation tools
   after Fuwen and Zhinu publish the required authoritative contracts.
 
@@ -397,3 +531,45 @@ consumers show near-identical code; until then each keeps its own copy:
 - Replacing the execution, workflow, session, memory, code-graph, or model
   primitives already owned elsewhere in Penghou.
 - Mutating an active Zhinu graph or letting an AI proposal activate itself.
+
+## V2 — Evidence-driven workflow evolution (deferred)
+
+Status: **future work after V1; not a current release gate**. Added 2026-09-26.
+V2.1/V2.2/V2.3 name cross-project delivery stages, not package or IR versions.
+Existing near-term priorities and completed work retain their current status.
+
+Architecture and shared acceptance gates: [reviewed V2 specification](../../Penghou.Guihua/docs/evidence-driven-workflow-evolution-v2.md).
+Cross-repository links assume sibling checkouts.
+
+### V2.1 — Reviewable outcome-driven repair
+
+- [ ] Extend the existing adaptive-planning and Milestone 8 decision surfaces
+  with bounded views separating executor receipts, evaluator judgments,
+  acceptance decisions and current/superseded revisions.
+- [ ] Present an exact-base Guihua proposal plus Fuwen comparison and Zhinu
+  transition preview: retained artifacts, validation-only reruns, invalidated
+  dependents, external effects, budget and unresolved evidence.
+- [ ] Bind approval/override to actor, scope, exact revision/generation,
+  preview/policy and idempotent operation identity. Reject stale actions and
+  show the authoritative transition receipt and projection lag.
+- [ ] Preserve human intervention rationale as evidence; a terminal result is
+  never reopened merely to display a later evaluation.
+
+Gate: a supervisor can reject an outcome, approve one replacement, inspect why
+work was reused/rerun, and recover an ambiguous response without duplicate
+activation.
+
+### V2.2/V2.3 — Experiment and preference explanations
+
+- [ ] Show candidate differences, fixed rubric, hard constraints, total budget,
+  effect isolation, losing/partial evidence and selected/inconclusive/none-
+  acceptable outcomes through bounded authorized views.
+- [ ] Explain when pinned relevant evidence skipped an experiment, including
+  source checkpoints, version/scope compatibility, freshness, uncertainty and
+  contrary evidence; expose unavailable recall and declared fallback.
+- [ ] Keep tool names illustrative until upstream contracts stabilize, and
+  reuse existing artifact retrieval, authentication and response bounds.
+
+Gate: returned decision packages expose enough evidence to review the choice
+without raw transcripts or cross-scope disclosure. Guihua, Zhinu, Hongxian,
+Cangjie, Baize and host policy retain their existing authorities.

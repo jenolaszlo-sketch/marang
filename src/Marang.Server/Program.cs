@@ -21,8 +21,9 @@ earlyAuthentication.Validate();
 // the Qingniao delegated-execution runtime. No execution providers are
 // registered yet, so delegations honestly wait for supervision until the
 // Milestone 5 provider integration lands.
-builder.Services.AddSingleton(_ => new DelegationRuntime(
-    new InMemoryDelegationAcceptanceRegistry(),
+builder.Services.AddSingleton<MarangDelegationCatalog>();
+builder.Services.AddSingleton(serviceProvider => new DelegationRuntime(
+    serviceProvider.GetRequiredService<MarangDelegationCatalog>(),
     new MarangAdmissionVerifier(),
     new InMemoryProviderRegistry(),
     new InMemoryExternalOperationProviderCatalog(),
@@ -51,7 +52,8 @@ var authentication = app.Services.GetRequiredService<Microsoft.Extensions.Option
 var authenticator = new MarangApiKeyAuthenticator(authentication.ApiKeys);
 app.Use(async (context, next) =>
 {
-    if (!context.Request.Path.StartsWithSegments("/mcp"))
+    if (!context.Request.Path.StartsWithSegments("/mcp") &&
+        !context.Request.Path.StartsWithSegments("/api"))
     {
         await next();
         return;
@@ -79,6 +81,74 @@ app.Use(async (context, next) =>
 
 app.MapGet("/healthz", () => Results.Ok("marang"));
 app.MapGet("/readyz", (DelegationRuntime _) => Results.Ok("ready"));
+app.MapGet("/api/delegations", async (
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var items = new List<object>();
+    foreach (var record in catalog.List(caller))
+    {
+        var progress = await runtime.GetStatusAsync(record.Id, cancellationToken);
+        if (progress is not null)
+        {
+            items.Add(new
+            {
+                id = record.Id.Value.ToString("D"),
+                objective = record.Objective,
+                provider = record.Provider,
+                workspace = record.Workspace,
+                state = progress.State.ToString(),
+                updatedAt = progress.UpdatedAt,
+                revision = progress.Revision,
+            });
+        }
+    }
+
+    return Results.Json(new { items });
+});
+app.MapGet("/api/delegations/{id:guid}", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var delegationId = new DelegationId(id);
+    var record = catalog.Find(delegationId, caller);
+    if (record is null)
+    {
+        return Results.NotFound();
+    }
+
+    var progress = await runtime.GetStatusAsync(delegationId, cancellationToken);
+    if (progress is null)
+    {
+        return Results.NotFound();
+    }
+
+    var result = await runtime.GetResultAsync(delegationId, cancellationToken);
+    return Results.Json(new
+    {
+        id = record.Id.Value.ToString("D"),
+        objective = record.Objective,
+        provider = record.Provider,
+        workspace = record.Workspace,
+        state = progress.State.ToString(),
+        updatedAt = progress.UpdatedAt,
+        revision = progress.Revision,
+        currentSteps = progress.CurrentSteps,
+        completedSteps = progress.CompletedSteps,
+        workerCalls = progress.WorkerCalls,
+        retries = progress.Retries,
+        resultSummary = result?.Summary,
+    });
+});
 app.MapMcp("/mcp");
 
 app.Run();

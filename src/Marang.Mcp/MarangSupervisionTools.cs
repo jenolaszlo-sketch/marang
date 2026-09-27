@@ -17,6 +17,7 @@ namespace Marang.Mcp;
 [McpServerToolType]
 public sealed class MarangSupervisionTools(
     DelegationRuntime runtime,
+    MarangDelegationCatalog catalog,
     IHttpContextAccessor httpContext,
     IOptions<MarangAuthenticationOptions> authentication)
 {
@@ -31,6 +32,11 @@ public sealed class MarangSupervisionTools(
         if (!Guid.TryParse(delegationId, out var id))
         {
             return Error("unknown delegation id");
+        }
+
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
         }
 
         var deadline = DateTimeOffset.UtcNow.AddSeconds(Math.Clamp(timeoutSeconds, 1, 300));
@@ -70,6 +76,11 @@ public sealed class MarangSupervisionTools(
         if (!Guid.TryParse(delegationId, out var id))
         {
             return Error("unknown delegation id");
+        }
+
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
         }
 
         if (!Guid.TryParse(checkpointId, out var checkpoint))
@@ -131,6 +142,11 @@ public sealed class MarangSupervisionTools(
         if (!Guid.TryParse(delegationId, out var id))
         {
             return Error("unknown delegation id");
+        }
+
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
         }
 
         if (!Guid.TryParse(checkpointId, out var checkpoint))
@@ -200,6 +216,11 @@ public sealed class MarangSupervisionTools(
         if (!Guid.TryParse(delegationId, out var id))
         {
             return Error("unknown delegation id");
+        }
+
+        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        {
+            return Error("unknown delegation");
         }
 
         var result = await runtime.GetResultAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);

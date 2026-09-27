@@ -12,3 +12,6 @@ coverage/
 coverage-*/
 .env*
 *.env
+node_modules/
+dist/
+playwright-report/
