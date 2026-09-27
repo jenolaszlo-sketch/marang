@@ -266,29 +266,37 @@ names, with no Marang product dependency.
 
 ## Milestone 2 — Complete the Qingniao in-memory delegated-execution runtime
 
-Status: **planned after extraction**
+Status: **Marang-side complete; runtime lives in Qingniao post-extraction**
 
-- [ ] Reference `Penghou.Siming` `0.1.0-preview.4`.
-- [ ] Implement the Siming-backed canonical semantic-fingerprint producer and
-      verifier; do not copy canonicalization logic.
-- [ ] Complete the deterministic in-memory coordinator using the existing plan
-      resolver, acceptance registry, provider snapshot, authorized adapter
-      catalog, early-handle store, and atomic execution store.
-- [ ] Make submission return `Queued` before provider execution and advance
-      through an explicit deterministic pump rather than timing-sensitive
-      background tasks.
-- [ ] Prove captured-handle recovery after ambiguous start without duplicate
-      work or a new semantic generation.
-- [ ] Seal a candidate before parallel deterministic Test and independent
-      Review.
-- [ ] Exercise a stable supervisor checkpoint, bounded re-entry context, one
-      revision-fenced intervention, and at most one new-generation repair.
-- [ ] Cover success, no provider, unauthorized adapter, rejection,
+Most of this milestone as originally written now lives in the extracted
+`Penghou.Qingniao` repository (M2.1–M2.8 supervision slice, consumed at
+`0.1.0-preview.2`): deterministic coordinator, plan resolver, acceptance
+registry, provider snapshot, adapter catalog, early-handle store, atomic
+execution store, Queued submission with a deterministic pump, seal/test/review
+flow, supervisor checkpoint with bounded re-entry and revision-fenced
+intervention, and the outcome matrix. Captured-handle recovery was additionally
+proven live against the real Codex CLI in Qingniao M3.
+
+Marang-side remainder:
+
+- [x] Reference `Penghou.Siming` `0.1.0-preview.7`.
+- [x] Implement the Siming-backed canonical semantic-fingerprint producer and
+      verifier; do not copy canonicalization logic (`MarangDelegationFingerprint`
+      over Siming canonical JSON v2; the host acceptance catalog stores the
+      fingerprint beside each record and treats mismatches as unknown
+      delegations).
+- [x] Cover success, no provider, unauthorized adapter, rejection,
       cancellation, budget exhaustion, transport ambiguity, worker failure,
-      `WaitingForSupervisor`, and `NeedsSupervisor`.
+      `WaitingForSupervisor`, and `NeedsSupervisor` through the composed MCP
+      surface (plus fingerprint determinism, field sensitivity, and tamper
+      rejection).
+- [ ] Durable cross-restart handle recovery and the remaining runtime proofs
+      stay with Milestone 5 durable execution (the in-memory index and runtime
+      are volatile by design; see the V1 track).
 
 Exit: Qingniao can be embedded and tested without MCP, ASP.NET Core, real
-providers, or a workflow database.
+providers, or a workflow database. (Satisfied via the Qingniao extraction;
+Marang composes it.)
 
 ## Milestone 3 — Scaffold Marang.Server
 
