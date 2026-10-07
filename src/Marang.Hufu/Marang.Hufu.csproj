@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <PackageId>Marang.Hufu</PackageId>
+    <Title>Marang Hufu host adapter</Title>
+    <Description>Host-owned resource operations behind Penghou.Hufu admission for Marang delegations.</Description>
+    <!-- Experimental vertical slice; packaging is a later, reviewed step. -->
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.3" />
+  </ItemGroup>
+
+</Project>
