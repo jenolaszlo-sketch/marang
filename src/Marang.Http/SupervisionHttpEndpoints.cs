@@ -54,6 +54,7 @@ public static class SupervisionHttpEndpoints
             workerCalls = progress.WorkerCalls,
             retries = progress.Retries,
             resultSummary = result?.Summary,
+            unresolvedConcerns = result?.UnresolvedConcerns ?? [],
             waiting = await WaitingSummaryAsync(runtime, progress, cancellationToken).ConfigureAwait(false),
             canCancel = !DelegationLifecycle.IsTerminal(progress.State),
         });

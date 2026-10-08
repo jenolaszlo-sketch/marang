@@ -23,6 +23,7 @@ export interface DelegationDetail extends DelegationSummary {
   workerCalls: number
   retries: number
   resultSummary?: string
+  unresolvedConcerns?: string[]
   waiting?: WaitingSummary | null
   canCancel?: boolean
 }

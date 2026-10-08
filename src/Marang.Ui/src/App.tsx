@@ -142,6 +142,16 @@ function WaitingCard({ waiting, approving, note, onApprove }: {
   </section>
 }
 
+function FailureCard({ summary, concerns }: { summary?: string; concerns: string[] }) {
+  return <section className="live-card failure-card" aria-label="Failure details">
+    <div className="live-card-heading"><div><span className="panel-icon"><X size={17} /></span><div><strong>Failed</strong><small>What went wrong</small></div></div></div>
+    <div className="failure-body">{summary ? <><div className="field-label">Summary</div><p>{summary}</p></> : null}
+      <div className="field-label">Unresolved concerns ({concerns.length})</div>
+      {concerns.length ? <ol className="concern-list">{concerns.map((concern, index) => <li key={index}>{concern}</li>)}</ol> : <p>No specific concerns were recorded.</p>}
+    </div>
+  </section>
+}
+
 function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: () => void; onSample: () => void }) {
   const [detail, setDetail] = useState<DelegationDetail | null>(null)
   const [error, setError] = useState('')
@@ -202,6 +212,7 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
     {!detail && !error ? <div className="live-loading"><span className="spinner" />Loading delegation…</div> : detail && <>
       <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{detail.waiting ? 'Needs your approval' : displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
       {detail.waiting ? <WaitingCard waiting={detail.waiting} approving={approving} note={actionNote} onApprove={() => void approve()} /> : null}
+      {detail.state === 'Failed' ? <FailureCard summary={detail.resultSummary} concerns={detail.unresolvedConcerns ?? []} /> : null}
       {detail.canCancel ? <div className="cancel-row"><button type="button" className="danger-button" disabled={cancelling} onClick={() => void cancel()}>{cancelling ? 'Cancelling…' : 'Cancel delegation'}</button>{actionNote && !detail.waiting ? <p className="action-note" role="status">{actionNote}</p> : null}</div> : null}
       <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
