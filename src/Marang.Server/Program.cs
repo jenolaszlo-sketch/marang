@@ -1,4 +1,5 @@
 using Marang;
+using Marang.Http;
 using Marang.Mcp;
 using Penghou.Qingniao;
 
@@ -119,35 +120,47 @@ app.MapGet("/api/delegations/{id:guid}", async (
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
-    var delegationId = new DelegationId(id);
-    var record = catalog.Find(delegationId, caller);
-    if (record is null)
+    var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
+        runtime, catalog, caller, id, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
+app.MapGet("/api/delegations/{id:guid}/waiting", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SupervisionHttpEndpoints.GetWaitingAsync(
+        runtime, catalog, caller, id, cancellationToken);
+    return status switch
     {
-        return Results.NotFound();
-    }
-
-    var progress = await runtime.GetStatusAsync(delegationId, cancellationToken);
-    if (progress is null)
+        200 => Results.Json(body),
+        409 => Results.Conflict(body),
+        _ => Results.NotFound(),
+    };
+});
+app.MapPost("/api/delegations/{id:guid}/interventions", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    InterventionHttpRequest request,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SupervisionHttpEndpoints.PostInterventionAsync(
+        runtime, catalog, caller, id, request, cancellationToken);
+    return status switch
     {
-        return Results.NotFound();
-    }
-
-    var result = await runtime.GetResultAsync(delegationId, cancellationToken);
-    return Results.Json(new
-    {
-        id = record.Id.Value.ToString("D"),
-        objective = record.Objective,
-        provider = record.Provider,
-        workspace = record.Workspace,
-        state = progress.State.ToString(),
-        updatedAt = progress.UpdatedAt,
-        revision = progress.Revision,
-        currentSteps = progress.CurrentSteps,
-        completedSteps = progress.CompletedSteps,
-        workerCalls = progress.WorkerCalls,
-        retries = progress.Retries,
-        resultSummary = result?.Summary,
-    });
+        200 => Results.Json(body),
+        400 => Results.BadRequest(body),
+        409 => Results.Conflict(body),
+        _ => Results.NotFound(),
+    };
 });
 app.MapMcp("/mcp");
 

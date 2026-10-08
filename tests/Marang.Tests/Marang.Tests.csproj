@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Marang\Marang.csproj" />
+    <ProjectReference Include="..\..\src\Marang.Http\Marang.Http.csproj" />
     <ProjectReference Include="..\..\src\Marang.Hufu\Marang.Hufu.csproj" />
     <ProjectReference Include="..\..\src\Marang.Mcp\Marang.Mcp.csproj" />
   </ItemGroup>

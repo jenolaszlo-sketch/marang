@@ -8,12 +8,22 @@ export interface DelegationSummary {
   revision: number
 }
 
+export interface WaitingSummary {
+  checkpointId: string
+  reason: string
+  summary: string
+  requestedAction: string
+  canIntervene: boolean
+  expectedRevision: number
+}
+
 export interface DelegationDetail extends DelegationSummary {
   currentSteps: string[]
   completedSteps: string[]
   workerCalls: number
   retries: number
   resultSummary?: string
+  waiting?: WaitingSummary | null
 }
 
 interface DelegationListResponse { items: DelegationSummary[] }
@@ -36,5 +46,35 @@ export async function listDelegations(signal?: AbortSignal): Promise<DelegationS
 
 export function getDelegation(id: string, signal?: AbortSignal): Promise<DelegationDetail> {
   return readJson<DelegationDetail>(`/api/delegations/${encodeURIComponent(id)}`, signal)
+}
+
+export interface InterventionResult {
+  state: string
+  revision: number
+}
+
+export async function approveIntervention(
+  id: string,
+  checkpointId: string,
+  expectedRevision: number,
+  signal?: AbortSignal,
+): Promise<InterventionResult> {
+  const response = await fetch(`/api/delegations/${encodeURIComponent(id)}/interventions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ action: 'approve', checkpointId, expectedRevision }),
+    signal,
+  })
+  if (!response.ok) {
+    const message = response.status === 404
+      ? 'This delegation could not be found.'
+      : response.status === 409
+        ? 'The checkpoint changed. Showing the current status.'
+        : `The delegation service returned ${response.status}.`
+    const error = new Error(message)
+    Object.assign(error, { status: response.status })
+    throw error
+  }
+  return response.json() as Promise<InterventionResult>
 }
 

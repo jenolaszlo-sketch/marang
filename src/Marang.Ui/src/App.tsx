@@ -3,7 +3,7 @@ import { Activity, ArrowLeft, ArrowRight, BookOpen, Check, CircleHelp, Clock3, G
 import type { JournalEntry, RunSnapshot, WorkflowNode } from './contracts'
 import { currentCounts, sampleRun, sampleSource } from './fixture'
 import { WorkflowGraph } from './WorkflowGraph'
-import { getDelegation, listDelegations } from './delegationApi'
+import { getDelegation, listDelegations, approveIntervention } from './delegationApi'
 import type { DelegationDetail, DelegationSummary } from './delegationApi'
 
 type InspectorTab = 'Summary' | 'Journal' | 'Evidence' | 'Attempts'
@@ -127,10 +127,27 @@ function DelegationList({ onOpen, onSample }: { onOpen: (id: string) => void; on
   </main></>
 }
 
+function WaitingCard({ waiting, approving, note, onApprove }: {
+  waiting: NonNullable<DelegationDetail['waiting']>
+  approving: boolean
+  note: string
+  onApprove: () => void
+}) {
+  return <section className="live-card waiting-card" aria-label="Needs your approval">
+    <div className="live-card-heading"><div><span className="panel-icon"><CircleHelp size={17} /></span><div><strong>Needs your approval</strong><small>{waiting.reason}</small></div></div></div>
+    <p>{waiting.summary}</p>
+    <p><strong>{waiting.requestedAction}</strong></p>
+    <button type="button" className="primary-button" disabled={!waiting.canIntervene || approving} onClick={onApprove}>{approving ? 'Approving…' : 'Approve / Resume'}</button>
+    {note ? <p className="action-note" role="status">{note}</p> : null}
+  </section>
+}
+
 function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: () => void; onSample: () => void }) {
   const [detail, setDetail] = useState<DelegationDetail | null>(null)
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
+  const [approving, setApproving] = useState(false)
+  const [actionNote, setActionNote] = useState('')
   useEffect(() => {
     let active = true
     let timer: number | undefined
@@ -144,10 +161,33 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
   }, [id, refresh])
   const current = detail?.currentSteps ?? []
   const completed = detail?.completedSteps ?? []
+  const approve = async () => {
+    const waiting = detail?.waiting
+    if (!waiting || approving) return
+    setApproving(true)
+    setActionNote('')
+    try {
+      await approveIntervention(id, waiting.checkpointId, waiting.expectedRevision)
+      setRefresh(value => value + 1)
+    } catch (reason) {
+      const status = (reason as { status?: number }).status
+      if (status === 409) {
+        setActionNote('Already decided — showing the current status.')
+        setRefresh(value => value + 1)
+      } else if (status === 404) {
+        setActionNote('You no longer have access to this delegation.')
+      } else {
+        setActionNote(reason instanceof Error ? reason.message : 'Could not approve.')
+      }
+    } finally {
+      setApproving(false)
+    }
+  }
   return <><LiveHeader onRuns={onBack} onSample={onSample} /><main className="page live-page detail-page"><button type="button" className="back-link" onClick={onBack}><ArrowLeft size={15} /> All delegations</button>
     {error && <div className="live-error" role="alert"><strong>{detail ? 'Could not refresh' : 'Delegation unavailable'}</strong><span>{error}</span>{!detail && <button type="button" onClick={() => setRefresh(value => value + 1)}>Try again</button>}</div>}
     {!detail && !error ? <div className="live-loading"><span className="spinner" />Loading delegation…</div> : detail && <>
-      <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
+      <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{detail.waiting ? 'Needs your approval' : displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
+      {detail.waiting ? <WaitingCard waiting={detail.waiting} approving={approving} note={actionNote} onApprove={() => void approve()} /> : null}
       <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
         {current.length > 0 && <div className="step-group"><div className="step-group-label"><span className="step-indicator active" /> CURRENT</div>{current.map((step, index) => <div className="live-step current-step" key={`${step}-${index}`}><span className="step-indicator active" /><span>{step}</span><span className="step-state-label">In progress</span></div>)}</div>}
