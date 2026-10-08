@@ -1,4 +1,5 @@
 using Marang;
+using Marang.Codex;
 using Marang.Http;
 using Marang.Mcp;
 using Penghou.Qingniao;
@@ -19,16 +20,42 @@ var earlyAuthentication = authenticationSection.Get<MarangAuthenticationOptions>
 earlyAuthentication.Validate();
 
 // Composition root: Marang product policy (admission + verification) over
-// the Qingniao delegated-execution runtime. No execution providers are
-// registered yet, so delegations honestly wait for supervision until the
-// Milestone 5 provider integration lands.
+// the Qingniao delegated-execution runtime. Execution providers are
+// registered here. The Codex provider is registered only when a bounded
+// objective is configured, because the published adapter is single-use per
+// configured prompt (one admitted objective).
 builder.Services.AddSingleton<MarangDelegationCatalog>();
-builder.Services.AddSingleton(serviceProvider => new DelegationRuntime(
-    serviceProvider.GetRequiredService<MarangDelegationCatalog>(),
-    new MarangAdmissionVerifier(),
-    new InMemoryProviderRegistry(),
-    new InMemoryExternalOperationProviderCatalog(),
-    verificationPolicy: new ImplementVerificationPolicy()));
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var providers = new InMemoryProviderRegistry();
+    var adapters = new InMemoryExternalOperationProviderCatalog();
+    var codex = builder.Configuration.GetSection("Marang:Codex");
+    if (codex.GetValue("Enabled", false))
+    {
+        var prompt = codex["Prompt"]
+            ?? throw new InvalidOperationException("Marang:Codex:Prompt is required when Codex is enabled.");
+        var workspace = codex["WorkspaceDirectory"]
+            ?? throw new InvalidOperationException("Marang:Codex:WorkspaceDirectory is required when Codex is enabled.");
+        var approvedRoot = codex["ApprovedWorkspaceRoot"]
+            ?? throw new InvalidOperationException("Marang:Codex:ApprovedWorkspaceRoot is required when Codex is enabled.");
+        var cliPath = codex["CliPath"];
+        CodexProviderRegistration.Register(
+            providers,
+            adapters,
+            new Penghou.Qingniao.Codex.CodexExecOptions(
+                prompt,
+                workspace,
+                approvedRoot,
+                cliPath is { Length: > 0 } ? cliPath : "codex"));
+    }
+
+    return new DelegationRuntime(
+        serviceProvider.GetRequiredService<MarangDelegationCatalog>(),
+        new MarangAdmissionVerifier(),
+        providers,
+        adapters,
+        verificationPolicy: new ImplementVerificationPolicy());
+});
 
 builder.Services
     .AddMcpServer()

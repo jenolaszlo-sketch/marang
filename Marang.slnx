@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Marang/Marang.csproj" />
+    <Project Path="src/Marang.Codex/Marang.Codex.csproj" />
     <Project Path="src/Marang.Hufu/Marang.Hufu.csproj" />
     <Project Path="src/Marang.Http/Marang.Http.csproj" />
     <Project Path="src/Marang.Server/Marang.Server.csproj" />

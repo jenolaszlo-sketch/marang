@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
+    <PackageReference Include="Penghou.Qingniao.Codex" Version="0.1.0-preview.4" />
+  </ItemGroup>
+
+</Project>
