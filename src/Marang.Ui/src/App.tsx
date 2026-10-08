@@ -3,7 +3,7 @@ import { Activity, ArrowLeft, ArrowRight, BookOpen, Check, CircleHelp, Clock3, G
 import type { JournalEntry, RunSnapshot, WorkflowNode } from './contracts'
 import { currentCounts, sampleRun, sampleSource } from './fixture'
 import { WorkflowGraph } from './WorkflowGraph'
-import { getDelegation, listDelegations, approveIntervention } from './delegationApi'
+import { getDelegation, listDelegations, approveIntervention, cancelDelegation } from './delegationApi'
 import type { DelegationDetail, DelegationSummary } from './delegationApi'
 
 type InspectorTab = 'Summary' | 'Journal' | 'Evidence' | 'Attempts'
@@ -135,10 +135,10 @@ function WaitingCard({ waiting, approving, note, onApprove }: {
 }) {
   return <section className="live-card waiting-card" aria-label="Needs your approval">
     <div className="live-card-heading"><div><span className="panel-icon"><CircleHelp size={17} /></span><div><strong>Needs your approval</strong><small>{waiting.reason}</small></div></div></div>
-    <p>{waiting.summary}</p>
+    <div className="waiting-body"><p>{waiting.summary}</p>
     <p><strong>{waiting.requestedAction}</strong></p>
     <button type="button" className="primary-button" disabled={!waiting.canIntervene || approving} onClick={onApprove}>{approving ? 'Approving…' : 'Approve / Resume'}</button>
-    {note ? <p className="action-note" role="status">{note}</p> : null}
+    {note ? <p className="action-note" role="status">{note}</p> : null}</div>
   </section>
 }
 
@@ -148,6 +148,7 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
   const [refresh, setRefresh] = useState(0)
   const [approving, setApproving] = useState(false)
   const [actionNote, setActionNote] = useState('')
+  const [cancelling, setCancelling] = useState(false)
   useEffect(() => {
     let active = true
     let timer: number | undefined
@@ -183,11 +184,25 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
       setApproving(false)
     }
   }
+  const cancel = async () => {
+    if (!detail?.canCancel || cancelling) return
+    if (!window.confirm('Cancel this delegation? In-flight work stops and the delegation ends as cancelled.')) return
+    setCancelling(true)
+    try {
+      await cancelDelegation(id)
+      setRefresh(value => value + 1)
+    } catch (reason) {
+      setActionNote(reason instanceof Error ? reason.message : 'Could not cancel.')
+    } finally {
+      setCancelling(false)
+    }
+  }
   return <><LiveHeader onRuns={onBack} onSample={onSample} /><main className="page live-page detail-page"><button type="button" className="back-link" onClick={onBack}><ArrowLeft size={15} /> All delegations</button>
     {error && <div className="live-error" role="alert"><strong>{detail ? 'Could not refresh' : 'Delegation unavailable'}</strong><span>{error}</span>{!detail && <button type="button" onClick={() => setRefresh(value => value + 1)}>Try again</button>}</div>}
     {!detail && !error ? <div className="live-loading"><span className="spinner" />Loading delegation…</div> : detail && <>
       <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{detail.waiting ? 'Needs your approval' : displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
       {detail.waiting ? <WaitingCard waiting={detail.waiting} approving={approving} note={actionNote} onApprove={() => void approve()} /> : null}
+      {detail.canCancel ? <div className="cancel-row"><button type="button" className="danger-button" disabled={cancelling} onClick={() => void cancel()}>{cancelling ? 'Cancelling…' : 'Cancel delegation'}</button>{actionNote && !detail.waiting ? <p className="action-note" role="status">{actionNote}</p> : null}</div> : null}
       <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
         {current.length > 0 && <div className="step-group"><div className="step-group-label"><span className="step-indicator active" /> CURRENT</div>{current.map((step, index) => <div className="live-step current-step" key={`${step}-${index}`}><span className="step-indicator active" /><span>{step}</span><span className="step-state-label">In progress</span></div>)}</div>}

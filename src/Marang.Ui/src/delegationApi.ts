@@ -24,6 +24,7 @@ export interface DelegationDetail extends DelegationSummary {
   retries: number
   resultSummary?: string
   waiting?: WaitingSummary | null
+  canCancel?: boolean
 }
 
 interface DelegationListResponse { items: DelegationSummary[] }
@@ -53,6 +54,11 @@ export interface InterventionResult {
   revision: number
 }
 
+export interface CancelResult {
+  state: string
+  revision: number
+}
+
 export async function approveIntervention(
   id: string,
   checkpointId: string,
@@ -76,5 +82,21 @@ export async function approveIntervention(
     throw error
   }
   return response.json() as Promise<InterventionResult>
+}
+
+export async function cancelDelegation(id: string, signal?: AbortSignal): Promise<CancelResult> {
+  const response = await fetch(`/api/delegations/${encodeURIComponent(id)}/cancel`, {
+    method: 'POST',
+    headers: { Accept: 'application/json' },
+    signal,
+  })
+  if (!response.ok) {
+    const error = new Error(response.status === 404
+      ? 'This delegation could not be found.'
+      : `The delegation service returned ${response.status}.`)
+    Object.assign(error, { status: response.status })
+    throw error
+  }
+  return response.json() as Promise<CancelResult>
 }
 

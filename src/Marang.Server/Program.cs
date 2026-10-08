@@ -162,6 +162,19 @@ app.MapPost("/api/delegations/{id:guid}/interventions", async (
         _ => Results.NotFound(),
     };
 });
+app.MapPost("/api/delegations/{id:guid}/cancel", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SupervisionHttpEndpoints.PostCancelAsync(
+        runtime, catalog, caller, id, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
 app.MapMcp("/mcp");
 
 app.Run();

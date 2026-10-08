@@ -55,6 +55,7 @@ public static class SupervisionHttpEndpoints
             retries = progress.Retries,
             resultSummary = result?.Summary,
             waiting = await WaitingSummaryAsync(runtime, progress, cancellationToken).ConfigureAwait(false),
+            canCancel = !DelegationLifecycle.IsTerminal(progress.State),
         });
     }
 
@@ -97,6 +98,51 @@ public static class SupervisionHttpEndpoints
             summary = hint?.Reason ?? "The delegation is waiting for a supervisor decision.",
             requestedAction = "Continue this step?",
             canIntervene = true,
+        });
+    }
+
+    /// <summary>
+    /// Requests durable cancellation over the existing fenced
+    /// <c>runtime.CancelAsync</c>. No second cancellation implementation:
+    /// unknown or forbidden delegations report 404, and an already-terminal
+    /// delegation is an idempotent success reporting its current state.
+    /// </summary>
+    public static async Task<(int StatusCode, object? Body)> PostCancelAsync(
+        DelegationRuntime runtime,
+        MarangDelegationCatalog catalog,
+        string caller,
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(runtime);
+        ArgumentNullException.ThrowIfNull(catalog);
+        ArgumentException.ThrowIfNullOrWhiteSpace(caller);
+
+        var delegationId = new DelegationId(id);
+        if (catalog.Find(delegationId, caller) is null)
+        {
+            return (404, null);
+        }
+
+        try
+        {
+            await runtime.CancelAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        }
+        catch (InvalidOperationException)
+        {
+            return (404, null);
+        }
+
+        var current = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (current is null)
+        {
+            return (404, null);
+        }
+
+        return (200, new
+        {
+            state = current.State.ToString(),
+            revision = current.Revision,
         });
     }
 
