@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.3" />
+    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.5" />
   </ItemGroup>
 
 </Project>
