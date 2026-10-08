@@ -50,6 +50,42 @@ export function getDelegation(id: string, signal?: AbortSignal): Promise<Delegat
   return readJson<DelegationDetail>(`/api/delegations/${encodeURIComponent(id)}`, signal)
 }
 
+export interface EvidenceFindingView {
+  code: string
+  severity: string
+  summary: string
+  resolved: boolean
+  source: string
+}
+
+export interface ArtifactView {
+  provider: string
+  repository: string
+  artifactId: string
+  kind: string
+  location: string
+  schemaVersion: number
+}
+
+export interface EvidenceCounters {
+  testsPassed: number
+  testsFailed: number
+  reviewApproved: boolean | null
+  reviewFindingsResolved: number
+}
+
+export interface EvidenceView {
+  hasResult: boolean
+  state?: string
+  evidence: EvidenceCounters | null
+  findings: EvidenceFindingView[]
+  artifacts: ArtifactView[]
+}
+
+export async function getEvidence(id: string, signal?: AbortSignal): Promise<EvidenceView> {
+  return readJson<EvidenceView>(`/api/delegations/${encodeURIComponent(id)}/evidence`, signal)
+}
+
 export interface InterventionResult {
   state: string
   revision: number

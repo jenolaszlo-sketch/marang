@@ -175,6 +175,33 @@ app.MapPost("/api/delegations/{id:guid}/cancel", async (
         runtime, catalog, caller, id, cancellationToken);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
+app.MapGet("/api/delegations/{id:guid}/evidence", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
+        runtime, catalog, caller, id, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
+app.MapGet("/api/delegations/{id:guid}/artifacts/{artifactId}", async (
+    Guid id,
+    string artifactId,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    DelegationRuntime runtime,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SupervisionHttpEndpoints.GetArtifactAsync(
+        runtime, catalog, caller, id, artifactId, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
 app.MapMcp("/mcp");
 
 app.Run();

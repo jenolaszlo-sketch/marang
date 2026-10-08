@@ -148,6 +148,114 @@ public static class SupervisionHttpEndpoints
     }
 
     /// <summary>
+    /// Reads caller-owned evidence for one delegation: compact result
+    /// counters, flattened normalized findings, and artifact descriptors.
+    /// Metadata only — artifact bytes stay with the provider. A delegation
+    /// without a terminal result truthfully reports no evidence yet.
+    /// </summary>
+    public static async Task<(int StatusCode, object? Body)> GetEvidenceAsync(
+        DelegationRuntime runtime,
+        MarangDelegationCatalog catalog,
+        string caller,
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(runtime);
+        ArgumentNullException.ThrowIfNull(catalog);
+        ArgumentException.ThrowIfNullOrWhiteSpace(caller);
+
+        var delegationId = new DelegationId(id);
+        if (catalog.Find(delegationId, caller) is null)
+        {
+            return (404, null);
+        }
+
+        var progress = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (progress is null)
+        {
+            return (404, null);
+        }
+
+        var result = await runtime.GetResultAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (result is null)
+        {
+            return (200, new
+            {
+                hasResult = false,
+                state = progress.State.ToString(),
+                evidence = (object?)null,
+                findings = Array.Empty<object>(),
+                artifacts = Array.Empty<object>(),
+            });
+        }
+
+        return (200, new
+        {
+            hasResult = true,
+            state = result.State.ToString(),
+            evidence = new
+            {
+                testsPassed = result.Evidence.TestsPassed,
+                testsFailed = result.Evidence.TestsFailed,
+                reviewApproved = result.Evidence.ReviewApproved,
+                reviewFindingsResolved = result.Evidence.ReviewFindingsResolved,
+            },
+            findings = EvidenceHttpMapper.FlattenFindings(result.NormalizedEvidence),
+            artifacts = result.Artifacts.Select(DescribeArtifact).ToArray(),
+        });
+    }
+
+    /// <summary>
+    /// Reads one caller-owned artifact descriptor from a terminal result.
+    /// Mirrors <c>marang_get_artifact</c> exactly: identity, location, and
+    /// content identity only — never artifact bytes. Unknown, forbidden,
+    /// non-terminal, and unknown-artifact all report 404 without distinction.
+    /// </summary>
+    public static async Task<(int StatusCode, object? Body)> GetArtifactAsync(
+        DelegationRuntime runtime,
+        MarangDelegationCatalog catalog,
+        string caller,
+        Guid id,
+        string artifactId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(runtime);
+        ArgumentNullException.ThrowIfNull(catalog);
+        ArgumentException.ThrowIfNullOrWhiteSpace(caller);
+
+        var delegationId = new DelegationId(id);
+        if (catalog.Find(delegationId, caller) is null)
+        {
+            return (404, null);
+        }
+
+        var result = await runtime.GetResultAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (result is null)
+        {
+            return (404, null);
+        }
+
+        var artifact = result.Artifacts.FirstOrDefault(candidate =>
+            string.Equals(candidate.ArtifactId, artifactId, StringComparison.Ordinal));
+        if (artifact is null)
+        {
+            return (404, null);
+        }
+
+        return (200, DescribeArtifact(artifact));
+    }
+
+    private static object DescribeArtifact(DelegationArtifactReference artifact) => new
+    {
+        provider = artifact.Provider,
+        repository = artifact.Repository,
+        artifactId = artifact.ArtifactId,
+        kind = artifact.Kind,
+        location = artifact.Location,
+        schemaVersion = artifact.SchemaVersion,
+    };
+
+    /// <summary>
     /// Applies one approve/resume intervention. Only <c>approve</c> is offered
     /// here; the remaining supervisor actions stay on the MCP path until they
     /// have clearly defined product semantics.

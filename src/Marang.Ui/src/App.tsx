@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Activity, ArrowLeft, ArrowRight, BookOpen, Check, CircleHelp, Clock3, GitBranch, Layers3, List, PanelRightClose, PanelRightOpen, Play, Radio, ShieldCheck, Sparkles, X } from 'lucide-react'
 import type { JournalEntry, RunSnapshot, WorkflowNode } from './contracts'
 import { currentCounts, sampleRun, sampleSource } from './fixture'
 import { WorkflowGraph } from './WorkflowGraph'
-import { getDelegation, listDelegations, approveIntervention, cancelDelegation } from './delegationApi'
-import type { DelegationDetail, DelegationSummary } from './delegationApi'
+import { getDelegation, listDelegations, approveIntervention, cancelDelegation, getEvidence } from './delegationApi'
+import type { DelegationDetail, DelegationSummary, EvidenceView } from './delegationApi'
 
 type InspectorTab = 'Summary' | 'Journal' | 'Evidence' | 'Attempts'
 const tabs: InspectorTab[] = ['Summary', 'Journal', 'Evidence', 'Attempts']
@@ -152,6 +152,22 @@ function FailureCard({ summary, concerns }: { summary?: string; concerns: string
   </section>
 }
 
+const terminalStates = ['Completed', 'Failed', 'Cancelled', 'BudgetExceeded', 'NeedsSupervisor']
+
+function EvidenceCard({ view }: { view: EvidenceView | null }) {
+  return <section className="live-card" aria-label="Evidence and artifacts">
+    <div className="live-card-heading"><div><span className="panel-icon"><BookOpen size={17} /></span><div><strong>Evidence & artifacts</strong><small>What the execution produced</small></div></div></div>
+    {!view ? <div className="steps-empty">Evidence appears here once the delegation finishes.</div> :
+      !view.hasResult ? <div className="steps-empty">No evidence yet — the delegation has no terminal result.</div> : <>
+        {view.evidence ? <div className="detail-metrics"><div><strong>{view.evidence.testsPassed}</strong><span>tests passed</span></div><div><strong>{view.evidence.testsFailed}</strong><span>tests failed</span></div><div><strong>{view.evidence.reviewApproved === null || view.evidence.reviewApproved === undefined ? '—' : view.evidence.reviewApproved ? 'Yes' : 'No'}</strong><span>review approved</span></div><div><strong>{view.evidence.reviewFindingsResolved}</strong><span>findings resolved</span></div></div> : null}
+        <div className="panel-intro">Findings <span>{view.findings.length}</span></div>
+        {view.findings.length ? <ul className="concern-list">{view.findings.map((finding, index) => <li key={index}><strong>[{finding.severity}] {finding.code}</strong> — {finding.summary}{finding.resolved ? ' (resolved)' : ''}</li>)}</ul> : <div className="steps-empty">No findings recorded.</div>}
+        <div className="panel-intro">Artifacts <span>{view.artifacts.length}</span></div>
+        {view.artifacts.length ? <ul className="concern-list">{view.artifacts.map(artifact => <li key={artifact.artifactId}><strong>{artifact.kind}</strong> {artifact.artifactId}<br /><small>{artifact.provider} · {artifact.repository} · {artifact.location}</small></li>)}</ul> : <div className="steps-empty">No artifacts recorded.</div>}
+      </>}
+  </section>
+}
+
 function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: () => void; onSample: () => void }) {
   const [detail, setDetail] = useState<DelegationDetail | null>(null)
   const [error, setError] = useState('')
@@ -159,11 +175,31 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
   const [approving, setApproving] = useState(false)
   const [actionNote, setActionNote] = useState('')
   const [cancelling, setCancelling] = useState(false)
+  const [evidence, setEvidence] = useState<EvidenceView | null>(null)
+  const evidenceFor = useRef<string | null>(null)
+  useEffect(() => {
+    setEvidence(null)
+    evidenceFor.current = null
+  }, [id])
   useEffect(() => {
     let active = true
     let timer: number | undefined
     const load = async () => {
-      try { const result = await getDelegation(id); if (active) { setDetail(result); setError('') } }
+      try {
+        const result = await getDelegation(id)
+        if (!active) return
+        setDetail(result)
+        setError('')
+        if (evidenceFor.current !== id && terminalStates.includes(result.state)) {
+          evidenceFor.current = id
+          try {
+            const view = await getEvidence(id)
+            if (active) setEvidence(view)
+          } catch {
+            evidenceFor.current = null
+          }
+        }
+      }
       catch (reason) { if (active) setError(reason instanceof Error ? reason.message : 'Could not load this delegation.') }
       finally { if (active) timer = window.setTimeout(load, 5000) }
     }
@@ -213,6 +249,7 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
       <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{detail.waiting ? 'Needs your approval' : displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
       {detail.waiting ? <WaitingCard waiting={detail.waiting} approving={approving} note={actionNote} onApprove={() => void approve()} /> : null}
       {detail.state === 'Failed' ? <FailureCard summary={detail.resultSummary} concerns={detail.unresolvedConcerns ?? []} /> : null}
+      <EvidenceCard view={evidence} />
       {detail.canCancel ? <div className="cancel-row"><button type="button" className="danger-button" disabled={cancelling} onClick={() => void cancel()}>{cancelling ? 'Cancelling…' : 'Cancel delegation'}</button>{actionNote && !detail.waiting ? <p className="action-note" role="status">{actionNote}</p> : null}</div> : null}
       <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
