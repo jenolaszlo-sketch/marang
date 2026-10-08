@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.2" />
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
   </ItemGroup>
 
   <ItemGroup>

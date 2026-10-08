@@ -15,7 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.2" />
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
+    <PackageReference Include="Penghou.Qingniao.Hufu" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.5" />
     <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.5" />
   </ItemGroup>

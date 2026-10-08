@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" PrivateAssets="all" />
-    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.2" />
+    <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
   </ItemGroup>
 
   <ItemGroup>
