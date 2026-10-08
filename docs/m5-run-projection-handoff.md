@@ -16,10 +16,14 @@ An authoritative durable run projection, approximately:
   runs addressable to Zhinu steps and Qingniao delegation IDs).
 
 Ownership stays upstream: Fuwen owns workflow semantics, Zhinu owns
-execution/activation truth, Hongxian owns session/evidence continuity,
-Qingniao owns delegation/attempt truth. Marang owns only the authorized
-product projection over their receipts — never another workflow engine,
-fencing scheme, or authority model.
+execution/activation truth, ordering, and the execution-evidence read shape
+(including the durable watermark and durability classification), Hongxian owns
+the generic session/evidence continuity contract (unchanged), Qingniao owns
+delegation/attempt truth. Marang owns run→delegation/attempt correlation, the
+authorized product projection/read model and the snapshot+journal handshake over
+their receipts — never another workflow engine, fencing scheme, or authority
+model. See the authoritative
+[M5 execution-evidence contract](m5-execution-evidence-contract.md).
 
 ## Transport
 
@@ -40,10 +44,17 @@ derivation lineage, Hufu contexts, signal internals, raw cursor values.
 ## Unblocker vs exit criterion
 
 - **Integration unblocker:** the published durable projection + correlation
-  contract above, backed by (i) a Zhinu release with external-operation
-  handles, parked waits, and execution generations, (ii) a Hongxian release
-  with the reconciled projection read, and (iii) one real registered
-  provider.
+  contract above, backed by (i) a Zhinu release that closes the narrow M5
+  read-contract gap — a snapshot carrying a durable watermark, an explicit
+  durable/advisory event classification, bounded event-page metadata, and an
+  explicit statement whether generation/operation transitions are stream-visible
+  or snapshot-only — and (ii) one real registered provider. Zhinu already
+  supplies stable run/step/generation/operation identities, persisted
+  run/step/wait/operation/generation state, per-run ordered durable events,
+  per-consumer cursor/export semantics, and plan/execution correlation; no new
+  execution model or identity scheme is required. Hongxian stays generic and
+  unchanged; Marang owns the projection and adapts Zhinu execution evidence into
+  Hongxian's existing envelopes.
 - **V1.5 exit criterion:** validated end-to-end against that real provider
   and a durable restart/recovery path (a remote delegation survives service
   restart with verifiable, session-linked evidence and no duplicate
