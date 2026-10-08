@@ -5,6 +5,16 @@ Status: first live delegation slice and backend audit, 2026-09-27. The sample mo
 server API. Align real DTOs with the [reviewed V1 spec](progress-workflow-observability-v1.md)
 before building the live adapter.
 
+Update 2026-10-08 (V1.4a closeout): delegation-scoped HTTP now covers status,
+waiting/approve (`.../waiting`, `.../interventions`), cancel (`.../cancel`),
+failure concerns, and evidence/artifact descriptors (`.../evidence`,
+`.../artifacts/{id}`) — all caller-scoped, tested, and rendered in the live
+UI with polling. Still missing (M5-gated): authoritative run projection,
+run-scoped journals/artifacts, SignalR, providers, durable recovery, and
+production Hufu composition. Artifacts exposed here are delegation-scoped
+references only. See [v14a-operator-console-closeout.md](v14a-operator-console-closeout.md)
+and [m5-run-projection-handoff.md](m5-run-projection-handoff.md).
+
 ## Implemented now
 
 - `RunSnapshot` separates node execution status from current/superseded
