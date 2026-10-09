@@ -41,7 +41,7 @@ public static class SessionJournalEndpoints
             return (404, null);
         }
 
-        if (catalog.Find(correlation.DelegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, correlation.DelegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -107,5 +107,30 @@ public static class SessionJournalEndpoints
         };
         return new SessionJournalView(
             false, reason, sessionId, 0, "Unknown", recovery, 0, [], [], false, null);
+    }
+
+    /// <summary>
+    /// Caller-scoped delegation lookup with post-restart reattachment: a
+    /// process-local miss is re-resolved through the durable acceptance
+    /// descriptor plus visibility authority (verify-only, never repaired).
+    /// </summary>
+    private static async Task<MarangDelegationRecord?> ReattachedAsync(
+        MarangDelegationCatalog catalog,
+        string caller,
+        Penghou.Qingniao.DelegationId delegationId,
+        CancellationToken cancellationToken)
+    {
+        var cached = catalog.Find(delegationId, caller);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        if (!await catalog.ReattachAsync(caller, delegationId, cancellationToken).ConfigureAwait(false))
+        {
+            return null;
+        }
+
+        return catalog.Find(delegationId, caller);
     }
 }

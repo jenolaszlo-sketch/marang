@@ -27,7 +27,7 @@ public static class SupervisionHttpEndpoints
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        var record = catalog.Find(delegationId, caller);
+        var record = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
         if (record is null)
         {
             return (404, null);
@@ -73,7 +73,7 @@ public static class SupervisionHttpEndpoints
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -120,7 +120,7 @@ public static class SupervisionHttpEndpoints
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -131,7 +131,14 @@ public static class SupervisionHttpEndpoints
         }
         catch (InvalidOperationException)
         {
-            return (404, null);
+            // Known delegation without a live execution handle (notably after
+            // a restart): fail closed as unavailable rather than unknown, so
+            // operators can distinguish "no such delegation" (404) from "no
+            // controllable execution here" (409). No work is started.
+            var live = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
+            return live is null
+                ? (409, new { error = "control unavailable: the delegation has no live execution handle" })
+                : (404, null);
         }
 
         var current = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
@@ -165,7 +172,7 @@ public static class SupervisionHttpEndpoints
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -224,7 +231,7 @@ public static class SupervisionHttpEndpoints
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -285,7 +292,7 @@ public static class SupervisionHttpEndpoints
         }
 
         var delegationId = new DelegationId(id);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -322,6 +329,26 @@ public static class SupervisionHttpEndpoints
             return await Conflict(runtime, delegationId, exception.Message, cancellationToken)
                 .ConfigureAwait(false);
         }
+    }
+
+    private static async Task<MarangDelegationRecord?> ReattachedAsync(
+        MarangDelegationCatalog catalog,
+        string caller,
+        DelegationId delegationId,
+        CancellationToken cancellationToken)
+    {
+        var cached = catalog.Find(delegationId, caller);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        if (!await catalog.ReattachAsync(caller, delegationId, cancellationToken).ConfigureAwait(false))
+        {
+            return null;
+        }
+
+        return catalog.Find(delegationId, caller);
     }
 
     private static async Task<object?> WaitingSummaryAsync(

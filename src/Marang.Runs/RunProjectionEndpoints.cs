@@ -29,7 +29,7 @@ public static class RunProjectionEndpoints
         ArgumentNullException.ThrowIfNull(source);
 
         var delegationId = new DelegationId(delegationGuid);
-        if (catalog.Find(delegationId, caller) is null)
+        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
         {
             return (404, null);
         }
@@ -69,7 +69,7 @@ public static class RunProjectionEndpoints
             return (404, null);
         }
 
-        var record = catalog.Find(correlation.DelegationId, caller);
+        var record = await ReattachedAsync(catalog, caller, correlation.DelegationId, cancellationToken).ConfigureAwait(false);
         if (record is null)
         {
             return (404, null);
@@ -109,5 +109,31 @@ public static class RunProjectionEndpoints
         {
             return (500, new { error = exception.Message });
         }
+    }
+
+    /// <summary>
+    /// Caller-scoped delegation lookup with post-restart reattachment: a
+    /// process-local miss is re-resolved through the durable acceptance
+    /// descriptor plus visibility authority (verify-only, never repaired).
+    /// Volatile catalogs reattach to nothing and behave exactly as before.
+    /// </summary>
+    private static async Task<MarangDelegationRecord?> ReattachedAsync(
+        MarangDelegationCatalog catalog,
+        string caller,
+        DelegationId delegationId,
+        CancellationToken cancellationToken)
+    {
+        var cached = catalog.Find(delegationId, caller);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        if (!await catalog.ReattachAsync(caller, delegationId, cancellationToken).ConfigureAwait(false))
+        {
+            return null;
+        }
+
+        return catalog.Find(delegationId, caller);
     }
 }

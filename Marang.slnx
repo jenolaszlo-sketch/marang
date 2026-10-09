@@ -8,8 +8,10 @@
     <Project Path="src/Marang.SessionJournal/Marang.SessionJournal.csproj" />
     <Project Path="src/Marang.Server/Marang.Server.csproj" />
     <Project Path="src/Marang.Mcp/Marang.Mcp.csproj" />
+    <Project Path="src/Marang.DelegationAuthority/Marang.DelegationAuthority.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Marang.Tests/Marang.Tests.csproj" />
+    <Project Path="tests/Marang.RestartProbe/Marang.RestartProbe.csproj" />
   </Folder>
 </Solution>
