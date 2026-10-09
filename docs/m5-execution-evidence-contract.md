@@ -34,6 +34,8 @@ correlation work.
 | External operations | `ListAsync`, `GetAsync` (`WorkflowExternalOperation`) | `OperationId` |
 | Instances / generations | `GetGeneration*`, `ListGenerationsAsync`, `ListDispositionsAsync` | `InstanceId`, `GenerationId` |
 | Aggregates | `GetRunProgressAsync`, `DiagnoseAsync` (`RunDiagnosis` codes) | — |
+| Event durability classification | `WorkflowEvent.Durability` via `WorkflowEventTypes.Durability` | `(RunId, Sequence)` |
+| Bounded event pages | `IWorkflowEventPageReader.GetEventPageAsync` → `WorkflowEventPage` | `(RunId, Sequence)` cursor |
 
 Plan/execution correlation exists: `WorkflowRun.DefinitionFingerprint`,
 `WorkflowGeneration.ExecutionFingerprint` + `PlanRevision`.
@@ -43,11 +45,14 @@ Plan/execution correlation exists: `WorkflowRun.DefinitionFingerprint`,
 1. **Snapshot + durable watermark.** No read returns the projection together
    with the run's latest durable sequence in one consistent read;
    `GetRunProgressAsync` is non-atomic and watermark-free.
-2. **Explicit durable/advisory classification.** Events are documented
-   "diagnostic"; there is no contract distinguishing durable execution facts
-   from advisory progress.
-3. **Bounded event-page metadata.** No `nextCursor` / `hasMore` /
-   `throughDurableSequence` / retention floor / `resyncRequired`.
+2. ~~Explicit durable/advisory classification.~~ **Delivered** —
+   `WorkflowEventDurability` (`Durable`/`Advisory`), `WorkflowEventTypes.Durability`,
+   `WorkflowEvent.Durability`; no schema or model change.
+3. ~~Bounded event-page metadata.~~ **Delivered** —
+   `IWorkflowEventPageReader.GetEventPageAsync` returns `WorkflowEventPage`
+   (`Events`, `NextCursor`, `HasMore`, `ThroughDurableSequence`,
+   `RetentionFloor`, `ResyncRequired`) over the existing run-scoped sequence,
+   independent of export acknowledgement.
 4. **Generation/operation transition visibility decision.** They are absent from
    the event stream and are currently snapshot-poll-only; make that explicit or
    add them to the stream.
@@ -92,17 +97,18 @@ evidence is desired. No workflow-specific identity enters Hongxian.
 
 ## Minimum viable M5 handoff
 
-Zhinu provides (a) a run snapshot reporting its durable watermark, (b) an
-explicit durable/advisory event classification, (c) bounded event-page metadata
-over the existing sequence/export cursor, and (d) an explicit statement that
-generation/operation transitions are snapshot-only (or their promotion to
-stream events). Hongxian unchanged. Marang then builds the projection and
-run → delegation/attempt correlation over those receipts.
+Zhinu provides (a) a run snapshot reporting its durable watermark, (b) ~~an
+explicit durable/advisory event classification~~ (**delivered**),
+(c) ~~bounded event-page metadata over the existing sequence/export cursor~~
+(**delivered**), and (d) an explicit statement that generation/operation
+transitions are snapshot-only (or their promotion to stream events). Hongxian
+unchanged. Marang then builds the projection and run → delegation/attempt
+correlation over those receipts.
 
 ## Implementation order
 
-1. Zhinu: durable/advisory classification + doc.
-2. Zhinu: event-page metadata (reuse existing cursor).
+1. ~~Zhinu: durable/advisory classification + doc.~~ **Done.**
+2. ~~Zhinu: event-page metadata (reuse existing cursor).~~ **Done.**
 3. Zhinu: watermark accessor + snapshot-with-watermark read.
 4. Zhinu: decide generation/operation transition visibility (stream vs
    snapshot-only).
