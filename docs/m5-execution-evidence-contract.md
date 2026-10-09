@@ -60,9 +60,40 @@ Plan/execution correlation exists: `WorkflowRun.DefinitionFingerprint`,
    (`Events`, `NextCursor`, `HasMore`, `ThroughDurableSequence`,
    `RetentionFloor`, `ResyncRequired`) over the existing run-scoped sequence,
    independent of export acknowledgement.
-4. **Generation/operation transition visibility decision.** They are absent from
-   the event stream and are currently snapshot-poll-only; make that explicit or
-   add them to the stream.
+4. ~~Generation/operation transition visibility decision.~~ **Decided 2026-10-09:
+   snapshot/state-only for M5 — no stream events.** The M5 run projection
+   (`RunProjectionBuilder`) consumes run + current step rows + watermark +
+   plan/map + host correlation; its checkpoints are waiting steps with
+   host-written reasons. It reads no generation, wait, disposition, artifact, or
+   external-operation rows and consumes no journal incrementally; session
+   journals read Hongxian. No generation or operation transition therefore needs
+   stream visibility for M5, and none is added.
+   - **Generation lifecycle observed after the initial read: none.** The
+     displayed generation is host correlation (`RunCorrelation.Generation`),
+     not `WorkflowGeneration` rows; activation, supersession, plan-revision or
+     fingerprint changes, and dispositions are not tracked.
+   - **Operation lifecycle observed: none.** Creation, claims, external-ID
+     assignment, completion, failure, recovery-intent, and lease/ownership
+     changes remain authoritative state only; lease/ownership bookkeeping is
+     never surfaced and outcomes surface through run/step rows.
+   - **Evaluated and found unnecessary for M5:** ordered evidence for
+     created/prepared/rejected vs activated/superseded generations, disposition
+     records as journaled audit, or external-operation
+     registration/acquire/lease vs completed/failed. A future stream decision,
+     if a consumer ever requires ordered generation/operation catch-up, would be
+     bounded to `activated`/`superseded` and `completed`/`failed` only.
+   - **Staleness contract:** these fields refresh only when the snapshot/state
+     reads refresh (whole-projection rebuild per poll); until then they may lag
+     wall-clock. The UI must not claim live/ordered semantics for
+     generation/operation state.
+   - **Restart/catch-up:** re-read the authoritative snapshot; no cursor
+     continuity is needed for these fields because they do not participate in
+     the journal.
+   - **Alternatives rejected:** stream events for selected transitions (new
+     event types, producer changes, classification, and mandatory
+     same-transaction coupling for no consumer); a second ordered stream (no
+     second ordering exists and the single run sequence already orders what the
+     projection consumes).
 
 **Not missing:** execution model, identity scheme, export/cursor subsystem,
 Hongxian contract.
@@ -110,7 +141,8 @@ explicit durable/advisory event classification~~ (**delivered**),
 over the existing sequence/export cursor~~
 (**delivered**), and (d) an explicit statement that
 generation/operation transitions are snapshot-only (or their promotion to
-stream events) — **still open**. Hongxian
+stream events) — **decided: snapshot/state-only for M5, no stream events; see
+item 4 above**. Hongxian
 unchanged. Marang then builds the projection and
 run → delegation/attempt correlation over those receipts.
 
@@ -119,7 +151,7 @@ run → delegation/attempt correlation over those receipts.
 1. ~~Zhinu: durable/advisory classification + doc.~~ **Done.**
 2. ~~Zhinu: event-page metadata (reuse existing cursor).~~ **Done.**
 3. ~~Zhinu: watermark accessor + snapshot-with-watermark read.~~ **Done.**
-4. Zhinu: decide generation/operation transition visibility (stream vs
-   snapshot-only).
+4. ~~Zhinu: decide generation/operation transition visibility (stream vs
+   snapshot-only).~~ **Decided (snapshot/state-only); no Zhinu change.**
 5. Marang: projection + correlation; adapt to Hongxian envelopes.
 6. Marang: real provider + durable restart/recovery proof (V1.5 exit).
