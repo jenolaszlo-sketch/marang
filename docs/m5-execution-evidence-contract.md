@@ -42,9 +42,16 @@ Plan/execution correlation exists: `WorkflowRun.DefinitionFingerprint`,
 
 ## Missing primitives (narrow read-contract gap)
 
-1. **Snapshot + durable watermark.** No read returns the projection together
-   with the run's latest durable sequence in one consistent read;
-   `GetRunProgressAsync` is non-atomic and watermark-free.
+1. ~~Snapshot + durable watermark.~~ **Delivered** —
+   `IWorkflowSnapshotReader.GetRunSnapshotAsync` returns a `WorkflowRunSnapshot`
+   (run, current-revision steps, dependency edges, waits, artifacts, bounded
+   external operations, active operation, generation + instance + dispositions,
+   source run/lineage, recursive child snapshots, derived diagnosis) together
+   with `ThroughDurableSequence`, all from one consistent read boundary (single
+   deferred read transaction, rolled back without writing). Watermark meaning:
+   all represented state includes every durable execution transition through D,
+   and no state change caused solely by a durable transition after D is
+   represented; advisory events past D do not invalidate the snapshot.
 2. ~~Explicit durable/advisory classification.~~ **Delivered** —
    `WorkflowEventDurability` (`Durable`/`Advisory`), `WorkflowEventTypes.Durability`,
    `WorkflowEvent.Durability`; no schema or model change.
@@ -96,20 +103,22 @@ evidence is desired. No workflow-specific identity enters Hongxian.
 - **A new projection subsystem in Zhinu** — Marang owns the projection.
 
 ## Minimum viable M5 handoff
-
-Zhinu provides (a) a run snapshot reporting its durable watermark, (b) ~~an
+Zhinu provides (a) ~~a run snapshot reporting its durable watermark~~ (**delivered**,
+see above), (b) ~~an
 explicit durable/advisory event classification~~ (**delivered**),
-(c) ~~bounded event-page metadata over the existing sequence/export cursor~~
-(**delivered**), and (d) an explicit statement that generation/operation
-transitions are snapshot-only (or their promotion to stream events). Hongxian
-unchanged. Marang then builds the projection and run → delegation/attempt
-correlation over those receipts.
+(c) ~~bounded event-page metadata
+over the existing sequence/export cursor~~
+(**delivered**), and (d) an explicit statement that
+generation/operation transitions are snapshot-only (or their promotion to
+stream events) — **still open**. Hongxian
+unchanged. Marang then builds the projection and
+run → delegation/attempt correlation over those receipts.
 
 ## Implementation order
 
 1. ~~Zhinu: durable/advisory classification + doc.~~ **Done.**
 2. ~~Zhinu: event-page metadata (reuse existing cursor).~~ **Done.**
-3. Zhinu: watermark accessor + snapshot-with-watermark read.
+3. ~~Zhinu: watermark accessor + snapshot-with-watermark read.~~ **Done.**
 4. Zhinu: decide generation/operation transition visibility (stream vs
    snapshot-only).
 5. Marang: projection + correlation; adapt to Hongxian envelopes.
