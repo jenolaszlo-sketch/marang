@@ -3,6 +3,7 @@ using Marang.Codex;
 using Marang.Http;
 using Marang.Mcp;
 using Marang.Runs;
+using Marang.SessionJournal;
 using Penghou.Qingniao;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,29 @@ earlyAuthentication.Validate();
 // objective is configured, because the published adapter is single-use per
 // configured prompt (one admitted objective).
 builder.Services.AddSingleton<MarangDelegationCatalog>();
-builder.Services.AddSingleton<IRunProjectionSource, UnconfiguredRunProjectionSource>();
+{
+    // Run projection and session journals read durable Zhinu/Hongxian stores
+    // only when configured; otherwise the endpoints truthfully report 404.
+    // Fail fast on partial configuration rather than silently substituting.
+    var runs = builder.Configuration.GetSection("Marang:Runs");
+    if (runs.GetValue("Enabled", false))
+    {
+        var zhinuDatabasePath = runs["ZhinuDatabasePath"]
+            ?? throw new InvalidOperationException("Marang:Runs:ZhinuDatabasePath is required when runs are enabled.");
+        var hongxianRootPath = runs["HongxianRootPath"]
+            ?? throw new InvalidOperationException("Marang:Runs:HongxianRootPath is required when runs are enabled.");
+        var planDirectory = runs["PlanDirectory"]
+            ?? throw new InvalidOperationException("Marang:Runs:PlanDirectory is required when runs are enabled.");
+        var configured = RunStoreComposition.Create(zhinuDatabasePath, hongxianRootPath, planDirectory);
+        builder.Services.AddSingleton<IRunProjectionSource>(configured);
+        builder.Services.AddSingleton<ISessionJournalSource>(configured);
+    }
+    else
+    {
+        builder.Services.AddSingleton<IRunProjectionSource, UnconfiguredRunProjectionSource>();
+        builder.Services.AddSingleton<ISessionJournalSource, UnconfiguredSessionJournalSource>();
+    }
+}
 builder.Services.AddSingleton(serviceProvider =>
 {
     var providers = new InMemoryProviderRegistry();
@@ -263,6 +286,20 @@ app.MapGet("/api/delegations/{id:guid}/run", async (
         catalog, caller, id, runs, cancellationToken);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
+app.MapGet("/api/runs/{id:guid}/journal", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    IRunProjectionSource runs,
+    ISessionJournalSource sessions,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await SessionJournalEndpoints.GetJournalAsync(
+        catalog, caller, id, runs, sessions, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
 app.MapMcp("/mcp");
 
 app.Run();
@@ -288,4 +325,14 @@ internal sealed class UnconfiguredRunProjectionSource : IRunProjectionSource
 
     public ValueTask<Guid?> GetRunIdByDelegationAsync(Penghou.Qingniao.DelegationId delegationId, CancellationToken cancellationToken = default) =>
         new((Guid?)null);
+}
+
+/// <summary>
+/// Placeholder session-journal source: always unavailable (404) until M5
+/// wires real Hongxian stores. Journal absence never affects the run graph.
+/// </summary>
+internal sealed class UnconfiguredSessionJournalSource : ISessionJournalSource
+{
+    public ValueTask<SessionJournalData?> ReadAsync(Penghou.Hongxian.SessionId sessionId, CancellationToken cancellationToken = default) =>
+        new((SessionJournalData?)null);
 }

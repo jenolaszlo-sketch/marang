@@ -21,3 +21,43 @@ export async function getDelegationRunId(delegationId: string, signal?: AbortSig
   const body = await response.json() as { runId?: string }
   return typeof body.runId === 'string' ? body.runId : null
 }
+
+export interface JournalEntryView {
+  sequence: number
+  eventType: string
+  committedAt: string
+  participant: string
+  refs: Record<string, string>
+}
+
+export interface JournalIncidentView {
+  incidentId: string
+  reasonCode: string | null
+  severity: string
+  detectedAt: string
+}
+
+export interface JournalView {
+  available: boolean
+  unavailableReason: string | null
+  sessionId: string
+  appliedSequence: number
+  operatorState: string
+  recoveryState: string
+  totalEvents: number
+  incidents: JournalIncidentView[]
+  entries: JournalEntryView[]
+  hasMore: boolean
+  nextSequence: number | null
+}
+
+export async function getRunJournal(id: string, signal?: AbortSignal): Promise<JournalView | null> {
+  const response = await fetch(`/api/runs/${encodeURIComponent(id)}/journal`, { headers: { Accept: 'application/json' }, signal })
+  if (response.status === 404) return null
+  if (!response.ok) {
+    const error = new Error(`The journal service returned ${response.status}.`)
+    Object.assign(error, { status: response.status })
+    throw error
+  }
+  return response.json() as Promise<JournalView>
+}

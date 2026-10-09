@@ -26,6 +26,9 @@
     <PackageReference Include="Penghou.Fuwen.Zhinu" Version="0.1.0-preview.13" />
     <PackageReference Include="Penghou.Zhinu" Version="0.2.0-preview.2" />
     <PackageReference Include="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.2" />
+    <PackageReference Include="Penghou.Hongxian" Version="0.1.0-preview.5" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Penghou.Hongxian.Sqlite" Version="0.1.0-preview.5" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
   </ItemGroup>
 
@@ -38,6 +41,7 @@
     <ProjectReference Include="..\..\src\Marang.Codex\Marang.Codex.csproj" />
     <ProjectReference Include="..\..\src\Marang.Http\Marang.Http.csproj" />
     <ProjectReference Include="..\..\src\Marang.Runs\Marang.Runs.csproj" />
+    <ProjectReference Include="..\..\src\Marang.SessionJournal\Marang.SessionJournal.csproj" Condition="'$(TargetFramework)' == 'net10.0'" />
     <ProjectReference Include="..\..\src\Marang.Hufu\Marang.Hufu.csproj" />
     <ProjectReference Include="..\..\src\Marang.Mcp\Marang.Mcp.csproj" />
   </ItemGroup>

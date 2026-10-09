@@ -5,35 +5,48 @@ namespace Marang.Runs;
 
 /// <summary>
 /// Host-owned correlation joining a Qingniao delegation to a Zhinu workflow
-/// run and its Fuwen plan revision. Persisted inside the Zhinu run's opaque
-/// <c>MetadataJson</c> (an existing durable carrier), never in a second
-/// Marang identity store. Marang reads it back; it never invents run, plan,
-/// or delegation identity.
+/// run, its Fuwen plan revision, and its Hongxian session. The session is
+/// carried as an opaque string; only the Hongxian layer interprets it.
+/// Persisted inside the Zhinu run's opaque <c>MetadataJson</c> (an existing
+/// durable carrier), never in a second Marang identity store.
 /// </summary>
 public sealed record RunCorrelation(
     DelegationId DelegationId,
     string Generation,
     Guid WorkflowRunId,
     string PlanRevision,
-    string ExecutionFingerprint)
+    string ExecutionFingerprint,
+    string? SessionId = null)
 {
     private const string DelegationKey = "marang.delegationId";
     private const string GenerationKey = "marang.generation";
     private const string PlanRevisionKey = "marang.planRevision";
     private const string FingerprintKey = "marang.executionFingerprint";
+    private const string SessionKey = "marang.sessionId";
 
     /// <summary>Serializes the correlation for a Zhinu run's MetadataJson.</summary>
-    public string ToMetadataJson() => JsonSerializer.Serialize(new Dictionary<string, string>
+    public string ToMetadataJson()
     {
-        [DelegationKey] = DelegationId.Value.ToString("D"),
-        [GenerationKey] = Generation,
-        [PlanRevisionKey] = PlanRevision,
-        [FingerprintKey] = ExecutionFingerprint,
-    });
+        var fields = new Dictionary<string, string>
+        {
+            [DelegationKey] = DelegationId.Value.ToString("D"),
+            [GenerationKey] = Generation,
+            [PlanRevisionKey] = PlanRevision,
+            [FingerprintKey] = ExecutionFingerprint,
+        };
+        if (!string.IsNullOrWhiteSpace(SessionId))
+        {
+            fields[SessionKey] = SessionId;
+        }
+
+        return JsonSerializer.Serialize(fields);
+    }
 
     /// <summary>
     /// Reads the correlation back from a Zhinu run's MetadataJson. Returns
     /// null when absent or malformed; the caller treats that as uncorrelated.
+    /// A malformed session id fails the whole correlation closed rather than
+    /// joining a wrong session.
     /// </summary>
     public static RunCorrelation? TryParseMetadataJson(string? metadataJson, Guid workflowRunId)
     {
@@ -68,12 +81,25 @@ public sealed record RunCorrelation(
                 return null;
             }
 
+            string? sessionId = null;
+            if (root.TryGetProperty(SessionKey, out var sessionElement))
+            {
+                var sessionText = sessionElement.GetString();
+                if (string.IsNullOrWhiteSpace(sessionText) || !Guid.TryParse(sessionText, out _))
+                {
+                    return null;
+                }
+
+                sessionId = sessionText;
+            }
+
             return new RunCorrelation(
                 new DelegationId(delegationGuid),
                 generation,
                 workflowRunId,
                 planRevision,
-                fingerprint);
+                fingerprint,
+                sessionId);
         }
         catch (JsonException)
         {

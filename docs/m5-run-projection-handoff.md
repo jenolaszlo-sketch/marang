@@ -65,3 +65,22 @@ derivation lineage, Hufu contexts, signal internals, raw cursor values.
 The Hufu library (derived authority, file admission) is proven and needs
 no V1.4 UI. Production composition (store, approvals, providers acting
 under authority) is an M5 product decision, not a V1.4a gap.
+
+## M5.4 notes (2026-10-08)
+
+- Session journals read Hongxian's reconciled projection plus one bounded
+  ledger page; recovery states are a pure mapping of Zhinu run status and
+  Hongxian `SessionOperatorState` (no Marang state machine). Graph truth
+  stays Zhinu-only; journal absence/failure never erases it.
+- Production `IRunProjectionSource`/`ISessionJournalSource` are wired
+  config-gated (`Marang:Runs`: `Enabled`, `ZhinuDatabasePath`,
+  `HongxianRootPath`, `PlanDirectory`) with fail-fast validation; when
+  unconfigured the endpoints truthfully report 404.
+- Packaging: Marang unifies `SQLitePCLRaw.bundle_e_sqlite3` to 2.1.13 and
+  `Microsoft.Data.Sqlite` to 10.0.11 (Fuwen.Zhinu/Hongxian.Sqlite require
+  newer than Hufu.Sqlite's exact pins), with a scoped `NU1608` suppression
+  proven by the full suite including Hufu Sqlite tests. Align the upstream
+  package dependencies later.
+- Hongxian preview.5 is net10-only, so Hongxian-dependent code lives in the
+  net10-only `Marang.SessionJournal` project; `Marang.Runs` stays net8/net10
+  and Hongxian-free. Journal tests are net10-gated (`#if`).
