@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Marang\Marang.csproj" />
     <ProjectReference Include="..\Marang.Codex\Marang.Codex.csproj" />
     <ProjectReference Include="..\Marang.Http\Marang.Http.csproj" />
+    <ProjectReference Include="..\Marang.Runs\Marang.Runs.csproj" />
     <ProjectReference Include="..\Marang.Mcp\Marang.Mcp.csproj" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@ using Marang;
 using Marang.Codex;
 using Marang.Http;
 using Marang.Mcp;
+using Marang.Runs;
 using Penghou.Qingniao;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ earlyAuthentication.Validate();
 // objective is configured, because the published adapter is single-use per
 // configured prompt (one admitted objective).
 builder.Services.AddSingleton<MarangDelegationCatalog>();
+builder.Services.AddSingleton<IRunProjectionSource, UnconfiguredRunProjectionSource>();
 builder.Services.AddSingleton(serviceProvider =>
 {
     var providers = new InMemoryProviderRegistry();
@@ -229,6 +231,61 @@ app.MapGet("/api/delegations/{id:guid}/artifacts/{artifactId}", async (
         runtime, catalog, caller, id, artifactId, cancellationToken);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
+app.MapGet("/api/runs/{id:guid}", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    IRunProjectionSource runs,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await RunProjectionEndpoints.GetRunAsync(
+        catalog, caller, id, runs, static () => DateTimeOffset.UtcNow, cancellationToken);
+    return status switch
+    {
+        200 => Results.Json(body),
+        409 => Results.Conflict(body),
+        500 => Results.Json(body, statusCode: 500),
+        _ => Results.NotFound(),
+    };
+});
+app.MapGet("/api/delegations/{id:guid}/run", async (
+    Guid id,
+    HttpContext context,
+    MarangDelegationCatalog catalog,
+    IRunProjectionSource runs,
+    CancellationToken cancellationToken) =>
+{
+    context.Response.Headers.CacheControl = "no-store";
+    var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    var (status, body) = await RunProjectionEndpoints.GetDelegationRunAsync(
+        catalog, caller, id, runs, cancellationToken);
+    return status == 200 ? Results.Json(body) : Results.NotFound();
+});
 app.MapMcp("/mcp");
 
 app.Run();
+
+/// <summary>
+/// Placeholder run-projection source: always uncorrelated (404) until M5
+/// wires real Zhinu/Fuwen stores, like the config-gated Codex provider.
+/// The endpoint contract is stable; only the store backing is pending.
+/// </summary>
+internal sealed class UnconfiguredRunProjectionSource : IRunProjectionSource
+{
+    public ValueTask<Penghou.Fuwen.WorkflowPlan?> GetPlanAsync(string planRevision, CancellationToken cancellationToken = default) =>
+        new((Penghou.Fuwen.WorkflowPlan?)null);
+
+    public ValueTask<Penghou.Zhinu.WorkflowRun?> GetRunAsync(Guid runId, CancellationToken cancellationToken = default) =>
+        new((Penghou.Zhinu.WorkflowRun?)null);
+
+    public ValueTask<IReadOnlyList<Penghou.Zhinu.WorkflowStepRun>> GetStepsAsync(Guid runId, CancellationToken cancellationToken = default) =>
+        new((IReadOnlyList<Penghou.Zhinu.WorkflowStepRun>)Array.Empty<Penghou.Zhinu.WorkflowStepRun>());
+
+    public ValueTask<long> GetThroughSequenceAsync(Guid runId, CancellationToken cancellationToken = default) =>
+        new(0L);
+
+    public ValueTask<Guid?> GetRunIdByDelegationAsync(Penghou.Qingniao.DelegationId delegationId, CancellationToken cancellationToken = default) =>
+        new((Guid?)null);
+}

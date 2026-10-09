@@ -4,6 +4,7 @@ import type { JournalEntry, RunSnapshot, WorkflowNode } from './contracts'
 import { currentCounts, sampleRun, sampleSource } from './fixture'
 import { WorkflowGraph } from './WorkflowGraph'
 import { getDelegation, listDelegations, approveIntervention, cancelDelegation, getEvidence } from './delegationApi'
+import { getRunProjection, getDelegationRunId } from './runApi'
 import type { DelegationDetail, DelegationSummary, EvidenceView } from './delegationApi'
 
 type InspectorTab = 'Summary' | 'Journal' | 'Evidence' | 'Attempts'
@@ -28,11 +29,11 @@ function Header({ onRuns, onSample }: { onRuns?: () => void; onSample?: () => vo
   </header>
 }
 
-function RunHeader({ run }: { run: RunSnapshot }) {
+function RunHeader({ run, live }: { run: RunSnapshot; live?: boolean }) {
   const counts = currentCounts(run)
   return <section className="run-header">
-    <div className="breadcrumb"><span>Runs</span><ArrowRight size={13} /><span>Sample workflow</span><ArrowRight size={13} /><strong>{run.title}</strong></div>
-    <div className="run-heading-row"><div><div className="eyebrow">RUN / {run.id}</div><h1>{run.title}</h1><div className="workspace">{run.workspace}</div></div><div className="run-heading-right"><Pill tone="sample"><Sparkles size={13} /> SAMPLE DATA</Pill><Pill tone="neutral"><Radio size={13} /> Static preview</Pill></div></div>
+    <div className="breadcrumb"><span>Runs</span><ArrowRight size={13} /><span>{live ? 'Live run' : 'Sample workflow'}</span><ArrowRight size={13} /><strong>{run.title}</strong></div>
+    <div className="run-heading-row"><div><div className="eyebrow">RUN / {run.id}</div><h1>{run.title}</h1><div className="workspace">{run.workspace}</div></div><div className="run-heading-right">{live ? <><Pill tone="live"><Radio size={13} /> LIVE DATA</Pill></> : <><Pill tone="sample"><Sparkles size={13} /> SAMPLE DATA</Pill><Pill tone="neutral"><Radio size={13} /> Static preview</Pill></>}</div></div>
     <div className="run-summary-row"><div className="summary-main"><span className="summary-icon"><Activity size={19} /></span><div><strong>Validation and review in progress</strong><span>{run.summary}</span></div></div><div className="metric"><strong>{counts.completed}</strong><span>completed</span></div><div className="metric"><strong>{counts.running}</strong><span>running</span></div><div className="metric"><strong>{counts.waiting}</strong><span>waiting</span></div><div className="metric elapsed"><strong>{run.elapsed}</strong><span>elapsed</span></div></div>
   </section>
 }
@@ -64,7 +65,7 @@ function Milestones({ onSelect }: { onSelect: (id: string) => void }) {
   return <div className="milestones"><div className="milestones-title"><GitBranch size={16} /><strong>Workflow story</strong><span>Revision 2 of 2</span></div><div className="milestone-items"><div><span className="timeline-dot done"><Check size={12} /></span><div><strong>Run started</strong><small>10:39 · Plan accepted</small></div></div><button type="button" onClick={() => onSelect('checkpoint')}><span className="timeline-dot revision"><GitBranch size={12} /></span><div><strong>Workflow revised</strong><small>10:42 · Validation replaced</small></div></button><div><span className="timeline-dot active"><Play size={11} /></span><div><strong>Now running</strong><small>Validation + review</small></div></div></div></div>
 }
 
-function RunScreen({ run, onRuns }: { run: RunSnapshot; onRuns: () => void }) {
+function RunScreen({ run, onRuns, live }: { run: RunSnapshot; onRuns: () => void; live?: boolean }) {
   const [selectedId, setSelectedId] = useState('validate')
   const [inspectorOpen, setInspectorOpen] = useState(() => !window.matchMedia('(max-width: 560px)').matches)
   const [view, setView] = useState<'graph' | 'list'>(() => window.matchMedia('(max-width: 560px)').matches ? 'list' : 'graph')
@@ -76,7 +77,7 @@ function RunScreen({ run, onRuns }: { run: RunSnapshot; onRuns: () => void }) {
   }, [])
   const work = run.nodes.find(node => node.id === selectedId) ?? run.nodes[0]
   const select = (id: string) => { setSelectedId(id); setInspectorOpen(true) }
-  return <><Header onRuns={onRuns} /><main className="page"><RunHeader run={run} /><div className="workspace-layout"><section className="workflow-panel" aria-label="Workflow"><div className="panel-toolbar"><div className="panel-title"><span className="panel-icon"><GitBranch size={17} /></span><div><strong>Workflow</strong><small>Current path and retained history</small></div></div><div className="toolbar-actions"><div className="segmented" aria-label="Workflow view"><button type="button" className={view === 'graph' ? 'active' : ''} onClick={() => setView('graph')}><GitBranch size={14} /> Graph</button><button type="button" className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}><List size={14} /> List</button></div>{!inspectorOpen && <button type="button" className="icon-button" aria-label="Open inspector" onClick={() => setInspectorOpen(true)}><PanelRightOpen size={17} /></button>}</div></div><div className="canvas-wrap">{view === 'graph' ? <WorkflowGraph run={run} selectedId={selectedId} onSelect={select} /> : <WorkflowList run={run} selectedId={selectedId} onSelect={select} />}</div><Milestones onSelect={select} /></section>{inspectorOpen && <Inspector run={run} work={work} onClose={() => setInspectorOpen(false)} />}</div><footer className="run-footer"><span><CircleHelp size={14} /> This is a deterministic sample. No live execution is connected.</span><span>Run ID: {run.id} · Snapshot {run.durableSequence}</span></footer></main></>
+  return <><Header onRuns={onRuns} /><main className="page"><RunHeader run={run} live={live} /><div className="workspace-layout"><section className="workflow-panel" aria-label="Workflow"><div className="panel-toolbar"><div className="panel-title"><span className="panel-icon"><GitBranch size={17} /></span><div><strong>Workflow</strong><small>Current path and retained history</small></div></div><div className="toolbar-actions"><div className="segmented" aria-label="Workflow view"><button type="button" className={view === 'graph' ? 'active' : ''} onClick={() => setView('graph')}><GitBranch size={14} /> Graph</button><button type="button" className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}><List size={14} /> List</button></div>{!inspectorOpen && <button type="button" className="icon-button" aria-label="Open inspector" onClick={() => setInspectorOpen(true)}><PanelRightOpen size={17} /></button>}</div></div><div className="canvas-wrap">{view === 'graph' ? <WorkflowGraph run={run} selectedId={selectedId} onSelect={select} /> : <WorkflowList run={run} selectedId={selectedId} onSelect={select} />}</div><Milestones onSelect={select} /></section>{inspectorOpen && <Inspector run={run} work={work} onClose={() => setInspectorOpen(false)} />}</div><footer className="run-footer">{live ? <><span><Radio size={14} /> Live projection. Refreshes automatically.</span><span>Run ID: {run.id} · Snapshot {run.durableSequence}</span></> : <><span><CircleHelp size={14} /> This is a deterministic sample. No live execution is connected.</span><span>Run ID: {run.id} · Snapshot {run.durableSequence}</span></>}</footer></main></>
 }
 
 function RunsScreen({ onOpen }: { onOpen: () => void }) {
@@ -168,7 +169,7 @@ function EvidenceCard({ view, pending }: { view: EvidenceView | null; pending: b
   </section>
 }
 
-function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: () => void; onSample: () => void }) {
+function DelegationDetailScreen({ id, onBack, onSample, onOpenRun }: { id: string; onBack: () => void; onSample: () => void; onOpenRun: (runId: string) => void }) {
   const [detail, setDetail] = useState<DelegationDetail | null>(null)
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
@@ -176,12 +177,17 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
   const [actionNote, setActionNote] = useState('')
   const [cancelling, setCancelling] = useState(false)
   const [cancelNote, setCancelNote] = useState('')
+  const [runId, setRunId] = useState<string | null>(null)
   const [evidence, setEvidence] = useState<EvidenceView | null>(null)
   const evidenceFor = useRef<string | null>(null)
   const heroHeading = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     setEvidence(null)
     evidenceFor.current = null
+    setRunId(null)
+    let active = true
+    void getDelegationRunId(id).then(value => { if (active) setRunId(value) }).catch(() => { if (active) setRunId(null) })
+    return () => { active = false }
   }, [id])
   useEffect(() => {
     let active = true
@@ -258,6 +264,7 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
       {detail.state === 'Failed' ? <FailureCard summary={detail.resultSummary} concerns={detail.unresolvedConcerns ?? []} /> : null}
       <EvidenceCard view={evidence} pending={terminalStates.includes(detail.state) && !evidence} />
       {detail.canCancel ? <div className="cancel-row"><button type="button" className="danger-button" disabled={cancelling} onClick={() => void cancel()}>{cancelling ? 'Cancelling…' : 'Cancel delegation'}</button>{cancelNote ? <p className="action-note" role="status">{cancelNote}</p> : null}</div> : null}
+      {runId ? <div className="cancel-row"><button type="button" className="refresh-button" onClick={() => onOpenRun(runId)}>View run graph <ArrowRight size={15} /></button></div> : null}
       <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
         {current.length > 0 && <div className="step-group"><div className="step-group-label"><span className="step-indicator active" /> CURRENT</div>{current.map((step, index) => <div className="live-step current-step" key={`${step}-${index}`}><span className="step-indicator active" /><span>{step}</span><span className="step-state-label">In progress</span></div>)}</div>}
@@ -267,6 +274,26 @@ function DelegationDetailScreen({ id, onBack, onSample }: { id: string; onBack: 
       <div className="live-poll-note"><Radio size={13} /> Automatically refreshes every 5 seconds <span>·</span> Progress reflects the service report</div>
     </>}
   </main></>
+}
+
+function LiveRunScreen({ id, onRuns, onSample }: { id: string; onRuns: () => void; onSample: () => void }) {
+  const [run, setRun] = useState<RunSnapshot | null>(null)
+  const [error, setError] = useState('')
+  const [refresh, setRefresh] = useState(0)
+  useEffect(() => {
+    let active = true
+    let timer: number | undefined
+    const load = async () => {
+      try { const result = await getRunProjection(id); if (active) { setRun(result); setError('') } }
+      catch (reason) { if (active) setError(reason instanceof Error ? reason.message : 'Could not load this run.') }
+      finally { if (active) timer = window.setTimeout(load, 5000) }
+    }
+    void load()
+    return () => { active = false; if (timer) window.clearTimeout(timer) }
+  }, [id, refresh])
+  if (error && !run) return <><LiveHeader onRuns={onRuns} onSample={onSample} /><main className="page"><div className="live-error" role="alert"><strong>Run unavailable</strong><span>{error}</span><button type="button" onClick={() => setRefresh(value => value + 1)}>Try again</button></div></main></>
+  if (!run) return <><LiveHeader onRuns={onRuns} onSample={onSample} /><main className="page"><div className="live-loading"><span className="spinner" />Loading run…</div></main></>
+  return <RunScreen run={run} onRuns={onRuns} live />
 }
 
 export function App() {
@@ -283,8 +310,10 @@ export function App() {
     return () => controller.abort()
   }, [path, isSample])
   if (isSample) return run ? <RunScreen run={run} onRuns={() => navigate('/ui/runs')} /> : <div className="loading">Loading sample workflow…</div>
+  const runMatch = path.match(/^\/ui\/runs\/([^/]+)\/?$/)
+  if (runMatch) return <LiveRunScreen id={decodeURIComponent(runMatch[1])} onRuns={() => navigate('/ui/delegations')} onSample={() => navigate(samplePath)} />
   const delegationMatch = path.match(/^\/ui\/delegations\/([^/]+)\/?$/)
-  if (delegationMatch) return <DelegationDetailScreen id={decodeURIComponent(delegationMatch[1])} onBack={() => navigate('/ui/delegations')} onSample={() => navigate(samplePath)} />
+  if (delegationMatch) return <DelegationDetailScreen id={decodeURIComponent(delegationMatch[1])} onBack={() => navigate('/ui/delegations')} onSample={() => navigate(samplePath)} onOpenRun={runId => navigate(`/ui/runs/${encodeURIComponent(runId)}`)} />
   if (path === '/ui/delegations' || path === '/ui/delegations/') return <DelegationList onOpen={id => navigate(`/ui/delegations/${encodeURIComponent(id)}`)} onSample={() => navigate(samplePath)} />
   return <RunsScreen onOpen={() => navigate(samplePath)} />
 }
