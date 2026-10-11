@@ -6,6 +6,7 @@ using Marang.Runs;
 using Marang.SessionJournal;
 using Penghou.Fuwen;
 using Penghou.Fuwen.Zhinu;
+using Penghou.Hongxian;
 using Penghou.Hongxian.Sqlite;
 using Penghou.Hufu;
 using Penghou.Hufu.Sqlite;
@@ -37,6 +38,7 @@ public sealed class MarangProviderProjectionTests
     private const string Workspace = "workspace";
     private const string ParentGrantId = "grant-codex-parent";
     private const string Caller = "operator-1";
+    private static readonly DateTimeOffset Start = new(2026, 10, 8, 0, 0, 0, TimeSpan.Zero);
 
     [Fact]
     public async Task Provider_backed_execution_projects_with_snapshot_watermark()
@@ -150,8 +152,13 @@ public sealed class MarangProviderProjectionTests
     }
 
     [Fact]
-    public async Task Provider_backed_projection_reconstructs_after_reopen()
+    public async Task Completed_provider_work_survives_teardown_without_respawn()
     {
+        // Completed-pre-crash proof: provider-backed work finishes, then every
+        // process-local component is torn down. Two successive reopens rebuild
+        // the identical projection from durable state alone, the session
+        // journal stays available, and no provider process ever spawns again.
+        // This does NOT prove recovery of an in-flight provider operation.
         var directory = Path.Combine(Path.GetTempPath(), "marang-provider-reopen-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         var ct = TestContext.Current.CancellationToken;
@@ -160,7 +167,7 @@ public sealed class MarangProviderProjectionTests
         var time = new FixedTimeProvider(Now);
         await PublishParentAsync(db.DatabasePath, time);
 
-        var factory = new ScriptedProcessFactory((_, _) => new ScriptedProcess(
+        var factory1 = new ScriptedProcessFactory((_, _) => new ScriptedProcess(
             SuccessTranscript("codex-thread-1"), exitCode: 0));
         var preflight = new HufuDelegationAuthorityPreflight(
             DerivationStore(db.DatabasePath, time),
@@ -175,7 +182,7 @@ public sealed class MarangProviderProjectionTests
             providers,
             adapters,
             new CodexExecOptions("Run one bounded task", files.Workspace, files.Root),
-            factory,
+            factory1,
             clock: () => Now);
         var runtime = new DelegationRuntime(
             catalog,
@@ -189,28 +196,46 @@ public sealed class MarangProviderProjectionTests
         var zhinuPath = Path.Combine(directory, "zhinu.db");
         var plan = CreatePlan();
         var map = FuwenZhinuStepMapper.Map(plan);
-        string before;
+        var hongxianRoot = Path.Combine(directory, "hongxian");
+        Guid runId;
+        string beforeSequence;
+        Dictionary<string, string> beforeNodes;
+        // Phase 1: live execution to terminal through the real provider.
         {
             var zhinu = new SqliteWorkflowStore(new ZhinuSqliteOptions { DatabasePath = zhinuPath });
             await using var engine = new WorkflowEngine(
                 zhinu,
                 new WorkflowRegistry().Register("task", "1", new DelegatingWorkflow(runtime, delegated)),
                 new ZhinuOptions { PollInterval = TimeSpan.FromMilliseconds(5) });
-            var runId = await engine.StartAsync("task", "1", "in", cancellationToken: ct);
+            runId = await engine.StartAsync("task", "1", "in", cancellationToken: ct);
             await engine.ExecuteAsync(runId, ct);
             await engine.WaitForCompletionAsync<string>(runId, cancellationToken: ct);
+            factory1.Spawns.Should().Be(1);
+            var terminal = await runtime.GetAsync(delegated.Id, ct);
+            DelegationLifecycle.IsTerminal(terminal.Progress.State).Should().BeTrue();
+            terminal.Progress.State.Should().Be(DelegationState.Completed);
+
+            await using var hongxian = new HongxianSqliteStoreSet(new HongxianSqliteOptions
+            {
+                RootPath = hongxianRoot,
+                Pooling = false,
+            });
+            var session = await hongxian.SessionStore.CreateAsync("provider-proof", "resource/1", cancellationToken: ct);
+            await hongxian.EventStore.AppendAsync(
+                new SessionEventRequest(
+                    session.Id,
+                    SessionParticipantAttribution.System("provider-proof", "marang"),
+                    SessionEventTypes.UserMessage,
+                    Start),
+                ct);
             var correlation = new RunCorrelation(
                 delegated.Id,
                 delegated.Id.Value.ToString("D"),
                 runId,
                 map.PlanRevision,
-                map.ExecutionFingerprint);
+                map.ExecutionFingerprint,
+                session.Id.Value.ToString("D"));
             await zhinu.UpdateRunMetadataAsync(runId, correlation.ToMetadataJson(), ct);
-            await using var hongxian = new HongxianSqliteStoreSet(new HongxianSqliteOptions
-            {
-                RootPath = Path.Combine(directory, "hongxian"),
-                Pooling = false,
-            });
             var source = new ConfiguredRunProjectionSource(
                 zhinu, zhinu, zhinu,
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
@@ -218,7 +243,16 @@ public sealed class MarangProviderProjectionTests
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
                 catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
             status.Should().Be(200);
-            before = Str(Json(body), "durableSequence");
+            var projection = Json(body);
+            Str(projection, "status").Should().Be("completed");
+            beforeSequence = Str(projection, "durableSequence");
+            beforeNodes = projection.GetProperty("nodes").EnumerateArray()
+                .ToDictionary(node => Str(node, "id"), node => Str(node, "status"));
+            var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
+                catalog, Caller, runId, source, source, ct);
+            journalStatus.Should().Be(200);
+            Json(journalBody).GetProperty("available").GetBoolean().Should().BeTrue();
+
             if (source is IDisposable disposable)
             {
                 disposable.Dispose();
@@ -226,41 +260,85 @@ public sealed class MarangProviderProjectionTests
         }
         Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
 
-        // Reopen durable stores only; the acceptance catalog is process-local
-        // by design. The projection must reconstruct identically.
-        await using var reopenedHongxian = new HongxianSqliteStoreSet(new HongxianSqliteOptions
+        // Phase 2: fresh components, same files, no execution anywhere. A new
+        // scripted factory proves no second spawn: had anything re-entered
+        // provider execution, it would have succeeded and been counted.
+        var factory2 = new ScriptedProcessFactory((_, _) => new ScriptedProcess(
+            SuccessTranscript("codex-thread-1"), exitCode: 0));
+        await using (var hongxian2 = new HongxianSqliteStoreSet(new HongxianSqliteOptions
         {
-            RootPath = Path.Combine(directory, "hongxian"),
+            RootPath = hongxianRoot,
             Pooling = false,
-        });
-        try
+        }))
         {
             var reopened = new SqliteWorkflowStore(new ZhinuSqliteOptions { DatabasePath = zhinuPath });
-            var runs = await reopened.GetRunsAsync(new RunQuery { Limit = 100 }, ct);
-            runs.Should().ContainSingle();
             var source = new ConfiguredRunProjectionSource(
                 reopened, reopened, reopened,
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
-                reopenedHongxian);
+                hongxian2);
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                catalog, Caller, runs[0].Id, source, () => DateTimeOffset.UtcNow, ct);
+                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
 
             status.Should().Be(200);
             var projection = Json(body);
-            Str(projection, "durableSequence").Should().Be(before);
             Str(projection, "status").Should().Be("completed");
+            Str(projection, "durableSequence").Should().Be(beforeSequence);
+            projection.GetProperty("nodes").EnumerateArray()
+                .ToDictionary(node => Str(node, "id"), node => Str(node, "status"))
+                .Should().BeEquivalentTo(beforeNodes);
+
+            var reread = await reopened.GetRunAsync(runId, ct);
+            reread.Should().NotBeNull();
+            var recorrelation = RunCorrelation.TryParseMetadataJson(reread!.MetadataJson, runId);
+            recorrelation.Should().NotBeNull();
+            recorrelation!.DelegationId.Should().Be(delegated.Id);
+            recorrelation.SessionId.Should().NotBeNullOrWhiteSpace();
+
+            var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
+                catalog, Caller, runId, source, source, ct);
+            journalStatus.Should().Be(200);
+            Json(journalBody).GetProperty("available").GetBoolean().Should().BeTrue();
 
             if (source is IDisposable disposable)
             {
                 disposable.Dispose();
             }
         }
-        finally
+        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+        factory2.Spawns.Should().Be(0);
+
+        // Phase 3: reopen once more; the result stays stable.
+        await using (var hongxian3 = new HongxianSqliteStoreSet(new HongxianSqliteOptions
         {
-            Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
-            if (Directory.Exists(directory))
+            RootPath = hongxianRoot,
+            Pooling = false,
+        }))
+        {
+            try
             {
-                Directory.Delete(directory, recursive: true);
+                var reopened = new SqliteWorkflowStore(new ZhinuSqliteOptions { DatabasePath = zhinuPath });
+                var source = new ConfiguredRunProjectionSource(
+                    reopened, reopened, reopened,
+                    (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
+                    hongxian3);
+                var (status, body) = await RunProjectionEndpoints.GetRunAsync(
+                    catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
+
+                status.Should().Be(200);
+                Str(Json(body), "durableSequence").Should().Be(beforeSequence);
+
+                if (source is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+            finally
+            {
+                Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+                if (Directory.Exists(directory))
+                {
+                    Directory.Delete(directory, recursive: true);
+                }
             }
         }
     }
