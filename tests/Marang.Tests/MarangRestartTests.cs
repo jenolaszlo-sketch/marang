@@ -70,6 +70,22 @@ public sealed class MarangRestartTests
             result["revokeBlocked"].Should().Be("pass");
             result["expiredBlocked"].Should().Be("pass");
 
+            // Post-terminal read reconstruction without a live runtime.
+            result["detailStatus"].Should().Be("pass");
+            result["detailHistory"].Should().Be("pass");
+            result["detailRunStatus"].Should().Be("pass");
+            result["detailResult"].Should().Be("pass");
+            result["detailEnvelope"].Should().Be("pass");
+            result["detailNoSynthesis"].Should().Be("pass");
+            result["evidenceStatus"].Should().Be("pass");
+            result["evidenceAbsent"].Should().Be("pass");
+            result["evidenceOutput"].Should().Be("pass");
+            result["evidenceRunStatus"].Should().Be("pass");
+            result["malloryDetailDenied"].Should().Be("pass");
+            result["malloryEvidenceDenied"].Should().Be("pass");
+            result["revokedDetailDenied"].Should().Be("pass");
+            result["expiredDetailDenied"].Should().Be("pass");
+
             await VerifyMarangPostRestartAsync(directory, manifest, ct);
         }
         finally

@@ -168,12 +168,13 @@ app.MapGet("/api/delegations/{id:guid}", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    IRunProjectionSource runs,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-        runtime, catalog, caller, id, cancellationToken);
+        runtime, catalog, caller, id, cancellationToken, runs);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/delegations/{id:guid}/waiting", async (
@@ -232,12 +233,13 @@ app.MapGet("/api/delegations/{id:guid}/evidence", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    IRunProjectionSource runs,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-        runtime, catalog, caller, id, cancellationToken);
+        runtime, catalog, caller, id, cancellationToken, runs);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/delegations/{id:guid}/artifacts/{artifactId}", async (

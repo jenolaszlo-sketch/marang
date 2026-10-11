@@ -17,15 +17,26 @@ export interface WaitingSummary {
   expectedRevision: number
 }
 
-export interface DelegationDetail extends DelegationSummary {
-  currentSteps: string[]
-  completedSteps: string[]
-  workerCalls: number
-  retries: number
-  resultSummary?: string
-  unresolvedConcerns?: string[]
+export interface DelegationDetail {
+  id: string
+  objective: string
+  provider: string
+  workspace: string
+  state: string | null
+  updatedAt: string | null
+  revision: number | null
+  currentSteps: string[] | null
+  completedSteps: string[] | null
+  workerCalls: number | null
+  retries: number | null
+  resultSummary?: string | null
+  unresolvedConcerns?: string[] | null
   waiting?: WaitingSummary | null
   canCancel?: boolean
+  runtimeAvailable?: boolean
+  runId?: string | null
+  runStatus?: string | null
+  sessionId?: string | null
 }
 
 interface DelegationListResponse { items: DelegationSummary[] }
@@ -76,10 +87,16 @@ export interface EvidenceCounters {
 
 export interface EvidenceView {
   hasResult: boolean
-  state?: string
+  state?: string | null
   evidence: EvidenceCounters | null
   findings: EvidenceFindingView[]
   artifacts: ArtifactView[]
+  runtimeAvailable?: boolean
+  runId?: string | null
+  runStatus?: string | null
+  sessionId?: string | null
+  terminalOutput?: string | null
+  terminalError?: string | null
 }
 
 export async function getEvidence(id: string, signal?: AbortSignal): Promise<EvidenceView> {

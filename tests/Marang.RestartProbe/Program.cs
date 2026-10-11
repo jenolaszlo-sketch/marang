@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Marang.DelegationAuthority;
+using Marang.Http;
 using Marang.Mcp;
 using Marang.Runs;
 using Marang.SessionJournal;
@@ -398,6 +399,53 @@ internal static class Program
         Check("sequenceMonotonicAfter", maxAfter >= maxSequence);
         var artifacts = await store.GetArtifactsAsync(runId, ct);
         Check("zeroArtifacts", artifacts.Count == 0);
+
+        // Post-terminal operator reads without any live Qingniao runtime:
+        // detail and evidence reconstruct from durable sources for the
+        // authorized caller and stay closed for everyone else.
+        var bareRuntime = new DelegationRuntime(
+            new MarangDelegationCatalog(), null,
+            new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
+        var historySources = RunStoreComposition.Create(Get("zhinuDb"), hongxianRoot, dir);
+        try
+        {
+            var (detailStatus, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
+                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources);
+            Check("detailStatus", detailStatus == 200, detailStatus.ToString());
+            var detail = JsonSerializer.SerializeToDocument(detailBody, new JsonSerializerOptions(JsonSerializerDefaults.Web)).RootElement;
+            Check("detailHistory", detail.GetProperty("runtimeAvailable").GetBoolean() == false);
+            Check("detailRunStatus", detail.GetProperty("runStatus").GetString() == "Completed");
+            Check("detailResult", (detail.GetProperty("resultSummary").GetString() ?? "").Contains("approved", StringComparison.Ordinal));
+            Check("detailEnvelope", detail.GetProperty("objective").GetString() == "Run one bounded restartable task"
+                && detail.GetProperty("sessionId").GetString() == sessionId.Value.ToString("D"));
+            Check("detailNoSynthesis", detail.GetProperty("state").ValueKind == JsonValueKind.Null
+                && detail.GetProperty("canCancel").GetBoolean() == false);
+
+            var (evidenceStatus, evidenceBody) = await SupervisionHttpEndpoints.GetEvidenceAsync(
+                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources);
+            Check("evidenceStatus", evidenceStatus == 200, evidenceStatus.ToString());
+            var evidence = JsonSerializer.SerializeToDocument(evidenceBody, new JsonSerializerOptions(JsonSerializerDefaults.Web)).RootElement;
+            Check("evidenceAbsent", evidence.GetProperty("hasResult").GetBoolean() == false);
+            Check("evidenceOutput", (evidence.GetProperty("terminalOutput").GetString() ?? "").Contains("approved", StringComparison.Ordinal));
+            Check("evidenceRunStatus", evidence.GetProperty("runStatus").GetString() == "Completed");
+
+            var (malloryDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
+                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources);
+            Check("malloryDetailDenied", malloryDetail == 404, malloryDetail.ToString());
+            var (malloryEvidence, _) = await SupervisionHttpEndpoints.GetEvidenceAsync(
+                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources);
+            Check("malloryEvidenceDenied", malloryEvidence == 404, malloryEvidence.ToString());
+            var (revokedDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
+                bareRuntime, revokedCatalog, Caller, secondaryId.Value, ct, historySources);
+            Check("revokedDetailDenied", revokedDetail == 404, revokedDetail.ToString());
+            var (expiredDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
+                bareRuntime, expiredCatalog, Caller, delegationId.Value, ct, historySources);
+            Check("expiredDetailDenied", expiredDetail == 404, expiredDetail.ToString());
+        }
+        finally
+        {
+            historySources.Dispose();
+        }
 
         results["output"] = output;
         results["runId"] = runId.ToString("D");

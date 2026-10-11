@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Marang.Mcp\Marang.Mcp.csproj" />
     <ProjectReference Include="..\..\src\Marang.Runs\Marang.Runs.csproj" />
+    <ProjectReference Include="..\..\src\Marang.Http\Marang.Http.csproj" />
     <ProjectReference Include="..\..\src\Marang.DelegationAuthority\Marang.DelegationAuthority.csproj" />
     <ProjectReference Include="..\..\src\Marang.SessionJournal\Marang.SessionJournal.csproj" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 using Marang.Mcp;
+using Marang.Runs;
 using Penghou.Qingniao;
+using Penghou.Zhinu;
 
 namespace Marang.Http;
 
@@ -11,16 +13,28 @@ namespace Marang.Http;
 /// in the runtime and the acceptance catalog. Handlers return a status code
 /// plus a body; the host maps them to HTTP results. Unknown and forbidden
 /// delegations both report 404 so callers cannot enumerate each other.
+///
+/// Historical reads survive restart without a live runtime: when the
+/// in-memory execution handle is gone but the caller holds a live visibility
+/// binding, detail and evidence are reconstructed from durable sources
+/// (accepted envelope, Zhinu run/output, session linkage) with unavailable
+/// runtime-only fields reported as explicit nulls rather than synthesized.
 /// </summary>
 public static class SupervisionHttpEndpoints
 {
-    /// <summary>Reads one caller-scoped delegation with an optional waiting summary.</summary>
+    /// <summary>
+    /// Reads one caller-scoped delegation with an optional waiting summary.
+    /// Without a live runtime handle, an authorized caller receives a
+    /// reconstructed history view when a durable run source is supplied;
+    /// without one the delegation reports 404 exactly as before.
+    /// </summary>
     public static async Task<(int StatusCode, object? Body)> GetDetailAsync(
         DelegationRuntime runtime,
         MarangDelegationCatalog catalog,
         string caller,
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IRunProjectionSource? runs = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
@@ -36,7 +50,10 @@ public static class SupervisionHttpEndpoints
         var progress = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
         if (progress is null)
         {
-            return (404, null);
+            // No live execution handle: reconstruct the history view from
+            // durable sources when the host supplied a run source. Without
+            // one, preserve the historical 404.
+            return await ReconstructedDetailAsync(record, delegationId, runs, cancellationToken).ConfigureAwait(false);
         }
 
         var result = await runtime.GetResultAsync(delegationId, cancellationToken).ConfigureAwait(false);
@@ -159,20 +176,25 @@ public static class SupervisionHttpEndpoints
     /// counters, flattened normalized findings, and artifact descriptors.
     /// Metadata only — artifact bytes stay with the provider. A delegation
     /// without a terminal result truthfully reports no evidence yet.
+    /// Without a live runtime handle, an authorized caller receives the
+    /// durable absence shape (plus any durable terminal receipts) when a run
+    /// source is supplied; without one the delegation reports 404 as before.
     /// </summary>
     public static async Task<(int StatusCode, object? Body)> GetEvidenceAsync(
         DelegationRuntime runtime,
         MarangDelegationCatalog catalog,
         string caller,
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IRunProjectionSource? runs = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var evidenceRecord = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (evidenceRecord is null)
         {
             return (404, null);
         }
@@ -180,7 +202,12 @@ public static class SupervisionHttpEndpoints
         var progress = await runtime.GetStatusAsync(delegationId, cancellationToken).ConfigureAwait(false);
         if (progress is null)
         {
-            return (404, null);
+            // No live Qingniao result survives restart. Prefer durable
+            // receipts (Zhinu terminal output/error, session linkage) and
+            // report the Qingniao result as absent rather than 404ing an
+            // otherwise authorized delegation. The entire Qingniao result is
+            // never persisted merely to serve this endpoint.
+            return await ReconstructedEvidenceAsync(delegationId, runs, cancellationToken).ConfigureAwait(false);
         }
 
         var result = await runtime.GetResultAsync(delegationId, cancellationToken).ConfigureAwait(false);
@@ -261,6 +288,63 @@ public static class SupervisionHttpEndpoints
         location = artifact.Location,
         schemaVersion = artifact.SchemaVersion,
     };
+
+    /// <summary>
+    /// Durable evidence absence shape: no Qingniao result is retained, but
+    /// terminal Zhinu receipts (output, error) and the session linkage are
+    /// reported when they exist. Zero-artifact success stays valid: an empty
+    /// artifact set on an absent result means "no Qingniao-result artifacts",
+    /// never a claim about the Zhinu artifact store.
+    /// </summary>
+    private static async Task<(int StatusCode, object? Body)> ReconstructedEvidenceAsync(
+        DelegationId delegationId,
+        IRunProjectionSource? runs,
+        CancellationToken cancellationToken)
+    {
+        if (runs is null)
+        {
+            return (404, null);
+        }
+
+        var runId = await runs.GetRunIdByDelegationAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (runId is null)
+        {
+            return (200, HistoryEvidence(null, null, null));
+        }
+
+        var run = await runs.GetRunAsync(runId.Value, cancellationToken).ConfigureAwait(false);
+        if (run is null)
+        {
+            return (404, null);
+        }
+
+        var correlation = RunCorrelation.TryParseMetadataJson(run.MetadataJson, run.Id);
+        if (correlation is null || correlation.DelegationId != delegationId)
+        {
+            return (404, null);
+        }
+
+        return (200, HistoryEvidence(runId.Value, run, correlation.SessionId));
+    }
+
+    private static object HistoryEvidence(Guid? runId, WorkflowRun? run, string? sessionId)
+    {
+        var terminal = run is not null && IsTerminal(run.Status);
+        return new
+        {
+            hasResult = false,
+            state = (string?)null,
+            runtimeAvailable = false,
+            runId = runId?.ToString("D"),
+            runStatus = run?.Status.ToString(),
+            sessionId,
+            terminalOutput = terminal ? run!.OutputJson : null,
+            terminalError = terminal ? run!.Error?.Message : null,
+            evidence = (object?)null,
+            findings = Array.Empty<object>(),
+            artifacts = Array.Empty<object>(),
+        };
+    }
 
     /// <summary>
     /// Applies one approve/resume intervention. Only <c>approve</c> is offered
@@ -350,6 +434,83 @@ public static class SupervisionHttpEndpoints
 
         return catalog.Find(delegationId, caller);
     }
+
+    /// <summary>
+    /// Reconstructs one delegation's history view from durable sources when
+    /// no live Qingniao handle exists. Every field states its provenance:
+    /// envelope identity from the accepted record, run linkage/output from
+    /// Zhinu, session linkage from the run correlation. Qingniao pump state
+    /// (state, revision, steps, counters, waiting) is reported as explicit
+    /// null rather than synthesized; control is reported unavailable.
+    /// Without a run source, or when no durable run exists yet, the record is
+    /// an authorized envelope with no execution history to show.
+    /// </summary>
+    private static async Task<(int StatusCode, object? Body)> ReconstructedDetailAsync(
+        MarangDelegationRecord record,
+        DelegationId delegationId,
+        IRunProjectionSource? runs,
+        CancellationToken cancellationToken)
+    {
+        if (runs is null)
+        {
+            return (404, null);
+        }
+
+        var runId = await runs.GetRunIdByDelegationAsync(delegationId, cancellationToken).ConfigureAwait(false);
+        if (runId is null)
+        {
+            return (200, HistoryDetail(record, null, null, null));
+        }
+
+        var run = await runs.GetRunAsync(runId.Value, cancellationToken).ConfigureAwait(false);
+        if (run is null)
+        {
+            return (404, null);
+        }
+
+        var correlation = RunCorrelation.TryParseMetadataJson(run.MetadataJson, run.Id);
+        if (correlation is null || correlation.DelegationId != delegationId)
+        {
+            return (404, null);
+        }
+
+        return (200, HistoryDetail(record, runId.Value, run, correlation.SessionId));
+    }
+
+    private static object HistoryDetail(
+        MarangDelegationRecord record,
+        Guid? runId,
+        WorkflowRun? run,
+        string? sessionId)
+    {
+        var terminal = run is not null && IsTerminal(run.Status);
+        return new
+        {
+            id = record.Id.Value.ToString("D"),
+            objective = record.Objective,
+            provider = record.Provider,
+            workspace = record.Workspace,
+            state = (string?)null,
+            runtimeAvailable = false,
+            runId = runId?.ToString("D"),
+            runStatus = run?.Status.ToString(),
+            sessionId,
+            updatedAt = (DateTimeOffset?)run?.UpdatedAt,
+            revision = (long?)null,
+            currentSteps = (IReadOnlyList<string>?)null,
+            completedSteps = (IReadOnlyList<string>?)null,
+            workerCalls = (int?)null,
+            retries = (int?)null,
+            resultSummary = terminal ? run!.OutputJson : null,
+            unresolvedConcerns = (IReadOnlyList<string>?)null,
+            waiting = (object?)null,
+            canCancel = false,
+        };
+    }
+
+    private static bool IsTerminal(WorkflowStatus status) =>
+        status is WorkflowStatus.Completed or WorkflowStatus.Failed
+            or WorkflowStatus.Cancelled or WorkflowStatus.Compensated;
 
     private static async Task<object?> WaitingSummaryAsync(
         DelegationRuntime runtime,

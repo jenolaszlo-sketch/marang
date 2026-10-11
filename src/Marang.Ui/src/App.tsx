@@ -168,11 +168,15 @@ function FailureCard({ summary, concerns }: { summary?: string; concerns: string
 
 const terminalStates = ['Completed', 'Failed', 'Cancelled', 'BudgetExceeded', 'NeedsSupervisor']
 
+function isHistoryTerminal(detail: DelegationDetail) {
+  return detail.runtimeAvailable === false && ['Completed', 'Failed', 'Cancelled'].includes(detail.runStatus ?? '')
+}
+
 function EvidenceCard({ view, pending }: { view: EvidenceView | null; pending: boolean }) {
   return <section className="live-card" aria-label="Evidence and artifacts">
     <div className="live-card-heading"><div><span className="panel-icon"><BookOpen size={17} /></span><div><strong>Evidence & artifacts</strong><small>What the execution produced</small></div></div></div>
     {!view ? <div className="steps-empty">{pending ? 'Loading evidence…' : 'Evidence appears here once the delegation finishes.'}</div> :
-      !view.hasResult ? <div className="steps-empty">No evidence yet — the delegation has no terminal result.</div> : <>
+      !view.hasResult ? (view.terminalOutput ? <><div className="panel-intro">Durable run output</div><p className="result-summary">{view.terminalOutput}</p></> : <div className="steps-empty">No evidence yet — the delegation has no terminal result.</div>) : <>
         {view.evidence ? <div className="detail-metrics"><div><strong>{view.evidence.testsPassed}</strong><span>tests passed</span></div><div><strong>{view.evidence.testsFailed}</strong><span>tests failed</span></div><div><strong>{view.evidence.reviewApproved === null || view.evidence.reviewApproved === undefined ? '—' : view.evidence.reviewApproved ? 'Yes' : 'No'}</strong><span>review approved</span></div><div><strong>{view.evidence.reviewFindingsResolved}</strong><span>findings resolved</span></div></div> : null}
         <div className="panel-intro">Findings <span>{view.findings.length}</span></div>
         {view.findings.length ? <ul className="concern-list">{view.findings.map((finding, index) => <li key={index}><strong>[{finding.severity}] {finding.code}</strong> — {finding.summary}{finding.resolved ? ' (resolved)' : ''}</li>)}</ul> : <div className="steps-empty">No findings recorded.</div>}
@@ -211,8 +215,10 @@ function DelegationDetailScreen({ id, onBack, onSample, onOpenRun }: { id: strin
         if (!active) return
         setDetail(result)
         setError('')
-        if (terminalStates.includes(result.state)) setCancelNote('')
-        if (evidenceFor.current !== id && terminalStates.includes(result.state)) {
+        setRunId(current => current ?? result.runId ?? null)
+        const terminal = terminalStates.includes(result.state ?? '') || isHistoryTerminal(result)
+        if (terminal) setCancelNote('')
+        if (evidenceFor.current !== id && terminal) {
           evidenceFor.current = id
           try {
             const view = await getEvidence(id)
@@ -264,7 +270,10 @@ function DelegationDetailScreen({ id, onBack, onSample, onOpenRun }: { id: strin
       if (!terminalStates.includes(outcome.state)) setCancelNote('Cancellation requested — finishing current work.')
       heroHeading.current?.focus()
     } catch (reason) {
-      setCancelNote(reason instanceof Error ? reason.message : 'Could not cancel.')
+      const status = (reason as { status?: number }).status
+      setCancelNote(status === 409
+        ? 'No live execution here — cancel is unavailable after restart.'
+        : reason instanceof Error ? reason.message : 'Could not cancel.')
     } finally {
       setCancelling(false)
     }
@@ -272,13 +281,14 @@ function DelegationDetailScreen({ id, onBack, onSample, onOpenRun }: { id: strin
   return <><LiveHeader onRuns={onBack} onSample={onSample} /><main className="page live-page detail-page"><button type="button" className="back-link" onClick={onBack}><ArrowLeft size={15} /> All delegations</button>
     {error && <div className="live-error" role="alert"><strong>{detail ? 'Could not refresh' : 'Delegation unavailable'}</strong><span>{error}</span>{!detail && <button type="button" onClick={() => setRefresh(value => value + 1)}>Try again</button>}</div>}
     {!detail && !error ? <div className="live-loading"><span className="spinner" />Loading delegation…</div> : detail && <>
-      <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1 ref={heroHeading} tabIndex={-1}>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state)}`}>{detail.waiting ? 'Needs your approval' : displayState(detail.state)}</span></div><div className="detail-updated"><Radio size={13} /> Live status <span>·</span> Updated {formatUpdated(detail.updatedAt)} <span>·</span> Revision {detail.revision}</div></section>
+      <section className="delegation-hero"><div className="eyebrow">DELEGATION / {detail.id}</div><div className="detail-title-line"><div><h1 ref={heroHeading} tabIndex={-1}>{detail.objective || 'Delegation'}</h1><div className="delegation-subtitle">{detail.provider} <i>·</i> {detail.workspace}</div></div><span className={`live-state large ${stateTone(detail.state ?? 'history')}`}>{detail.waiting ? 'Needs your approval' : detail.state ? displayState(detail.state) : 'History'}</span></div><div className="detail-updated"><Radio size={13} /> {detail.runtimeAvailable === false ? 'Durable history' : 'Live status'} <span>·</span> Updated {detail.updatedAt ? formatUpdated(detail.updatedAt) : 'not recorded'} <span>·</span> Revision {detail.revision ?? '—'}</div></section>
+      {detail.runtimeAvailable === false ? <div className="live-poll-note" role="status">Showing last durable state — live supervision is unavailable after restart. Follow the run graph for execution truth.</div> : null}
       {detail.waiting ? <WaitingCard waiting={detail.waiting} approving={approving} note={actionNote} onApprove={() => void approve()} /> : null}
-      {detail.state === 'Failed' ? <FailureCard summary={detail.resultSummary} concerns={detail.unresolvedConcerns ?? []} /> : null}
-      <EvidenceCard view={evidence} pending={terminalStates.includes(detail.state) && !evidence} />
+      {detail.state === 'Failed' || (detail.runtimeAvailable === false && detail.runStatus === 'Failed') ? <FailureCard summary={detail.resultSummary ?? undefined} concerns={detail.unresolvedConcerns ?? []} /> : null}
+      <EvidenceCard view={evidence} pending={((terminalStates.includes(detail.state ?? '')) || isHistoryTerminal(detail)) && !evidence} />
       {detail.canCancel ? <div className="cancel-row"><button type="button" className="danger-button" disabled={cancelling} onClick={() => void cancel()}>{cancelling ? 'Cancelling…' : 'Cancel delegation'}</button>{cancelNote ? <p className="action-note" role="status">{cancelNote}</p> : null}</div> : null}
-      {runId ? <div className="cancel-row"><button type="button" className="refresh-button" onClick={() => onOpenRun(runId)}>View run graph <ArrowRight size={15} /></button></div> : null}
-      <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls}</strong><span>worker calls</span></div><div><strong>{detail.retries}</strong><span>retries</span></div></section>
+      {runId ? <div className="cancel-row"><button type="button" className="refresh-button" onClick={() => onOpenRun(runId)}>View run graph <ArrowRight size={17} /></button></div> : null}
+      <section className="detail-metrics"><div><strong>{current.length}</strong><span>current steps</span></div><div><strong>{completed.length}</strong><span>completed steps</span></div><div><strong>{detail.workerCalls ?? '—'}</strong><span>worker calls</span></div><div><strong>{detail.retries ?? '—'}</strong><span>retries</span></div></section>
       <div className="live-detail-grid"><section className="live-card"><div className="live-card-heading"><div><span className="panel-icon"><Activity size={17} /></span><div><strong>Reported progress</strong><small>Current and completed step labels</small></div></div></div>
         {current.length > 0 && <div className="step-group"><div className="step-group-label"><span className="step-indicator active" /> CURRENT</div>{current.map((step, index) => <div className="live-step current-step" key={`${step}-${index}`}><span className="step-indicator active" /><span>{step}</span><span className="step-state-label">In progress</span></div>)}</div>}
         {completed.length > 0 && <div className="step-group"><div className="step-group-label"><span className="step-indicator done"><Check size={11} /></span> COMPLETED</div>{completed.map((step, index) => <div className="live-step" key={`${step}-${index}`}><span className="step-indicator done"><Check size={11} /></span><span>{step}</span><span className="step-state-label">Completed</span></div>)}</div>}
