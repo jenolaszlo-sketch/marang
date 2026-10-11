@@ -109,3 +109,36 @@ under authority) is an M5 product decision, not a V1.4a gap.
 - **Remaining:** the V1.5 restart/recovery proof (delegation survives service
   restart with verifiable, session-linked evidence and no duplicate external
   work). No multi-provider support is claimed from this one-provider proof.
+
+## V1.5 completed-case restart status (2026-10-11)
+
+### Proven
+
+- Completed provider-backed work survives full teardown/reopen: the
+  projection rebuilds identically (run status, node statuses,
+  `durableSequence`) across two successive reopens from durable state alone,
+  with no runtime, engine execution, or provider pumping in the reopened
+  phases.
+- Reconstruction causes no second provider spawn: a fresh scripted factory in
+  the reopened phases records zero spawns while the original factory recorded
+  exactly one.
+- Durable `RunCorrelation` still maps the run to the same delegation,
+  generation, plan revision, fingerprint, and session after reopen.
+- Session-linked evidence stays readable after reopen (journal available).
+
+### Not yet proven / architectural gap
+
+- A provider operation still in flight at process loss: there is no durable
+  provider-operation handle anywhere (handles live only in the in-memory
+  adapter catalog and runtime memory), so reconnecting to or observing an
+  orphaned external operation is impossible by construction today.
+- No-duplicate-work proof for that in-flight case.
+- Recovery-time authority/preflight for resumed provider execution (nothing
+  re-enters execution in the completed case, so existing preflight coverage
+  suffices there).
+
+The in-flight gap requires a durable provider-operation handle/resume contract
+and is **not** being solved in this milestone; it belongs to the
+delegation/restart architecture milestone. This note records the boundary
+without choosing between Zhinu `WorkflowExternalOperation`, a Marang-owned
+table, or another persistence mechanism.
