@@ -13,8 +13,8 @@
     <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Fuwen" Version="0.1.0-preview.13" />
     <PackageReference Include="Penghou.Fuwen.Zhinu" Version="0.1.0-preview.13" />
-    <PackageReference Include="Penghou.Zhinu" Version="0.2.0-preview.2" />
-    <PackageReference Include="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.2" />
+    <PackageReference Include="Penghou.Zhinu" Version="0.2.0-preview.3" />
+    <PackageReference Include="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.3" />
     <PackageReference Include="Penghou.Hongxian" Version="0.1.0-preview.5" />
     <PackageReference Include="Penghou.Hongxian.Sqlite" Version="0.1.0-preview.5" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />

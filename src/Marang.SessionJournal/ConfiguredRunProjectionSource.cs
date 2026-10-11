@@ -17,6 +17,7 @@ public sealed class ConfiguredRunProjectionSource : IRunProjectionSource, ISessi
 {
     private readonly IWorkflowRepository _runs;
     private readonly IWorkflowStepRepository _steps;
+    private readonly IWorkflowSnapshotRepository _snapshots;
     private readonly Func<string, CancellationToken, ValueTask<WorkflowPlan?>> _plans;
     private readonly HongxianSqliteStoreSet _hongxian;
     private bool _disposed;
@@ -26,15 +27,18 @@ public sealed class ConfiguredRunProjectionSource : IRunProjectionSource, ISessi
     public ConfiguredRunProjectionSource(
         IWorkflowRepository runs,
         IWorkflowStepRepository steps,
+        IWorkflowSnapshotRepository snapshots,
         Func<string, CancellationToken, ValueTask<WorkflowPlan?>> plans,
         HongxianSqliteStoreSet hongxian)
     {
         ArgumentNullException.ThrowIfNull(runs);
         ArgumentNullException.ThrowIfNull(steps);
+        ArgumentNullException.ThrowIfNull(snapshots);
         ArgumentNullException.ThrowIfNull(plans);
         ArgumentNullException.ThrowIfNull(hongxian);
         _runs = runs;
         _steps = steps;
+        _snapshots = snapshots;
         _plans = plans;
         _hongxian = hongxian;
     }
@@ -54,20 +58,24 @@ public sealed class ConfiguredRunProjectionSource : IRunProjectionSource, ISessi
     /// <inheritdoc />
     public async ValueTask<long> GetThroughSequenceAsync(Guid runId, CancellationToken cancellationToken = default)
     {
-        // Durable watermark from committed event sequences (bounded read).
-        // A future Zhinu event-page repository would serve this directly;
-        // the max committed sequence is the same durable fact.
-        var events = await _runs.GetEventsAsync(runId, 0, 1000, cancellationToken).ConfigureAwait(false);
-        long through = 0;
-        foreach (var @event in events)
-        {
-            if (@event.Sequence > through)
+        // Authoritative watermark from the run snapshot: rows and watermark come
+        // from one consistent Zhinu read boundary, so this never reports a
+        // sequence ahead of the state the projection was built from. Unknown
+        // runs report 0. Reads only the watermark-relevant shape.
+        var snapshot = await _snapshots.ReadRunSnapshotAsync(
+            runId,
+            new RunSnapshotOptions
             {
-                through = @event.Sequence;
-            }
-        }
-
-        return through;
+                MaxDepth = 0,
+                IncludeArtifacts = false,
+                IncludeDiagnosis = false,
+                IncludeActiveOperation = false,
+                IncludeExternalOperations = false,
+                IncludeGeneration = false,
+                IncludeSourceLineage = false,
+            },
+            cancellationToken).ConfigureAwait(false);
+        return snapshot?.ThroughDurableSequence ?? 0;
     }
 
     /// <inheritdoc />

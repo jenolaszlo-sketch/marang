@@ -32,7 +32,7 @@ public static class RunStoreComposition
         var zhinu = new SqliteWorkflowStore(new ZhinuSqliteOptions { DatabasePath = zhinuDatabasePath });
         var hongxian = new HongxianSqliteStoreSet(new HongxianSqliteOptions { RootPath = hongxianRootPath });
         return new ConfiguredRunProjectionSource(
-            zhinu, zhinu,
+            zhinu, zhinu, zhinu,
             (revision, ct) => LoadPlanAsync(planDirectory, revision, ct),
             hongxian);
     }

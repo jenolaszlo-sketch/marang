@@ -119,6 +119,7 @@ public sealed class MarangSessionJournalTests
             var runs = new ConfiguredRunProjectionSource(
                 zhinuReopened,
                 zhinuReopened,
+                zhinuReopened,
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
                 new HongxianSqliteStoreSet(new HongxianSqliteOptions
                 {
@@ -240,7 +241,7 @@ public sealed class MarangSessionJournalTests
                 RootPath = Path.Combine(_directory, "hongxian"),
                 Pooling = false,
             });
-            Runs = new ConfiguredRunProjectionSource(_zhinu, _zhinu, (_, _) => ValueTask.FromResult<WorkflowPlan?>(null), _hongxian);
+            Runs = new ConfiguredRunProjectionSource(_zhinu, _zhinu, _zhinu, (_, _) => ValueTask.FromResult<WorkflowPlan?>(null), _hongxian);
         }
 
         public async Task<SessionId> CreateSessionAsync(CancellationToken ct)
