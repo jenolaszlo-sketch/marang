@@ -84,3 +84,28 @@ under authority) is an M5 product decision, not a V1.4a gap.
 - Hongxian preview.5 is net10-only, so Hongxian-dependent code lives in the
   net10-only `Marang.SessionJournal` project; `Marang.Runs` stays net8/net10
   and Hongxian-free. Journal tests are net10-gated (`#if`).
+
+## M5 provider-backed projection proof (2026-10-11)
+
+- **Provider selected:** the published `CodexExecAdapter`
+  (`Penghou.Qingniao.Codex`), registered through the normal composition path
+  (`CodexProviderRegistration.Register` into `IProviderRegistry` +
+  `InMemoryExternalOperationProviderCatalog`). It counts as the real-provider
+  proof because it is the shipped adapter (not a test fake), executes a real
+  bounded process, and the test asserts exactly one spawn.
+- **Registration path:** `CodexProviderRegistration.Register(providers,
+  adapters, options, processFactory, clock)` then `DelegationRuntime` with
+  Hufu preflight; Marang consumes Zhinu `0.2.0-preview.3`.
+- **Execution path exercised:** a Zhinu workflow activity delegates through
+  the full delegation lifecycle (`DelegateAsync` + pump to terminal, Hufu
+  preflight, scripted transcript, no live CLI) and completes with the provider
+  outcome; the host correlates the run via `RunCorrelation` metadata. The
+  existing run projection rebuilds from that durable state with no
+  provider-specific branches, carrying the authoritative snapshot watermark
+  (`durableSequence` equals the snapshot's `ThroughDurableSequence`, proven
+  against a Durable/Durable/Advisory/Advisory stream).
+- **Negative path:** an unregistered provider parks the delegation for
+  supervisor review (`NeedsSupervisor`, terminal) and never executes.
+- **Remaining:** the V1.5 restart/recovery proof (delegation survives service
+  restart with verifiable, session-linked evidence and no duplicate external
+  work). No multi-provider support is claimed from this one-provider proof.
