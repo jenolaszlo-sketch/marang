@@ -36,27 +36,34 @@ Duplicate valid commands are harmless. Operators can see the exact requested
 delta and whether it was granted, applied, blocked, or superseded, without secret
 material leaking through responses or logs.
 
-## Pre-stable hardening: migrate delegation visibility authority into Hufu
+## Delegation visibility authority moved into Hufu
 
-Recorded after the M5.5 restart-safe observation slice. Marang currently
-implements its delegation visibility store locally
-(`src/Marang.DelegationAuthority`, host-owned, Hufu-style slot/revocation/
-idempotency semantics over a Marang-owned SQLite file). That placement closed
-the M5.5 proof without derailing it, but the authority model ultimately
-belongs in Hufu.
+Recorded after the M5.5 restart-safe observation slice and completed as a
+behavior-preserving migration. Delegation visibility authority (the
+`(tenant, subject, delegation, generation)` binding with Observe/Cancel/
+Intervene operations, validity windows, idempotent publish commands, and
+terminal revocation) is now **Hufu-owned**: `Penghou.Hufu.
+IDelegationVisibilityStore` / `DelegationVisibilityBinding` with the
+`Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore` durable implementation.
+Marang references `Penghou.Hufu` 0.1.0-preview.6 and removed its local
+`Marang.DelegationAuthority.DelegationVisibility` /
+`SqliteDelegationVisibilityStore`.
 
-Planned migration (not started; explicitly out of M5.5 scope):
+Marang retains exactly what is host-owned:
 
-- Move the delegation visibility authority contract and store into Hufu
-  (record family, slot/revocation/validity/command semantics); Marang keeps
-  only authentication, the `AcceptedDelegation` product-metadata descriptor,
-  and cache/read composition.
-- Preserve the proven invariants across the move: content-independent
-  acceptance identity, same-slot conflict detection, terminal revocation,
-  verify-only reads, and the ordered accept-then-expose protocol.
-- Re-qualify with the existing M5.5 restart proof (two-process reattachment,
-  isolation, revocation/expiry) against the Hufu-backed store before
-  removing the local implementation.
+- authentication and stable principal mapping,
+- the durable `AcceptedDelegation` product-metadata descriptor,
+- acceptance identity and the ordered accept-then-expose protocol, and
+- operator read composition (cache/read path).
+
+Cross-record agreement checks stay in Marang; the `Guid`↔`D`-string conversion
+happens only at the store boundary. Behavioral equivalence is proven by the
+unchanged Marang suite: two-process restart reattachment, caller isolation,
+replay/conflict, expiry/revocation, and historical-read reconstruction all
+pass against the Hufu-owned store. Store-level publish/revoke/check semantics
+are qualified in the Hufu suite. No acceptance-identity, restart, control-
+continuity, projection/journal, authentication, or metadata-ownership
+semantics changed.
 
 ## Dependency and design home
 

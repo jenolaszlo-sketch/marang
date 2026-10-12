@@ -4,6 +4,8 @@ using Marang.Http;
 using Marang.Runs;
 using Penghou.Fuwen;
 using Penghou.Fuwen.Zhinu;
+using Penghou.Hufu;
+using Penghou.Hufu.Sqlite;
 using Penghou.Qingniao;
 using Penghou.Zhinu;
 
@@ -12,9 +14,11 @@ namespace Marang.Tests;
 /// <summary>
 /// Restart-safe delegation acceptance authority: stable acceptance identity
 /// (principal + request key, never content), a Marang-owned durable metadata
-/// descriptor, a durable visibility binding with terminal revocation, and an
-/// ordered idempotent protocol whose partial crash state is completed by
-/// exact retry — never repaired by reads. Reads only verify and fail closed.
+/// descriptor, a Hufu-owned durable visibility binding with terminal
+/// revocation, and an ordered idempotent protocol whose partial crash state
+/// is completed by exact retry — never repaired by reads. Reads only verify
+/// and fail closed. Store-level visibility semantics are qualified in the
+/// Hufu suite; these tests prove the Marang protocol behavior above them.
 /// </summary>
 public sealed class DelegationAuthorityTests
 {
@@ -84,79 +88,9 @@ public sealed class DelegationAuthorityTests
         }
     }
 
-    // Visibility store.
-
-    [Fact]
-    public async Task Visibility_publish_replays_conflicts_and_honors_terminal_revocation()
-    {
-        var directory = NewDirectory();
-        try
-        {
-            var ct = TestContext.Current.CancellationToken;
-            var store = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
-            var candidate = Binding("key-1", new string('a', 64));
-
-            var (publishStatus, published) = await store.PublishAsync(candidate, ct);
-            publishStatus.Should().Be(DelegationVisibilityPublishStatus.Published);
-
-            var (replayStatus, replayed) = await store.PublishAsync(candidate with { }, ct);
-            replayStatus.Should().Be(DelegationVisibilityPublishStatus.Replayed);
-            replayed.Should().Be(published);
-
-            var (conflictStatus, _) = await store.PublishAsync(candidate with { FingerprintHash = new string('b', 64) }, ct);
-            conflictStatus.Should().Be(DelegationVisibilityPublishStatus.Conflict);
-
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Observe, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Granted);
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Cancel, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Granted);
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Intervene, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Forbidden);
-            (await store.CheckAsync("marang", "someone-else", candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Observe, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Unknown);
-
-            (await store.RevokeAsync("marang", Caller, candidate.DelegationId, "g0", "revoke-1", "operator.revoked", ct))
-                .Should().Be(DelegationVisibilityRevokeStatus.Revoked);
-            (await store.RevokeAsync("marang", Caller, candidate.DelegationId, "g0", "revoke-1", "operator.revoked", ct))
-                .Should().Be(DelegationVisibilityRevokeStatus.Replayed);
-            (await store.RevokeAsync("marang", Caller, candidate.DelegationId, "g0", "revoke-2", "operator.revoked", ct))
-                .Should().Be(DelegationVisibilityRevokeStatus.Conflict);
-            (await store.RevokeAsync("marang", Caller, Guid.NewGuid(), "g0", "revoke-3", "operator.revoked", ct))
-                .Should().Be(DelegationVisibilityRevokeStatus.NotFound);
-
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Observe, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Revoked);
-            var (afterRevokeStatus, _) = await store.PublishAsync(candidate with { }, ct);
-            afterRevokeStatus.Should().Be(DelegationVisibilityPublishStatus.Revoked);
-        }
-        finally
-        {
-            Delete(directory);
-        }
-    }
-
-    [Fact]
-    public async Task Visibility_check_distinguishes_expiry_and_forbidden()
-    {
-        var directory = NewDirectory();
-        try
-        {
-            var ct = TestContext.Current.CancellationToken;
-            var store = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
-            var candidate = Binding("key-1", new string('a', 64));
-            await store.PublishAsync(candidate, ct);
-
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                DelegationVisibilityOperation.Observe, candidate.ExpiresAt.AddSeconds(1), ct))
-                .Should().Be(DelegationVisibilityCheckStatus.Expired);
-            (await store.CheckAsync("marang", Caller, candidate.DelegationId, "g0",
-                (DelegationVisibilityOperation)16, Start, ct)).Should().Be(DelegationVisibilityCheckStatus.Forbidden);
-        }
-        finally
-        {
-            Delete(directory);
-        }
-    }
+    // Visibility store semantics (publish/replay/conflict, terminal
+    // revocation, check matrix) are qualified in the Hufu suite against the
+    // Hufu-owned store; the protocol tests below prove Marang behavior above it.
 
     // Ordered protocol through the catalog.
 
@@ -230,7 +164,7 @@ public sealed class DelegationAuthorityTests
 
             var visibility = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
             var (status, _) = await visibility.PublishAsync(new DelegationVisibilityBinding(
-                "marang", Caller, id, AcceptanceIdentity.InitialGeneration, request.RequestKey,
+                "marang", Caller, id.ToString("D"), AcceptanceIdentity.InitialGeneration, request.RequestKey,
                 fingerprint.Version, fingerprint.Hash,
                 DelegationVisibilityOperation.Observe | DelegationVisibilityOperation.Cancel | DelegationVisibilityOperation.Intervene,
                 Start, Start.AddDays(30),
@@ -295,7 +229,7 @@ public sealed class DelegationAuthorityTests
 
             var visibility = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
             var (status, _) = await visibility.PublishAsync(new DelegationVisibilityBinding(
-                "marang", Caller, id, AcceptanceIdentity.InitialGeneration, request.RequestKey,
+                "marang", Caller, id.ToString("D"), AcceptanceIdentity.InitialGeneration, request.RequestKey,
                 fingerprint.Version, new string('c', 64),
                 DelegationVisibilityOperation.Observe,
                 Start, Start.AddDays(30),
@@ -380,7 +314,7 @@ public sealed class DelegationAuthorityTests
                 reread, Caller, runId, source, () => Start, ct)).StatusCode.Should().Be(200);
 
             var visibility = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
-            (await visibility.RevokeAsync("marang", Caller, accepted.DelegationId.Value,
+            (await visibility.RevokeAsync("marang", Caller, accepted.DelegationId.Value.ToString("D"),
                 AcceptanceIdentity.InitialGeneration, "revoke-reattach", "operator.revoked", ct))
                 .Should().Be(DelegationVisibilityRevokeStatus.Revoked);
 
@@ -491,19 +425,6 @@ public sealed class DelegationAuthorityTests
             key, AcceptanceIdentity.DelegationIdFor(key), "marang", Caller, requestKey,
             fingerprintVersion, fingerprintHash, "Do the work", "authority-provider", "workspace",
             AcceptanceIdentity.InitialGeneration, Start);
-    }
-
-    private static DelegationVisibilityBinding Binding(string requestKey, string fingerprintHash)
-    {
-        var key = AcceptanceIdentity.AcceptanceKey("marang", Caller, requestKey);
-        var id = AcceptanceIdentity.DelegationIdFor(key);
-        return new DelegationVisibilityBinding(
-            "marang", Caller, id, AcceptanceIdentity.InitialGeneration, requestKey,
-            "v3", fingerprintHash,
-            DelegationVisibilityOperation.Observe | DelegationVisibilityOperation.Cancel,
-            Start, Start.AddDays(30),
-            AcceptanceIdentity.VisibilityCommandId(key, AcceptanceIdentity.InitialGeneration),
-            Revoked: false, RevokeReason: string.Empty, Start);
     }
 
     private static string NewDirectory()

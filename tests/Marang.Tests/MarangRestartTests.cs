@@ -137,7 +137,7 @@ public sealed class MarangRestartTests
             // reads the same delegation/run/session through public endpoints.
             var durable = new MarangDelegationCatalog(
                 new Marang.DelegationAuthority.SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
-                new Marang.DelegationAuthority.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
+                new Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
             (await durable.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
                 .Should().BeTrue();
             (await RunProjectionEndpoints.GetRunAsync(
@@ -167,15 +167,15 @@ public sealed class MarangRestartTests
 
             // Terminal revocation on the main binding: restoring access needs
             // a new acceptance. Nothing after this needs the binding.
-            var visibility = new Marang.DelegationAuthority.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
+            var visibility = new Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
             (await visibility.RevokeAsync(
-                "marang", Caller, Guid.Parse(manifest["delegationId"]),
+                "marang", Caller, Guid.Parse(manifest["delegationId"]).ToString("D"),
                 Marang.DelegationAuthority.AcceptanceIdentity.InitialGeneration,
                 "driver-revoke-1", "driver.revoked", ct))
-                .Should().Be(Marang.DelegationAuthority.DelegationVisibilityRevokeStatus.Revoked);
+                .Should().Be(Penghou.Hufu.DelegationVisibilityRevokeStatus.Revoked);
             var afterRevoke = new MarangDelegationCatalog(
                 new Marang.DelegationAuthority.SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
-                new Marang.DelegationAuthority.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
+                new Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
             (await afterRevoke.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
                 .Should().BeFalse();
             (await RunProjectionEndpoints.GetRunAsync(

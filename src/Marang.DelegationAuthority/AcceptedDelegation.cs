@@ -4,8 +4,9 @@ namespace Marang.DelegationAuthority;
 /// Durable Marang-owned product metadata for one accepted delegation.
 /// Authority-free by construction: no grants, no authorization decisions, no
 /// revocation state, no execution state. Caller visibility authority lives in
-/// the <see cref="DelegationVisibilityBinding"/>; this record only describes
-/// what was accepted so post-restart reads can reconstruct the envelope.
+/// the Hufu-owned <c>Penghou.Hufu.DelegationVisibilityBinding</c>; this record
+/// only describes what was accepted so post-restart reads can reconstruct the
+/// envelope.
 /// </summary>
 public sealed record AcceptedDelegation(
     string AcceptanceKey,

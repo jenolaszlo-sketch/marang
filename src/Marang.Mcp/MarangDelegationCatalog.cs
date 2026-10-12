@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Marang.DelegationAuthority;
+using Penghou.Hufu;
 using Penghou.Qingniao;
 
 namespace Marang;
@@ -12,12 +13,13 @@ namespace Marang;
 /// carries a Siming-backed content fingerprint; reads that fail fingerprint
 /// verification are treated as unknown delegations (fail closed).
 ///
-/// Durable mode (descriptor + visibility stores configured) runs an ordered,
-/// idempotent acceptance protocol before anything becomes externally visible:
-/// descriptor first, visibility binding second, in-memory acceptance third,
-/// then a cross-record agreement check. There is no cross-store transaction;
-/// exact retries converge via deterministic identities, and partial crash
-/// state is completed by retry — never by ordinary reads, which only verify.
+/// Durable mode (descriptor + Hufu-owned visibility stores configured) runs
+/// an ordered, idempotent acceptance protocol before anything becomes
+/// externally visible: descriptor first, visibility binding second,
+/// in-memory acceptance third, then a cross-record agreement check. There is
+/// no cross-store transaction; exact retries converge via deterministic
+/// identities, and partial crash state is completed by retry — never by
+/// ordinary reads, which only verify.
 /// </summary>
 public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
 {
@@ -105,7 +107,7 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
             }
 
             var binding = new DelegationVisibilityBinding(
-                principal.TenantId, principal.SubjectId, delegationId,
+                principal.TenantId, principal.SubjectId, delegationId.ToString("D"),
                 AcceptanceIdentity.InitialGeneration, request.RequestKey,
                 fingerprint.Version, fingerprint.Hash,
                 DelegationVisibilityOperation.Observe | DelegationVisibilityOperation.Cancel | DelegationVisibilityOperation.Intervene,
@@ -196,7 +198,7 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
         }
 
         var check = await _visibility.CheckAsync(
-            principal.TenantId, principal.SubjectId, delegationId.Value, descriptor.Generation,
+            principal.TenantId, principal.SubjectId, delegationId.Value.ToString("D"), descriptor.Generation,
             DelegationVisibilityOperation.Observe, _now(), cancellationToken).ConfigureAwait(false);
         if (check != DelegationVisibilityCheckStatus.Granted)
         {
@@ -204,7 +206,7 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
         }
 
         var binding = await _visibility.GetAsync(
-            principal.TenantId, principal.SubjectId, delegationId.Value, descriptor.Generation, cancellationToken).ConfigureAwait(false);
+            principal.TenantId, principal.SubjectId, delegationId.Value.ToString("D"), descriptor.Generation, cancellationToken).ConfigureAwait(false);
         if (binding is null
             || !string.Equals(binding.RequestKey, descriptor.RequestKey, StringComparison.Ordinal)
             || !string.Equals(binding.FingerprintVersion, descriptor.FingerprintVersion, StringComparison.Ordinal)
@@ -254,7 +256,7 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
 
     private static void VerifyAgreement(AcceptedDelegation descriptor, DelegationVisibilityBinding binding, string requestKey)
     {
-        if (!binding.DelegationId.Equals(descriptor.DelegationId)
+        if (!string.Equals(binding.DelegationId, descriptor.DelegationId.ToString("D"), StringComparison.Ordinal)
             || !string.Equals(binding.TenantId, descriptor.TenantId, StringComparison.Ordinal)
             || !string.Equals(binding.SubjectId, descriptor.SubjectId, StringComparison.Ordinal)
             || !string.Equals(binding.RequestKey, descriptor.RequestKey, StringComparison.Ordinal)

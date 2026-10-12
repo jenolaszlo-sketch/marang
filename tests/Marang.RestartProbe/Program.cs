@@ -4,6 +4,8 @@ using Marang.Http;
 using Marang.Mcp;
 using Marang.Runs;
 using Marang.SessionJournal;
+using Penghou.Hufu;
+using Penghou.Hufu.Sqlite;
 using Penghou.Fuwen;
 using Penghou.Fuwen.Zhinu;
 using Penghou.Hongxian;
@@ -361,7 +363,7 @@ internal static class Program
         var visibility = new SqliteDelegationVisibilityStore(authorityDb);
         var secondaryId = new DelegationId(Guid.Parse(Get("secondaryDelegationId")));
         var revoked = await visibility.RevokeAsync(
-            MarangPrincipal.DefaultTenant, Caller, secondaryId.Value,
+            MarangPrincipal.DefaultTenant, Caller, secondaryId.Value.ToString("D"),
             AcceptanceIdentity.InitialGeneration, "probe-revoke-1", "probe.revoked", ct);
         Check("revoked", revoked == DelegationVisibilityRevokeStatus.Revoked);
         var revokedCatalog = new MarangDelegationCatalog(
