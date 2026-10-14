@@ -192,6 +192,42 @@ references and no local feeds.
 - Pre-existing unrelated working-tree edits (`README.md`, `docs/roadmap.md`)
   were left untouched.
 
+### Boundary: HC-1 CLOSED
+
+```text
+HC-1: CLOSED
+
+Commit: 519add2
+Scope: default Marang host composition only
+
+Proven:
+  - real Ed25519 Biscuit verification against pinned public keys
+  - live SQLite-backed Hufu current-authority snapshots
+  - ReadCurrent-only host authority access
+  - mandatory Accept gate remains before Marang state
+  - incomplete config → fail closed / fail fast
+  - MCP tool boundary qualified end to end; default Server smoke healthy
+  - public NuGet-only dependency graph
+  - zero Hufu project/source references
+
+Qualification:
+  13 host acceptance tests
+  134/134 net8.0
+  155/155 net10.0
+
+Residuals:
+  - explicit Revoke narrowing remains Hufu-owned qualification
+  - acceptance evidence sink currently in-memory/replaceable
+  - existing targeted NU1608 suppression unchanged
+  - unrelated dirty README.md / docs/roadmap.md untouched
+```
+
+Fidelity note: the qualification ran through `marang_delegate` with real
+`HttpContext` (the repo's established HTTP-boundary pattern) plus a live
+default-Server smoke test — not a live-Kestrel request carrying the credential
+header through the middleware into the tool. The middleware codec itself is
+unit-qualified (round-trip + malformed rejection).
+
 ## Dependency and design home
 
 Implementation depends on Hufu's reviewed contracts, durable-store semantics,
