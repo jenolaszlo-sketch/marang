@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BiscuitSharp" Version="0.1.0-preview.2" />
     <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Qingniao.Codex" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Qingniao.Hufu" Version="0.1.0-preview.4" />

@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- Unified SQLitePCLRaw patch vs Penghou.Hufu.Sqlite's exact pin; same suppression as Marang.Tests. -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 

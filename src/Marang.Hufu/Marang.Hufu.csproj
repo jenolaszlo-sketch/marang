@@ -8,11 +8,16 @@
     <!-- Experimental vertical slice; packaging is a later, reviewed step. -->
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- SQLitePCLRaw 2.1.12->2.1.13 is a patch unified for Penghou.Fuwen.Zhinu (>= 2.1.13)
+         against Penghou.Hufu.Sqlite (= 2.1.12). Same suppression as Marang.Tests/Marang.SessionJournal. -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BiscuitSharp" Version="0.1.0-preview.2" />
     <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.8" />
     <PackageReference Include="Penghou.Hufu.Biscuit" Version="0.1.0-preview.8" />
+    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.8" />
   </ItemGroup>
 
 </Project>

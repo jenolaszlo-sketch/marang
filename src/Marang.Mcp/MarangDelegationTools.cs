@@ -54,24 +54,40 @@ public sealed class MarangDelegationTools(
             ["Done"],
             [],
             new DelegationBudget(MaximumWorkerCalls: 8, MaximumRetries: 2));
-        var handle = await runtime.DelegateAsync(
-            new DelegationCallerScope(caller), request, cancellationToken).ConfigureAwait(false);
-        var snapshot = await runtime.GetAsync(handle.DelegationId, cancellationToken).ConfigureAwait(false);
-        var steps = Math.Clamp(maxSteps, 1, 50);
-        for (var index = 0;
-            index < steps && !DelegationLifecycle.IsTerminal(snapshot.Progress.State);
-            index++)
+        try
         {
-            snapshot = await runtime.PumpAsync(
-                handle.DelegationId, snapshot.Progress.Revision, cancellationToken).ConfigureAwait(false);
-        }
+            var handle = await runtime.DelegateAsync(
+                new DelegationCallerScope(caller), request, cancellationToken).ConfigureAwait(false);
+            var snapshot = await runtime.GetAsync(handle.DelegationId, cancellationToken).ConfigureAwait(false);
+            var steps = Math.Clamp(maxSteps, 1, 50);
+            for (var index = 0;
+                index < steps && !DelegationLifecycle.IsTerminal(snapshot.Progress.State);
+                index++)
+            {
+                snapshot = await runtime.PumpAsync(
+                    handle.DelegationId, snapshot.Progress.Revision, cancellationToken).ConfigureAwait(false);
+            }
 
-        return JsonSerializer.Serialize(new
+            return JsonSerializer.Serialize(new
+            {
+                delegationId = handle.DelegationId.Value.ToString("D"),
+                caller,
+                state = snapshot.Progress.State.ToString(),
+            });
+        }
+        catch (MarangDelegationAcceptanceException exception)
         {
-            delegationId = handle.DelegationId.Value.ToString("D"),
-            caller,
-            state = snapshot.Progress.State.ToString(),
-        });
+            // The mandatory Hufu acceptance gate did not accept: surface the
+            // coarse outcome (status + bounded reason code, never credential
+            // material) instead of an untyped failure. No acceptance state exists.
+            return JsonSerializer.Serialize(new
+            {
+                error = "delegation not accepted",
+                status = exception.Outcome.Status.ToString(),
+                reason = exception.Outcome.ReasonCode,
+                caller,
+            });
+        }
     }
 
     /// <summary>Reads the current delegation state.</summary>

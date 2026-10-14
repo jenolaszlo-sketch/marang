@@ -127,6 +127,71 @@ host supplies one; the acceptance proof runs against a host-supplied source in
 the Marang suite. Resource/execution operations inside an accepted delegation
 remain independently authorized (AE-1); `Accept` confers no resource rights.
 
+## HC-1: default host authority composition (implemented, 2026-10-14)
+
+The default `Marang.Server` host now composes the acceptance gate itself from
+`Marang:Hufu` configuration instead of registering fail-closed unconditionally:
+
+- **Live source:** `SqliteAuthorityStore` over the configured
+  `AuthorityDatabasePath`, read through `AuthorityStoreSnapshotSource` with a
+  least-privilege store authorizer that permits only `ReadCurrent` (publication
+  and revocation stay operator functions outside this composition).
+- **Real trust:** `BiscuitTrustVerifier` over host-pinned Biscuit public keys
+  (`TrustedIssuers`: realm + key id + public key). A credential verifies only
+  when its envelope names a pinned key id **and** its bytes parse as a token
+  whose Ed25519 signature verifies under that key. No private key material
+  exists anywhere in this composition; the pinned keys are public trust
+  anchors, never caller input, never logged.
+- **Fail-closed default:** a missing database path or an empty trust list
+  composes `FailClosedDelegationAcceptanceGate`; partial configuration fails
+  fast at startup. There is no external trust source to go stale at verify
+  time, so "trust unavailable" collapses to "unconfigured host", which fails
+  closed. The fixed post-`Build` gate registration (previously dead code) now
+  registers before `Build`, and the catalog is constructed explicitly with the
+  composed gate.
+- **Observable denials:** `marang_delegate` maps `MarangDelegationAcceptanceException`
+  to a coarse `{error, status, reason, caller}` payload (bounded reason codes
+  only, never credential material) instead of an untyped failure.
+
+### Qualification (`MarangHostAcceptanceTests`, end to end through `marang_delegate`)
+
+| Case | Result |
+| --- | --- |
+| live accept (real snapshot + real signature) | deterministic delegation id; single `Permit` evidence entry; one catalog record |
+| missing credential | `Denied`/`marang.delegation-credential-missing`; no state, no evidence |
+| tampered credential (flipped byte) | `Denied`/`marang.delegation-credential-invalid`; decided before Hufu |
+| valid signature, unpinned issuer | rejected: signature math is not trust |
+| pinned key bytes under a foreign label | rejected: the label must bind to trust |
+| expired authority | `Denied`; the denial is recorded as decision evidence; no descriptor |
+| absent authority (no snapshot) | `Unavailable`; no state |
+| workspace outside Hufu ceiling (MCP root passes) | `Denied`/`marang.acceptance-denied` |
+| authority database in a missing directory | `Unavailable`; nothing throws |
+| evidence sink refuses | `Unavailable`; no state |
+| retry with same request key | converges on one id; every use re-evaluates (2 evidence entries) |
+| narrowing after accept | retry `Denied`/`marang.acceptance-denied` |
+| unconfigured host | fail-closed gate; `Unavailable`/`marang.acceptance-authority-not-configured` |
+| trust verifier unit | verified/tampered/missing bound correctly; empty trust rejected at construction |
+
+Full suite: 134/134 (net8.0), 155/155 (net10.0). Server smoke: default
+configuration boots, `/healthz` and `/readyz` healthy. Package-graph proof: a
+forced nuget.org-only restore of the full Server graph into an empty package
+folder resolves `Penghou.Hufu`, `Penghou.Hufu.Biscuit`, `Penghou.Hufu.Sqlite`
+(all `0.1.0-preview.8`) and `BiscuitSharp/0.1.0-preview.2` with zero project
+references and no local feeds.
+
+### Residual
+
+- Revocation-level narrowing (an explicit `Revoke` between uses) is covered
+  by Hufu's own store suite; the Marang qualification covers expiry and absence.
+- The acceptance evidence journal is host-held in memory; a durable evidence
+  store can replace the recorder sink without changing the gate.
+- `Penghou.Hufu.Sqlite`'s exact `Microsoft.Data.Sqlite`/`SQLitePCLRaw` pins
+  differ by one patch from the repo-wide unification; the four affected src
+  projects carry the same targeted `NU1608` suppression the repo already uses
+  for `Marang.Tests`/`Marang.SessionJournal`.
+- Pre-existing unrelated working-tree edits (`README.md`, `docs/roadmap.md`)
+  were left untouched.
+
 ## Dependency and design home
 
 Implementation depends on Hufu's reviewed contracts, durable-store semantics,

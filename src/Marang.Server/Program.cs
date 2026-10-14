@@ -26,7 +26,64 @@ earlyAuthentication.Validate();
 // registered here. The Codex provider is registered only when a bounded
 // objective is configured, because the published adapter is single-use per
 // configured prompt (one admitted objective).
-builder.Services.AddSingleton<MarangDelegationCatalog>();
+//
+// The Hufu delegation-acceptance gate is mandatory for the acceptance registry
+// (see MarangDelegationCatalog). The default host composes it here from
+// Marang:Hufu configuration: a live gate over the current-authority SQLite
+// source plus pinned Biscuit trust when fully configured, otherwise the
+// fail-closed gate. No composition path accepts delegated work without a Hufu
+// acceptance decision, and partial Hufu configuration fails fast.
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var section = builder.Configuration.GetSection("Marang:Hufu");
+    var databasePath = section["AuthorityDatabasePath"];
+    var tenantId = section["TenantId"];
+    if (string.IsNullOrWhiteSpace(tenantId)) tenantId = "marang";
+    var issuers = new List<Marang.Hufu.MarangHufuTrustedIssuer>();
+    foreach (var child in section.GetSection("TrustedIssuers").GetChildren())
+    {
+        var realm = child["Realm"];
+        var keyId = child["KeyId"];
+        var publicKey = child["PublicKey"];
+        if (string.IsNullOrWhiteSpace(realm) || string.IsNullOrWhiteSpace(keyId) ||
+            string.IsNullOrWhiteSpace(publicKey))
+            throw new InvalidOperationException(
+                "Marang:Hufu:TrustedIssuers entries require Realm, KeyId, and PublicKey.");
+        try
+        {
+            issuers.Add(new Marang.Hufu.MarangHufuTrustedIssuer(
+                realm, keyId, BiscuitSharp.BiscuitPublicKey.ParsePrefixed(publicKey)));
+        }
+        catch (Exception exception) when (exception is FormatException or ArgumentException)
+        {
+            throw new InvalidOperationException(
+                $"Marang:Hufu:TrustedIssuers entry '{keyId}' has a malformed PublicKey.", exception);
+        }
+    }
+
+    var options = new Marang.Hufu.MarangHufuAcceptanceOptions
+    {
+        AuthorityDatabasePath = databasePath,
+        TenantId = tenantId,
+        TrustedIssuers = issuers,
+        AcceptancePolicy = new Marang.Hufu.MarangDelegationAcceptancePolicy
+        {
+            AllowedCallers = new HashSet<string>(
+                section.GetSection("AllowedCallers").Get<string[]>() ?? [], StringComparer.Ordinal),
+            AllowedWorkspaces = new HashSet<string>(
+                section.GetSection("AllowedWorkspaces").Get<string[]>() ?? [], StringComparer.Ordinal),
+            AllowedProviders = new HashSet<string>(
+                section.GetSection("AllowedProviders").Get<string[]>() ?? [], StringComparer.Ordinal),
+        },
+    };
+    return Marang.Hufu.MarangHufuAcceptanceCompositionFactory.Create(
+        options, new Marang.Hufu.MarangHufuAcceptanceStoreAuthorizer());
+});
+builder.Services.AddSingleton(serviceProvider =>
+    serviceProvider.GetRequiredService<Marang.Hufu.MarangHufuAcceptanceComposition>().Gate);
+builder.Services.AddSingleton(serviceProvider => new MarangDelegationCatalog(
+    serviceProvider.GetRequiredService<Marang.Hufu.MarangHufuAcceptanceComposition>().Gate,
+    httpContext: serviceProvider.GetRequiredService<IHttpContextAccessor>()));
 {
     // Run projection and session journals read durable Zhinu/Hongxian stores
     // only when configured; otherwise the endpoints truthfully report 404.
@@ -97,12 +154,6 @@ builder.Services
 // authorization/fencing tests pass.
 
 var app = builder.Build();
-
-// The Hufu delegation-acceptance gate is mandatory for the acceptance registry
-// (see MarangDelegationCatalog). This default composition fails closed: the host
-// must register a real gate (a Hufu current-authority source) to accept work.
-// No composition path accepts delegated work without a Hufu acceptance decision.
-builder.Services.AddSingleton<Marang.Hufu.IMarangDelegationAcceptanceGate, Marang.Hufu.FailClosedDelegationAcceptanceGate>();
 
 // Authentication lives at this boundary; Qingniao stays transport-unaware.
 // Loopback requests skip it for local development. Everything else needs a
