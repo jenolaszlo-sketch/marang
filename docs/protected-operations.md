@@ -15,22 +15,22 @@ Hufu prerelease is published before Marang consumes it).
 | `marang_ping` | MCP | public introspection | n/a | n/a |
 | `GET /healthz`, `GET /readyz` | HTTP | public introspection | n/a | n/a |
 | `marang_delegate` | MCP | acceptance operation (AE-5A, already gated) | — (Accept, not a resource action) | — |
-| `marang_status` | MCP | protected read | `MarangDelegationRead` (new) | delegation |
-| `marang_result` | MCP | protected read | `MarangResultRead` (new) | delegation result |
-| `marang_wait` | MCP | protected read (polls status) | `MarangDelegationRead` (new) | delegation |
-| `marang_inspect` | MCP | protected read (checkpoint facets) | `MarangDelegationRead` (new) | delegation checkpoint |
-| `marang_get_artifact` | MCP | protected read (descriptors only, never bytes) | `MarangResultRead` (new) | delegation artifact |
+| `marang_status` | MCP | protected read | `MarangReadDelegation` (new) | delegation |
+| `marang_result` | MCP | protected read | `MarangReadResult` (new) | delegation result |
+| `marang_wait` | MCP | protected read (polls status) | `MarangReadDelegation` (new) | delegation |
+| `marang_inspect` | MCP | protected read (checkpoint facets) | `MarangReadDelegation` (new) | delegation checkpoint |
+| `marang_get_artifact` | MCP | protected read (descriptors only, never bytes) | `MarangReadResult` (new) | delegation artifact |
 | `marang_intervene` | MCP | protected write | `MarangIntervene` (new) | delegation checkpoint |
 | `marang_cancel` | MCP | protected write | `MarangCancel` (new) | delegation |
-| `GET /api/delegations` | HTTP | protected read (caller-scoped list) | `MarangDelegationRead` (new) | caller catalog view |
-| `GET /api/delegations/{id}` | HTTP | protected read | `MarangDelegationRead` (new) | delegation |
-| `GET /api/delegations/{id}/waiting` | HTTP | protected read | `MarangDelegationRead` (new) | delegation checkpoint |
-| `GET /api/delegations/{id}/evidence` | HTTP | protected read (findings/artifacts) | `MarangResultRead` (new) | delegation result |
-| `GET /api/delegations/{id}/artifacts/{artifactId}` | HTTP | protected read (descriptors only) | `MarangResultRead` (new) | delegation artifact |
+| `GET /api/delegations` | HTTP | protected read (caller-scoped list) | `MarangReadDelegation` (new) | caller catalog view |
+| `GET /api/delegations/{id}` | HTTP | protected read | `MarangReadDelegation` (new) | delegation |
+| `GET /api/delegations/{id}/waiting` | HTTP | protected read | `MarangReadDelegation` (new) | delegation checkpoint |
+| `GET /api/delegations/{id}/evidence` | HTTP | protected read (findings/artifacts) | `MarangReadResult` (new) | delegation result |
+| `GET /api/delegations/{id}/artifacts/{artifactId}` | HTTP | protected read (descriptors only) | `MarangReadResult` (new) | delegation artifact |
 | `POST /api/delegations/{id}/interventions` | HTTP | protected write (activate + approve) | `MarangIntervene` (new) | delegation checkpoint |
 | `POST /api/delegations/{id}/cancel` | HTTP | protected write | `MarangCancel` (new) | delegation |
-| `GET /api/delegations/{id}/run`, `GET /api/runs/{id}` | HTTP | protected read (run projection) | `MarangResultRead` (new) | delegation run |
-| `GET /api/runs/{id}/journal` | HTTP | protected read (session journal) | `MarangResultRead` (new) | run session journal |
+| `GET /api/delegations/{id}/run`, `GET /api/runs/{id}` | HTTP | protected read (run projection) | `MarangReadResult` (new) | delegation run |
+| `GET /api/runs/{id}/journal` | HTTP | protected read (session journal) | `MarangReadResult` (new) | run session journal |
 | `/mcp` transport | HTTP | transport (tools carry their own gates) | n/a | n/a |
 
 Out of scope (non-goals, §25): delegation-execution pumping, workflow-step
@@ -61,8 +61,8 @@ dishonest authority semantic. The four new actions below are appended instead
 
 | Action | Genuine meaning | Covers |
 |---|---|---|
-| `MarangDelegationRead` | read lifecycle/supervision state of a caller-owned delegation | status, detail, waiting, wait-poll, inspect, list, run-by-delegation lookup |
-| `MarangResultRead` | read execution outputs of a caller-owned delegation | result summary, evidence/findings, artifact descriptors, run projections, session journals |
+| `MarangReadDelegation` | read lifecycle/supervision state of a caller-owned delegation | status, detail, waiting, wait-poll, inspect, list, run-by-delegation lookup |
+| `MarangReadResult` | read execution outputs of a caller-owned delegation | result summary, evidence/findings, artifact descriptors, run projections, session journals |
 | `MarangIntervene` | apply one fenced supervisor intervention to a waiting checkpoint | MCP intervene, HTTP approve |
 | `MarangCancel` | request durable cancellation of a live delegation | MCP cancel, HTTP cancel |
 
