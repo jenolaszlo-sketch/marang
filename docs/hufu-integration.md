@@ -328,6 +328,46 @@ with zero Hufu project/source references and no local feeds.
   allow that scope in `Marang:Hufu:Resource:AllowedWorkspaces`.
 - Workflow-step runtime, A2A, and Gagamba authority remain untouched (non-goals).
 
+### Boundary: AE-5B CLOSED
+
+```text
+AE-5B: CLOSED
+
+Hufu
+  d472272
+  0.1.0-preview.9
+  four permanent Marang resource actions
+  Accept / Derive / resource-action separation proven
+
+Marang
+  inventory: f6b761c
+  naming:    e80d5a7
+  wiring:    fc04a90
+  qualify:   9451736
+
+Invariant:
+  acceptance grants no resource rights;
+  every protected operation authorizes current authority
+  for its exact action/resource before first side effect.
+
+Qualification:
+  Q01-Q19 green
+  18 Marang resource-authority E2E tests
+  24 Hufu adversarial separation tests
+  152/152 net8
+  173/173 net10
+  Q20 public-only preview.9 graph proven
+
+Residuals:
+  revocation narrowing remains Hufu-owned
+  no durable operator resource-publishing path yet
+  list authority requires tenant scope
+  workflow-runtime / A2A / Gagamba authority untouched
+  release housekeeping deferred
+```
+
+AE-5B is not reopened for any residual above.
+
 ## Dependency and design home
 
 Implementation depends on Hufu's reviewed contracts, durable-store semantics,
