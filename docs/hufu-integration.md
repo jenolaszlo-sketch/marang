@@ -228,6 +228,106 @@ default-Server smoke test — not a live-Kestrel request carrying the credential
 header through the middleware into the tool. The middleware codec itself is
 unit-qualified (round-trip + malformed rejection).
 
+## AE-5B: current-authority resource authorization (implemented, 2026-10-14)
+
+Successful delegation acceptance grants no resource rights by itself. AE-5B
+adds the independent per-operation decision: is this delegation, under its
+current effective authority, permitted to perform this specific action on this
+specific resource now? See the checked-in
+[protected-operation inventory](protected-operations.md).
+
+### AE-5B.1 — Hufu contract (Hufu preview.9)
+
+Hufu already owned a complete, qualified resource-authorization operation
+(`AuthorityRequest` + `IAuthorityRequestAuthorizer` +
+`CurrentAuthorityRequestAuthorizer`), structurally distinct from
+`DelegationAcceptance*` and from `Derive`. AE-5B.1 therefore appended four
+Marang-scoped `AuthorityAction` values (append-only; persisted numeric values
+preserved) and extended the total Cedar/Biscuit/telemetry mappings:
+
+| Action | Policy meaning |
+| --- | --- |
+| `MarangReadDelegation` | read lifecycle/supervision state of a caller-owned delegation |
+| `MarangReadResult` | read execution outputs (results, findings, artifact descriptors, projections, journals) |
+| `MarangIntervene` | one fenced supervisor intervention at a waiting checkpoint |
+| `MarangCancel` | durable cancellation of a live delegation |
+
+The two reads stay split because they answer different policy questions
+(observing lifecycle/supervisory state vs retrieving execution outputs) and can
+diverge. No existing file verb is reused: every Marang operation governs a
+delegation-lifecycle resource, never a file, so mapping would be analogy, not
+identity. Adversarial separation tests (`MarangResourceActionTests`) prove
+`Derive`, `Accept`, the four Marang actions, and the file verbs cannot
+substitute for one another, that wrong-action/wrong-resource denies, that
+narrowing denies the next attempt, and that evidence failure fails closed.
+Published immutably as `0.1.0-preview.9` (nine-package set, byte-identical
+public verification).
+
+### AE-5B.2 — Marang wiring
+
+- `IMarangResourceAuthorizationGate` (Marang.Hufu) is the single shared
+  abstraction. `MarangResourceAuthorizationGate` verifies the credential
+  first, then evaluates a fresh Hufu `AuthorityRequest` against current
+  authority. Its context is
+  `(tenant, caller, {delegationId}, revision "g0", fence "resource")` — a fence
+  **distinct** from acceptance's, so acceptance and resource decisions never
+  share a context.
+- `HufuResourceAuthorizationEvaluator` = Hufu's Cedar grant evaluation ANDed
+  with host caller/workspace bounds. Marang does not duplicate authority
+  semantics; the bounds are an additional host kill-switch.
+- Every protected MCP tool and HTTP handler evaluates the gate before its
+  first protected side effect (before `ReattachAsync`, which itself can
+  mutate). Denial and unavailability map to the same `unknown delegation`/404
+  callers use for unknown or forbidden delegations, so authorization is not an
+  existence oracle. `marang_delegate` (acceptance) is deliberately **not**
+  resource-gated.
+- Non-canonical caller-supplied resource segments (e.g. a mixed-case artifact
+  id) are **rejected, not normalized**, avoiding the fold-collision class.
+- Default host (`Marang.Server`) composes the live gate from `Marang:Hufu`
+  (database path + pinned issuers) plus `Marang:Hufu:Resource` policy;
+  unconfigured trust yields the fail-closed gate, and an empty policy composes
+  a live gate that denies every caller. No permissive default.
+
+### AE-5B.3 — qualification (`MarangResourceAuthorityTests`, end to end)
+
+| Case | Result |
+| --- | --- |
+| Q01 accepted + resource permit | executes; `Permit` evidence recorded |
+| Q02/Q03 acceptance grants no resource right | resource denied; no permit evidence |
+| Q04 resource permit does not admit a delegation | acceptance denied; no catalog record |
+| Q05 wrong action | denied |
+| Q06 wrong resource | denied |
+| Q07/Q13 narrowed authority / retry | next attempt denied; no cached permit |
+| Q08 expired authority | denied |
+| Q09 authority source unavailable | `Unavailable`; fail closed |
+| Q10 evidence failure after permit | `Unavailable`; fail closed |
+| Q11 unmapped action (file verb) | `Denied`/`marang.resource-action-unmapped` |
+| Q12 non-canonical resource identity | `Denied`/`marang.resource-invalid` |
+| Q14 tampered credential | denied |
+| Q15 untrusted signer | denied |
+| Q16 workspace ceiling | denied |
+| Q17 evidence binding | subject/action/resource/snapshot bound |
+| Q18 side-effect ordering | denial never reaches the runtime |
+| Q19 protected-operation coverage | deny-all gate fails closed on every tool |
+| adversarial | file-verb grant does not authorize a Marang action |
+
+Full suite: 152/152 (net8.0), 173/173 (net10.0). Q20 public-package isolation:
+a forced nuget.org-only restore of the full Server graph into an empty package
+folder resolves `Penghou.Hufu`, `Penghou.Hufu.Biscuit`, `Penghou.Hufu.Cedar`,
+`Penghou.Hufu.Sqlite` (all `0.1.0-preview.9`) and `BiscuitSharp/0.1.0-preview.2`
+with zero Hufu project/source references and no local feeds.
+
+### Residual
+
+- Q20 proves package isolation; it is a restore-proof, not a full live-Kestrel
+  end-to-end run (consistent with the HC-1 fidelity note).
+- Resource snapshots are published by the operator against the fixed resource
+  context shape `(tenant, caller, delegationId, "g0", "resource")`; a durable
+  operator publishing path is out of AE-5B scope.
+- The caller-scoped catalog list uses workspace = tenant scope; a host must
+  allow that scope in `Marang:Hufu:Resource:AllowedWorkspaces`.
+- Workflow-step runtime, A2A, and Gagamba authority remain untouched (non-goals).
+
 ## Dependency and design home
 
 Implementation depends on Hufu's reviewed contracts, durable-store semantics,
