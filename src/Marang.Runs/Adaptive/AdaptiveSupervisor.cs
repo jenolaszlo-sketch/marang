@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Marang.Hufu;
+using Marang.Runs.Effects;
 using Penghou.Zhinu;
 using Penghou.Zhinu.Sqlite.Experimental;
 
@@ -26,7 +27,8 @@ public sealed record AdaptiveSupervisorPolicy(bool RequiresApproval, string Prof
 /// The runtime repository owns durable execution state, comparison, stale-state checks and cutover.
 /// Host composition authenticates the operator and resolves Hufu authority on each mutation.
 /// </summary>
-public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revisions, IAdaptiveSupervisorAuthority authority)
+public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revisions, IAdaptiveSupervisorAuthority authority,
+    IRepositoryEffectRevisionGuard? repositoryEffects = null)
 {
     public async Task<(AdaptiveProposal Proposal, string Digest, AdaptiveOperatorView View)> ProposeAsync(
         AdaptiveRevision candidate, string impact,
@@ -34,8 +36,11 @@ public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revision
     {
         AdaptivePlanAuthoring.VerifyArchive(candidate);
         var parent = await revisions.GetActiveAsync(candidate.WorkflowId, cancellationToken);
+        await using var effectScope = await EnterEffectGuard(parent, candidate, false, cancellationToken);
         var state = await revisions.GetStateDigestAsync(candidate.WorkflowId, cancellationToken);
         var policy = authority.PolicyFor(candidate);
+        if (AdaptivePlanAuthoring.HasRepositoryEffects(candidate) && !policy.RequiresApproval)
+            throw new WorkflowStateException("The M3 repository profile requires explicit approval of every exact effect revision.");
         var proposal = new AdaptiveProposal(Guid.NewGuid(), candidate, state,
             AdaptiveRevisionContracts.Compare(parent, candidate),
             policy.RequiresApproval ? AdaptiveAuthorityDecision.ApprovalRequired : AdaptiveAuthorityDecision.Automatic,
@@ -69,6 +74,8 @@ public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revision
     {
         AdaptivePlanAuthoring.VerifyArchive(proposal.Candidate);
         if (AdaptiveRevisionContracts.Digest(proposal) != digest) throw new WorkflowStateException("Proposal digest mismatch.");
+        await using var effectScope = await EnterEffectGuard(await revisions.GetActiveAsync(proposal.Candidate.WorkflowId, cancellationToken),
+            proposal.Candidate, true, cancellationToken);
         // A fresh Hufu check is mandatory even after durable user approval. Revocation cannot become permission.
         var decision = await authority.EvaluateAsync(proposal, digest, receipt, cancellationToken);
         if (decision.Outcome != AdaptiveRevisionAuthorityOutcome.Automatic)
@@ -85,6 +92,11 @@ public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revision
 
     public async Task CancelAsync(Guid workflowId, string authenticatedActor, CancellationToken cancellationToken = default)
     {
+        var active = await revisions.GetActiveAsync(workflowId, cancellationToken);
+        if (AdaptivePlanAuthoring.HasRepositoryEffects(active) && repositoryEffects is null)
+            throw new WorkflowStateException("Effectful workflow cancellation requires its physical checkout guard.");
+        await using var effectScope = AdaptivePlanAuthoring.HasRepositoryEffects(active)
+            ? await repositoryEffects!.EnterCancellationAsync(active, cancellationToken) : null;
         if (!await authority.CanCancelAsync(workflowId, authenticatedActor, cancellationToken))
             throw new WorkflowStateException("Current authority does not permit cancellation.");
         await revisions.CancelAsync(workflowId, authenticatedActor, cancellationToken);
@@ -107,5 +119,12 @@ public sealed class AdaptiveSupervisor(SqliteAdaptiveRevisionRepository revision
             .Select(c => Label(c.LogicalId) + ": perform revised work").ToArray();
         return new AdaptiveOperatorView(proposal.Candidate.Reason + " " + proposal.ImpactSummary,
             preserved, affected, introduced, ["Approve", "Reject", "Cancel workflow", "Ask / discuss further"], question, authority);
+    }
+
+    private async ValueTask<IAsyncDisposable?> EnterEffectGuard(AdaptiveRevision parent, AdaptiveRevision candidate, bool activating, CancellationToken ct)
+    {
+        if (!AdaptivePlanAuthoring.HasRepositoryEffects(parent) && !AdaptivePlanAuthoring.HasRepositoryEffects(candidate)) return null;
+        if (repositoryEffects is null) throw new WorkflowStateException("Repository effects require a reconciliation guard at revision proposal and activation.");
+        return await repositoryEffects.EnterAsync(parent, candidate, activating, ct);
     }
 }

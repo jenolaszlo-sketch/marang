@@ -8,9 +8,12 @@ using Penghou.Zhinu.Sqlite.Experimental;
 
 namespace Marang.Runs.Adaptive;
 
-/// <summary>Bounded M1 authoring profile: independent read/report branches, optionally followed by one join.</summary>
+/// <summary>Bounded host work specification; repository effects require explicit M3 admission.</summary>
 public sealed record AdaptiveWorkSpec(string LogicalId, string Title, string Requirement, string Input,
-    string AuthorityDigest, string Provenance, string[] Dependencies, Guid ExecutionId, bool AcceptReuse);
+    string AuthorityDigest, string Provenance, string[] Dependencies, Guid ExecutionId, bool AcceptReuse)
+{
+    public bool IsRepositoryEffect { get; init; }
+}
 
 /// <summary>Immutable Fuwen definitions retained with their canonical lineage envelope.</summary>
 public sealed record AdaptivePlanArchive(string DefinitionFingerprint, string DefinitionBase64,
@@ -28,10 +31,32 @@ public static class AdaptivePlanAuthoring
     private static readonly PrimitiveType StringType = new(FuwenPrimitiveKind.String);
     private static readonly DescriptorReference Activity = new(DescriptorKind.Activity, "aaaw.repository-review", "1",
         new ContentDigest("sha256", "descriptor/v1", AdaptiveRevisionContracts.Digest("aaaw.repository-review/read-report/v1")));
+    public const string RepositoryEffectAuthorityProfile = "m3/controlled-repository/v1";
+    private static readonly DescriptorReference EffectActivity = new(DescriptorKind.Activity, "aaaw.repository-effect", "1",
+        new ContentDigest("sha256", "descriptor/v1", AdaptiveRevisionContracts.Digest("aaaw.repository-effect/reconcile-before-replay/v1")));
 
-    public static async Task<AuthoredAdaptiveRevision> AuthorAsync(Guid workflowId, string revisionId, string? parent,
+    public static Task<AuthoredAdaptiveRevision> AuthorAsync(Guid workflowId, string revisionId, string? parent,
         string goal, string reason, string creator, AdaptiveWorkSpec[] work, FuwenZhinuExecutionPorts ports,
         WorkflowRegistry? registry = null, CancellationToken cancellationToken = default)
+    {
+        if (work.Any(w => w.IsRepositoryEffect)) throw new ArgumentException("Repository mutations require explicit M3 authoring.");
+        return AuthorCoreAsync(workflowId, revisionId, parent, goal, reason, creator, work, ports, registry, cancellationToken);
+    }
+
+    /// <summary>Explicit M3 admission: one reconciled effect protocol branch and otherwise read/report work.</summary>
+    public static Task<AuthoredAdaptiveRevision> AuthorEffectAsync(Guid workflowId, string revisionId, string? parent,
+        string goal, string reason, string creator, AdaptiveWorkSpec[] work, FuwenZhinuExecutionPorts ports,
+        WorkflowRegistry? registry = null, CancellationToken cancellationToken = default)
+    {
+        if (parent is null || work.Count(w => w.IsRepositoryEffect) != 1 || work.Any(w => w.AuthorityDigest != RepositoryEffectAuthorityProfile) ||
+            work.Any(w => w.IsRepositoryEffect && (w.Dependencies.Length != 0 || w.Input.Length != 64 || w.Input.Any(c => !Uri.IsHexDigit(c) || char.IsUpper(c)))))
+            throw new ArgumentException("M3 requires an approved successor with one independent immutable effect digest in the controlled profile.");
+        return AuthorCoreAsync(workflowId, revisionId, parent, goal, reason, creator, work, ports, registry, cancellationToken);
+    }
+
+    private static async Task<AuthoredAdaptiveRevision> AuthorCoreAsync(Guid workflowId, string revisionId, string? parent,
+        string goal, string reason, string creator, AdaptiveWorkSpec[] work, FuwenZhinuExecutionPorts ports,
+        WorkflowRegistry? registry, CancellationToken cancellationToken)
     {
         work = JsonSerializer.Deserialize<AdaptiveWorkSpec[]>(JsonSerializer.Serialize(work))!;
         if (work.Length is < 2 or > 16 || work.Select(s => s.LogicalId).Distinct().Count() != work.Length)
@@ -112,11 +137,16 @@ public static class AdaptivePlanAuthoring
             var plan = doc.ReadPlan();
             if (plan.Name != branch.LogicalId || plan.Nodes.OfType<ActivityNode>().Single().Name != branch.LogicalId)
                 throw new WorkflowStateException("Manifest branch differs from its admitted Fuwen definition.");
-            if (plan.Nodes.Count != 2 || plan.Nodes.OfType<ActivityNode>().Single().Activity != Activity ||
+            var callable = plan.Nodes.OfType<ActivityNode>().Single().Activity;
+            var isEffect = callable == EffectActivity;
+            if (plan.Nodes.Count != 2 || (callable != Activity && !isEffect) ||
                 plan.Nodes.OfType<ReturnNode>().Count() != 1)
-                throw new WorkflowStateException("Candidate exceeds the finite M1 read/report execution profile.");
+                throw new WorkflowStateException("Candidate exceeds the finite admitted execution profiles.");
             var input = JsonSerializer.Deserialize<string>(branch.Execution.InputJson!)!;
             using var facts = JsonDocument.Parse(input);
+            if (isEffect && (revision.ParentRevisionId is null || branch.AuthorityDigest != RepositoryEffectAuthorityProfile || branch.Dependencies.Length != 0 ||
+                facts.RootElement.GetProperty("Input").GetString() is not { Length: 64 } effectDigest || effectDigest.Any(c => !Uri.IsHexDigit(c) || char.IsUpper(c))))
+                throw new WorkflowStateException("Effect branch must bind an immutable approved-successor intent in the controlled profile.");
             if (facts.RootElement.GetProperty("LogicalId").GetString() != branch.LogicalId ||
                 facts.RootElement.GetProperty("Provenance").GetString() != branch.Provenance ||
                 branch.InputDigest != AdaptiveRevisionContracts.Digest(input) ||
@@ -130,13 +160,17 @@ public static class AdaptivePlanAuthoring
                 throw new WorkflowStateException("Execution registration differs from its verified branch identity.");
             expectedWork.Add(new AdaptiveWorkSpec(branch.LogicalId, branch.Title,
                 facts.RootElement.GetProperty("Requirement").GetString()!, facts.RootElement.GetProperty("Input").GetString()!,
-                branch.AuthorityDigest, branch.Provenance, branch.Dependencies, branch.Execution.Id, branch.AcceptReuse));
+                branch.AuthorityDigest, branch.Provenance, branch.Dependencies, branch.Execution.Id, branch.AcceptReuse)
+            { IsRepositoryEffect = isEffect });
             if (WorkflowPlanIdentity.ComputeExecutionFingerprint(BuildPlan(branch.LogicalId, "branch-contract/1",
                 [expectedWork[^1] with { Dependencies = [] }])) != doc.ExecutionFingerprint)
                 throw new WorkflowStateException("Branch definition differs from the finite execution profile.");
         }
         var independent = expectedWork.Where(s => s.Dependencies.Length == 0).ToArray();
         var joins = expectedWork.Where(s => s.Dependencies.Length > 0).ToArray();
+        if (expectedWork.Any(w => w.IsRepositoryEffect) && (expectedWork.Count(w => w.IsRepositoryEffect) != 1 ||
+            expectedWork.Any(w => w.AuthorityDigest != RepositoryEffectAuthorityProfile)))
+            throw new WorkflowStateException("M3 archives require one controlled effect branch and the host effect authority profile.");
         if (independent.Length < 2 || joins.Length > 1 || joins.Any(j =>
             !j.Dependencies.Order(StringComparer.Ordinal).SequenceEqual(independent.Select(s => s.LogicalId).Order(StringComparer.Ordinal))))
             throw new WorkflowStateException("Manifest dependencies exceed the admitted phase profile.");
@@ -170,13 +204,35 @@ public static class AdaptivePlanAuthoring
     }
 
     private static ContentDigest Digest(string text) => new("sha256", "aaaw-m1/v1", AdaptiveRevisionContracts.Digest(text));
+    public static bool HasRepositoryEffects(AdaptiveRevision revision)
+    {
+        var archive = JsonSerializer.Deserialize<AdaptivePlanArchive>(revision.PlanEnvelopeJson)!;
+        return WorkflowDefinitionDocument.LoadVerified(archive.DefinitionFingerprint, Convert.FromBase64String(archive.DefinitionBase64)).ReadPlan()
+            .Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity);
+    }
+
+    public static bool IsRepositoryEffectBranch(AdaptiveRevision revision, AdaptiveBranch branch)
+    {
+        var archive = JsonSerializer.Deserialize<AdaptivePlanArchive>(revision.PlanEnvelopeJson)!;
+        var definition = WorkflowDefinitionDocument.LoadVerified(branch.Execution.DefinitionFingerprint!, Convert.FromBase64String(archive.BranchDefinitions[branch.LogicalId]));
+        return definition.ReadPlan().Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity);
+    }
+
     private static async Task<WorkflowAdmissionResult> Admit(WorkflowPlan plan, CancellationToken ct)
     {
-        var result = await new WorkflowAdmissionService(new WorkflowCompiler(new InMemoryTrustedCatalogue([
+        var descriptors = new List<TrustedCatalogueDescriptor> {
             new TrustedCatalogueDescriptor(Activity, callableContract: new CallableContract(
                 new CallableSignature([new CallableParameter("value", StringType)], StringType),
-                CallableEffect.Read, CallableIdempotency.Idempotent, CallableRetrySafety.Safe))]),
-            capabilityPolicy: new CapabilityGrantPolicy("aaaw-m1/read-report/v1", []))).AdmitAsync(plan, cancellationToken: ct);
+                CallableEffect.Read, CallableIdempotency.Idempotent, CallableRetrySafety.Safe)) };
+        if (plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity))
+            descriptors.Add(new TrustedCatalogueDescriptor(EffectActivity, callableContract: new CallableContract(
+                new CallableSignature([new CallableParameter("value", StringType)], StringType),
+                // The invoked protocol embeds an immutable effect key and reconciles before writing; raw replacement is never exposed.
+                CallableEffect.Write, CallableIdempotency.Idempotent, CallableRetrySafety.Safe)));
+        var profile = plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity)
+            ? "aaaw-m3/controlled-repository/v1" : "aaaw-m1/read-report/v1";
+        var result = await new WorkflowAdmissionService(new WorkflowCompiler(new InMemoryTrustedCatalogue(descriptors),
+            capabilityPolicy: new CapabilityGrantPolicy(profile, []))).AdmitAsync(plan, cancellationToken: ct);
         if (!result.Succeeded) throw new WorkflowStateException("Candidate failed deterministic Fuwen admission: " + string.Join("; ", result.Diagnostics.Select(d => d.Message)));
         return result;
     }
@@ -184,7 +240,7 @@ public static class AdaptivePlanAuthoring
     private static WorkflowPlan BuildPlan(string name, string revision, AdaptiveWorkSpec[] work)
     {
         var paths = work.ToDictionary(s => s.LogicalId, s => StructuralNodeIdentity.Create(name, s.LogicalId));
-        var nodes = work.Select(s => (WorkflowNode)new ActivityNode(s.LogicalId, paths[s.LogicalId], Activity,
+        var nodes = work.Select(s => (WorkflowNode)new ActivityNode(s.LogicalId, paths[s.LogicalId], s.IsRepositoryEffect ? EffectActivity : Activity,
             [new ArgumentBinding("value", new InputBinding([]))], StringType)).ToList();
         var returnPath = StructuralNodeIdentity.Create(name, "return_result");
         nodes.Add(new ReturnNode("return_result", returnPath, new NodeOutputBinding(paths[work[^1].LogicalId], [])));
@@ -194,7 +250,8 @@ public static class AdaptivePlanAuthoring
         phases.Add(new WorkflowExecutionPhase([returnPath]));
         return new WorkflowPlan(FuwenContracts.IrVersion, "fuwen-language/v1", FuwenContracts.CompilerSemanticVersion,
             FuwenContracts.CanonicalJsonVersion, FuwenContracts.ExecutionFingerprintVersion, name, revision,
-            StringType, StringType, "aaaw-m1/routing-v1", [], [Activity], new CapabilityManifest([]), nodes,
+            StringType, StringType, work.Any(w => w.IsRepositoryEffect) ? "aaaw-m3/repository-effects/v1" : "aaaw-m1/routing-v1", [],
+            work.Select(w => w.IsRepositoryEffect ? EffectActivity : Activity).Distinct().ToArray(), new CapabilityManifest([]), nodes,
             new WorkflowExecutionOrder([new WorkflowExecutionRegion(name, phases)]));
     }
 }

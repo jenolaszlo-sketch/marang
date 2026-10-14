@@ -32,12 +32,14 @@ internal static class Program
         string? dir = null;
         string? barrier = null;
         var interactive = false;
+        var resume = false;
         for (var i = 0; i + 1 < args.Length; i += 2)
         {
             if (args[i] == "--phase") phase = args[i + 1];
             if (args[i] == "--dir") dir = args[i + 1];
             if (args[i] == "--barrier") barrier = args[i + 1];
             if (args[i] == "--interactive") interactive = args[i + 1] == "true";
+            if (args[i] == "--resume") resume = args[i + 1] == "true";
         }
 
         if (string.IsNullOrWhiteSpace(phase) || string.IsNullOrWhiteSpace(dir))
@@ -56,6 +58,7 @@ internal static class Program
             else if (phase == "continuity-resume") await SupervisorContinuityProbe.RunAsync(dir, barrier, resume: true);
             else if (phase == "supervisor-delegation") await SupervisorDelegationRecoveryProbe.RunAsync(dir, barrier, interactive);
             else if (phase == "supervisor-view") await SupervisorOperatorProbe.RunAsync(dir, interactive);
+            else if (phase == "repository-effect") await RepositoryEffectProbe.RunAsync(dir, barrier, resume);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

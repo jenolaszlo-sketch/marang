@@ -156,3 +156,11 @@ or security-sensitive component implementation is changed, and no publication is
 
 The [M2 qualification report](docs/aaaw-m2/evidence.md) records the supported claim,
 all required probes, exact source/package evidence and the limits of supervisor continuity.
+
+M3 introduces an experimental controlled repository effect protocol: immutable exact patches,
+durable intent, physical-state reconciliation before replay, exact-state validation and separately
+approved corrective revisions. A superseded result does not erase changed files. Partial or
+unresolved effects block further mutation. See [the contract](docs/aaaw-m3/contracts.md),
+[operator guidance](docs/aaaw-m3/operator.md) and [ADR 0018](docs/decisions/0018-aaaw-m3-repository-effect-reconciliation.md).
+Reproduction uses `eng/qualify-aaaw-m3.ps1` and the unchanged pinned packages. No M3 package
+release or push is part of qualification.
