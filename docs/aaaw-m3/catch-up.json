@@ -1,0 +1,507 @@
+{
+  "workflow": {
+    "workflowId": "9cda3bf5-82a8-43c6-86fc-10f96275d045",
+    "activeRevisionId": "revision-3",
+    "goal": "Correct patch A, then validate the exact resulting repository state.",
+    "state": 6,
+    "branches": [
+      {
+        "logicalId": "inventory",
+        "title": "Repository inventory",
+        "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+        "executionState": "Completed",
+        "evidenceCategory": 0,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "plan",
+        "title": "Change plan",
+        "executionId": "8c7b4fe7-1e77-4290-a76a-dd22eb1d34db",
+        "executionState": "Completed",
+        "evidenceCategory": 0,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "effect",
+        "title": "Apply and validate repository patch",
+        "executionId": "dd4ac437-4745-4f1f-83bf-0aeb37dd59d3",
+        "executionState": "Completed",
+        "evidenceCategory": 0,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "final",
+        "title": "Final workflow join",
+        "executionId": "2773b3a9-2cde-4dc9-9b83-d6790b9e06a1",
+        "executionState": "Completed",
+        "evidenceCategory": 0,
+        "hasResult": true,
+        "blockers": []
+      }
+    ],
+    "priorResults": [
+      {
+        "logicalId": "plan",
+        "title": "Change plan",
+        "executionId": "54fa802a-9ca2-4c43-9f4c-dc97e1763e9e",
+        "executionState": "Completed",
+        "evidenceCategory": 2,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "final",
+        "title": "Final workflow join",
+        "executionId": "58ec81df-9237-4c17-9308-9f66f4b37cd9",
+        "executionState": "Cancelled",
+        "evidenceCategory": 2,
+        "hasResult": false,
+        "blockers": []
+      },
+      {
+        "logicalId": "plan",
+        "title": "Change plan",
+        "executionId": "1b910c39-ffdf-410e-a542-490e426d07f6",
+        "executionState": "Completed",
+        "evidenceCategory": 2,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "effect",
+        "title": "Apply and validate repository patch",
+        "executionId": "0a86b18d-a3e1-4b3a-b4fb-b9a4b2b20ffb",
+        "executionState": "Completed",
+        "evidenceCategory": 2,
+        "hasResult": true,
+        "blockers": []
+      },
+      {
+        "logicalId": "final",
+        "title": "Final workflow join",
+        "executionId": "622bd999-4fa0-435b-aa17-baa5b51a33e0",
+        "executionState": "Cancelled",
+        "evidenceCategory": 2,
+        "hasResult": false,
+        "blockers": []
+      }
+    ],
+    "decisions": [],
+    "conditions": [],
+    "blockers": [],
+    "timeline": [
+      {
+        "fromRevisionId": null,
+        "toRevisionId": "revision-1",
+        "reason": "Initial repository inventory and change plan.",
+        "trigger": "Initial",
+        "evidenceReferences": [
+          "README.md",
+          "src/Marang/WorkflowPlanReference.cs",
+          "tests/Marang.Tests/Marang.Tests.csproj"
+        ],
+        "work": [
+          {
+            "logicalId": "inventory",
+            "title": "Repository inventory",
+            "previousExecutionId": null,
+            "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+            "classifications": [
+              "Added"
+            ],
+            "reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "logicalId": "plan",
+            "title": "Change plan",
+            "previousExecutionId": null,
+            "executionId": "54fa802a-9ca2-4c43-9f4c-dc97e1763e9e",
+            "classifications": [
+              "Added"
+            ],
+            "reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "logicalId": "final",
+            "title": "Final workflow join",
+            "previousExecutionId": null,
+            "executionId": "58ec81df-9237-4c17-9308-9f66f4b37cd9",
+            "classifications": [
+              "Added"
+            ],
+            "reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          }
+        ]
+      },
+      {
+        "fromRevisionId": "revision-1",
+        "toRevisionId": "revision-2",
+        "reason": "Patch A extracts the existing correct SHA-256 length check into a constant set to 63; preserve completed inventory and use deterministic validation to trigger a corrective revision.",
+        "trigger": "User",
+        "evidenceReferences": [
+          "repository-effect:revision-2",
+          "src/Marang/WorkflowPlanReference.cs",
+          "README.md"
+        ],
+        "work": [
+          {
+            "logicalId": "effect",
+            "title": "Apply and validate repository patch",
+            "previousExecutionId": null,
+            "executionId": "0a86b18d-a3e1-4b3a-b4fb-b9a4b2b20ffb",
+            "classifications": [
+              "Added"
+            ],
+            "reasons": [
+              "This logical work item was introduced with a new execution identity."
+            ]
+          },
+          {
+            "logicalId": "final",
+            "title": "Final workflow join",
+            "previousExecutionId": "58ec81df-9237-4c17-9308-9f66f4b37cd9",
+            "executionId": "622bd999-4fa0-435b-aa17-baa5b51a33e0",
+            "classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          },
+          {
+            "logicalId": "inventory",
+            "title": "Repository inventory",
+            "previousExecutionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+            "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+            "classifications": [
+              "Preserved",
+              "Reused"
+            ],
+            "reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+            ]
+          },
+          {
+            "logicalId": "plan",
+            "title": "Change plan",
+            "previousExecutionId": "54fa802a-9ca2-4c43-9f4c-dc97e1763e9e",
+            "executionId": "1b910c39-ffdf-410e-a542-490e426d07f6",
+            "classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          }
+        ]
+      },
+      {
+        "fromRevisionId": "revision-2",
+        "toRevisionId": "revision-3",
+        "reason": "Patch A failed the existing workflow plan fingerprint tests because it accepted 63-character fingerprints. Patch B restores the required 64-character contract.",
+        "trigger": "Evidence",
+        "evidenceReferences": [
+          "repository-effect:revision-3",
+          "src/Marang/WorkflowPlanReference.cs",
+          "README.md"
+        ],
+        "work": [
+          {
+            "logicalId": "effect",
+            "title": "Apply and validate repository patch",
+            "previousExecutionId": "0a86b18d-a3e1-4b3a-b4fb-b9a4b2b20ffb",
+            "executionId": "dd4ac437-4745-4f1f-83bf-0aeb37dd59d3",
+            "classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          },
+          {
+            "logicalId": "final",
+            "title": "Final workflow join",
+            "previousExecutionId": "622bd999-4fa0-435b-aa17-baa5b51a33e0",
+            "executionId": "2773b3a9-2cde-4dc9-9b83-d6790b9e06a1",
+            "classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          },
+          {
+            "logicalId": "inventory",
+            "title": "Repository inventory",
+            "previousExecutionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+            "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+            "classifications": [
+              "Preserved",
+              "Reused"
+            ],
+            "reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+            ]
+          },
+          {
+            "logicalId": "plan",
+            "title": "Change plan",
+            "previousExecutionId": "1b910c39-ffdf-410e-a542-490e426d07f6",
+            "executionId": "8c7b4fe7-1e77-4290-a76a-dd22eb1d34db",
+            "classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          }
+        ]
+      }
+    ],
+    "changesSinceCheckpoint": [
+      {
+        "sequence": 1,
+        "kind": "RevisionActivated",
+        "summary": "Original revision activated: revision-1"
+      },
+      {
+        "sequence": 3,
+        "kind": "RevisionProposalCreated",
+        "summary": "Change proposed: Patch A extracts the existing correct SHA-256 length check into a constant set to 63; preserve completed inventory and use deterministic validation to trigger a corrective revision."
+      },
+      {
+        "sequence": 6,
+        "kind": "RevisionApproved",
+        "summary": "Exact proposal approved; commit still requires fresh authority."
+      },
+      {
+        "sequence": 9,
+        "kind": "RevisionCommitted",
+        "summary": "Revision activated: revision-2"
+      },
+      {
+        "sequence": 10,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect 5271bf9e-2940-4ed0-a88a-17d15b8e468a: IntentCommitted; "
+      },
+      {
+        "sequence": 11,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect 5271bf9e-2940-4ed0-a88a-17d15b8e468a: Applying; DefinitelyNotApplied"
+      },
+      {
+        "sequence": 12,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect 5271bf9e-2940-4ed0-a88a-17d15b8e468a: AppliedObserved; DefinitelyApplied"
+      },
+      {
+        "sequence": 13,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect 5271bf9e-2940-4ed0-a88a-17d15b8e468a: ValidationFailed; DefinitelyApplied; validation passed: False"
+      },
+      {
+        "sequence": 14,
+        "kind": "RevisionProposalCreated",
+        "summary": "Change proposed: Patch A failed the existing workflow plan fingerprint tests because it accepted 63-character fingerprints. Patch B restores the required 64-character contract."
+      },
+      {
+        "sequence": 17,
+        "kind": "RevisionApproved",
+        "summary": "Exact proposal approved; commit still requires fresh authority."
+      },
+      {
+        "sequence": 21,
+        "kind": "RevisionCommitted",
+        "summary": "Revision activated: revision-3"
+      },
+      {
+        "sequence": 22,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect df1b88a1-1993-44df-9afd-6c0c472464d0: IntentCommitted; "
+      },
+      {
+        "sequence": 23,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect df1b88a1-1993-44df-9afd-6c0c472464d0: Applying; DefinitelyNotApplied"
+      },
+      {
+        "sequence": 24,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect df1b88a1-1993-44df-9afd-6c0c472464d0: AppliedObserved; DefinitelyApplied"
+      },
+      {
+        "sequence": 25,
+        "kind": "RepositoryEffect",
+        "summary": "Repository effect df1b88a1-1993-44df-9afd-6c0c472464d0: ValidationPassed; DefinitelyApplied; validation passed: True"
+      }
+    ],
+    "evidenceWatermark": 25,
+    "lastAcknowledgedRevision": null,
+    "totalRevisionCount": 3,
+    "earlierMeaningfulChangeCount": 0
+  },
+  "effects": [
+    {
+      "effectId": "5271bf9e-2940-4ed0-a88a-17d15b8e468a",
+      "revisionId": "revision-2",
+      "logicalStepId": "effect",
+      "baseState": "00eefbff43a7dad11539ec0f1b79f08a88470a65373ed924a6cdc663e91cab19",
+      "patchIdentity": "9059a60f2391492bfb4556d12466b9d24321c6b3b37da2e8b64b45efaed38965",
+      "expectedPostState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "observedState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "classification": "AppliedThenCorrected",
+      "stage": "ValidationFailed",
+      "validationPassed": false,
+      "isCurrent": false,
+      "replayPermitted": false,
+      "replayEligibleAfterFreshAuthority": false,
+      "physicalEffectRecorded": true,
+      "explanation": "This earlier physical mutation was observed and later corrected by an effect whose exact base follows its post-state. Its superseded result is historical, not nonexistent. Validation failed against the recorded exact state; correction requires a new effect and approved revision."
+    },
+    {
+      "effectId": "df1b88a1-1993-44df-9afd-6c0c472464d0",
+      "revisionId": "revision-3",
+      "logicalStepId": "effect",
+      "baseState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "patchIdentity": "84c7c1b04fd0cd352c7fd1a63cb2aa3cb378e460bb336f3b0738267467814024",
+      "expectedPostState": "413b52f3bc8f55f55c4b14791c3f6f8d1c0486a7fc80d34cb903960c6282cde4",
+      "observedState": "413b52f3bc8f55f55c4b14791c3f6f8d1c0486a7fc80d34cb903960c6282cde4",
+      "classification": "DefinitelyApplied",
+      "stage": "ValidationPassed",
+      "validationPassed": true,
+      "isCurrent": true,
+      "replayPermitted": false,
+      "replayEligibleAfterFreshAuthority": false,
+      "physicalEffectRecorded": true,
+      "explanation": "The observed checkout matches the intended post-state. The mutation must not be replayed; result recording and exact-state validation can resume. Validation passed against the recorded exact state."
+    }
+  ],
+  "observedStateDigest": "413b52f3bc8f55f55c4b14791c3f6f8d1c0486a7fc80d34cb903960c6282cde4",
+  "mutationBlocked": false,
+  "explanation": "The repository was observed under its checkout lock. Already applied effects are retained and will not be replayed; each new write requires exact current approval and fresh authority.",
+  "drillDown": {
+    "workflow": {
+      "fromRevisionId": "revision-1",
+      "toRevisionId": "revision-2",
+      "reason": "Patch A extracts the existing correct SHA-256 length check into a constant set to 63; preserve completed inventory and use deterministic validation to trigger a corrective revision.",
+      "trigger": "User",
+      "evidenceReferences": [
+        "repository-effect:revision-2",
+        "src/Marang/WorkflowPlanReference.cs",
+        "README.md"
+      ],
+      "work": [
+        {
+          "logicalId": "effect",
+          "title": "Apply and validate repository patch",
+          "previousExecutionId": null,
+          "executionId": "0a86b18d-a3e1-4b3a-b4fb-b9a4b2b20ffb",
+          "classifications": [
+            "Added"
+          ],
+          "reasons": [
+            "This logical work item was introduced with a new execution identity."
+          ]
+        },
+        {
+          "logicalId": "final",
+          "title": "Final workflow join",
+          "previousExecutionId": "58ec81df-9237-4c17-9308-9f66f4b37cd9",
+          "executionId": "622bd999-4fa0-435b-aa17-baa5b51a33e0",
+          "classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "logicalId": "inventory",
+          "title": "Repository inventory",
+          "previousExecutionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+          "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+          "classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "logicalId": "plan",
+          "title": "Change plan",
+          "previousExecutionId": "54fa802a-9ca2-4c43-9f4c-dc97e1763e9e",
+          "executionId": "1b910c39-ffdf-410e-a542-490e426d07f6",
+          "classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        }
+      ]
+    },
+    "effects": [
+      {
+        "effectId": "5271bf9e-2940-4ed0-a88a-17d15b8e468a",
+        "revisionId": "revision-2",
+        "logicalStepId": "effect",
+        "baseState": "00eefbff43a7dad11539ec0f1b79f08a88470a65373ed924a6cdc663e91cab19",
+        "patchIdentity": "9059a60f2391492bfb4556d12466b9d24321c6b3b37da2e8b64b45efaed38965",
+        "expectedPostState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+        "observedState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+        "classification": "AppliedThenCorrected",
+        "stage": "ValidationFailed",
+        "validationPassed": false,
+        "isCurrent": false,
+        "replayPermitted": false,
+        "replayEligibleAfterFreshAuthority": false,
+        "physicalEffectRecorded": true,
+        "explanation": "This earlier physical mutation was observed and later corrected by an effect whose exact base follows its post-state. Its superseded result is historical, not nonexistent. Validation failed against the recorded exact state; correction requires a new effect and approved revision."
+      }
+    ],
+    "physicalRepositoryExplanation": "Logical result fencing does not undo files. Earlier applied effects and validation failures remain historical physical facts; the corrective effect binds the observed prior post-state as its new base."
+  },
+  "inventoryResult": "\"{\\u0022RepositoryId\\u0022:\\u00229579fce257d1bbffe20ee5447fdd45eaa20fa15fca6bde8929d66ab4f4e1f929\\u0022,\\u0022ReadmeLines\\u0022:160,\\u0022PackageReferences\\u0022:18,\\u0022ReadmeSha256\\u0022:\\u00224e325f8e1a25d08a5bda4f859f7deea3ef65f31d6ec949ec1dbcfa2e7ff6d14d\\u0022,\\u0022ProjectSha256\\u0022:\\u002243cab759bbe1cc74c591176fb400f9093badf68e2763ccff2dc36647c43ba7fb\\u0022,\\u0022SourceSha256\\u0022:\\u00223a4bd5a4c387a3dbc69096ef519c5492726944a2c0a2a89adefa6efca10e6a16\\u0022,\\u0022SourceCommit\\u0022:\\u0022a0916534d0e82e499cffb2dea526b64357eb32e2\\u0022}\""
+}

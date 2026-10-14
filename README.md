@@ -164,3 +164,6 @@ unresolved effects block further mutation. See [the contract](docs/aaaw-m3/contr
 [operator guidance](docs/aaaw-m3/operator.md) and [ADR 0018](docs/decisions/0018-aaaw-m3-repository-effect-reconciliation.md).
 Reproduction uses `eng/qualify-aaaw-m3.ps1` and the unchanged pinned packages. No M3 package
 release or push is part of qualification.
+
+The [M3 qualification report](docs/aaaw-m3/evidence.md) records exact source/package identities,
+all ten killed-process barriers, validation-driven correction and the controlled-checkout limits.

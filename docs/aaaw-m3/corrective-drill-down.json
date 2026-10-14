@@ -1,0 +1,114 @@
+{
+  "workflow": {
+    "fromRevisionId": "revision-2",
+    "toRevisionId": "revision-3",
+    "reason": "Patch A failed the existing workflow plan fingerprint tests because it accepted 63-character fingerprints. Patch B restores the required 64-character contract.",
+    "trigger": "Evidence",
+    "evidenceReferences": [
+      "repository-effect:revision-3",
+      "src/Marang/WorkflowPlanReference.cs",
+      "README.md"
+    ],
+    "work": [
+      {
+        "logicalId": "effect",
+        "title": "Apply and validate repository patch",
+        "previousExecutionId": "0a86b18d-a3e1-4b3a-b4fb-b9a4b2b20ffb",
+        "executionId": "dd4ac437-4745-4f1f-83bf-0aeb37dd59d3",
+        "classifications": [
+          "Replaced",
+          "Fenced",
+          "Invalidated"
+        ],
+        "reasons": [
+          "Required behavior or admitted contract changed.",
+          "Immutable execution input changed.",
+          "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+        ]
+      },
+      {
+        "logicalId": "final",
+        "title": "Final workflow join",
+        "previousExecutionId": "622bd999-4fa0-435b-aa17-baa5b51a33e0",
+        "executionId": "2773b3a9-2cde-4dc9-9b83-d6790b9e06a1",
+        "classifications": [
+          "Replaced",
+          "Fenced",
+          "Invalidated"
+        ],
+        "reasons": [
+          "Required behavior or admitted contract changed.",
+          "Immutable execution input changed.",
+          "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+        ]
+      },
+      {
+        "logicalId": "inventory",
+        "title": "Repository inventory",
+        "previousExecutionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+        "executionId": "c39d3bb2-3a12-45f4-8b84-1ed80886be80",
+        "classifications": [
+          "Preserved",
+          "Reused"
+        ],
+        "reasons": [
+          "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+          "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+        ]
+      },
+      {
+        "logicalId": "plan",
+        "title": "Change plan",
+        "previousExecutionId": "1b910c39-ffdf-410e-a542-490e426d07f6",
+        "executionId": "8c7b4fe7-1e77-4290-a76a-dd22eb1d34db",
+        "classifications": [
+          "Replaced",
+          "Fenced",
+          "Invalidated"
+        ],
+        "reasons": [
+          "Required behavior or admitted contract changed.",
+          "Immutable execution input changed.",
+          "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+        ]
+      }
+    ]
+  },
+  "effects": [
+    {
+      "effectId": "5271bf9e-2940-4ed0-a88a-17d15b8e468a",
+      "revisionId": "revision-2",
+      "logicalStepId": "effect",
+      "baseState": "00eefbff43a7dad11539ec0f1b79f08a88470a65373ed924a6cdc663e91cab19",
+      "patchIdentity": "9059a60f2391492bfb4556d12466b9d24321c6b3b37da2e8b64b45efaed38965",
+      "expectedPostState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "observedState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "classification": "AppliedThenCorrected",
+      "stage": "ValidationFailed",
+      "validationPassed": false,
+      "isCurrent": false,
+      "replayPermitted": false,
+      "replayEligibleAfterFreshAuthority": false,
+      "physicalEffectRecorded": true,
+      "explanation": "This earlier physical mutation was observed and later corrected by an effect whose exact base follows its post-state. Its superseded result is historical, not nonexistent. Validation failed against the recorded exact state; correction requires a new effect and approved revision."
+    },
+    {
+      "effectId": "df1b88a1-1993-44df-9afd-6c0c472464d0",
+      "revisionId": "revision-3",
+      "logicalStepId": "effect",
+      "baseState": "f24421b437dcf63087c6ca4d38a16bbc2f047c247812410db4a2d805d5eaaab2",
+      "patchIdentity": "84c7c1b04fd0cd352c7fd1a63cb2aa3cb378e460bb336f3b0738267467814024",
+      "expectedPostState": "413b52f3bc8f55f55c4b14791c3f6f8d1c0486a7fc80d34cb903960c6282cde4",
+      "observedState": "413b52f3bc8f55f55c4b14791c3f6f8d1c0486a7fc80d34cb903960c6282cde4",
+      "classification": "DefinitelyApplied",
+      "stage": "ValidationPassed",
+      "validationPassed": true,
+      "isCurrent": true,
+      "replayPermitted": false,
+      "replayEligibleAfterFreshAuthority": false,
+      "physicalEffectRecorded": true,
+      "explanation": "The observed checkout matches the intended post-state. The mutation must not be replayed; result recording and exact-state validation can resume. Validation passed against the recorded exact state."
+    }
+  ],
+  "physicalRepositoryExplanation": "Logical result fencing does not undo files. Earlier applied effects and validation failures remain historical physical facts; the corrective effect binds the observed prior post-state as its new base."
+}
