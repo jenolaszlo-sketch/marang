@@ -1,0 +1,373 @@
+{
+  "ProviderStarts": 1,
+  "OldOperationMayStillExist": true,
+  "ActiveRevision": "recovery-revision-2",
+  "OldExecutionFenced": true,
+  "ReplacementCompleted": true,
+  "ReplacementAuthoritative": true,
+  "UnknownHistorical": true,
+  "decision": {
+    "DecisionId": "8a44f591-f0fe-4d25-ab0e-f6d8d8c22110",
+    "WorkflowId": "a58f14e7-3eb5-4339-ac6b-5247182d7094",
+    "DelegationId": "2682081c-76b7-4797-8320-604e0534389a",
+    "BoundExecutionId": "0cb33b4f-fa04-4c25-90e0-044dea3807e2",
+    "JournalRecordDigest": "120cc8e647d4270da704d9ed62a8850e0c7499aea3b4c1e2c0b52c29859991b7",
+    "Classification": 4,
+    "BoundBranchAuthorityDigest": "m1/bounded-repository-read-report",
+    "ActiveRevisionId": "revision-1",
+    "ActiveStateDigest": "e982791a43b24a0e5a7e33b7ba009a5d659b1b14484dbd09ae75466c669f6e9e",
+    "Options": [
+      "Wait",
+      "Replace"
+    ],
+    "ChosenOption": "Replace",
+    "Actor": "qualified-operator",
+    "RecordedAt": "2026-10-14T08:50:10.65252+00:00",
+    "Status": "Committed",
+    "CandidateRevisionId": "recovery-revision-2",
+    "CandidateDigest": "1cf4946990fb2d8f566a848fa26d9ddb7347e4e92e7ce247e6f1d0643d5cd85b",
+    "ProposalId": "24a87cf9-5773-439b-a779-3111f36c2e49",
+    "ProposalDigest": "540afa1a0f4c1b8248f7affdb7534149c629dec68e4e2c2fbc86fa0d0ba22a43",
+    "ResultingRevisionId": "recovery-revision-2",
+    "ResultingState": null,
+    "AuthorityOutcome": "Automatic",
+    "AuthorityEvidence": "adaptive-revision.authorized-with-approval @ 2026-10-14T08:50:12.8371408\u002B00:00"
+  },
+  "CatchUp": {
+    "WorkflowId": "a58f14e7-3eb5-4339-ac6b-5247182d7094",
+    "ActiveRevisionId": "recovery-revision-2",
+    "Goal": "Review Marang\u0027s README and package contracts; produce a repository readiness report.",
+    "State": 0,
+    "Branches": [
+      {
+        "LogicalId": "inventory",
+        "Title": "Package inventory",
+        "ExecutionId": "545df520-4da2-437b-9f38-98509c9c7113",
+        "ExecutionState": "Completed",
+        "EvidenceCategory": 0,
+        "HasResult": true,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "acceptance",
+        "Title": "Acceptance evidence",
+        "ExecutionId": "f0fef1e1-69d4-4203-b1a3-dfe989dda590",
+        "ExecutionState": "Completed",
+        "EvidenceCategory": 0,
+        "HasResult": true,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "review",
+        "Title": "README review",
+        "ExecutionId": "4edb2c6b-c166-467a-9723-b7c97b269c42",
+        "ExecutionState": "Running",
+        "EvidenceCategory": 1,
+        "HasResult": false,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "local",
+        "Title": "Local contract assessment",
+        "ExecutionId": "890dba0c-ecc5-4e0d-85bb-602ac56be80f",
+        "ExecutionState": "Running",
+        "EvidenceCategory": 1,
+        "HasResult": false,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "delegated",
+        "Title": "Delegated contract assessment",
+        "ExecutionId": "7f29652e-e534-4818-8729-83d8126c3b74",
+        "ExecutionState": "Completed",
+        "EvidenceCategory": 0,
+        "HasResult": true,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "outcome",
+        "Title": "Final report",
+        "ExecutionId": "5d27aaa1-3a37-4ea7-a0ef-b0bca14ebab2",
+        "ExecutionState": "Pending",
+        "EvidenceCategory": 1,
+        "HasResult": false,
+        "Blockers": [
+          "Final report waits for Local contract assessment.",
+          "Final report waits for README review."
+        ]
+      }
+    ],
+    "PriorResults": [
+      {
+        "LogicalId": "delegated",
+        "Title": "Delegated contract assessment",
+        "ExecutionId": "0cb33b4f-fa04-4c25-90e0-044dea3807e2",
+        "ExecutionState": "Cancelled",
+        "EvidenceCategory": 2,
+        "HasResult": false,
+        "Blockers": []
+      },
+      {
+        "LogicalId": "outcome",
+        "Title": "Final report",
+        "ExecutionId": "44ce067b-7025-40e7-b530-31ab29f11ffc",
+        "ExecutionState": "Cancelled",
+        "EvidenceCategory": 2,
+        "HasResult": false,
+        "Blockers": []
+      }
+    ],
+    "Decisions": [],
+    "Conditions": [
+      {
+        "Id": "a3908f73fd9d10cbc7ff26cb448269bbfbfaf1da23019e9f87fbd586b00a11a0",
+        "LogicalId": "delegated",
+        "Classification": "ProviderStateUnknown",
+        "RequiresDecision": false,
+        "Actions": [],
+        "Explanation": "Delegated contract assessment: ProviderStateUnknown. Historical provider evidence; this operation cannot satisfy active intent and may still exist externally.",
+        "IsCurrent": false
+      }
+    ],
+    "Blockers": [
+      "Final report waits for Local contract assessment.",
+      "Final report waits for README review."
+    ],
+    "Timeline": [
+      {
+        "FromRevisionId": null,
+        "ToRevisionId": "revision-1",
+        "Reason": "Review Marang\u0027s README and package contracts; produce a repository readiness report.",
+        "Trigger": "Initial",
+        "EvidenceReferences": [
+          "readme.input",
+          "packages.input"
+        ],
+        "Work": [
+          {
+            "LogicalId": "inventory",
+            "Title": "Package inventory",
+            "PreviousExecutionId": null,
+            "ExecutionId": "545df520-4da2-437b-9f38-98509c9c7113",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "LogicalId": "acceptance",
+            "Title": "Acceptance evidence",
+            "PreviousExecutionId": null,
+            "ExecutionId": "f0fef1e1-69d4-4203-b1a3-dfe989dda590",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "LogicalId": "review",
+            "Title": "README review",
+            "PreviousExecutionId": null,
+            "ExecutionId": "4edb2c6b-c166-467a-9723-b7c97b269c42",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "LogicalId": "local",
+            "Title": "Local contract assessment",
+            "PreviousExecutionId": null,
+            "ExecutionId": "890dba0c-ecc5-4e0d-85bb-602ac56be80f",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "LogicalId": "delegated",
+            "Title": "Delegated contract assessment",
+            "PreviousExecutionId": null,
+            "ExecutionId": "0cb33b4f-fa04-4c25-90e0-044dea3807e2",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          },
+          {
+            "LogicalId": "outcome",
+            "Title": "Final report",
+            "PreviousExecutionId": null,
+            "ExecutionId": "44ce067b-7025-40e7-b530-31ab29f11ffc",
+            "Classifications": [
+              "Added"
+            ],
+            "Reasons": [
+              "Admitted as original work under the verified plan."
+            ]
+          }
+        ]
+      },
+      {
+        "FromRevisionId": "revision-1",
+        "ToRevisionId": "recovery-revision-2",
+        "Reason": "Operator replaces unresolved read/report work after physical provider start without durable handle capture.",
+        "Trigger": "Evidence",
+        "EvidenceReferences": [
+          "unknown-result.json"
+        ],
+        "Work": [
+          {
+            "LogicalId": "acceptance",
+            "Title": "Acceptance evidence",
+            "PreviousExecutionId": "f0fef1e1-69d4-4203-b1a3-dfe989dda590",
+            "ExecutionId": "f0fef1e1-69d4-4203-b1a3-dfe989dda590",
+            "Classifications": [
+              "Preserved",
+              "Reused"
+            ],
+            "Reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+            ]
+          },
+          {
+            "LogicalId": "delegated",
+            "Title": "Delegated contract assessment",
+            "PreviousExecutionId": "0cb33b4f-fa04-4c25-90e0-044dea3807e2",
+            "ExecutionId": "7f29652e-e534-4818-8729-83d8126c3b74",
+            "Classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated"
+            ],
+            "Reasons": [
+              "Required behavior or admitted contract changed.",
+              "Immutable execution input changed.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          },
+          {
+            "LogicalId": "inventory",
+            "Title": "Package inventory",
+            "PreviousExecutionId": "545df520-4da2-437b-9f38-98509c9c7113",
+            "ExecutionId": "545df520-4da2-437b-9f38-98509c9c7113",
+            "Classifications": [
+              "Preserved",
+              "Reused"
+            ],
+            "Reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+            ]
+          },
+          {
+            "LogicalId": "local",
+            "Title": "Local contract assessment",
+            "PreviousExecutionId": "890dba0c-ecc5-4e0d-85bb-602ac56be80f",
+            "ExecutionId": "890dba0c-ecc5-4e0d-85bb-602ac56be80f",
+            "Classifications": [
+              "Preserved"
+            ],
+            "Reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "No claim of completed-result reuse at activation is inferred from later completion."
+            ]
+          },
+          {
+            "LogicalId": "outcome",
+            "Title": "Final report",
+            "PreviousExecutionId": "44ce067b-7025-40e7-b530-31ab29f11ffc",
+            "ExecutionId": "5d27aaa1-3a37-4ea7-a0ef-b0bca14ebab2",
+            "Classifications": [
+              "Replaced",
+              "Fenced",
+              "Invalidated",
+              "DependencyChanged"
+            ],
+            "Reasons": [
+              "Prerequisite or provenance changed, so an earlier execution cannot satisfy this revision.",
+              "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+            ]
+          },
+          {
+            "LogicalId": "review",
+            "Title": "README review",
+            "PreviousExecutionId": "4edb2c6b-c166-467a-9723-b7c97b269c42",
+            "ExecutionId": "4edb2c6b-c166-467a-9723-b7c97b269c42",
+            "Classifications": [
+              "Preserved"
+            ],
+            "Reasons": [
+              "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+              "No claim of completed-result reuse at activation is inferred from later completion."
+            ]
+          }
+        ]
+      }
+    ],
+    "ChangesSinceCheckpoint": [
+      {
+        "Sequence": 1,
+        "Kind": "RevisionActivated",
+        "Summary": "Original revision activated: revision-1"
+      },
+      {
+        "Sequence": 3,
+        "Kind": "DelegationRecoveryDecision",
+        "Summary": "Delegation recovery decision: Wait; Waiting"
+      },
+      {
+        "Sequence": 4,
+        "Kind": "DelegationRecoveryDecision",
+        "Summary": "Delegation recovery decision: Replace; Preparing"
+      },
+      {
+        "Sequence": 5,
+        "Kind": "RevisionProposalCreated",
+        "Summary": "Change proposed: Operator replaces unresolved read/report work after physical provider start without durable handle capture."
+      },
+      {
+        "Sequence": 6,
+        "Kind": "DelegationRecoveryDecisionUpdated",
+        "Summary": "Delegation recovery decision: Replace; AwaitingApproval"
+      },
+      {
+        "Sequence": 9,
+        "Kind": "RevisionApproved",
+        "Summary": "Exact proposal approved; commit still requires fresh authority."
+      },
+      {
+        "Sequence": 10,
+        "Kind": "DelegationRecoveryDecisionUpdated",
+        "Summary": "Delegation recovery decision: Replace; AwaitingApproval"
+      },
+      {
+        "Sequence": 13,
+        "Kind": "RevisionCommitted",
+        "Summary": "Revision activated: recovery-revision-2"
+      },
+      {
+        "Sequence": 14,
+        "Kind": "DelegationRecoveryDecisionUpdated",
+        "Summary": "Delegation recovery decision: Replace; Committed"
+      }
+    ],
+    "EvidenceWatermark": 14,
+    "LastAcknowledgedRevision": null,
+    "TotalRevisionCount": 2,
+    "EarlierMeaningfulChangeCount": 0
+  },
+  "ProcessId": 31432,
+  "Limit": "Explicit bounded read/report replacement; full enclosing execution and arbitrary external effects are not inferred."
+}

@@ -1,0 +1,16 @@
+{
+  "ReadmeLines": 156,
+  "SecurityLines": 53,
+  "ApiSourceLines": 112,
+  "DeclaredFrameworks": [
+    "net8.0",
+    "net10.0"
+  ],
+  "TestProject": "tests/Marang.Tests/Marang.Tests.csproj",
+  "SecurityDocument": "SECURITY.md",
+  "ApiSource": "src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs",
+  "TestProjectHash": "d3dad193f52a15b0aabf28fdd93c882a58dce49cafd2c5125daf45371728a822",
+  "SecurityHash": "97dba0de8c4800a23a54685b341c96a5ae414c6ef431d8232168346e4bcc546f",
+  "ApiHash": "dc3c9724a7884c62b9e6d9348fb093d02b3d3cb9c73d42e999a54793234ad244",
+  "Assessment": "Declared target and platform coverage is read from repository files. This process probe executes only on its current host and makes no Linux or Windows build claim."
+}

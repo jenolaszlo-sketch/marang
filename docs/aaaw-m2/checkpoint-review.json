@@ -1,0 +1,676 @@
+{
+  "WorkflowId": "a58f14e7-3eb5-4339-ac6b-5247182d7094",
+  "ActiveRevisionId": "revision-4",
+  "Goal": "Review Marang\u0027s README and package contracts; produce a repository readiness report.",
+  "State": 6,
+  "Branches": [
+    {
+      "LogicalId": "inventory",
+      "Title": "Package inventory",
+      "ExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "acceptance",
+      "Title": "Acceptance evidence",
+      "ExecutionId": "238e5ee5-32c4-4a9c-ad1d-4b8fab6ddaa5",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "review",
+      "Title": "README review",
+      "ExecutionId": "267a656f-f949-419c-8af1-bf93076deb45",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "local",
+      "Title": "Local contract assessment",
+      "ExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "delegated",
+      "Title": "Delegated contract assessment",
+      "ExecutionId": "9a2659d8-b96d-4b72-a2ca-029a345626bd",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "platform-linux",
+      "Title": "Declared Linux target assessment",
+      "ExecutionId": "4ba5ed23-b125-4c86-8425-f42420927592",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "platform-windows",
+      "Title": "Declared Windows target assessment",
+      "ExecutionId": "ee590eb9-4bff-4b28-a92b-3235e19121c5",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "outcome",
+      "Title": "Final report",
+      "ExecutionId": "37feaa95-fbd3-44bb-a491-2fcd1f4fb18a",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 0,
+      "HasResult": true,
+      "Blockers": []
+    }
+  ],
+  "PriorResults": [
+    {
+      "LogicalId": "acceptance",
+      "Title": "Acceptance evidence",
+      "ExecutionId": "4870a021-1f6b-47da-9871-c62cc69d06e4",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "review",
+      "Title": "README review",
+      "ExecutionId": "6104c9c1-6b69-48d2-9c13-e3e53be53e41",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "local",
+      "Title": "Local contract assessment",
+      "ExecutionId": "242870a9-c69d-43b1-8de4-e703d66c9946",
+      "ExecutionState": "Cancelled",
+      "EvidenceCategory": 2,
+      "HasResult": false,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "delegated",
+      "Title": "Delegated contract assessment",
+      "ExecutionId": "ea1e644c-d1c7-406d-bae8-405909c02466",
+      "ExecutionState": "Cancelled",
+      "EvidenceCategory": 2,
+      "HasResult": false,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "outcome",
+      "Title": "Final report",
+      "ExecutionId": "4865a16a-ef6f-48ae-8fc6-d748adcf9f78",
+      "ExecutionState": "Cancelled",
+      "EvidenceCategory": 2,
+      "HasResult": false,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "acceptance",
+      "Title": "Acceptance evidence",
+      "ExecutionId": "409c4d04-b834-456f-8b67-a5ba78292152",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "delegated",
+      "Title": "Delegated contract assessment",
+      "ExecutionId": "06b97617-14bb-4fec-bd59-ffe17c45e8b6",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "outcome",
+      "Title": "Final report",
+      "ExecutionId": "1a9a7353-71f8-4c6f-a37f-09a3f9340cd6",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "acceptance",
+      "Title": "Acceptance evidence",
+      "ExecutionId": "40d2880b-55ba-44a8-82e1-2b1be9c533df",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    },
+    {
+      "LogicalId": "outcome",
+      "Title": "Final report",
+      "ExecutionId": "2c7bc1cd-d966-47c3-b916-2593a35232c6",
+      "ExecutionState": "Completed",
+      "EvidenceCategory": 2,
+      "HasResult": true,
+      "Blockers": []
+    }
+  ],
+  "Decisions": [],
+  "Conditions": [
+    {
+      "Id": "6e900b2157896e1cf400e1260f34117ec3cb83f7efd3dcad662c9ba97403a73a",
+      "LogicalId": "delegated",
+      "Classification": "ObservableComplete",
+      "RequiresDecision": false,
+      "Actions": [],
+      "Explanation": "Delegated contract assessment: ObservableComplete. Historical provider evidence; this operation cannot satisfy active intent and may still exist externally.",
+      "IsCurrent": false
+    },
+    {
+      "Id": "99cd5fc9fbee85b0fe002dda665467563ff026d273bd81dc39c8c3922bf0033c",
+      "LogicalId": "delegated",
+      "Classification": "ObservableComplete",
+      "RequiresDecision": false,
+      "Actions": [],
+      "Explanation": "Delegated contract assessment: ObservableComplete. Historical provider evidence; this operation cannot satisfy active intent and may still exist externally.",
+      "IsCurrent": false
+    }
+  ],
+  "Blockers": [],
+  "Timeline": [
+    {
+      "FromRevisionId": null,
+      "ToRevisionId": "revision-1",
+      "Reason": "Review Marang\u0027s README and package contracts; produce a repository readiness report.",
+      "Trigger": "Initial",
+      "EvidenceReferences": [
+        "README.md",
+        "tests/Marang.Tests/Marang.Tests.csproj"
+      ],
+      "Work": [
+        {
+          "LogicalId": "inventory",
+          "Title": "Package inventory",
+          "PreviousExecutionId": null,
+          "ExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        },
+        {
+          "LogicalId": "acceptance",
+          "Title": "Acceptance evidence",
+          "PreviousExecutionId": null,
+          "ExecutionId": "4870a021-1f6b-47da-9871-c62cc69d06e4",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        },
+        {
+          "LogicalId": "review",
+          "Title": "README review",
+          "PreviousExecutionId": null,
+          "ExecutionId": "6104c9c1-6b69-48d2-9c13-e3e53be53e41",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        },
+        {
+          "LogicalId": "local",
+          "Title": "Local contract assessment",
+          "PreviousExecutionId": null,
+          "ExecutionId": "242870a9-c69d-43b1-8de4-e703d66c9946",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        },
+        {
+          "LogicalId": "delegated",
+          "Title": "Delegated contract assessment",
+          "PreviousExecutionId": null,
+          "ExecutionId": "ea1e644c-d1c7-406d-bae8-405909c02466",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        },
+        {
+          "LogicalId": "outcome",
+          "Title": "Final report",
+          "PreviousExecutionId": null,
+          "ExecutionId": "4865a16a-ef6f-48ae-8fc6-d748adcf9f78",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "Admitted as original work under the verified plan."
+          ]
+        }
+      ]
+    },
+    {
+      "FromRevisionId": "revision-1",
+      "ToRevisionId": "revision-2",
+      "Reason": "Use Markdown instead of JSON for the contract assessment, and include restart limitations.",
+      "Trigger": "User",
+      "EvidenceReferences": [
+        "README.md",
+        "tests/Marang.Tests/Marang.Tests.csproj"
+      ],
+      "Work": [
+        {
+          "LogicalId": "acceptance",
+          "Title": "Acceptance evidence",
+          "PreviousExecutionId": "4870a021-1f6b-47da-9871-c62cc69d06e4",
+          "ExecutionId": "409c4d04-b834-456f-8b67-a5ba78292152",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "delegated",
+          "Title": "Delegated contract assessment",
+          "PreviousExecutionId": "ea1e644c-d1c7-406d-bae8-405909c02466",
+          "ExecutionId": "06b97617-14bb-4fec-bd59-ffe17c45e8b6",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "inventory",
+          "Title": "Package inventory",
+          "PreviousExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "ExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "Classifications": [
+            "Preserved"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "No claim of completed-result reuse at activation is inferred from later completion."
+          ]
+        },
+        {
+          "LogicalId": "local",
+          "Title": "Local contract assessment",
+          "PreviousExecutionId": "242870a9-c69d-43b1-8de4-e703d66c9946",
+          "ExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "outcome",
+          "Title": "Final report",
+          "PreviousExecutionId": "4865a16a-ef6f-48ae-8fc6-d748adcf9f78",
+          "ExecutionId": "1a9a7353-71f8-4c6f-a37f-09a3f9340cd6",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "review",
+          "Title": "README review",
+          "PreviousExecutionId": "6104c9c1-6b69-48d2-9c13-e3e53be53e41",
+          "ExecutionId": "6104c9c1-6b69-48d2-9c13-e3e53be53e41",
+          "Classifications": [
+            "Preserved"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "No claim of completed-result reuse at activation is inferred from later completion."
+          ]
+        }
+      ]
+    },
+    {
+      "FromRevisionId": "revision-2",
+      "ToRevisionId": "revision-3",
+      "Reason": "The report requirement expands to include the repository security document, public API contract source, and declared target limits.",
+      "Trigger": "User",
+      "EvidenceReferences": [
+        "README.md",
+        "SECURITY.md",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs"
+      ],
+      "Work": [
+        {
+          "LogicalId": "acceptance",
+          "Title": "Acceptance evidence",
+          "PreviousExecutionId": "409c4d04-b834-456f-8b67-a5ba78292152",
+          "ExecutionId": "40d2880b-55ba-44a8-82e1-2b1be9c533df",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "delegated",
+          "Title": "Delegated contract assessment",
+          "PreviousExecutionId": "06b97617-14bb-4fec-bd59-ffe17c45e8b6",
+          "ExecutionId": "06b97617-14bb-4fec-bd59-ffe17c45e8b6",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "inventory",
+          "Title": "Package inventory",
+          "PreviousExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "ExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "local",
+          "Title": "Local contract assessment",
+          "PreviousExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+          "ExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "outcome",
+          "Title": "Final report",
+          "PreviousExecutionId": "1a9a7353-71f8-4c6f-a37f-09a3f9340cd6",
+          "ExecutionId": "2c7bc1cd-d966-47c3-b916-2593a35232c6",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "platform-linux",
+          "Title": "Declared Linux target assessment",
+          "PreviousExecutionId": null,
+          "ExecutionId": "4ba5ed23-b125-4c86-8425-f42420927592",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "This logical work item was introduced with a new execution identity."
+          ]
+        },
+        {
+          "LogicalId": "platform-windows",
+          "Title": "Declared Windows target assessment",
+          "PreviousExecutionId": null,
+          "ExecutionId": "ee590eb9-4bff-4b28-a92b-3235e19121c5",
+          "Classifications": [
+            "Added"
+          ],
+          "Reasons": [
+            "This logical work item was introduced with a new execution identity."
+          ]
+        },
+        {
+          "LogicalId": "review",
+          "Title": "README review",
+          "PreviousExecutionId": "6104c9c1-6b69-48d2-9c13-e3e53be53e41",
+          "ExecutionId": "267a656f-f949-419c-8af1-bf93076deb45",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        }
+      ]
+    },
+    {
+      "FromRevisionId": "revision-3",
+      "ToRevisionId": "revision-4",
+      "Reason": "The actual M1 unknown-provider probe stopped before handle capture and proved automatic restart is unsafe; revise the prior conclusion using that failure evidence.",
+      "Trigger": "Evidence",
+      "EvidenceReferences": [
+        "m1-unknown-result.json",
+        "m1-unknown-catch-up.md"
+      ],
+      "Work": [
+        {
+          "LogicalId": "acceptance",
+          "Title": "Acceptance evidence",
+          "PreviousExecutionId": "40d2880b-55ba-44a8-82e1-2b1be9c533df",
+          "ExecutionId": "238e5ee5-32c4-4a9c-ad1d-4b8fab6ddaa5",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "delegated",
+          "Title": "Delegated contract assessment",
+          "PreviousExecutionId": "06b97617-14bb-4fec-bd59-ffe17c45e8b6",
+          "ExecutionId": "9a2659d8-b96d-4b72-a2ca-029a345626bd",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "inventory",
+          "Title": "Package inventory",
+          "PreviousExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "ExecutionId": "6091a1dd-ee68-457a-a41f-e8eb7fd19e8d",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "local",
+          "Title": "Local contract assessment",
+          "PreviousExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+          "ExecutionId": "91115e6f-7bae-4262-abbc-36d9f553102a",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "outcome",
+          "Title": "Final report",
+          "PreviousExecutionId": "2c7bc1cd-d966-47c3-b916-2593a35232c6",
+          "ExecutionId": "37feaa95-fbd3-44bb-a491-2fcd1f4fb18a",
+          "Classifications": [
+            "Replaced",
+            "Fenced",
+            "Invalidated"
+          ],
+          "Reasons": [
+            "Required behavior or admitted contract changed.",
+            "Immutable execution input changed.",
+            "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+          ]
+        },
+        {
+          "LogicalId": "platform-linux",
+          "Title": "Declared Linux target assessment",
+          "PreviousExecutionId": "4ba5ed23-b125-4c86-8425-f42420927592",
+          "ExecutionId": "4ba5ed23-b125-4c86-8425-f42420927592",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "platform-windows",
+          "Title": "Declared Windows target assessment",
+          "PreviousExecutionId": "ee590eb9-4bff-4b28-a92b-3235e19121c5",
+          "ExecutionId": "ee590eb9-4bff-4b28-a92b-3235e19121c5",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        },
+        {
+          "LogicalId": "review",
+          "Title": "README review",
+          "PreviousExecutionId": "267a656f-f949-419c-8af1-bf93076deb45",
+          "ExecutionId": "267a656f-f949-419c-8af1-bf93076deb45",
+          "Classifications": [
+            "Preserved",
+            "Reused"
+          ],
+          "Reasons": [
+            "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+            "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+          ]
+        }
+      ]
+    }
+  ],
+  "ChangesSinceCheckpoint": [
+    {
+      "Sequence": 14,
+      "Kind": "RevisionProposalCreated",
+      "Summary": "Change proposed: The report requirement expands to include the repository security document, public API contract source, and declared target limits."
+    },
+    {
+      "Sequence": 17,
+      "Kind": "RevisionApproved",
+      "Summary": "Exact proposal approved; commit still requires fresh authority."
+    },
+    {
+      "Sequence": 21,
+      "Kind": "RevisionCommitted",
+      "Summary": "Revision activated: revision-3"
+    },
+    {
+      "Sequence": 22,
+      "Kind": "RevisionProposalCreated",
+      "Summary": "Change proposed: The actual M1 unknown-provider probe stopped before handle capture and proved automatic restart is unsafe; revise the prior conclusion using that failure evidence."
+    },
+    {
+      "Sequence": 25,
+      "Kind": "RevisionApproved",
+      "Summary": "Exact proposal approved; commit still requires fresh authority."
+    },
+    {
+      "Sequence": 29,
+      "Kind": "RevisionCommitted",
+      "Summary": "Revision activated: revision-4"
+    }
+  ],
+  "EvidenceWatermark": 29,
+  "LastAcknowledgedRevision": "revision-2",
+  "TotalRevisionCount": 4,
+  "EarlierMeaningfulChangeCount": 0
+}

@@ -1,0 +1,262 @@
+{
+  "contract": "aaaw-m2-qualification/v1",
+  "date": "2026-10-14",
+  "repository": "https://github.com/jenolaszlo-sketch/marang",
+  "branch": "codex/aaaw-m2-marang",
+  "implementationCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+  "m1MarangBaseline": "71d54fd0757d9682907afde1884db3d9d5b0cbe1",
+  "host": "Windows x64",
+  "sdk": "10.0.401",
+  "command": "./eng/qualify-aaaw-m2.ps1 -ReuseQualifiedPackages",
+  "sourceQualification": "The unchanged implementation working tree passed and was then committed at implementationCommit; captured evidence is a documentation follow-up.",
+  "tests": [
+    {
+      "framework": "net8.0",
+      "runtime": "8.0.31",
+      "file": "artifacts/aaaw-m2/final-consumer/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_16_49_46_net8.0.trx",
+      "sha256": "4edef760e7823c7e8b0a2a923c1e121699af9192f29e22063e5c21ee6e21fd79",
+      "counters": {
+        "total": "143",
+        "executed": "143",
+        "passed": "143",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    },
+    {
+      "framework": "net10.0",
+      "runtime": "10.0.12",
+      "file": "artifacts/aaaw-m2/final-consumer/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_16_49_48_net10.0.trx",
+      "sha256": "a8cfb6527b2bc7a65c341b27f83c005e58aee35dbf4332848d719740351fcf1e",
+      "counters": {
+        "total": "183",
+        "executed": "183",
+        "passed": "183",
+        "failed": "0",
+        "error": "0",
+        "timeout": "0",
+        "aborted": "0",
+        "inconclusive": "0",
+        "passedButRunAborted": "0",
+        "notRunnable": "0",
+        "notExecuted": "0",
+        "disconnected": "0",
+        "warning": "0",
+        "completed": "0",
+        "inProgress": "0",
+        "pending": "0"
+      }
+    }
+  ],
+  "processes": [
+    {
+      "Barrier": "checkpoint",
+      "KilledProcess": "35916",
+      "RecoveredProcess": 51548,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/checkpoint-501300488fc24f9b968a37d3d99046fe/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "between-revisions",
+      "KilledProcess": "51152",
+      "RecoveredProcess": 23908,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/between-revisions-97a18f3c2a884f45b974c18a27d85617/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "after-fencing",
+      "KilledProcess": "15492",
+      "RecoveredProcess": 30668,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/after-fencing-b4d38ad54a00401a8fec26743ec275b8/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "proposal",
+      "KilledProcess": "33784",
+      "RecoveredProcess": 11648,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/proposal-cba223612e3542608c304c1df16c21a9/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "discussion",
+      "KilledProcess": "42012",
+      "RecoveredProcess": 50752,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/discussion-b9dcd421335e429ca7589b5a31ae0366/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "approval",
+      "KilledProcess": "22616",
+      "RecoveredProcess": 45656,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/continuity-probes/approval-25ae234389984e71921a179638c36e67/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "recovery-approved",
+      "KilledRecoveryProcess": 46052,
+      "ResumedProcess": 31432,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/delegation-probes/recovery-approved-4860af868ece454995ce34df55575fbf/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "recovery-fenced",
+      "KilledRecoveryProcess": 40684,
+      "ResumedProcess": 41284,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/delegation-probes/recovery-fenced-08de9d3fbc164d50881114c212cfa54c/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    },
+    {
+      "Barrier": "unresolved",
+      "KilledRecoveryProcess": 48764,
+      "ResumedProcess": 16568,
+      "Passed": true,
+      "file": "artifacts/aaaw-m2/delegation-probes/unresolved-739c05dc1e904b6bb23adc567df4cf1a/process-evidence.json",
+      "repository": "marang",
+      "sourceCommit": "6a1840c7fb7eb8e757c8a1d0085d67b08f61e9bd",
+      "runtime": "net10.0 / 10.0.12"
+    }
+  ],
+  "probes": {
+    "P1": "SupervisorContinuityProcessTests.Normal_fresh_process_restart_reconstructs_catch_up_without_a_barrier",
+    "P2": "Successive_repository_revisions_recover_after_fresh_process(discussion)",
+    "P3": "Successive_repository_revisions_recover_after_fresh_process(proposal)",
+    "P4": "Successive_repository_revisions_recover_after_fresh_process(approval)",
+    "P5": "SupervisorDelegationRecoveryProcessTests(unresolved); nested actual killed provider-start fixture",
+    "P6": "SupervisorDelegationRecoveryProcessTests(recovery-approved,recovery-fenced); DelegationRecoveryActionsTests",
+    "P7": "All continuity process cases: retained revision-1 -> revision-2 -> revision-3 -> revision-4",
+    "P8": "All continuity process cases: InventoryInvocationCount=1, identical inventory execution in every revision",
+    "P9": "All continuity process cases and SupervisorCatchUpTests: explicit reviewed completed-result reuse",
+    "P10": "AdaptiveRevisionProcessTests plus M2 replacement/history/drill-down assertions",
+    "P11": "SupervisorContinuityStoreTests stale dismissal; provider progress after approval; stale proposal; revoked grant",
+    "P12": "SupervisorCatchUpTests and process catch-up: active completed result vs superseded or unresolved evidence",
+    "P13": "All continuity process cases: report/review requirement changes, security and API source assessment",
+    "P14": "All continuity process cases: added declared target assessment branches and reused results",
+    "P15": "All continuity process cases: actual killed provider-start evidence drives revision-4 correction"
+  },
+  "packages": [
+    {
+      "id": "Penghou.Zhinu",
+      "version": "0.2.0-preview.4-aaaw-m1.3",
+      "commit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875"
+    },
+    {
+      "id": "Penghou.Zhinu.Sqlite",
+      "version": "0.2.0-preview.4-aaaw-m1.3",
+      "commit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39"
+    },
+    {
+      "id": "Penghou.Qingniao.Abstractions",
+      "version": "0.1.0-preview.5-aaaw-m1.4",
+      "commit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870"
+    },
+    {
+      "id": "Penghou.Qingniao",
+      "version": "0.1.0-preview.5-aaaw-m1.4",
+      "commit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37"
+    }
+  ],
+  "unchangedConsumerPackages": [
+    {
+      "id": "Penghou.Fuwen",
+      "version": "0.1.0-preview.13",
+      "sourceCommit": "603b2e78d3f3ff33e2152641ab0ca016a120552e",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-fuwen"
+    },
+    {
+      "id": "Penghou.Fuwen.Zhinu",
+      "version": "0.1.0-preview.13",
+      "sourceCommit": "603b2e78d3f3ff33e2152641ab0ca016a120552e",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-fuwen"
+    },
+    {
+      "id": "Penghou.Hufu",
+      "version": "0.1.0-preview.6",
+      "sourceCommit": "c0ef75afda4ba2562e3252d4e54cd536e37f428d",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-hufu"
+    },
+    {
+      "id": "Penghou.Hufu.Sqlite",
+      "version": "0.1.0-preview.6",
+      "sourceCommit": "c0ef75afda4ba2562e3252d4e54cd536e37f428d",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-hufu"
+    },
+    {
+      "id": "Penghou.Hufu.Cedar",
+      "version": "0.1.0-preview.3",
+      "sourceCommit": "3206c4447add6ef0821fb70f118b638598d9aac0",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-hufu"
+    },
+    {
+      "id": "Penghou.Hongxian",
+      "version": "0.1.0-preview.5",
+      "sourceCommit": "325d8011d4731092ced0cb5acab6301444840ab0",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-hongxian"
+    },
+    {
+      "id": "Penghou.Hongxian.Sqlite",
+      "version": "0.1.0-preview.5",
+      "sourceCommit": "325d8011d4731092ced0cb5acab6301444840ab0",
+      "repository": "https://github.com/jenolaszlo-sketch/penghou-hongxian"
+    }
+  ],
+  "demonstrationDirectory": "artifacts/aaaw-m2/continuity-probes/normal-9c71880118d94e56969a33ea4f45a3b0",
+  "recoveryDirectory": "artifacts/aaaw-m2/delegation-probes/recovery-approved-4860af868ece454995ce34df55575fbf",
+  "validation": {
+    "solutionBuild": "passed; 0 warnings/errors",
+    "format": "passed",
+    "packageHashesAndProducerMetadata": "passed",
+    "operatorConsoleSmoke": "passed",
+    "hongxianMirrorReplay": "passed; idempotent",
+    "publications": 0,
+    "stableFoundationChanges": 0,
+    "hufuOrGagambaImplementationChanges": 0
+  },
+  "limits": [
+    "Finite repository read/report profile; deterministic planner and file-backed provider",
+    "Windows x64 process-kill qualification; no other OS or power-loss claim",
+    "Declared target assessments are not Linux/Windows builds",
+    "Replacement permits bounded duplicate read/report computation; no arbitrary external duplication safety",
+    "Full Qingniao supervisory-state recovery and arbitrary provider reconnection remain deferred",
+    "No compensation, arbitrary external-effect rollback, uncertain result adoption or distributed transactions",
+    "Workflow-wide cancellation remains separate from condition-bound recovery choices"
+  ]
+}

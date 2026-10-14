@@ -153,3 +153,6 @@ Use [the operator guide](docs/aaaw-m2/operator.md), [continuity contracts](docs/
 and [ADR 0017](docs/decisions/0017-aaaw-m2-supervisor-continuity.md). Qualification uses
 `eng/qualify-aaaw-m2.ps1` and the same pinned unpublished M1 packages. No stable foundation
 or security-sensitive component implementation is changed, and no publication is required.
+
+The [M2 qualification report](docs/aaaw-m2/evidence.md) records the supported claim,
+all required probes, exact source/package evidence and the limits of supervisor continuity.
