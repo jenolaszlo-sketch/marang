@@ -1,0 +1,9 @@
+<Project>
+  <!-- Unpublished M1 packages are built from pinned source by eng/qualify-aaaw-m1.ps1.
+       Keep the complete host graph on one assembly set for consumer qualification. -->
+  <ItemGroup>
+    <PackageReference Update="Penghou.Qingniao" Version="0.1.0-preview.5-aaaw-m1.4" />
+    <PackageReference Update="Penghou.Zhinu" Version="0.2.0-preview.4-aaaw-m1.3" />
+    <PackageReference Update="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.4-aaaw-m1.3" />
+  </ItemGroup>
+</Project>

@@ -30,10 +30,14 @@ internal static class Program
     {
         string? phase = null;
         string? dir = null;
+        string? barrier = null;
+        var interactive = false;
         for (var i = 0; i + 1 < args.Length; i += 2)
         {
             if (args[i] == "--phase") phase = args[i + 1];
             if (args[i] == "--dir") dir = args[i + 1];
+            if (args[i] == "--barrier") barrier = args[i + 1];
+            if (args[i] == "--interactive") interactive = args[i + 1] == "true";
         }
 
         if (string.IsNullOrWhiteSpace(phase) || string.IsNullOrWhiteSpace(dir))
@@ -46,6 +50,8 @@ internal static class Program
         {
             if (phase == "1") await Phase1Async(dir);
             else if (phase == "2") await Phase2Async(dir);
+            else if (phase == "adaptive") await AdaptiveRevisionProbe.RunAsync(dir, barrier, interactive);
+            else if (phase == "adaptive-unknown") await AdaptiveRevisionProbe.VerifyUnknownAsync(dir);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

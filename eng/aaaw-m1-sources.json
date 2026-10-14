@@ -1,0 +1,12 @@
+{
+  "zhinu": {
+    "repository": "https://github.com/jenolaszlo-sketch/penghou-zhinu",
+    "commit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+    "packageVersion": "0.2.0-preview.4-aaaw-m1.3"
+  },
+  "qingniao": {
+    "repository": "https://github.com/jenolaszlo-sketch/penghou-qingniao",
+    "commit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+    "packageVersion": "0.1.0-preview.5-aaaw-m1.4"
+  }
+}

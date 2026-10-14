@@ -22,8 +22,29 @@ jobs:
             8.0.x
             10.0.x
 
+      - name: Checkout locked M1 Zhinu source
+        uses: actions/checkout@v6
+        with:
+          repository: jenolaszlo-sketch/penghou-zhinu
+          ref: 07e1807cc4b867dd4f527445aa108f56135d37db
+          path: .aaaw-source/zhinu
+
+      - name: Checkout locked M1 Qingniao source
+        uses: actions/checkout@v6
+        with:
+          repository: jenolaszlo-sketch/penghou-qingniao
+          ref: f08971df33916be184fd1bebb5940ba2bd660a49
+          path: .aaaw-source/qingniao
+
+      - name: Build unpublished M1 packages
+        shell: pwsh
+        run: ./eng/qualify-aaaw-m1.ps1 -PackagesOnly -ZhinuCheckout .aaaw-source/zhinu -QingniaoCheckout .aaaw-source/qingniao
+
+      - name: Restore package consumer
+        run: dotnet restore Marang.slnx --configfile NuGet.AAAWM1.Config
+
       - name: Build
-        run: dotnet build Marang.slnx --configuration Release
+        run: dotnet build Marang.slnx --configuration Release --no-restore
 
       - name: Verify formatting
         run: dotnet format Marang.slnx --verify-no-changes --no-restore
@@ -42,6 +63,14 @@ jobs:
             artifacts/*.nupkg
             artifacts/*.snupkg
           if-no-files-found: error
+
+      - name: Upload M1 qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: aaaw-m1-evidence
+          path: artifacts/aaaw-m1/
+          if-no-files-found: warn
 
   ui:
     runs-on: ubuntu-latest

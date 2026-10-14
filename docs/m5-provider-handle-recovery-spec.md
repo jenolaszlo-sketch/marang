@@ -1,5 +1,10 @@
 # M5 durable provider-handle recovery spec (design decision, no implementation)
 
+M1 update (2026-10-14): [ADR 0016](decisions/0016-aaaw-m1-branch-revision-admission.md) and the
+[bounded recovery contract](aaaw-m1/delegation-recovery.md) now resolve and implement the minimum
+read/report recovery boundary. The original M5 completed-case proof and broader alternatives below
+remain historical; full provider/runtime recovery is not claimed.
+
 Status: **decision record, not a work order.** The completed-case V1.5 proof
 is closed. This spec frames the one remaining architectural decision — how an
 in-flight provider operation survives process loss — for the

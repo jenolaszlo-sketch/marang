@@ -111,3 +111,31 @@ See the [service architecture](docs/architecture.md), active
 [roadmap](docs/roadmap.md), detailed pre-extraction
 [Qingniao runtime architecture](docs/qingniao-runtime-architecture.md), and
 [boundary decision](docs/decisions/0015-qingniao-extraction-and-marang-service-boundary.md).
+
+## Experimental adaptive workflow milestone
+
+The M1 branch demonstrates a bounded durable repository read/report workflow that can preserve
+unaffected executions while an approved revision fences and replaces affected work. It composes
+Fuwen, Zhinu, Qingniao, Hufu/Cedar and Hongxian. It remains an experimental host profile;
+the existing server UI does not expose general workflow editing.
+
+M1 consumes unpublished packages built from the exact source revisions in
+[the source lock](eng/aaaw-m1-sources.json). Use checkouts at those commits to build and qualify:
+
+```powershell
+./eng/qualify-aaaw-m1.ps1 -ZhinuCheckout ../zhinu -QingniaoCheckout ../qingniao
+```
+
+Add `-FullSourceQualification` for both complete source suites. Package-only preparation uses
+`-PackagesOnly`, followed by restore with `NuGet.AAAWM1.Config`. No packages are published.
+
+For a console demonstration with Approve, Reject, Cancel and Discuss actions:
+
+```powershell
+dotnet tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll --phase adaptive --dir artifacts/aaaw-m1/interactive --interactive true
+```
+
+The demo reads this repository, writes only its own evidence directory, and uses a deterministic
+observable provider through Qingniao's real lifecycle. See the [architecture](docs/aaaw-m1/architecture.md),
+[revision contract](docs/aaaw-m1/revision-contract.md), [recovery limits](docs/aaaw-m1/delegation-recovery.md)
+and [deferred work](docs/aaaw-m1/deferred.md).
