@@ -142,3 +142,14 @@ and [deferred work](docs/aaaw-m1/deferred.md).
 
 The [M1 qualification report](docs/aaaw-m1/evidence.md) records exact source commits,
 package hashes, test results, all crash barriers and the limits of the supported claim.
+
+M2 adds durable supervisor intent, pending discussions and checkpoints, current-state catch-up,
+revision drill-down and explicit unresolved-delegation decisions. It preserves the M1 admission,
+approval, fencing and provider-recovery contracts. The finite repository scenario continues through
+four revisions while retaining one completed inventory execution. Its target assessments describe
+repository declarations and evidence gaps; they do not assert Linux/Windows builds.
+
+Use [the operator guide](docs/aaaw-m2/operator.md), [continuity contracts](docs/aaaw-m2/contracts.md)
+and [ADR 0017](docs/decisions/0017-aaaw-m2-supervisor-continuity.md). Qualification uses
+`eng/qualify-aaaw-m2.ps1` and the same pinned unpublished M1 packages. No stable foundation
+or security-sensitive component implementation is changed, and no publication is required.

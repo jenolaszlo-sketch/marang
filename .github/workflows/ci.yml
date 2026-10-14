@@ -72,6 +72,14 @@ jobs:
           path: artifacts/aaaw-m1/
           if-no-files-found: warn
 
+      - name: Upload M2 qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: aaaw-m2-evidence
+          path: artifacts/aaaw-m2/
+          if-no-files-found: warn
+
   ui:
     runs-on: ubuntu-latest
     defaults:

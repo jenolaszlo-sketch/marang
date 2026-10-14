@@ -52,6 +52,10 @@ internal static class Program
             else if (phase == "2") await Phase2Async(dir);
             else if (phase == "adaptive") await AdaptiveRevisionProbe.RunAsync(dir, barrier, interactive);
             else if (phase == "adaptive-unknown") await AdaptiveRevisionProbe.VerifyUnknownAsync(dir);
+            else if (phase == "continuity") await SupervisorContinuityProbe.RunAsync(dir, barrier, resume: false);
+            else if (phase == "continuity-resume") await SupervisorContinuityProbe.RunAsync(dir, barrier, resume: true);
+            else if (phase == "supervisor-delegation") await SupervisorDelegationRecoveryProbe.RunAsync(dir, barrier, interactive);
+            else if (phase == "supervisor-view") await SupervisorOperatorProbe.RunAsync(dir, interactive);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

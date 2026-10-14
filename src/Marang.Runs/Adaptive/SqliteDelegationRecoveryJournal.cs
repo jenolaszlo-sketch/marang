@@ -188,7 +188,7 @@ public sealed class SqliteDelegationRecoveryJournal(IZhinuSqliteDatabase databas
     private static string Encode(ExternalOperationRecoveryRecord record) => JsonSerializer.Serialize(new RecordWire("aaaw-provider-journal/v1",
         record.Intent, record.Capture, record.Observation, record.Result is not { } result ? null : new ResultWire(result.Handle,
             result.State, result.CompletedAt, result.Summary, result.Artifacts.ToArray(), result.Provenance, result.Failure, result.Candidate), record.RecoveryState));
-    private static ExternalOperationRecoveryRecord Decode(string json)
+    internal static ExternalOperationRecoveryRecord Decode(string json)
     {
         var wire = JsonSerializer.Deserialize<RecordWire>(json, SerializerOptions)!;
         if (wire.Version != "aaaw-provider-journal/v1") throw new InvalidOperationException("Unknown delegation journal version.");

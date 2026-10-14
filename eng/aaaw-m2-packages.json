@@ -1,0 +1,6 @@
+[
+  { "id": "Penghou.Zhinu", "version": "0.2.0-preview.4-aaaw-m1.3", "commit": "07e1807cc4b867dd4f527445aa108f56135d37db", "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875" },
+  { "id": "Penghou.Zhinu.Sqlite", "version": "0.2.0-preview.4-aaaw-m1.3", "commit": "07e1807cc4b867dd4f527445aa108f56135d37db", "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39" },
+  { "id": "Penghou.Qingniao.Abstractions", "version": "0.1.0-preview.5-aaaw-m1.4", "commit": "f08971df33916be184fd1bebb5940ba2bd660a49", "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870" },
+  { "id": "Penghou.Qingniao", "version": "0.1.0-preview.5-aaaw-m1.4", "commit": "f08971df33916be184fd1bebb5940ba2bd660a49", "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37" }
+]
