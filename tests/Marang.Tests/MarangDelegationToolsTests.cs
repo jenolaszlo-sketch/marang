@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.Mcp;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +47,7 @@ public sealed class MarangDelegationToolsTests
     [Fact]
     public async Task Missing_context_falls_back_to_local_operator()
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var runtime = CreateRuntime(catalog);
         var accessor = new HttpContextAccessor();
         var tools = new MarangDelegationTools(
@@ -81,7 +81,7 @@ public sealed class MarangDelegationToolsTests
     [Fact]
     public async Task Cancel_before_execution_terminates()
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var runtime = CreateRuntime(catalog);
         var tools = new MarangDelegationTools(
             runtime, catalog, Context("tester"), Options.Create(new MarangAuthenticationOptions()));
@@ -107,7 +107,7 @@ public sealed class MarangDelegationToolsTests
     [Fact]
     public async Task Other_caller_cannot_read_or_cancel_a_delegation()
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var runtime = CreateRuntime(catalog);
         var options = Options.Create(new MarangAuthenticationOptions
         {
@@ -140,7 +140,7 @@ public sealed class MarangDelegationToolsTests
 
     private static MarangDelegationTools CreateTools(string caller)
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var options = new MarangAuthenticationOptions
         {
             AllowedWorkspaceRoots = new Dictionary<string, string[]>
@@ -164,3 +164,5 @@ public sealed class MarangDelegationToolsTests
         new InMemoryProviderRegistry(),
         new InMemoryExternalOperationProviderCatalog());
 }
+
+

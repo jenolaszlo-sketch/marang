@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.Mcp;
 using Microsoft.AspNetCore.Http;
@@ -116,7 +116,7 @@ public sealed class MarangSupervisionToolsTests
 
     private static (MarangSupervisionTools Supervision, MarangDelegationTools Delegation) CreateTools(string caller)
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var runtime = new DelegationRuntime(
             catalog,
             new MarangAdmissionVerifier(),
@@ -136,3 +136,5 @@ public sealed class MarangSupervisionToolsTests
             new MarangDelegationTools(runtime, catalog, accessor, options));
     }
 }
+
+

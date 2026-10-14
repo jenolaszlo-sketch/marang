@@ -113,4 +113,10 @@ public static class MarangHttpContextKeys
 {
     /// <summary>Gets the items key for the caller identity.</summary>
     public const string CallerIdentity = "Marang.CallerIdentity";
+
+    /// <summary>Gets the items key for the typed delegation credential carried in HTTP metadata.</summary>
+    public const string DelegationCredential = "Marang.DelegationCredential";
+
+    /// <summary>Gets the HTTP header carrying the delegation credential.</summary>
+    public const string DelegationCredentialHeader = "X-Marang-Delegation-Credential";
 }

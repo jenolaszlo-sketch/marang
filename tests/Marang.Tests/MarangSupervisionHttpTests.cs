@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.Http;
 using Penghou.Qingniao;
@@ -212,7 +212,7 @@ public sealed class MarangSupervisionHttpTests
     private static (DelegationRuntime Runtime, MarangDelegationCatalog Catalog) CreateRuntime(
         IExternalOperationProvider provider)
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var descriptor = new ProviderDescriptor("waiting-provider", [new CapabilityDescriptor("agent.execute", 1)]);
         var providers = new InMemoryProviderRegistry();
         providers.Register(descriptor);
@@ -284,3 +284,5 @@ public sealed class MarangSupervisionHttpTests
                 new ExternalTaskReference(request.Correlation.Agent.Provider, value)));
     }
 }
+
+

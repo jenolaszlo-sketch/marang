@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.Codex;
 using Marang.Http;
@@ -15,7 +15,7 @@ namespace Marang.Tests;
 /// is registered through the normal provider-selection mechanism, authorized
 /// through the normal Hufu authority preflight, runs exactly one bounded
 /// process to a durable terminal state, and exposes its result/evidence
-/// through the existing HTTP operator surface — with no special-case
+/// through the existing HTTP operator surface â€” with no special-case
 /// execution path in Marang. The process is a deterministic scripted
 /// transcript (no live CLI, no network), bounded to a single spawn.
 /// </summary>
@@ -99,7 +99,7 @@ public sealed class MarangCodexDelegationTests
         ICodexProcessFactory factory,
         IDelegationAuthorityPreflight preflight)
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var providers = new InMemoryProviderRegistry();
         var adapters = new InMemoryExternalOperationProviderCatalog();
         CodexProviderRegistration.Register(
@@ -305,3 +305,5 @@ public sealed class MarangCodexDelegationTests
         }
     }
 }
+
+

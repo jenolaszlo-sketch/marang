@@ -1,4 +1,4 @@
-#if NET10_0_OR_GREATER
+﻿#if NET10_0_OR_GREATER
 using System.Text.Json;
 using FluentAssertions;
 using Marang.Runs;
@@ -84,7 +84,7 @@ public sealed class MarangSessionJournalTests
         var directory = Path.Combine(Path.GetTempPath(), "marang-reopen-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         var ct = TestContext.Current.CancellationToken;
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         // The acceptance catalog is process-local by design (Qingniao retention
         // model); the restart below reopens only the durable Zhinu/Hongxian
         // stores, proving reconstruction from persisted state.
@@ -225,7 +225,7 @@ public sealed class MarangSessionJournalTests
         private readonly SqliteWorkflowStore _zhinu;
         private readonly HongxianSqliteStoreSet _hongxian;
 
-        public MarangDelegationCatalog Catalog { get; } = new();
+        public MarangDelegationCatalog Catalog { get; } = new(TestAcceptanceGate.AllowAll());
         public ConfiguredRunProjectionSource Runs { get; }
         public ConfiguredRunProjectionSource Sessions => Runs;
 
@@ -290,3 +290,5 @@ public sealed class MarangSessionJournalTests
     }
 }
 #endif
+
+

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Marang.DelegationAuthority;
 using Marang.Http;
 using Marang.Mcp;
@@ -93,7 +93,7 @@ internal static class Program
         // descriptor plus visibility binding persist beside Zhinu/Hongxian
         // state so a fresh process can reattach the same caller.
         var authorityDb = Path.Combine(dir, "authority.db");
-        var catalog = new MarangDelegationCatalog(
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
             new SqliteAcceptedDelegationStore(authorityDb),
             new SqliteDelegationVisibilityStore(authorityDb));
         var acceptance = await catalog.AcceptAsync(
@@ -272,7 +272,7 @@ internal static class Program
         // process with empty memory resolves the same caller via the
         // descriptor plus visibility binding (verify-only, never repaired).
         var authorityDb = Get("authorityDb");
-        var durableCatalog = new MarangDelegationCatalog(
+        var durableCatalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
             new SqliteAcceptedDelegationStore(authorityDb),
             new SqliteDelegationVisibilityStore(authorityDb));
         Check("preReattachHidden", durableCatalog.Find(delegationId, Caller) is null);
@@ -312,8 +312,8 @@ internal static class Program
         // Isolation: possession of a delegation ID is not authority, and
         // Hongxian participant strings are never consulted. A volatile
         // catalog (no durable state) and a foreign subject both fail closed.
-        var volatileCatalog = new MarangDelegationCatalog();
-        var malloryCatalog = new MarangDelegationCatalog(
+        var volatileCatalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
+        var malloryCatalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
             new SqliteAcceptedDelegationStore(authorityDb),
             new SqliteDelegationVisibilityStore(authorityDb));
         var isolationSources = RunStoreComposition.Create(Get("zhinuDb"), hongxianRoot, dir);
@@ -366,14 +366,14 @@ internal static class Program
             MarangPrincipal.DefaultTenant, Caller, secondaryId.Value.ToString("D"),
             AcceptanceIdentity.InitialGeneration, "probe-revoke-1", "probe.revoked", ct);
         Check("revoked", revoked == DelegationVisibilityRevokeStatus.Revoked);
-        var revokedCatalog = new MarangDelegationCatalog(
+        var revokedCatalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
             new SqliteAcceptedDelegationStore(authorityDb),
             new SqliteDelegationVisibilityStore(authorityDb));
         Check("revokeBlocked", !await revokedCatalog.ReattachAsync(Caller, secondaryId, ct));
 
         // Expiry blocks reattachment without mutating anything: the main
         // binding (30-day validity) is expired under a future clock.
-        var expiredCatalog = new MarangDelegationCatalog(
+        var expiredCatalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
             new SqliteAcceptedDelegationStore(authorityDb),
             new SqliteDelegationVisibilityStore(authorityDb),
             () => DateTimeOffset.UtcNow.AddDays(31));
@@ -406,7 +406,7 @@ internal static class Program
         // detail and evidence reconstruct from durable sources for the
         // authorized caller and stay closed for everyone else.
         var bareRuntime = new DelegationRuntime(
-            new MarangDelegationCatalog(), null,
+            new MarangDelegationCatalog(TestAcceptanceGate.AllowAll()), null,
             new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
         var historySources = RunStoreComposition.Create(Get("zhinuDb"), hongxianRoot, dir);
         try
@@ -502,3 +502,5 @@ internal static class Program
         }
     }
 }
+
+

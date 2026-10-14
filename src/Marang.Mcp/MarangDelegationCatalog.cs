@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
 using Marang.DelegationAuthority;
+using Marang.Hufu;
+using Microsoft.AspNetCore.Http;
 using Penghou.Hufu;
 using Penghou.Qingniao;
 
@@ -13,9 +15,14 @@ namespace Marang;
 /// carries a Siming-backed content fingerprint; reads that fail fingerprint
 /// verification are treated as unknown delegations (fail closed).
 ///
+/// Every acceptance first passes the mandatory Hufu
+/// <c>DelegationAcceptanceOperation.Accept</c> gate (with credential verification
+/// before it) before any durable state is created or mutated. There is no
+/// fallback that bypasses that decision.
+///
 /// Durable mode (descriptor + Hufu-owned visibility stores configured) runs
-/// an ordered, idempotent acceptance protocol before anything becomes
-/// externally visible: descriptor first, visibility binding second,
+/// an ordered, idempotent acceptance protocol after the acceptance decision:
+/// descriptor first, visibility binding second,
 /// in-memory acceptance third, then a cross-record agreement check. There is
 /// no cross-store transaction; exact retries converge via deterministic
 /// identities, and partial crash state is completed by retry — never by
@@ -28,33 +35,34 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
     private readonly ConcurrentDictionary<DelegationId, string> fingerprints = new();
     private readonly IAcceptedDelegationStore? _descriptors;
     private readonly IDelegationVisibilityStore? _visibility;
+    private readonly IMarangDelegationAcceptanceGate _acceptanceGate;
+    private readonly IHttpContextAccessor? _httpContext;
     private readonly Func<DateTimeOffset> _now;
     private readonly TimeSpan _visibilityValidity;
 
-    /// <summary>Volatile-only catalog: acceptance is process-local.</summary>
-    public MarangDelegationCatalog()
-        : this(null, null)
-    {
-    }
-
     /// <summary>
-    /// Catalog with optional durable acceptance authority. Both stores must be
-    /// supplied together; either both or neither. A null pair preserves the
-    /// historical volatile behavior.
+    /// Catalog with optional durable acceptance authority and a required Hufu
+    /// acceptance gate. The gate is mandatory: there is no construction path
+    /// that accepts delegated work without a Hufu acceptance decision. Descriptor
+    /// and visibility stores are supplied together or not at all.
     /// </summary>
     public MarangDelegationCatalog(
-        IAcceptedDelegationStore? descriptors,
-        IDelegationVisibilityStore? visibility,
+        IMarangDelegationAcceptanceGate acceptanceGate,
+        IAcceptedDelegationStore? descriptors = null,
+        IDelegationVisibilityStore? visibility = null,
         Func<DateTimeOffset>? now = null,
-        TimeSpan? visibilityValidity = null)
+        TimeSpan? visibilityValidity = null,
+        IHttpContextAccessor? httpContext = null)
     {
         if ((descriptors is null) != (visibility is null))
         {
             throw new ArgumentException("Descriptor and visibility stores must be supplied together.", nameof(descriptors));
         }
 
+        _acceptanceGate = acceptanceGate ?? throw new ArgumentNullException(nameof(acceptanceGate));
         _descriptors = descriptors;
         _visibility = visibility;
+        _httpContext = httpContext;
         _now = now ?? (() => DateTimeOffset.UtcNow);
         _visibilityValidity = visibilityValidity ?? TimeSpan.FromDays(30);
         if (_visibilityValidity <= TimeSpan.Zero || _visibilityValidity > TimeSpan.FromDays(3650))
@@ -76,6 +84,20 @@ public sealed class MarangDelegationCatalog : IDelegationAcceptanceRegistry
         var fingerprint = DelegationRequestIdentity.Compute(request);
         var principal = MarangPrincipalMapper.MapCaller(caller.Identifier);
         var acceptanceKey = AcceptanceIdentity.AcceptanceKey(principal.TenantId, principal.SubjectId, request.RequestKey);
+
+        // Mandatory Hufu acceptance decision, before any durable acceptance state.
+        // The credential is carried in HTTP metadata, never in the tool arguments.
+        var credential = _httpContext?.HttpContext?.Items[MarangHttpContextKeys.DelegationCredential] as MarangDelegationCredential;
+        var outcome = await _acceptanceGate.AuthorizeAsync(
+            new MarangDelegationAcceptanceInput(
+                principal.SubjectId, acceptanceKey, request.Workspace.Identifier, request.Provider,
+                AcceptanceIdentity.InitialGeneration, fingerprint.Hash, credential),
+            cancellationToken).ConfigureAwait(false);
+        if (outcome.Status != MarangDelegationAcceptanceStatus.Accepted)
+        {
+            throw new MarangDelegationAcceptanceException(outcome);
+        }
+
         var delegationId = AcceptanceIdentity.DelegationIdFor(acceptanceKey);
         var now = _now();
         var isNew = true;

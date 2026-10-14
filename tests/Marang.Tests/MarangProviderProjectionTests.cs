@@ -1,4 +1,4 @@
-#if NET10_0_OR_GREATER
+﻿#if NET10_0_OR_GREATER
 using System.Text.Json;
 using FluentAssertions;
 using Marang.Codex;
@@ -59,7 +59,7 @@ public sealed class MarangProviderProjectionTests
             ParentContext,
             (delegationId, generation) => new AuthenticatedAuthorityContext(
                 "tenant", "delegation", $"run-{delegationId}", "rev", generation));
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var providers = new InMemoryProviderRegistry();
         var adapters = new InMemoryExternalOperationProviderCatalog();
         var adapter = CodexProviderRegistration.Register(
@@ -175,7 +175,7 @@ public sealed class MarangProviderProjectionTests
             ParentContext,
             (delegationId, generation) => new AuthenticatedAuthorityContext(
                 "tenant", "delegation", $"run-{delegationId}", "rev", generation));
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var providers = new InMemoryProviderRegistry();
         var adapters = new InMemoryExternalOperationProviderCatalog();
         CodexProviderRegistration.Register(
@@ -360,7 +360,7 @@ public sealed class MarangProviderProjectionTests
             ParentContext,
             (delegationId, generation) => new AuthenticatedAuthorityContext(
                 "tenant", "delegation", $"run-{delegationId}", "rev", generation));
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var providers = new InMemoryProviderRegistry();
         var adapters = new InMemoryExternalOperationProviderCatalog();
         CodexProviderRegistration.Register(
@@ -657,3 +657,5 @@ public sealed class MarangProviderProjectionTests
     }
 }
 #endif
+
+

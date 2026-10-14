@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.Runs;
 using Penghou.Fuwen;
@@ -88,7 +88,7 @@ public sealed class MarangRunProjectionTests
             Step(runId, "$loop/loop1/2/condition", StepStatus.Running),
             Step(runId, "loop1", StepStatus.Running),
         };
-        var (catalog, delegationId) = await AcceptAsync("proj-repeat");        var correlation = Correlation(delegationId, runId, map);        var run = Run(runId, WorkflowStatus.Running, map, correlation);
+        var (catalog, delegationId) = await AcceptAsync("proj-repeat"); var correlation = Correlation(delegationId, runId, map); var run = Run(runId, WorkflowStatus.Running, map, correlation);
         var source = new FakeSource(plan, run, steps, throughSequence: 17);
 
         var (status, body) = await RunProjectionEndpoints.GetRunAsync(
@@ -115,7 +115,7 @@ public sealed class MarangRunProjectionTests
             Step(runId, $"{fanOutPath}/$item/sha256-{new string('a', 64)}", StepStatus.Completed),
             Step(runId, $"{fanOutPath}/$item/sha256-{new string('b', 64)}", StepStatus.Running),
         };
-        var (catalog, delegationId) = await AcceptAsync("proj-fanout");        var correlation = Correlation(delegationId, runId, map);        var run = Run(runId, WorkflowStatus.Running, map, correlation);
+        var (catalog, delegationId) = await AcceptAsync("proj-fanout"); var correlation = Correlation(delegationId, runId, map); var run = Run(runId, WorkflowStatus.Running, map, correlation);
         var source = new FakeSource(plan, run, steps, throughSequence: 9);
 
         var (status, body) = await RunProjectionEndpoints.GetRunAsync(
@@ -139,7 +139,7 @@ public sealed class MarangRunProjectionTests
         var map = FuwenZhinuStepMapper.Map(plan);
         var runId = Guid.NewGuid();
         var steps = new[] { Step(runId, "demo/fetch", StepStatus.Completed), Step(runId, "bogus/step", StepStatus.Running) };
-        var (catalog, delegationId) = await AcceptAsync("proj-drift");        var correlation = Correlation(delegationId, runId, map);        var run = Run(runId, WorkflowStatus.Running, map, correlation);
+        var (catalog, delegationId) = await AcceptAsync("proj-drift"); var correlation = Correlation(delegationId, runId, map); var run = Run(runId, WorkflowStatus.Running, map, correlation);
         var source = new FakeSource(plan, run, steps, throughSequence: 3);
 
         var (status, _) = await RunProjectionEndpoints.GetRunAsync(
@@ -155,7 +155,7 @@ public sealed class MarangRunProjectionTests
         var map = FuwenZhinuStepMapper.Map(plan);
         var runId = Guid.NewGuid();
         var steps = new[] { Step(runId, "demo/fetch", StepStatus.Completed) };
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var acceptance = await catalog.AcceptAsync(
             new DelegationCallerScope(Caller),
             new DelegationRequest(
@@ -209,7 +209,7 @@ public sealed class MarangRunProjectionTests
         var map = FuwenZhinuStepMapper.Map(plan);
         var runId = Guid.NewGuid();
         var steps = new[] { Step(runId, "demo/fetch", StepStatus.Completed) };
-        var (catalog, delegationId) = await AcceptAsync("proj-foreign");        var correlation = Correlation(delegationId, runId, map);        var run = Run(runId, WorkflowStatus.Running, map, correlation);
+        var (catalog, delegationId) = await AcceptAsync("proj-foreign"); var correlation = Correlation(delegationId, runId, map); var run = Run(runId, WorkflowStatus.Running, map, correlation);
         var source = new FakeSource(plan, run, steps, throughSequence: 3);
 
         (await RunProjectionEndpoints.GetRunAsync(
@@ -443,7 +443,7 @@ public sealed class MarangRunProjectionTests
 
     private static async Task<(MarangDelegationCatalog Catalog, DelegationId DelegationId)> AcceptAsync(string requestKey)
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var acceptance = await catalog.AcceptAsync(
             new DelegationCallerScope(Caller),
             new DelegationRequest(
@@ -491,3 +491,5 @@ public sealed class MarangRunProjectionTests
         }
     }
 }
+
+

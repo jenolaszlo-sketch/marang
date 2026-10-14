@@ -86,12 +86,9 @@ public sealed class HufuDerivedAuthorityTests
     private static CurrentAuthorityRequestAuthorizer Admission(SqliteAuthorityStore store, TimeProvider time)
     {
         var source = new AuthorityStoreSnapshotSource(store, Actor);
-        return new CurrentAuthorityRequestAuthorizer(
-            source,
-            new CoverEvaluator(),
-            new AllowRecorder(),
-            time,
-            new AuthorityDerivation.LineageAncestorLiveness(source, store));
+        // Qualified derived-authority composition: ancestor liveness plus the
+        // required current-parent-policy checker (preview.8 fails closed otherwise).
+        return DerivedAuthorityRequestAuthorizer.Create(source, new CoverEvaluator(), new AllowRecorder(), store, time);
     }
 
     private static async Task PublishParentAsync(string path, TimeProvider time)

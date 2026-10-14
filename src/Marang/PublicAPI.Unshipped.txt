@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 Marang.IWorkflowPlanHostVerifier
 Marang.IWorkflowPlanHostVerifier.Verify(Marang.WorkflowPlanVerificationContext! context) -> Marang.WorkflowPlanVerificationResult!
 Marang.WorkflowPlanVerificationContext
@@ -75,3 +75,5 @@ static Marang.WorkflowPlanRevisionReference.operator ==(Marang.WorkflowPlanRevis
 static Marang.WorkflowPlanVerificationResult.operator !=(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool
 static Marang.WorkflowPlanVerificationResult.operator ==(Marang.WorkflowPlanVerificationResult? left, Marang.WorkflowPlanVerificationResult? right) -> bool
 Marang.MarangAuthenticationOptions.Validate() -> void
+const Marang.MarangHttpContextKeys.DelegationCredential = "Marang.DelegationCredential" -> string!
+const Marang.MarangHttpContextKeys.DelegationCredentialHeader = "X-Marang-Delegation-Credential" -> string!

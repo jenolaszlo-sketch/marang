@@ -98,6 +98,12 @@ builder.Services
 
 var app = builder.Build();
 
+// The Hufu delegation-acceptance gate is mandatory for the acceptance registry
+// (see MarangDelegationCatalog). This default composition fails closed: the host
+// must register a real gate (a Hufu current-authority source) to accept work.
+// No composition path accepts delegated work without a Hufu acceptance decision.
+builder.Services.AddSingleton<Marang.Hufu.IMarangDelegationAcceptanceGate, Marang.Hufu.FailClosedDelegationAcceptanceGate>();
+
 // Authentication lives at this boundary; Qingniao stays transport-unaware.
 // Loopback requests skip it for local development. Everything else needs a
 // key, and a rejection never touches delegation state.
@@ -110,6 +116,15 @@ app.Use(async (context, next) =>
     {
         await next();
         return;
+    }
+
+    // The delegation credential is carried in HTTP metadata (a dedicated header),
+    // never in tool arguments, and reaches the acceptance path as a typed carrier.
+    var credential = Marang.Hufu.MarangDelegationCredential.TryDecode(
+        context.Request.Headers[MarangHttpContextKeys.DelegationCredentialHeader].ToString());
+    if (credential is not null)
+    {
+        context.Items[MarangHttpContextKeys.DelegationCredential] = credential;
     }
 
     var remote = context.Connection.RemoteIpAddress;

@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Penghou.Qingniao;
 
 namespace Marang.Tests;
@@ -8,7 +8,7 @@ public sealed class MarangDelegationCatalogTests
     [Fact]
     public async Task Accepted_delegation_is_visible_only_to_its_caller()
     {
-        var catalog = new MarangDelegationCatalog();
+        var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var request = new DelegationRequest(
             "catalog-test", "Review the changes", "provider-one",
             new WorkspaceReference("local", "workspace"),
@@ -25,3 +25,5 @@ public sealed class MarangDelegationCatalogTests
         catalog.List("bob").Should().BeEmpty();
     }
 }
+
+

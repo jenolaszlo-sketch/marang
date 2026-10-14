@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Marang.DelegationAuthority;
 using Marang.Http;
@@ -189,12 +189,13 @@ public sealed class DelegationReadReconstructionTests
     }
 
     private static MarangDelegationCatalog DurableCatalog(string directory) => new(
+        TestAcceptanceGate.AllowAll(),
         new SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
         new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")),
         () => Start);
 
     private static DelegationRuntime BareRuntime() => new(
-        new MarangDelegationCatalog(), null,
+        new MarangDelegationCatalog(TestAcceptanceGate.AllowAll()), null,
         new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
 
     private static DelegationRequest Request(string requestKey) => new(
@@ -276,3 +277,5 @@ public sealed class DelegationReadReconstructionTests
         }
     }
 }
+
+

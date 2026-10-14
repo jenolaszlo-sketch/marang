@@ -1,4 +1,4 @@
-#if NET10_0_OR_GREATER
+﻿#if NET10_0_OR_GREATER
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
@@ -124,7 +124,7 @@ public sealed class MarangRestartTests
 
             // Caller isolation fail-closed on a fresh catalog (no pre-restart
             // acceptance survives; the run must not leak).
-            var fresh = new MarangDelegationCatalog();
+            var fresh = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
             (await RunProjectionEndpoints.GetRunAsync(
                 fresh, Caller, runId, sources, () => Start, ct)).StatusCode.Should().Be(404);
             (await SessionJournalEndpoints.GetJournalAsync(
@@ -135,7 +135,7 @@ public sealed class MarangRestartTests
             // Restart-safe reattachment through durable authority: the same
             // subject re-establishes visibility on a fresh in-memory cache and
             // reads the same delegation/run/session through public endpoints.
-            var durable = new MarangDelegationCatalog(
+            var durable = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
                 new Marang.DelegationAuthority.SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
                 new Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
             (await durable.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
@@ -157,7 +157,7 @@ public sealed class MarangRestartTests
             // Control without a live execution handle is unavailable (409),
             // never success and never silent work; strangers stay 404.
             var bareRuntime = new Penghou.Qingniao.DelegationRuntime(
-                new MarangDelegationCatalog(), null,
+                new MarangDelegationCatalog(TestAcceptanceGate.AllowAll()), null,
                 new Penghou.Qingniao.InMemoryProviderRegistry(),
                 new Penghou.Qingniao.InMemoryExternalOperationProviderCatalog());
             (await Marang.Http.SupervisionHttpEndpoints.PostCancelAsync(
@@ -173,7 +173,7 @@ public sealed class MarangRestartTests
                 Marang.DelegationAuthority.AcceptanceIdentity.InitialGeneration,
                 "driver-revoke-1", "driver.revoked", ct))
                 .Should().Be(Penghou.Hufu.DelegationVisibilityRevokeStatus.Revoked);
-            var afterRevoke = new MarangDelegationCatalog(
+            var afterRevoke = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
                 new Marang.DelegationAuthority.SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
                 new Penghou.Hufu.Sqlite.SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")));
             (await afterRevoke.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
@@ -284,3 +284,5 @@ public sealed class MarangRestartTests
         ?? throw new InvalidOperationException($"Cannot read '{path}'.");
 }
 #endif
+
+

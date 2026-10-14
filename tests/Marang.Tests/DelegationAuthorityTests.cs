@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using Marang.DelegationAuthority;
 using Marang.Http;
 using Marang.Runs;
@@ -16,7 +16,7 @@ namespace Marang.Tests;
 /// (principal + request key, never content), a Marang-owned durable metadata
 /// descriptor, a Hufu-owned durable visibility binding with terminal
 /// revocation, and an ordered idempotent protocol whose partial crash state
-/// is completed by exact retry — never repaired by reads. Reads only verify
+/// is completed by exact retry â€” never repaired by reads. Reads only verify
 /// and fail closed. Store-level visibility semantics are qualified in the
 /// Hufu suite; these tests prove the Marang protocol behavior above them.
 /// </summary>
@@ -338,7 +338,7 @@ public sealed class DelegationAuthorityTests
         try
         {
             var ct = TestContext.Current.CancellationToken;
-            var catalog = new MarangDelegationCatalog(
+            var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
                 new SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
                 new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")),
                 () => Start, TimeSpan.FromMinutes(1));
@@ -362,7 +362,7 @@ public sealed class DelegationAuthorityTests
             };
             var source = new FakeAuthoritySource(plan, run, [AuthorityStep(runId, "demo/fetch", StepStatus.Completed)]);
 
-            var later = new MarangDelegationCatalog(
+            var later = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll(), 
                 new SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
                 new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")),
                 () => Start.AddMinutes(2));
@@ -390,7 +390,7 @@ public sealed class DelegationAuthorityTests
             // the durable catalog knows it: cancel must report unavailable
             // (409), never success and never silent work.
             var runtime = new DelegationRuntime(
-                new MarangDelegationCatalog(), null,
+                new MarangDelegationCatalog(TestAcceptanceGate.AllowAll()), null,
                 new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
             var (status, body) = await SupervisionHttpEndpoints.PostCancelAsync(
                 runtime, catalog, Caller, accepted.DelegationId.Value, ct);
@@ -409,6 +409,7 @@ public sealed class DelegationAuthorityTests
     // Helpers.
 
     private static MarangDelegationCatalog DurableCatalog(string directory) => new(
+        TestAcceptanceGate.AllowAll(),
         new SqliteAcceptedDelegationStore(Path.Combine(directory, "authority.db")),
         new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db")),
         () => Start);
@@ -507,3 +508,5 @@ public sealed class DelegationAuthorityTests
         }
     }
 }
+
+

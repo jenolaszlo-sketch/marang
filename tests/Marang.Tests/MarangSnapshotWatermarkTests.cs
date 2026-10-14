@@ -1,4 +1,4 @@
-#if NET10_0_OR_GREATER
+﻿#if NET10_0_OR_GREATER
 using System.Text.Json;
 using FluentAssertions;
 using Marang.Runs;
@@ -84,7 +84,7 @@ public sealed class MarangSnapshotWatermarkTests
         {
             var plan = CreatePlan();
             var map = FuwenZhinuStepMapper.Map(plan);
-            var catalog = new MarangDelegationCatalog();
+            var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
             var acceptance = await catalog.AcceptAsync(
                 new DelegationCallerScope(Caller),
                 new DelegationRequest(
@@ -247,3 +247,5 @@ public sealed class MarangSnapshotWatermarkTests
         element.GetProperty(name).GetString()!;
 }
 #endif
+
+
