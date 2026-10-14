@@ -1,6 +1,8 @@
 using Penghou.Hongxian;
 
+using Marang.Hufu;
 using Marang.Runs;
+using Penghou.Hufu;
 
 namespace Marang.SessionJournal;
 
@@ -22,7 +24,9 @@ public static class SessionJournalEndpoints
         Guid runId,
         IRunProjectionSource runs,
         ISessionJournalSource sessions,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
@@ -41,7 +45,22 @@ public static class SessionJournalEndpoints
             return (404, null);
         }
 
-        if (await ReattachedAsync(catalog, caller, correlation.DelegationId, cancellationToken).ConfigureAwait(false) is null)
+        var record = await ReattachedAsync(catalog, caller, correlation.DelegationId, cancellationToken).ConfigureAwait(false);
+        if (record is null)
+        {
+            return (404, null);
+        }
+
+        if (gate is null)
+        {
+            return (404, null);
+        }
+
+        var outcome = await gate.AuthorizeAsync(
+            new MarangResourceAuthorizationInput(caller, AuthorityAction.MarangReadResult,
+                correlation.DelegationId.Value.ToString("D"), record.Workspace, $"run/{runId:D}/journal", credential),
+            cancellationToken).ConfigureAwait(false);
+        if (outcome.Status != MarangResourceAuthorizationStatus.Permitted)
         {
             return (404, null);
         }

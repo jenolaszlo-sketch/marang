@@ -16,7 +16,7 @@ namespace Marang.Tests;
 /// (principal + request key, never content), a Marang-owned durable metadata
 /// descriptor, a Hufu-owned durable visibility binding with terminal
 /// revocation, and an ordered idempotent protocol whose partial crash state
-/// is completed by exact retry â€” never repaired by reads. Reads only verify
+/// is completed by exact retry — never repaired by reads. Reads only verify
 /// and fail closed. Store-level visibility semantics are qualified in the
 /// Hufu suite; these tests prove the Marang protocol behavior above them.
 /// </summary>
@@ -311,7 +311,7 @@ public sealed class DelegationAuthorityTests
             // Sanity: the durable path reads before revocation.
             var reread = DurableCatalog(directory);
             (await RunProjectionEndpoints.GetRunAsync(
-                reread, Caller, runId, source, () => Start, ct)).StatusCode.Should().Be(200);
+                reread, Caller, runId, source, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(200);
 
             var visibility = new SqliteDelegationVisibilityStore(Path.Combine(directory, "authority.db"));
             (await visibility.RevokeAsync("marang", Caller, accepted.DelegationId.Value.ToString("D"),
@@ -321,9 +321,9 @@ public sealed class DelegationAuthorityTests
             var after = DurableCatalog(directory);
             (await after.ReattachAsync(Caller, accepted.DelegationId, ct)).Should().BeFalse();
             (await RunProjectionEndpoints.GetRunAsync(
-                after, Caller, runId, source, () => Start, ct)).StatusCode.Should().Be(404);
+                after, Caller, runId, source, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await RunProjectionEndpoints.GetDelegationRunAsync(
-                after, Caller, accepted.DelegationId.Value, source, ct)).StatusCode.Should().Be(404);
+                after, Caller, accepted.DelegationId.Value, source, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         }
         finally
         {
@@ -368,7 +368,7 @@ public sealed class DelegationAuthorityTests
                 () => Start.AddMinutes(2));
             (await later.ReattachAsync(Caller, accepted.DelegationId, ct)).Should().BeFalse();
             (await RunProjectionEndpoints.GetRunAsync(
-                later, Caller, runId, source, () => Start, ct)).StatusCode.Should().Be(404);
+                later, Caller, runId, source, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         }
         finally
         {
@@ -393,12 +393,12 @@ public sealed class DelegationAuthorityTests
                 new MarangDelegationCatalog(TestAcceptanceGate.AllowAll()), null,
                 new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
             var (status, body) = await SupervisionHttpEndpoints.PostCancelAsync(
-                runtime, catalog, Caller, accepted.DelegationId.Value, ct);
+                runtime, catalog, Caller, accepted.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
             status.Should().Be(409);
             body.Should().NotBeNull();
 
             (await SupervisionHttpEndpoints.PostCancelAsync(
-                runtime, catalog, "someone-else", accepted.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+                runtime, catalog, "someone-else", accepted.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         }
         finally
         {

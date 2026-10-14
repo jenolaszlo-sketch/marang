@@ -290,17 +290,17 @@ internal static class Program
         try
         {
             var (delegationRunStatus, delegationRunBody) = await RunProjectionEndpoints.GetDelegationRunAsync(
-                durableCatalog, Caller, delegationId.Value, sources, ct);
+                durableCatalog, Caller, delegationId.Value, sources, ct, gate: TestResourceGate.AllowAll());
             Check("delegationRun", delegationRunStatus == 200, delegationRunStatus.ToString());
             Check("delegationRunId", delegationRunBody is not null
                 && delegationRunBody.GetType().GetProperty("runId")?.GetValue(delegationRunBody)?.ToString() == runId.ToString("D"));
 
             var (runStatus, _) = await RunProjectionEndpoints.GetRunAsync(
-                durableCatalog, Caller, runId, sources, static () => DateTimeOffset.UtcNow, ct);
+                durableCatalog, Caller, runId, sources, static () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
             Check("runProjection", runStatus == 200, runStatus.ToString());
 
             var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                durableCatalog, Caller, runId, sources, sources, ct);
+                durableCatalog, Caller, runId, sources, sources, ct, gate: TestResourceGate.AllowAll());
             Check("journalEndpoint", journalStatus == 200, journalStatus.ToString());
             Check("journalAvailableEndpoint", journalBody is SessionJournalView { Available: true });
         }
@@ -321,13 +321,13 @@ internal static class Program
         {
             Check("volatileHidden", volatileCatalog.Find(delegationId, Caller) is null);
             var (volatileRun, _) = await RunProjectionEndpoints.GetRunAsync(
-                volatileCatalog, Caller, runId, isolationSources, static () => DateTimeOffset.UtcNow, ct);
+                volatileCatalog, Caller, runId, isolationSources, static () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
             Check("volatileDenied", volatileRun == 404, volatileRun.ToString());
             var (malloryRun, _) = await RunProjectionEndpoints.GetRunAsync(
-                malloryCatalog, "mallory", runId, isolationSources, static () => DateTimeOffset.UtcNow, ct);
+                malloryCatalog, "mallory", runId, isolationSources, static () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
             Check("malloryDenied", malloryRun == 404, malloryRun.ToString());
             var (malloryJournal, _) = await SessionJournalEndpoints.GetJournalAsync(
-                malloryCatalog, "mallory", runId, isolationSources, isolationSources, ct);
+                malloryCatalog, "mallory", runId, isolationSources, isolationSources, ct, gate: TestResourceGate.AllowAll());
             Check("malloryJournalDenied", malloryJournal == 404, malloryJournal.ToString());
             Check("malloryReattachDenied", !await malloryCatalog.ReattachAsync("mallory", delegationId, ct));
         }
@@ -412,7 +412,7 @@ internal static class Program
         try
         {
             var (detailStatus, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources);
+                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("detailStatus", detailStatus == 200, detailStatus.ToString());
             var detail = JsonSerializer.SerializeToDocument(detailBody, new JsonSerializerOptions(JsonSerializerDefaults.Web)).RootElement;
             Check("detailHistory", detail.GetProperty("runtimeAvailable").GetBoolean() == false);
@@ -424,7 +424,7 @@ internal static class Program
                 && detail.GetProperty("canCancel").GetBoolean() == false);
 
             var (evidenceStatus, evidenceBody) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources);
+                bareRuntime, durableCatalog, Caller, delegationId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("evidenceStatus", evidenceStatus == 200, evidenceStatus.ToString());
             var evidence = JsonSerializer.SerializeToDocument(evidenceBody, new JsonSerializerOptions(JsonSerializerDefaults.Web)).RootElement;
             Check("evidenceAbsent", evidence.GetProperty("hasResult").GetBoolean() == false);
@@ -432,16 +432,16 @@ internal static class Program
             Check("evidenceRunStatus", evidence.GetProperty("runStatus").GetString() == "Completed");
 
             var (malloryDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
-                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources);
+                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("malloryDetailDenied", malloryDetail == 404, malloryDetail.ToString());
             var (malloryEvidence, _) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources);
+                bareRuntime, durableCatalog, "mallory", delegationId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("malloryEvidenceDenied", malloryEvidence == 404, malloryEvidence.ToString());
             var (revokedDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
-                bareRuntime, revokedCatalog, Caller, secondaryId.Value, ct, historySources);
+                bareRuntime, revokedCatalog, Caller, secondaryId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("revokedDetailDenied", revokedDetail == 404, revokedDetail.ToString());
             var (expiredDetail, _) = await SupervisionHttpEndpoints.GetDetailAsync(
-                bareRuntime, expiredCatalog, Caller, delegationId.Value, ct, historySources);
+                bareRuntime, expiredCatalog, Caller, delegationId.Value, ct, historySources, gate: TestResourceGate.AllowAll());
             Check("expiredDetailDenied", expiredDetail == 404, expiredDetail.ToString());
         }
         finally

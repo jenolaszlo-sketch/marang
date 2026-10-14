@@ -51,7 +51,7 @@ public sealed class MarangDelegationToolsTests
         var runtime = CreateRuntime(catalog);
         var accessor = new HttpContextAccessor();
         var tools = new MarangDelegationTools(
-            runtime, catalog, accessor, Options.Create(new MarangAuthenticationOptions()));
+            runtime, catalog, accessor, Options.Create(new MarangAuthenticationOptions()), TestResourceGate.AllowAll());
         var ct = TestContext.Current.CancellationToken;
 
         var json = await tools.DelegateAsync(
@@ -84,7 +84,7 @@ public sealed class MarangDelegationToolsTests
         var catalog = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
         var runtime = CreateRuntime(catalog);
         var tools = new MarangDelegationTools(
-            runtime, catalog, Context("tester"), Options.Create(new MarangAuthenticationOptions()));
+            runtime, catalog, Context("tester"), Options.Create(new MarangAuthenticationOptions()), TestResourceGate.AllowAll());
         var ct = TestContext.Current.CancellationToken;
         var handle = await runtime.DelegateAsync(
             new DelegationCallerScope("tester"),
@@ -120,7 +120,7 @@ public sealed class MarangDelegationToolsTests
         var context = new DefaultHttpContext();
         context.Items[MarangHttpContextKeys.CallerIdentity] = "alice";
         var accessor = new HttpContextAccessor { HttpContext = context };
-        var tools = new MarangDelegationTools(runtime, catalog, accessor, options);
+        var tools = new MarangDelegationTools(runtime, catalog, accessor, options, TestResourceGate.AllowAll());
         var ct = TestContext.Current.CancellationToken;
         var created = await tools.DelegateAsync($"key-{Guid.NewGuid():N}",
             "Do the work", "no-such-provider", "workspace", 1, ct);
@@ -148,7 +148,7 @@ public sealed class MarangDelegationToolsTests
                 [caller] = ["workspace"],
             },
         };
-        return new MarangDelegationTools(CreateRuntime(catalog), catalog, Context(caller), Options.Create(options));
+        return new MarangDelegationTools(CreateRuntime(catalog), catalog, Context(caller), Options.Create(options), TestResourceGate.AllowAll());
     }
 
     private static IHttpContextAccessor Context(string caller)

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using BiscuitSharp;
 using FluentAssertions;
 using Marang.DelegationAuthority;
@@ -213,7 +213,7 @@ public sealed class MarangHostAcceptanceTests
         var catalog = new MarangDelegationCatalog(failing, httpContext: f.Accessor);
         var runtime = new DelegationRuntime(catalog,
             new MarangAdmissionVerifier(), new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
-        var tools = new MarangDelegationTools(runtime, catalog, f.Accessor, Options.Create(f.Authentication));
+        var tools = new MarangDelegationTools(runtime, catalog, f.Accessor, Options.Create(f.Authentication), TestResourceGate.AllowAll());
 
         var json = await tools.DelegateAsync(requestKey, "Do the work", Provider, Workspace, 1, ct);
 
@@ -270,7 +270,7 @@ public sealed class MarangHostAcceptanceTests
             Options.Create(new MarangAuthenticationOptions
             {
                 AllowedWorkspaceRoots = new Dictionary<string, string[]> { [Caller] = [Workspace] },
-            }));
+            }), TestResourceGate.AllowAll());
         var ct = TestContext.Current.CancellationToken;
 
         var json = await tools.DelegateAsync(
@@ -404,7 +404,7 @@ public sealed class MarangHostAcceptanceTests
             var catalog = new MarangDelegationCatalog(composition.Gate, httpContext: accessor);
             var runtime = new DelegationRuntime(catalog,
                 new MarangAdmissionVerifier(), new InMemoryProviderRegistry(), new InMemoryExternalOperationProviderCatalog());
-            var tools = new MarangDelegationTools(runtime, catalog, accessor, Options.Create(authentication));
+            var tools = new MarangDelegationTools(runtime, catalog, accessor, Options.Create(authentication), TestResourceGate.AllowAll());
 
             var fixture = new HostFixture(directory, dbPath, now, signingKey, tokenBytes,
                 publisher, composition, catalog, tools, accessor, authentication, http);

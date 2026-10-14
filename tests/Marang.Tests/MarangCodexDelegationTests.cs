@@ -15,7 +15,7 @@ namespace Marang.Tests;
 /// is registered through the normal provider-selection mechanism, authorized
 /// through the normal Hufu authority preflight, runs exactly one bounded
 /// process to a durable terminal state, and exposes its result/evidence
-/// through the existing HTTP operator surface â€” with no special-case
+/// through the existing HTTP operator surface — with no special-case
 /// execution path in Marang. The process is a deterministic scripted
 /// transcript (no live CLI, no network), bounded to a single spawn.
 /// </summary>
@@ -68,13 +68,13 @@ public sealed class MarangCodexDelegationTests
         factory.Spawns.Should().Be(1);
 
         var (detailStatus, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         detailStatus.Should().Be(200);
         Str(Json(detailBody), "state").Should().Be("Completed");
         Str(Json(detailBody), "resultSummary").Should().NotBeNullOrEmpty();
 
         var (evidenceStatus, evidenceBody) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         evidenceStatus.Should().Be(200);
         var evidence = Json(evidenceBody);
         evidence.GetProperty("hasResult").GetBoolean().Should().BeTrue();
@@ -84,7 +84,7 @@ public sealed class MarangCodexDelegationTests
 
         // A foreign caller cannot read the Codex delegation or its evidence.
         (await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     private static string[] SuccessTranscript(string threadId) =>

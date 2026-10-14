@@ -136,3 +136,30 @@ RequestIdentity)`. Construction rules:
 Coarse outcomes only (`resource_authority_permit/denied/expired/unavailable/
 evidence_failed/unmapped/invalid_resource`), following the HC-1 denial-mapping
 precedent. No credential material, no policy state in user-visible errors.
+
+## Implemented wiring (AE-5B.2)
+
+- `IMarangResourceAuthorizationGate` (Marang.Hufu) is the single shared
+  abstraction. Every protected MCP tool and HTTP handler evaluates it before
+  its first protected side effect; the handler signatures take the gate as a
+  required seam (null/gate-less callers fail closed). The MCP tools receive it
+  by constructor injection; the HTTP handlers receive it from the endpoint
+  lambda (composed from DI) plus the credential from `HttpContext.Items`.
+- `MarangResourceAuthorizationGate` verifies the credential first, then builds
+  a fresh Hufu `AuthorityRequest` and evaluates current authority. Its context
+  is `(tenant, caller, {delegationId}, revision "g0", fence "resource")` — the
+  fence is **distinct** from acceptance's, so acceptance and resource decisions
+  can never share a context. The revision `"g0"` mirrors the acceptance initial
+  generation; the run id is the delegation under operation.
+- Denial and unavailability map to the same `unknown delegation` / 404 shape
+  callers use for unknown or forbidden delegations, so authorization never
+  becomes an existence oracle. `ReattachAsync` is caller-scoped, so the record
+  that supplies the workspace is already the caller's own.
+- The caller-scoped catalog list (`GET /api/delegations`) uses workspace =
+  `marang` (the tenant scope) and path `catalog/{caller}/delegations`; a host
+  must allow the tenant scope in `Marang:Hufu:Resource:AllowedWorkspaces` for
+  listing. Empty policy = deny all (fail closed).
+- `marang_delegate` (acceptance) is deliberately **not** resource-gated: it
+  consults only the acceptance gate. A resource permit never substitutes for
+  acceptance and vice versa (§17, AE5B-Q03/Q04).
+

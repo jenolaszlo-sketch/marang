@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol" Version="2.2.0" />
-    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.8" />
+    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.9" />
     <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Siming" Version="0.1.0-preview.7" />
     <ProjectReference Include="..\Marang\Marang.csproj" />

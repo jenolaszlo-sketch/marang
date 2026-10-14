@@ -128,7 +128,7 @@ public sealed class MarangSnapshotWatermarkTests
                 hongxian);
 
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                catalog, Caller, runId, source, () => Start.AddMinutes(2), ct);
+                catalog, Caller, runId, source, () => Start.AddMinutes(2), ct, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             Str(Json(body), "durableSequence").Should().Be("2");

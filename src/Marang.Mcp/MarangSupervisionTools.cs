@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.Text.Json;
+using Marang.Hufu;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol.Server;
+using Penghou.Hufu;
 using Penghou.Qingniao;
 
 namespace Marang.Mcp;
@@ -13,13 +15,18 @@ namespace Marang.Mcp;
 /// checkpoint-scoped call carries the exact checkpoint id plus the expected
 /// revision: stale or competing actions are rejected by the runtime, and this
 /// layer reports the rejection instead of retrying it.
+///
+/// Every tool evaluates the mandatory Hufu resource gate before its first
+/// runtime effect, against the delegation record's own workspace. Denial
+/// reports the same shape as an unknown delegation (no existence oracle).
 /// </summary>
 [McpServerToolType]
 public sealed class MarangSupervisionTools(
     DelegationRuntime runtime,
     MarangDelegationCatalog catalog,
     IHttpContextAccessor httpContext,
-    IOptions<MarangAuthenticationOptions> authentication)
+    IOptions<MarangAuthenticationOptions> authentication,
+    IMarangResourceAuthorizationGate resourceGate)
 {
     /// <summary>Polls one delegation until terminal or bounded timeout.</summary>
     [McpServerTool(Name = "marang_wait")]
@@ -34,9 +41,17 @@ public sealed class MarangSupervisionTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
+        }
+
+        var denied = await AuthorizeResourceAsync(AuthorityAction.MarangReadDelegation,
+            id, record.Workspace, $"delegation/{id:D}/supervision", cancellationToken).ConfigureAwait(false);
+        if (denied is not null)
+        {
+            return denied;
         }
 
         var deadline = DateTimeOffset.UtcNow.AddSeconds(Math.Clamp(timeoutSeconds, 1, 300));
@@ -78,7 +93,8 @@ public sealed class MarangSupervisionTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
         }
@@ -100,6 +116,17 @@ public sealed class MarangSupervisionTools(
         if (act is null)
         {
             return Error("unsupported action (approve, reject, retry, escalate, cancel); reason is required except for approve");
+        }
+
+        // One Hufu action covers all five supervisor verbs: the policy meaning
+        // is "intervene at this checkpoint", and the verb selects behavior.
+        // The verb is bound from the same arguments used downstream.
+        var interventionDenied = await AuthorizeResourceAsync(AuthorityAction.MarangIntervene,
+            id, record.Workspace, $"delegation/{id:D}/checkpoint/{checkpoint:D}/intervention",
+            cancellationToken).ConfigureAwait(false);
+        if (interventionDenied is not null)
+        {
+            return interventionDenied;
         }
 
         try
@@ -144,7 +171,8 @@ public sealed class MarangSupervisionTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
         }
@@ -164,6 +192,14 @@ public sealed class MarangSupervisionTools(
             }
 
             requested |= facet;
+        }
+
+        var inspectDenied = await AuthorizeResourceAsync(AuthorityAction.MarangReadDelegation,
+            id, record.Workspace, $"delegation/{id:D}/checkpoint/{checkpoint:D}",
+            cancellationToken).ConfigureAwait(false);
+        if (inspectDenied is not null)
+        {
+            return inspectDenied;
         }
 
         try
@@ -218,9 +254,20 @@ public sealed class MarangSupervisionTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
+        }
+
+        // The artifact id is caller-supplied identity: the gate rejects
+        // non-canonical segments instead of normalizing them.
+        var artifactDenied = await AuthorizeResourceAsync(AuthorityAction.MarangReadResult,
+            id, record.Workspace, $"delegation/{id:D}/artifact/{artifactId}",
+            cancellationToken).ConfigureAwait(false);
+        if (artifactDenied is not null)
+        {
+            return artifactDenied;
         }
 
         var result = await runtime.GetResultAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
@@ -253,6 +300,19 @@ public sealed class MarangSupervisionTools(
     private string CurrentCaller() =>
         httpContext.HttpContext?.Items[MarangHttpContextKeys.CallerIdentity] as string
         ?? authentication.Value.LocalCallerIdentity;
+
+    private MarangDelegationCredential? CurrentCredential() =>
+        httpContext.HttpContext?.Items[MarangHttpContextKeys.DelegationCredential] as MarangDelegationCredential;
+
+    private async Task<string?> AuthorizeResourceAsync(AuthorityAction action, Guid id,
+        string workspace, string path, CancellationToken cancellationToken)
+    {
+        var outcome = await resourceGate.AuthorizeAsync(
+            new MarangResourceAuthorizationInput(
+                CurrentCaller(), action, id.ToString("D"), workspace, path, CurrentCredential()),
+            cancellationToken).ConfigureAwait(false);
+        return outcome.Status == MarangResourceAuthorizationStatus.Permitted ? null : Error("unknown delegation");
+    }
 
     private static string Error(string message) =>
         JsonSerializer.Serialize(new { error = message });

@@ -28,7 +28,7 @@ public sealed class MarangEvidenceHttpTests
         terminal.Progress.State.Should().Be(DelegationState.Completed);
 
         var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var view = Json(body);
@@ -43,7 +43,7 @@ public sealed class MarangEvidenceHttpTests
         artifact.TryGetProperty("content", out _).Should().BeFalse();
 
         var (singleStatus, singleBody) = await SupervisionHttpEndpoints.GetArtifactAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, "artifact-1", ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, "artifact-1", ct, gate: TestResourceGate.AllowAll());
         singleStatus.Should().Be(200);
         Str(Json(singleBody), "artifactId").Should().Be("artifact-1");
     }
@@ -58,7 +58,7 @@ public sealed class MarangEvidenceHttpTests
             new DelegationCallerScope(Caller), CreateRequest("evidence-empty"), ct);
 
         var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var view = Json(body);
@@ -67,7 +67,7 @@ public sealed class MarangEvidenceHttpTests
         view.GetProperty("artifacts").GetArrayLength().Should().Be(0);
 
         (await SupervisionHttpEndpoints.GetArtifactAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, "artifact-1", ct)).StatusCode.Should().Be(404);
+            runtime, catalog, Caller, handle.DelegationId.Value, "artifact-1", ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     [Fact]
@@ -81,13 +81,13 @@ public sealed class MarangEvidenceHttpTests
         await PumpToTerminalAsync(runtime, handle.DelegationId, ct);
 
         (await SupervisionHttpEndpoints.GetEvidenceAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.GetEvidenceAsync(
-            runtime, catalog, Caller, Guid.NewGuid(), ct)).StatusCode.Should().Be(404);
+            runtime, catalog, Caller, Guid.NewGuid(), ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.GetArtifactAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, "artifact-1", ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, "artifact-1", ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.GetArtifactAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, "no-such-artifact", ct)).StatusCode.Should().Be(404);
+            runtime, catalog, Caller, handle.DelegationId.Value, "no-such-artifact", ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     [Fact]

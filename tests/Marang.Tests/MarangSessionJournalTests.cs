@@ -35,7 +35,7 @@ public sealed class MarangSessionJournalTests
         var runId = await hosts.CreateRunAsync(sessionId, WorkflowStatus.Running, ct);
 
         var (status, body) = await SessionJournalEndpoints.GetJournalAsync(
-            hosts.Catalog, Caller, runId, hosts.Runs, hosts.Sessions, ct);
+            hosts.Catalog, Caller, runId, hosts.Runs, hosts.Sessions, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var journal = Json(body);
@@ -56,7 +56,7 @@ public sealed class MarangSessionJournalTests
         var runId = await hosts.CreateRunAsync(SessionId.New(), WorkflowStatus.Running, ct);
 
         var (status, body) = await SessionJournalEndpoints.GetJournalAsync(
-            hosts.Catalog, Caller, runId, hosts.Runs, hosts.Sessions, ct);
+            hosts.Catalog, Caller, runId, hosts.Runs, hosts.Sessions, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var journal = Json(body);
@@ -73,7 +73,7 @@ public sealed class MarangSessionJournalTests
         var runId = await hosts.CreateRunAsync(sessionId, WorkflowStatus.Running, ct);
 
         (await SessionJournalEndpoints.GetJournalAsync(
-            hosts.Catalog, "someone-else", runId, hosts.Runs, hosts.Sessions, ct)).StatusCode.Should().Be(404);
+            hosts.Catalog, "someone-else", runId, hosts.Runs, hosts.Sessions, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public sealed class MarangSessionJournalTests
                 }));
 
             var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                catalog, Caller, runId, runs, runs, ct);
+                catalog, Caller, runId, runs, runs, ct, gate: TestResourceGate.AllowAll());
             journalStatus.Should().Be(200);
             var journal = Json(journalBody);
             jsonTrue(journal, "available").Should().BeTrue();

@@ -118,7 +118,7 @@ public sealed class MarangProviderProjectionTests
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
                 hongxian);
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
+                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var projection = Json(body);
@@ -241,7 +241,7 @@ public sealed class MarangProviderProjectionTests
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
                 hongxian);
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
+                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
             status.Should().Be(200);
             var projection = Json(body);
             Str(projection, "status").Should().Be("completed");
@@ -249,7 +249,7 @@ public sealed class MarangProviderProjectionTests
             beforeNodes = projection.GetProperty("nodes").EnumerateArray()
                 .ToDictionary(node => Str(node, "id"), node => Str(node, "status"));
             var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                catalog, Caller, runId, source, source, ct);
+                catalog, Caller, runId, source, source, ct, gate: TestResourceGate.AllowAll());
             journalStatus.Should().Be(200);
             Json(journalBody).GetProperty("available").GetBoolean().Should().BeTrue();
 
@@ -277,7 +277,7 @@ public sealed class MarangProviderProjectionTests
                 (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
                 hongxian2);
             var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
+                catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var projection = Json(body);
@@ -295,7 +295,7 @@ public sealed class MarangProviderProjectionTests
             recorrelation.SessionId.Should().NotBeNullOrWhiteSpace();
 
             var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                catalog, Caller, runId, source, source, ct);
+                catalog, Caller, runId, source, source, ct, gate: TestResourceGate.AllowAll());
             journalStatus.Should().Be(200);
             Json(journalBody).GetProperty("available").GetBoolean().Should().BeTrue();
 
@@ -322,7 +322,7 @@ public sealed class MarangProviderProjectionTests
                     (_, _) => ValueTask.FromResult<WorkflowPlan?>(plan),
                     hongxian3);
                 var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                    catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct);
+                    catalog, Caller, runId, source, () => DateTimeOffset.UtcNow, ct, gate: TestResourceGate.AllowAll());
 
                 status.Should().Be(200);
                 Str(Json(body), "durableSequence").Should().Be(beforeSequence);

@@ -15,9 +15,10 @@
 
   <ItemGroup>
     <PackageReference Include="BiscuitSharp" Version="0.1.0-preview.2" />
-    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.8" />
-    <PackageReference Include="Penghou.Hufu.Biscuit" Version="0.1.0-preview.8" />
-    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.8" />
+    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.9" />
+    <PackageReference Include="Penghou.Hufu.Biscuit" Version="0.1.0-preview.9" />
+    <PackageReference Include="Penghou.Hufu.Cedar" Version="0.1.0-preview.9" />
+    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.9" />
   </ItemGroup>
 
 </Project>

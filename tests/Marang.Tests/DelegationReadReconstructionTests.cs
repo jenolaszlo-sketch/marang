@@ -37,7 +37,7 @@ public sealed class DelegationReadReconstructionTests
             var restarted = DurableCatalog(directory);
             var runtime = BareRuntime();
             var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime, restarted, Caller, accepted.DelegationId.Value, ct, runs: source);
+                runtime, restarted, Caller, accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var detail = Json(body);
@@ -74,7 +74,7 @@ public sealed class DelegationReadReconstructionTests
 
             var restarted = DurableCatalog(directory);
             var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime: BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source);
+                runtime: BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var detail = Json(body);
@@ -102,16 +102,16 @@ public sealed class DelegationReadReconstructionTests
             var runtime = BareRuntime();
 
             (await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime, restarted, Caller, Guid.NewGuid(), ct, runs: source)).StatusCode.Should().Be(404);
+                runtime, restarted, Caller, Guid.NewGuid(), ct, runs: source, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime, restarted, "someone-else", accepted.DelegationId.Value, ct, runs: source)).StatusCode.Should().Be(404);
+                runtime, restarted, "someone-else", accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             // Without a run source the historical behavior (404) is preserved.
             (await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime, restarted, Caller, accepted.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+                runtime, restarted, Caller, accepted.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             // A delegation with no durable run yet reports its authorized
             // envelope with null execution fields rather than 404.
             var (emptyStatus, emptyBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-                runtime, restarted, Caller, accepted.DelegationId.Value, ct, runs: new FakeRunSource(null));
+                runtime, restarted, Caller, accepted.DelegationId.Value, ct, runs: new FakeRunSource(null), gate: TestResourceGate.AllowAll());
             emptyStatus.Should().Be(200);
             var empty = Json(emptyBody);
             Str(empty, "objective").Should().Be("Do the delegated work");
@@ -138,7 +138,7 @@ public sealed class DelegationReadReconstructionTests
 
             var restarted = DurableCatalog(directory);
             var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source);
+                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var evidence = Json(body);
@@ -170,7 +170,7 @@ public sealed class DelegationReadReconstructionTests
 
             var restarted = DurableCatalog(directory);
             var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source);
+                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll());
 
             status.Should().Be(200);
             var evidence = Json(body);
@@ -178,9 +178,9 @@ public sealed class DelegationReadReconstructionTests
             evidence.GetProperty("terminalOutput").ValueKind.Should().Be(JsonValueKind.Null);
 
             (await SupervisionHttpEndpoints.GetEvidenceAsync(
-                BareRuntime(), restarted, "someone-else", accepted.DelegationId.Value, ct, runs: source)).StatusCode.Should().Be(404);
+                BareRuntime(), restarted, "someone-else", accepted.DelegationId.Value, ct, runs: source, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await SupervisionHttpEndpoints.GetEvidenceAsync(
-                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+                BareRuntime(), restarted, Caller, accepted.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         }
         finally
         {

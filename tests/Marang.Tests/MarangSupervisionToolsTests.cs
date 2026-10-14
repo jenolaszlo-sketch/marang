@@ -132,8 +132,8 @@ public sealed class MarangSupervisionToolsTests
                 [caller] = ["workspace"],
             },
         });
-        return (new MarangSupervisionTools(runtime, catalog, accessor, options),
-            new MarangDelegationTools(runtime, catalog, accessor, options));
+        return (new MarangSupervisionTools(runtime, catalog, accessor, options, TestResourceGate.AllowAll()),
+            new MarangDelegationTools(runtime, catalog, accessor, options, TestResourceGate.AllowAll()));
     }
 }
 

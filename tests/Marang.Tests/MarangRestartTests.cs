@@ -126,11 +126,11 @@ public sealed class MarangRestartTests
             // acceptance survives; the run must not leak).
             var fresh = new MarangDelegationCatalog(TestAcceptanceGate.AllowAll());
             (await RunProjectionEndpoints.GetRunAsync(
-                fresh, Caller, runId, sources, () => Start, ct)).StatusCode.Should().Be(404);
+                fresh, Caller, runId, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await SessionJournalEndpoints.GetJournalAsync(
-                fresh, Caller, runId, sources, sources, ct)).StatusCode.Should().Be(404);
+                fresh, Caller, runId, sources, sources, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await RunProjectionEndpoints.GetRunAsync(
-                fresh, "mallory", runId, sources, () => Start, ct)).StatusCode.Should().Be(404);
+                fresh, "mallory", runId, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
             // Restart-safe reattachment through durable authority: the same
             // subject re-establishes visibility on a fresh in-memory cache and
@@ -141,18 +141,18 @@ public sealed class MarangRestartTests
             (await durable.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
                 .Should().BeTrue();
             (await RunProjectionEndpoints.GetRunAsync(
-                durable, Caller, runId, sources, () => Start, ct)).StatusCode.Should().Be(200);
+                durable, Caller, runId, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(200);
             var (reattachedDelegationRunStatus, reattachedDelegationRunBody) =
                 await RunProjectionEndpoints.GetDelegationRunAsync(
-                    durable, Caller, Guid.Parse(manifest["delegationId"]), sources, ct);
+                    durable, Caller, Guid.Parse(manifest["delegationId"]), sources, ct, gate: TestResourceGate.AllowAll());
             reattachedDelegationRunStatus.Should().Be(200);
             reattachedDelegationRunBody.Should().NotBeNull();
             var (reattachedJournalStatus, reattachedJournalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                durable, Caller, runId, sources, sources, ct);
+                durable, Caller, runId, sources, sources, ct, gate: TestResourceGate.AllowAll());
             reattachedJournalStatus.Should().Be(200);
             reattachedJournalBody.Should().BeOfType<SessionJournalView>().Which.Available.Should().BeTrue();
             (await RunProjectionEndpoints.GetRunAsync(
-                durable, "mallory", runId, sources, () => Start, ct)).StatusCode.Should().Be(404);
+                durable, "mallory", runId, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
             // Control without a live execution handle is unavailable (409),
             // never success and never silent work; strangers stay 404.
@@ -161,9 +161,9 @@ public sealed class MarangRestartTests
                 new Penghou.Qingniao.InMemoryProviderRegistry(),
                 new Penghou.Qingniao.InMemoryExternalOperationProviderCatalog());
             (await Marang.Http.SupervisionHttpEndpoints.PostCancelAsync(
-                bareRuntime, durable, Caller, Guid.Parse(manifest["delegationId"]), ct)).StatusCode.Should().Be(409);
+                bareRuntime, durable, Caller, Guid.Parse(manifest["delegationId"]), ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(409);
             (await Marang.Http.SupervisionHttpEndpoints.PostCancelAsync(
-                bareRuntime, durable, "mallory", Guid.Parse(manifest["delegationId"]), ct)).StatusCode.Should().Be(404);
+                bareRuntime, durable, "mallory", Guid.Parse(manifest["delegationId"]), ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
             // Terminal revocation on the main binding: restoring access needs
             // a new acceptance. Nothing after this needs the binding.
@@ -179,13 +179,13 @@ public sealed class MarangRestartTests
             (await afterRevoke.ReattachAsync(Caller, new Penghou.Qingniao.DelegationId(Guid.Parse(manifest["delegationId"])), ct))
                 .Should().BeFalse();
             (await RunProjectionEndpoints.GetRunAsync(
-                afterRevoke, Caller, runId, sources, () => Start, ct)).StatusCode.Should().Be(404);
+                afterRevoke, Caller, runId, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
             // The mechanism is live: a fresh delegation gets normal behavior.
             var acceptance = await fresh.AcceptAsync(
                 new DelegationCallerScope(Caller), DelegationRequest(), ct);
             (await RunProjectionEndpoints.GetRunAsync(
-                fresh, Caller, Guid.NewGuid(), sources, () => Start, ct)).StatusCode.Should().Be(404);
+                fresh, Caller, Guid.NewGuid(), sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             acceptance.DelegationId.Should().NotBeNull();
 
             // Positive post-restart path on a fresh correlated run.
@@ -219,18 +219,18 @@ public sealed class MarangRestartTests
                     Start), ct);
 
             var (runStatus, _) = await RunProjectionEndpoints.GetRunAsync(
-                fresh, Caller, runId2, sources, () => Start, ct);
+                fresh, Caller, runId2, sources, () => Start, ct, gate: TestResourceGate.AllowAll());
             runStatus.Should().Be(200);
             var (journalStatus, journalBody) = await SessionJournalEndpoints.GetJournalAsync(
-                fresh, Caller, runId2, sources, sources, ct);
+                fresh, Caller, runId2, sources, sources, ct, gate: TestResourceGate.AllowAll());
             journalStatus.Should().Be(200);
             var journal = JsonDocument.Parse(JsonSerializer.Serialize(
                 journalBody, new JsonSerializerOptions(JsonSerializerDefaults.Web))).RootElement;
             journal.GetProperty("available").GetBoolean().Should().BeTrue();
             (await RunProjectionEndpoints.GetRunAsync(
-                fresh, "mallory", runId2, sources, () => Start, ct)).StatusCode.Should().Be(404);
+                fresh, "mallory", runId2, sources, () => Start, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
             (await SessionJournalEndpoints.GetJournalAsync(
-                fresh, "mallory", runId2, sources, sources, ct)).StatusCode.Should().Be(404);
+                fresh, "mallory", runId2, sources, sources, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
             if (sources is IDisposable disposable)
             {

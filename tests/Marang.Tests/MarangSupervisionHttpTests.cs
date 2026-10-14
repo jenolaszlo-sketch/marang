@@ -29,7 +29,7 @@ public sealed class MarangSupervisionHttpTests
         await PumpToWaitingAsync(runtime, handle.DelegationId, ct);
 
         var (detailStatus, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         detailStatus.Should().Be(200);
         var waiting = Json(detailBody).GetProperty("waiting");
         Str(waiting, "checkpointId").Should().NotBeNullOrEmpty();
@@ -40,13 +40,13 @@ public sealed class MarangSupervisionHttpTests
         var expectedRevision = Num(waiting, "expectedRevision");
 
         var (waitingStatus, waitingBody) = await SupervisionHttpEndpoints.GetWaitingAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         waitingStatus.Should().Be(200);
         Str(Json(waitingBody), "checkpointId").Should().Be(checkpointId);
 
         var (approveStatus, approveBody) = await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, Caller, handle.DelegationId.Value,
-            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct);
+            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct, gate: TestResourceGate.AllowAll());
         approveStatus.Should().Be(200);
         Str(Json(approveBody), "state").Should().Be("Running");
         provider.ResumeCalls.Should().Be(1);
@@ -67,12 +67,12 @@ public sealed class MarangSupervisionHttpTests
             new DelegationCallerScope(Caller), CreateRequest("waiting-stale"), ct);
         await PumpToWaitingAsync(runtime, handle.DelegationId, ct);
         var (_, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         var checkpointId = Str(Json(detailBody).GetProperty("waiting"), "checkpointId");
 
         var (status, body) = await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, Caller, handle.DelegationId.Value,
-            new InterventionHttpRequest("approve", checkpointId, 1, null, null), ct);
+            new InterventionHttpRequest("approve", checkpointId, 1, null, null), ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(409);
         Str(Json(body), "state").Should().Be("WaitingForSupervisor");
@@ -93,20 +93,20 @@ public sealed class MarangSupervisionHttpTests
             new DelegationCallerScope(Caller), CreateRequest("waiting-finished"), ct);
         await PumpToWaitingAsync(runtime, handle.DelegationId, ct);
         var (_, detailBody) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         var waiting = Json(detailBody).GetProperty("waiting");
         var checkpointId = Str(waiting, "checkpointId");
         var expectedRevision = Num(waiting, "expectedRevision");
 
         var (approveStatus, _) = await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, Caller, handle.DelegationId.Value,
-            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct);
+            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct, gate: TestResourceGate.AllowAll());
         approveStatus.Should().Be(200);
         await PumpToTerminalAsync(runtime, handle.DelegationId, ct);
 
         var (status, body) = await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, Caller, handle.DelegationId.Value,
-            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct);
+            new InterventionHttpRequest("approve", checkpointId, expectedRevision, null, null), ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(409);
         Str(Json(body), "state").Should().Be("Completed");
@@ -125,12 +125,12 @@ public sealed class MarangSupervisionHttpTests
         await PumpToWaitingAsync(runtime, handle.DelegationId, ct);
 
         (await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.GetWaitingAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, "someone-else", handle.DelegationId.Value,
-            new InterventionHttpRequest("approve", Guid.NewGuid().ToString("D"), 7, null, null), ct))
+            new InterventionHttpRequest("approve", Guid.NewGuid().ToString("D"), 7, null, null), ct, gate: TestResourceGate.AllowAll()))
             .StatusCode.Should().Be(404);
 
         provider.ResumeCalls.Should().Be(0);
@@ -151,7 +151,7 @@ public sealed class MarangSupervisionHttpTests
 
         var (status, _) = await SupervisionHttpEndpoints.PostInterventionAsync(
             runtime, catalog, Caller, handle.DelegationId.Value,
-            new InterventionHttpRequest("reject", Guid.NewGuid().ToString("D"), 7, "no", null), ct);
+            new InterventionHttpRequest("reject", Guid.NewGuid().ToString("D"), 7, "no", null), ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(400);
         provider.ResumeCalls.Should().Be(0);

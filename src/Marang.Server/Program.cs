@@ -84,6 +84,61 @@ builder.Services.AddSingleton(serviceProvider =>
 builder.Services.AddSingleton(serviceProvider => new MarangDelegationCatalog(
     serviceProvider.GetRequiredService<Marang.Hufu.MarangHufuAcceptanceComposition>().Gate,
     httpContext: serviceProvider.GetRequiredService<IHttpContextAccessor>()));
+
+// The Hufu resource gate is mandatory for every protected Marang operation.
+// The default host composes it from the same Marang:Hufu trust configuration
+// (database path + pinned issuers) plus an explicit resource policy
+// (Marang:Hufu:Resource). Failing to configure trust yields the fail-closed
+// gate; an empty policy composes a live gate that denies every caller. Either
+// way there is no permissive default, and a missing gate on any call fails
+// closed. Resource authorization never substitutes for acceptance.
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var section = builder.Configuration.GetSection("Marang:Hufu");
+    var databasePath = section["AuthorityDatabasePath"];
+    var tenantId = section["TenantId"];
+    if (string.IsNullOrWhiteSpace(tenantId)) tenantId = "marang";
+    var issuers = new List<Marang.Hufu.MarangHufuTrustedIssuer>();
+    foreach (var child in section.GetSection("TrustedIssuers").GetChildren())
+    {
+        var realm = child["Realm"];
+        var keyId = child["KeyId"];
+        var publicKey = child["PublicKey"];
+        if (string.IsNullOrWhiteSpace(realm) || string.IsNullOrWhiteSpace(keyId) ||
+            string.IsNullOrWhiteSpace(publicKey))
+            throw new InvalidOperationException(
+                "Marang:Hufu:TrustedIssuers entries require Realm, KeyId, and PublicKey.");
+        try
+        {
+            issuers.Add(new Marang.Hufu.MarangHufuTrustedIssuer(
+                realm, keyId, BiscuitSharp.BiscuitPublicKey.ParsePrefixed(publicKey)));
+        }
+        catch (Exception exception) when (exception is FormatException or ArgumentException)
+        {
+            throw new InvalidOperationException(
+                $"Marang:Hufu:TrustedIssuers entry '{keyId}' has a malformed PublicKey.", exception);
+        }
+    }
+
+    var resource = section.GetSection("Resource");
+    var options = new Marang.Hufu.MarangHufuResourceOptions
+    {
+        AuthorityDatabasePath = databasePath,
+        TenantId = tenantId,
+        TrustedIssuers = issuers,
+        ResourcePolicy = new Marang.Hufu.MarangResourceAuthorizationPolicy
+        {
+            AllowedCallers = new HashSet<string>(
+                resource.GetSection("AllowedCallers").Get<string[]>() ?? [], StringComparer.Ordinal),
+            AllowedWorkspaces = new HashSet<string>(
+                resource.GetSection("AllowedWorkspaces").Get<string[]>() ?? [], StringComparer.Ordinal),
+        },
+    };
+    return Marang.Hufu.MarangHufuResourceCompositionFactory.Create(
+        options, new Marang.Hufu.MarangHufuAcceptanceStoreAuthorizer());
+});
+builder.Services.AddSingleton(serviceProvider =>
+    serviceProvider.GetRequiredService<Marang.Hufu.MarangHufuResourceComposition>().Gate);
 {
     // Run projection and session journals read durable Zhinu/Hongxian stores
     // only when configured; otherwise the endpoints truthfully report 404.
@@ -204,10 +259,26 @@ app.MapGet("/api/delegations", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
+    // The caller-scoped catalog view is its own resource: the tenant scope is
+    // the workspace, the caller's view is the path.
+    var listOutcome = await gate.AuthorizeAsync(
+        new Marang.Hufu.MarangResourceAuthorizationInput(
+            caller, Penghou.Hufu.AuthorityAction.MarangReadDelegation,
+            Marang.DelegationAuthority.MarangPrincipal.DefaultTenant,
+            Marang.DelegationAuthority.MarangPrincipal.DefaultTenant,
+            $"catalog/{caller}/delegations",
+            context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential),
+        cancellationToken);
+    if (listOutcome.Status != Marang.Hufu.MarangResourceAuthorizationStatus.Permitted)
+    {
+        return Results.NotFound();
+    }
+
     var items = new List<object>();
     foreach (var record in catalog.List(caller))
     {
@@ -235,12 +306,14 @@ app.MapGet("/api/delegations/{id:guid}", async (
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
     IRunProjectionSource runs,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-        runtime, catalog, caller, id, cancellationToken, runs);
+        runtime, catalog, caller, id, cancellationToken, runs, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/delegations/{id:guid}/waiting", async (
@@ -248,12 +321,14 @@ app.MapGet("/api/delegations/{id:guid}/waiting", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetWaitingAsync(
-        runtime, catalog, caller, id, cancellationToken);
+        runtime, catalog, caller, id, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status switch
     {
         200 => Results.Json(body),
@@ -267,12 +342,14 @@ app.MapPost("/api/delegations/{id:guid}/interventions", async (
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
     InterventionHttpRequest request,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.PostInterventionAsync(
-        runtime, catalog, caller, id, request, cancellationToken);
+        runtime, catalog, caller, id, request, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status switch
     {
         200 => Results.Json(body),
@@ -286,12 +363,14 @@ app.MapPost("/api/delegations/{id:guid}/cancel", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.PostCancelAsync(
-        runtime, catalog, caller, id, cancellationToken);
+        runtime, catalog, caller, id, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/delegations/{id:guid}/evidence", async (
@@ -300,12 +379,14 @@ app.MapGet("/api/delegations/{id:guid}/evidence", async (
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
     IRunProjectionSource runs,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetEvidenceAsync(
-        runtime, catalog, caller, id, cancellationToken, runs);
+        runtime, catalog, caller, id, cancellationToken, runs, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/delegations/{id:guid}/artifacts/{artifactId}", async (
@@ -314,12 +395,14 @@ app.MapGet("/api/delegations/{id:guid}/artifacts/{artifactId}", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     DelegationRuntime runtime,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SupervisionHttpEndpoints.GetArtifactAsync(
-        runtime, catalog, caller, id, artifactId, cancellationToken);
+        runtime, catalog, caller, id, artifactId, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/runs/{id:guid}", async (
@@ -327,12 +410,14 @@ app.MapGet("/api/runs/{id:guid}", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     IRunProjectionSource runs,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-        catalog, caller, id, runs, static () => DateTimeOffset.UtcNow, cancellationToken);
+        catalog, caller, id, runs, static () => DateTimeOffset.UtcNow, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status switch
     {
         200 => Results.Json(body),
@@ -346,12 +431,14 @@ app.MapGet("/api/delegations/{id:guid}/run", async (
     HttpContext context,
     MarangDelegationCatalog catalog,
     IRunProjectionSource runs,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await RunProjectionEndpoints.GetDelegationRunAsync(
-        catalog, caller, id, runs, cancellationToken);
+        catalog, caller, id, runs, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapGet("/api/runs/{id:guid}/journal", async (
@@ -360,12 +447,14 @@ app.MapGet("/api/runs/{id:guid}/journal", async (
     MarangDelegationCatalog catalog,
     IRunProjectionSource runs,
     ISessionJournalSource sessions,
+    Marang.Hufu.IMarangResourceAuthorizationGate gate,
     CancellationToken cancellationToken) =>
 {
     context.Response.Headers.CacheControl = "no-store";
     var caller = (string)context.Items[MarangHttpContextKeys.CallerIdentity]!;
     var (status, body) = await SessionJournalEndpoints.GetJournalAsync(
-        catalog, caller, id, runs, sessions, cancellationToken);
+        catalog, caller, id, runs, sessions, cancellationToken, gate,
+        context.Items[MarangHttpContextKeys.DelegationCredential] as Marang.Hufu.MarangDelegationCredential);
     return status == 200 ? Results.Json(body) : Results.NotFound();
 });
 app.MapMcp("/mcp");

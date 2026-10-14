@@ -1,5 +1,7 @@
+using Marang.Hufu;
 using Marang.Mcp;
 using Marang.Runs;
+using Penghou.Hufu;
 using Penghou.Qingniao;
 using Penghou.Zhinu;
 
@@ -34,7 +36,9 @@ public static class SupervisionHttpEndpoints
         string caller,
         Guid id,
         CancellationToken cancellationToken = default,
-        IRunProjectionSource? runs = null)
+        IRunProjectionSource? runs = null,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
@@ -43,6 +47,15 @@ public static class SupervisionHttpEndpoints
         var delegationId = new DelegationId(id);
         var record = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
         if (record is null)
+        {
+            return (404, null);
+        }
+
+        // The waiting card names a checkpoint id only after reading status, so
+        // the supervision resource authorizes this read; checkpoint exactness
+        // is enforced downstream by fencing, not by authority.
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangReadDelegation,
+                id, record.Workspace, $"delegation/{id:D}/supervision", credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -83,14 +96,23 @@ public static class SupervisionHttpEndpoints
         MarangDelegationCatalog catalog,
         string caller,
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var record = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (record is null)
+        {
+            return (404, null);
+        }
+
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangReadDelegation,
+                id, record.Workspace, $"delegation/{id:D}/supervision", credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -130,14 +152,23 @@ public static class SupervisionHttpEndpoints
         MarangDelegationCatalog catalog,
         string caller,
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var record = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (record is null)
+        {
+            return (404, null);
+        }
+
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangCancel,
+                id, record.Workspace, $"delegation/{id:D}/supervision", credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -186,7 +217,9 @@ public static class SupervisionHttpEndpoints
         string caller,
         Guid id,
         CancellationToken cancellationToken = default,
-        IRunProjectionSource? runs = null)
+        IRunProjectionSource? runs = null,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
@@ -195,6 +228,12 @@ public static class SupervisionHttpEndpoints
         var delegationId = new DelegationId(id);
         var evidenceRecord = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
         if (evidenceRecord is null)
+        {
+            return (404, null);
+        }
+
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangReadResult,
+                id, evidenceRecord.Workspace, $"delegation/{id:D}/result", credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -251,14 +290,25 @@ public static class SupervisionHttpEndpoints
         string caller,
         Guid id,
         string artifactId,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
 
         var delegationId = new DelegationId(id);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var artifactRecord = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (artifactRecord is null)
+        {
+            return (404, null);
+        }
+
+        // Caller-supplied artifact identity: the gate rejects non-canonical
+        // segments rather than normalizing them.
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangReadResult,
+                id, artifactRecord.Workspace, $"delegation/{id:D}/artifact/{artifactId}", credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -357,7 +407,9 @@ public static class SupervisionHttpEndpoints
         string caller,
         Guid id,
         InterventionHttpRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(catalog);
@@ -376,7 +428,17 @@ public static class SupervisionHttpEndpoints
         }
 
         var delegationId = new DelegationId(id);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var interventionRecord = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (interventionRecord is null)
+        {
+            return (404, null);
+        }
+
+        // One authorization covers the activate-then-accept protocol below:
+        // both runtime calls use the same bound delegation/checkpoint ids.
+        if (!await AuthorizeAsync(gate, caller, AuthorityAction.MarangIntervene,
+                id, interventionRecord.Workspace, $"delegation/{id:D}/checkpoint/{checkpoint:D}/intervention",
+                credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -433,6 +495,34 @@ public static class SupervisionHttpEndpoints
         }
 
         return catalog.Find(delegationId, caller);
+    }
+
+    /// <summary>
+    /// Evaluates the mandatory Hufu resource gate before a protected side
+    /// effect. A null gate is an unconfigured host: fail closed (never a
+    /// bypass). Denial and unavailability both return false; callers map that
+    /// to the same 404 they use for unknown/forbidden delegations, so
+    /// authorization never becomes an existence oracle.
+    /// </summary>
+    private static async Task<bool> AuthorizeAsync(
+        IMarangResourceAuthorizationGate? gate,
+        string caller,
+        AuthorityAction action,
+        Guid id,
+        string workspace,
+        string path,
+        MarangDelegationCredential? credential,
+        CancellationToken cancellationToken)
+    {
+        if (gate is null)
+        {
+            return false;
+        }
+
+        var outcome = await gate.AuthorizeAsync(
+            new MarangResourceAuthorizationInput(caller, action, id.ToString("D"), workspace, path, credential),
+            cancellationToken).ConfigureAwait(false);
+        return outcome.Status == MarangResourceAuthorizationStatus.Permitted;
     }
 
     /// <summary>

@@ -17,7 +17,7 @@
     <PackageReference Include="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.3" />
     <PackageReference Include="Penghou.Hongxian" Version="0.1.0-preview.5" />
     <PackageReference Include="Penghou.Hongxian.Sqlite" Version="0.1.0-preview.5" />
-    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.8" />
+    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.9" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
   </ItemGroup>
 

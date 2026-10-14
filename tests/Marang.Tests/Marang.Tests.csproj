@@ -22,9 +22,9 @@
     <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Qingniao.Codex" Version="0.1.0-preview.4" />
     <PackageReference Include="Penghou.Qingniao.Hufu" Version="0.1.0-preview.4" />
-    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.8" />
-    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.8" />
-    <PackageReference Include="Penghou.Hufu.Biscuit" Version="0.1.0-preview.8" />
+    <PackageReference Include="Penghou.Hufu" Version="0.1.0-preview.9" />
+    <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.9" />
+    <PackageReference Include="Penghou.Hufu.Biscuit" Version="0.1.0-preview.9" />
     <PackageReference Include="Penghou.Fuwen.Zhinu" Version="0.1.0-preview.13" />
     <PackageReference Include="Penghou.Zhinu" Version="0.2.0-preview.3" />
     <PackageReference Include="Penghou.Zhinu.Sqlite" Version="0.2.0-preview.3" />

@@ -1,4 +1,6 @@
+using Marang.Hufu;
 using Penghou.Fuwen.Zhinu;
+using Penghou.Hufu;
 using Penghou.Qingniao;
 
 namespace Marang.Runs;
@@ -22,14 +24,22 @@ public static class RunProjectionEndpoints
         string caller,
         Guid delegationGuid,
         IRunProjectionSource source,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
         ArgumentNullException.ThrowIfNull(source);
 
         var delegationId = new DelegationId(delegationGuid);
-        if (await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false) is null)
+        var record = await ReattachedAsync(catalog, caller, delegationId, cancellationToken).ConfigureAwait(false);
+        if (record is null)
+        {
+            return (404, null);
+        }
+
+        if (!await AuthorizeAsync(gate, caller, delegationGuid, record.Workspace, credential, cancellationToken).ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -50,7 +60,9 @@ public static class RunProjectionEndpoints
         Guid runId,
         IRunProjectionSource source,
         Func<DateTimeOffset> now,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IMarangResourceAuthorizationGate? gate = null,
+        MarangDelegationCredential? credential = null)
     {
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(caller);
@@ -71,6 +83,12 @@ public static class RunProjectionEndpoints
 
         var record = await ReattachedAsync(catalog, caller, correlation.DelegationId, cancellationToken).ConfigureAwait(false);
         if (record is null)
+        {
+            return (404, null);
+        }
+
+        if (!await AuthorizeAsync(gate, caller, correlation.DelegationId.Value,
+                record.Workspace, credential, cancellationToken, $"run/{runId:D}").ConfigureAwait(false))
         {
             return (404, null);
         }
@@ -135,5 +153,32 @@ public static class RunProjectionEndpoints
         }
 
         return catalog.Find(delegationId, caller);
+    }
+
+    /// <summary>
+    /// Evaluates the mandatory Hufu resource gate before a protected run
+    /// read. A null gate is an unconfigured host: fail closed. Denial and
+    /// unavailability both map to the caller's existing 404.
+    /// </summary>
+    private static async Task<bool> AuthorizeAsync(
+        IMarangResourceAuthorizationGate? gate,
+        string caller,
+        Guid delegationId,
+        string workspace,
+        MarangDelegationCredential? credential,
+        CancellationToken cancellationToken,
+        string? path = null)
+    {
+        if (gate is null)
+        {
+            return false;
+        }
+
+        var resolved = path ?? $"delegation/{delegationId:D}/run";
+        var outcome = await gate.AuthorizeAsync(
+            new MarangResourceAuthorizationInput(caller, AuthorityAction.MarangReadResult,
+                delegationId.ToString("D"), workspace, resolved, credential),
+            cancellationToken).ConfigureAwait(false);
+        return outcome.Status == MarangResourceAuthorizationStatus.Permitted;
     }
 }

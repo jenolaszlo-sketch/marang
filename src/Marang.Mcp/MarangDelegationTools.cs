@@ -1,9 +1,11 @@
 using System.ComponentModel;
 using System.Net;
 using System.Text.Json;
+using Marang.Hufu;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using ModelContextProtocol.Server;
+using Penghou.Hufu;
 using Penghou.Qingniao;
 
 namespace Marang.Mcp;
@@ -16,13 +18,21 @@ namespace Marang.Mcp;
 /// status, result, and cancel are reads against the same runtime.
 /// Intervention, wait, inspect, and artifact tools stay out until their
 /// authorization/fencing tests pass.
+///
+/// Every protected operation evaluates the mandatory Hufu resource gate
+/// before its first runtime effect. Denial reports the same shape as an
+/// unknown delegation: the catalog is caller-scoped, so a distinct denial
+/// shape would confirm a delegation's existence to an unauthorized caller.
+/// Acceptance (`marang_delegate`) is deliberately NOT resource-gated: a
+/// resource permit must never substitute for acceptance nor vice versa.
 /// </summary>
 [McpServerToolType]
 public sealed class MarangDelegationTools(
     DelegationRuntime runtime,
     MarangDelegationCatalog catalog,
     IHttpContextAccessor httpContext,
-    IOptions<MarangAuthenticationOptions> authentication)
+    IOptions<MarangAuthenticationOptions> authentication,
+    IMarangResourceAuthorizationGate resourceGate)
 {
     /// <summary>Accepts one bounded unit of work and pumps it bounded steps.</summary>
     [McpServerTool(Name = "marang_delegate")]
@@ -54,6 +64,9 @@ public sealed class MarangDelegationTools(
             ["Done"],
             [],
             new DelegationBudget(MaximumWorkerCalls: 8, MaximumRetries: 2));
+        // Acceptance only: no resource gate applies here by design (§17). A
+        // resource permit must never substitute for acceptance, so acceptance
+        // consults only the acceptance gate even when a resource gate exists.
         try
         {
             var handle = await runtime.DelegateAsync(
@@ -102,9 +115,17 @@ public sealed class MarangDelegationTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
+        }
+
+        var denied = await AuthorizeResourceAsync(AuthorityAction.MarangReadDelegation,
+            id, record.Workspace, $"delegation/{id:D}/supervision", cancellationToken).ConfigureAwait(false);
+        if (denied is not null)
+        {
+            return denied;
         }
 
         var status = await runtime.GetStatusAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
@@ -133,9 +154,17 @@ public sealed class MarangDelegationTools(
             return Error("unknown delegation id");
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
+        }
+
+        var denied = await AuthorizeResourceAsync(AuthorityAction.MarangReadResult,
+            id, record.Workspace, $"delegation/{id:D}/result", cancellationToken).ConfigureAwait(false);
+        if (denied is not null)
+        {
+            return denied;
         }
 
         var result = await runtime.GetResultAsync(new DelegationId(id), cancellationToken).ConfigureAwait(false);
@@ -154,9 +183,17 @@ public sealed class MarangDelegationTools(
             return "unknown delegation id";
         }
 
-        if (catalog.Find(new DelegationId(id), CurrentCaller()) is null)
+        var record = catalog.Find(new DelegationId(id), CurrentCaller());
+        if (record is null)
         {
             return Error("unknown delegation");
+        }
+
+        var denied = await AuthorizeResourceAsync(AuthorityAction.MarangCancel,
+            id, record.Workspace, $"delegation/{id:D}/supervision", cancellationToken).ConfigureAwait(false);
+        if (denied is not null)
+        {
+            return denied;
         }
 
         try
@@ -173,6 +210,19 @@ public sealed class MarangDelegationTools(
     private string CurrentCaller() =>
         httpContext.HttpContext?.Items[MarangHttpContextKeys.CallerIdentity] as string
         ?? authentication.Value.LocalCallerIdentity;
+
+    private MarangDelegationCredential? CurrentCredential() =>
+        httpContext.HttpContext?.Items[MarangHttpContextKeys.DelegationCredential] as MarangDelegationCredential;
+
+    private async Task<string?> AuthorizeResourceAsync(AuthorityAction action, Guid id,
+        string workspace, string path, CancellationToken cancellationToken)
+    {
+        var outcome = await resourceGate.AuthorizeAsync(
+            new MarangResourceAuthorizationInput(
+                CurrentCaller(), action, id.ToString("D"), workspace, path, CurrentCredential()),
+            cancellationToken).ConfigureAwait(false);
+        return outcome.Status == MarangResourceAuthorizationStatus.Permitted ? null : Error("unknown delegation");
+    }
 
     private static string Error(string message) =>
         JsonSerializer.Serialize(new { error = message });

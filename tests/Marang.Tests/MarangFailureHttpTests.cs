@@ -28,7 +28,7 @@ public sealed class MarangFailureHttpTests
         terminal.Progress.State.Should().Be(DelegationState.Failed);
 
         var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var detail = Json(body);
@@ -55,7 +55,7 @@ public sealed class MarangFailureHttpTests
         terminal.Progress.State.Should().Be(DelegationState.Completed);
 
         var (status, body) = await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var detail = Json(body);
@@ -78,7 +78,7 @@ public sealed class MarangFailureHttpTests
         await PumpToTerminalAsync(runtime, handle.DelegationId, ct);
 
         (await SupervisionHttpEndpoints.GetDetailAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     private static JsonElement Json(object? body) =>

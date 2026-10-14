@@ -41,7 +41,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 42);
 
         var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-            catalog, Caller, runId, source, () => Start.AddMinutes(2), TestContext.Current.CancellationToken);
+            catalog, Caller, runId, source, () => Start.AddMinutes(2), TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var projection = Json(body);
@@ -92,7 +92,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 17);
 
         var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-            catalog, Caller, runId, source, () => Start.AddMinutes(3), TestContext.Current.CancellationToken);
+            catalog, Caller, runId, source, () => Start.AddMinutes(3), TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var nodes = Json(body).GetProperty("nodes");
@@ -119,7 +119,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 9);
 
         var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-            catalog, Caller, runId, source, () => Start.AddMinutes(1), TestContext.Current.CancellationToken);
+            catalog, Caller, runId, source, () => Start.AddMinutes(1), TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         var projection = Json(body);
@@ -143,7 +143,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 3);
 
         var (status, _) = await RunProjectionEndpoints.GetRunAsync(
-            catalog, Caller, runId, source, () => Start, TestContext.Current.CancellationToken);
+            catalog, Caller, runId, source, () => Start, TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(500);
     }
@@ -173,7 +173,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 3);
 
         var (status, _) = await RunProjectionEndpoints.GetRunAsync(
-            catalog, Caller, runId, source, () => Start, TestContext.Current.CancellationToken);
+            catalog, Caller, runId, source, () => Start, TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(409);
     }
@@ -192,14 +192,14 @@ public sealed class MarangRunProjectionTests
         var ct = TestContext.Current.CancellationToken;
 
         var (status, body) = await RunProjectionEndpoints.GetDelegationRunAsync(
-            catalog, Caller, delegationId.Value, source, ct);
+            catalog, Caller, delegationId.Value, source, ct, gate: TestResourceGate.AllowAll());
         status.Should().Be(200);
         Str(Json(body), "runId").Should().Be(runId.ToString("D"));
 
         (await RunProjectionEndpoints.GetDelegationRunAsync(
-            catalog, "someone-else", delegationId.Value, source, ct)).StatusCode.Should().Be(404);
+            catalog, "someone-else", delegationId.Value, source, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await RunProjectionEndpoints.GetDelegationRunAsync(
-            catalog, Caller, Guid.NewGuid(), source, ct)).StatusCode.Should().Be(404);
+            catalog, Caller, Guid.NewGuid(), source, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
     }
 
     [Fact]
@@ -213,7 +213,7 @@ public sealed class MarangRunProjectionTests
         var source = new FakeSource(plan, run, steps, throughSequence: 3);
 
         (await RunProjectionEndpoints.GetRunAsync(
-            catalog, "someone-else", runId, source, () => Start, TestContext.Current.CancellationToken))
+            catalog, "someone-else", runId, source, () => Start, TestContext.Current.CancellationToken, gate: TestResourceGate.AllowAll()))
             .StatusCode.Should().Be(404);
     }
 
@@ -258,7 +258,7 @@ public sealed class MarangRunProjectionTests
                 var steps = new[] { Step(runId, "demo/fetch", StepStatus.Completed) };
                 var source = new FakeSource(plan, run!, steps, throughSequence);
                 var (status, body) = await RunProjectionEndpoints.GetRunAsync(
-                    preCatalog, Caller, runId, source, () => Start.AddMinutes(1), ct);
+                    preCatalog, Caller, runId, source, () => Start.AddMinutes(1), ct, gate: TestResourceGate.AllowAll());
 
                 status.Should().Be(200);
                 Str(Json(body), "durableSequence").Should().Be(throughSequence.ToString());

@@ -28,7 +28,7 @@ public sealed class MarangCancelHttpTests
             new DelegationCallerScope(Caller), CreateRequest("cancel-queued"), ct);
 
         var (status, body) = await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         Str(Json(body), "state").Should().Be("Cancelled");
@@ -50,7 +50,7 @@ public sealed class MarangCancelHttpTests
         await PumpToRunningAsync(runtime, handle.DelegationId, ct);
 
         var (status, _) = await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         status.Should().Be(200);
         provider.CancelCalls.Should().Be(1);
@@ -71,9 +71,9 @@ public sealed class MarangCancelHttpTests
             new DelegationCallerScope(Caller), CreateRequest("cancel-repeat"), ct);
 
         var (firstStatus, firstBody) = await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
         var (secondStatus, secondBody) = await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, Caller, handle.DelegationId.Value, ct);
+            runtime, catalog, Caller, handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll());
 
         firstStatus.Should().Be(200);
         secondStatus.Should().Be(200);
@@ -93,9 +93,9 @@ public sealed class MarangCancelHttpTests
             new DelegationCallerScope(Caller), CreateRequest("cancel-foreign"), ct);
 
         (await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, "someone-else", handle.DelegationId.Value, ct)).StatusCode.Should().Be(404);
+            runtime, catalog, "someone-else", handle.DelegationId.Value, ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
         (await SupervisionHttpEndpoints.PostCancelAsync(
-            runtime, catalog, Caller, Guid.NewGuid(), ct)).StatusCode.Should().Be(404);
+            runtime, catalog, Caller, Guid.NewGuid(), ct, gate: TestResourceGate.AllowAll())).StatusCode.Should().Be(404);
 
         provider.CancelCalls.Should().Be(0);
         (await runtime.GetAsync(handle.DelegationId, ct)).Progress.State
