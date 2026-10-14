@@ -139,3 +139,6 @@ The demo reads this repository, writes only its own evidence directory, and uses
 observable provider through Qingniao's real lifecycle. See the [architecture](docs/aaaw-m1/architecture.md),
 [revision contract](docs/aaaw-m1/revision-contract.md), [recovery limits](docs/aaaw-m1/delegation-recovery.md)
 and [deferred work](docs/aaaw-m1/deferred.md).
+
+The [M1 qualification report](docs/aaaw-m1/evidence.md) records exact source commits,
+package hashes, test results, all crash barriers and the limits of the supported claim.

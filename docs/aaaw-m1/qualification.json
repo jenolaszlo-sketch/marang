@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "aaaw-m1-evidence/v1",
+  "date": "2026-10-14",
+  "platform": "Windows x64",
+  "implementationCommits": {
+    "zhinu": "07e1807cc4b867dd4f527445aa108f56135d37db",
+    "qingniao": "f08971df33916be184fd1bebb5940ba2bd660a49",
+    "marang": "1820d44f7f65beef63fc922d3be8f6c9a8aab7ff"
+  },
+  "packages": [
+    {
+      "Sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+      "File": "Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg"
+    },
+    {
+      "Sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+      "File": "Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg"
+    },
+    {
+      "Sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+      "File": "Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg"
+    },
+    {
+      "Sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+      "File": "Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg"
+    }
+  ],
+  "testRuns": [
+    {
+      "path": "artifacts/aaaw-m1/final-consumer/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_15_09_05_net8.0.trx",
+      "total": 119,
+      "passed": 119,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "912f0062b73d750c4432211ff812df60aad3a318c4c46b64cf0263da0390c3b0"
+    },
+    {
+      "path": "artifacts/aaaw-m1/final-consumer/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_15_09_08_net10.0.trx",
+      "total": 149,
+      "passed": 149,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "8768b828ab7181d9cffa4591e3893b412771984e5808b4412ec342763c326deb"
+    },
+    {
+      "path": "../zhinu/artifacts/aaaw-m1/locked-source/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_15_23_20_net8.0.trx",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "279122040cbf32b53322438ad0b0e72e8a8648236b25174c3bd5e321f2888f89"
+    },
+    {
+      "path": "../zhinu/artifacts/aaaw-m1/locked-source/Laszlos_LAPTOP-KBD8D8JG_2026-10-14_15_23_21_net10.0.trx",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "07d61337835f102349e5b1c30174a4c496e67bb0229b3cb4d983dad8a98b5637"
+    },
+    {
+      "path": "../qingniao/tests/Penghou.Qingniao.Tests/TestResults/Qingniao-net10.trx",
+      "total": 433,
+      "passed": 433,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "d334c4d8a55ade60552a884fe8568ffe24f8b01eab37384330594e1f4258d941"
+    },
+    {
+      "path": "../qingniao/tests/Penghou.Qingniao.Hufu.Tests/TestResults/Qingniao-Hufu-net10.trx",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "1891f9553718517b7bedfa1641d7c8cd8002ddbc414e399a129a1dad2250a0f4"
+    },
+    {
+      "path": "../qingniao/tests/Penghou.Qingniao.Codex.Tests/TestResults/Qingniao-Codex-net10.trx",
+      "total": 72,
+      "passed": 69,
+      "failed": 0,
+      "notExecuted": 0,
+      "sha256": "35cce21b5739463c94b1f5ff79827c8c1d14f512d0734d0f4a4c4ab374f38506"
+    }
+  ],
+  "processCases": [
+    {
+      "barrier": "after-activation",
+      "killedProcess": 20704,
+      "recoveredProcess": 30408,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/after-activation-252440fe85f1430da431d9d3bbbf8f5c/process-evidence.json",
+      "sha256": "e61fca9aefccae47fe89354363879dcd1d68d0562865bea95105b94288100dd3"
+    },
+    {
+      "barrier": "approved-before-commit",
+      "killedProcess": 35684,
+      "recoveredProcess": 41624,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/approved-before-commit-f68c672764c5482c97ba6154cb5c33db/process-evidence.json",
+      "sha256": "afdf934f7c2e87663819594252ea50b8a1790a51cadae221f98474250b100cf6"
+    },
+    {
+      "barrier": "basic",
+      "killedProcess": null,
+      "recoveredProcess": 50716,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/basic-05579a14ad694c70a0cc1258f99ff10d/process-evidence.json",
+      "sha256": "84cd5ac305a5e510fe865716799b049f17476c31dd9dc9fb2c19585570488a1b"
+    },
+    {
+      "barrier": "committed-before-dispatch",
+      "killedProcess": 38016,
+      "recoveredProcess": 23008,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/committed-before-dispatch-ab0033017bc44d55b88f3359b61186c1/process-evidence.json",
+      "sha256": "0bc4706be3ea5e12d476acee7fe228017786b248f1ebfec7b55f0707e52c13d6"
+    },
+    {
+      "barrier": "delegated-running",
+      "killedProcess": 13732,
+      "recoveredProcess": 28540,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/delegated-running-f6e6b1efef1241d9a75cbe196f4c1327/process-evidence.json",
+      "sha256": "ad7938072f88da9de882a40a341e28a1583101e51fbeb2754bff85dcceea0183"
+    },
+    {
+      "barrier": "during-fencing",
+      "killedProcess": 36144,
+      "recoveredProcess": 7572,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/during-fencing-fa189608afa04a41b6ad16fe240eb893/process-evidence.json",
+      "sha256": "d434ce991e5342b83779c309daa1398a5f559e7d9af996e83381b6d6afbcdab8"
+    },
+    {
+      "barrier": "proposal-created",
+      "killedProcess": 47828,
+      "recoveredProcess": 23160,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/proposal-created-63dac7c8726448558c2992ec153f8d90/process-evidence.json",
+      "sha256": "a1f6d22c3d31dec36f91060dedfd999ab7d0c7fddcacca60a78fe2eab93bda19"
+    },
+    {
+      "barrier": "replacement-running",
+      "killedProcess": 48448,
+      "recoveredProcess": 18840,
+      "passed": true,
+      "path": "artifacts/aaaw-m1/process-probes/replacement-running-67aa915c98654d4e954ab12afbc603dd/process-evidence.json",
+      "sha256": "0ad48853b1d6694eee97b0d5f2d3b06926ffb12607f066ab8a3662b028f13915"
+    }
+  ],
+  "unknownProvider": {
+    "State": "UnknownAfterRecovery",
+    "RequiresOperatorResolution": true,
+    "ProviderStarts": 1,
+    "ActiveRevision": "revision-1"
+  }
+}

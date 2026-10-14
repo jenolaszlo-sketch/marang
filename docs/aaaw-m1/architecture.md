@@ -4,7 +4,7 @@ The qualification scenario reviews the repository's actual README and package re
 
 Plan is a verified canonical Fuwen definition. Revision is immutable Fuwen lineage plus a runtime manifest. Execution is a collection of independently leased Zhinu runs selected by that manifest. These objects are retained separately. A revision-specific step identity differs from its logical identity; execution, delegation, attempt and provider task identities remain distinct.
 
-The finite authoring profile supports 2–16 independent read/report branches and at most one join of all branches. It rejects other graphs. The provider ports never interpret prose as permission to execute arbitrary commands or alter the repository. Qualification writes only its own evidence directory. A live model may propose work specifications, but it cannot install a runtime manifest or approve it.
+The finite authoring profile supports 2–16 total work items, at least two independent read/report branches, and at most one join of all branches. It rejects other graphs. The provider ports never interpret prose as permission to execute arbitrary commands or alter the repository. Qualification writes only its own evidence directory. A live model may propose work specifications, but it cannot install a runtime manifest or approve it.
 
 The supervisor validates Fuwen bytes, schema, identities, graph, input binding, branch equivalence and host authority profile. It calculates a conservative change set. Contract, inputs, provenance, authority or dependency changes invalidate work and transitive dependents. Completed reuse requires explicit acceptance and matching evidence. Identical names are insufficient.
 

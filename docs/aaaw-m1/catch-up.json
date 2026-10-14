@@ -1,0 +1,27 @@
+{
+  "Explanation": "Use Markdown instead of JSON for the contract assessment, and include restart limitations. The inventory and ongoing README review remain valid. Earlier acceptance evidence becomes historical; contract work is replaced. One bounded additional reporting pass is required.",
+  "Preserved": [
+    "Package inventory: preserve existing work",
+    "README review: preserve existing work"
+  ],
+  "Affected": [
+    "Acceptance evidence: keep earlier results in history; prevent them from contributing to the revised outcome",
+    "Delegated contract assessment: keep earlier results in history; prevent them from contributing to the revised outcome",
+    "Local contract assessment: keep earlier results in history; prevent them from contributing to the revised outcome",
+    "Final report: keep earlier results in history; prevent them from contributing to the revised outcome"
+  ],
+  "Introduced": [
+    "Acceptance evidence: perform revised work",
+    "Delegated contract assessment: perform revised work",
+    "Local contract assessment: perform revised work",
+    "Final report: perform revised work"
+  ],
+  "Actions": [
+    "Approve",
+    "Reject",
+    "Cancel workflow",
+    "Ask / discuss further"
+  ],
+  "Discussion": null,
+  "Authority": "ApprovalRequired"
+}
