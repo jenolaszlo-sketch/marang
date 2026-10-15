@@ -1,0 +1,21 @@
+{
+  "archive": "linux-raw-evidence.zip",
+  "archiveBytes": 9219583,
+  "archiveSha256": "b2449cc5803186892c36145c8f6e34023c7c19218ef19c59b92a8da554c603d5",
+  "files": 23,
+  "source": "C:\\Users\\Laszlos\\source\\repos\\Solo\\aaaw-m5\\marang\\artifacts\\aaaw-m5\\linux-gp-m5",
+  "internalCaptureManifests": [
+    {
+      "file": "evidence-manifest.json",
+      "verifiedReferences": [
+        "sourceBundle",
+        "rawEvidenceArchive"
+      ]
+    }
+  ],
+  "macosWorkflowLogIncluded": false,
+  "archiveManifest": {
+    "path": "linux-raw-evidence.zip.sha256",
+    "sha256": "b153d0053aaa531feee21d552fa73d8e463de0498155b573dcdd3679ca31e79c"
+  }
+}

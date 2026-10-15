@@ -143,6 +143,11 @@ and [deferred work](docs/aaaw-m1/deferred.md).
 The [M1 qualification report](docs/aaaw-m1/evidence.md) records exact source commits,
 package hashes, test results, all crash barriers and the limits of the supported claim.
 
+The later [M5 bounded qualification](docs/aaaw-m5/gp-resume/qualification.md)
+records the unchanged repository scenarios passing on Windows, delegated WSL2
+Linux and macOS ARM64, including all twelve restart barriers and the actual-state
+control. It retains the experimental scope and the original blocked Mac evidence.
+
 M2 adds durable supervisor intent, pending discussions and checkpoints, current-state catch-up,
 revision drill-down and explicit unresolved-delegation decisions. It preserves the M1 admission,
 approval, fencing and provider-recovery contracts. The finite repository scenario continues through

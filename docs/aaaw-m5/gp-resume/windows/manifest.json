@@ -1,0 +1,19 @@
+{
+  "archive": "windows-raw-evidence.zip",
+  "archiveBytes": 1001832,
+  "archiveSha256": "6974c526fd089ab1e501084d1e3b4f6718d523d1dca754734440c5a4bf742949",
+  "files": 11,
+  "source": "C:\\Users\\Laszlos\\source\\repos\\Solo\\aaaw-m5\\marang\\artifacts\\aaaw-m5\\windows-gp-m5",
+  "internalCaptureManifests": [
+    {
+      "file": "captured-artifacts.zip",
+      "manifestFiles": 103,
+      "manifestSha256": "9ac15c94650582b7fb9e5c279ae994682995864e7fc44dffba95f8fde529cab4"
+    }
+  ],
+  "macosWorkflowLogIncluded": false,
+  "archiveManifest": {
+    "path": "windows-raw-evidence.zip.sha256",
+    "sha256": "41d8d92df5832abc33f3ace328d810a98e2ad16e7b1958513de30d1d9b5f9e00"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "archive": "macos-raw-evidence.zip",
+  "archiveBytes": 1017438,
+  "archiveSha256": "13b1f48ab29e6c1dacea96412c63a222236e2afa27552bd6243601087dd42004",
+  "files": 6,
+  "source": "C:\\Users\\Laszlos\\source\\repos\\Solo\\aaaw-m5\\marang\\artifacts\\aaaw-m5\\macos-gp-m5",
+  "internalCaptureManifests": [
+    {
+      "file": "aaaw-m5-macos-b9df4b6fa9d1553b5f2df95dceebb699238ce935/captured-artifacts.zip",
+      "manifestFiles": 97,
+      "manifestSha256": "7162b8b25a6834daadfe7e8ed7d81712f669ccba5c7d1e2920a39c418639bfc2"
+    }
+  ],
+  "macosWorkflowLogIncluded": true,
+  "archiveManifest": {
+    "path": "macos-raw-evidence.zip.sha256",
+    "sha256": "5f8051f08194589dc6c7896eda7a9fef437b29e602fd08c1a7b1a619ff48fff7"
+  }
+}
