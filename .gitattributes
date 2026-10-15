@@ -7,3 +7,6 @@
 *.md text eol=lf
 docs/aaaw-m5/** -text
 docs/aaaw-m5/**/*.md text eol=lf
+# Preserve test-runner whitespace as part of original, hash-verifiable evidence.
+docs/aaaw-m5/**/*.trx -whitespace
+docs/aaaw-m5/**/*.log -whitespace

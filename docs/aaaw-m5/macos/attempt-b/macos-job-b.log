@@ -1,0 +1,294 @@
+native-macos	Set up job	﻿2026-10-15T14:28:01.9737560Z Current runner version: '2.337.0'
+native-macos	Set up job	2026-10-15T14:28:01.9793680Z ##[group]Runner Image Provisioner
+native-macos	Set up job	2026-10-15T14:28:01.9932860Z Hosted Compute Agent
+native-macos	Set up job	2026-10-15T14:28:01.9933650Z Version: 20260828.587
+native-macos	Set up job	2026-10-15T14:28:01.9934090Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+native-macos	Set up job	2026-10-15T14:28:01.9934600Z Build Date: 2026-08-28T16:44:25Z
+native-macos	Set up job	2026-10-15T14:28:01.9935090Z Worker ID: {6cb3e42e-df8f-4c63-8b44-f004becafc18}
+native-macos	Set up job	2026-10-15T14:28:01.9935590Z Azure Region: westus
+native-macos	Set up job	2026-10-15T14:28:01.9935990Z ##[endgroup]
+native-macos	Set up job	2026-10-15T14:28:01.9938410Z ##[group]Operating System
+native-macos	Set up job	2026-10-15T14:28:01.9938850Z macOS
+native-macos	Set up job	2026-10-15T14:28:01.9939250Z 15.7.9
+native-macos	Set up job	2026-10-15T14:28:01.9939620Z 24G830
+native-macos	Set up job	2026-10-15T14:28:01.9939980Z ##[endgroup]
+native-macos	Set up job	2026-10-15T14:28:01.9940360Z ##[group]Runner Image
+native-macos	Set up job	2026-10-15T14:28:01.9940740Z Image: macos-15-arm64
+native-macos	Set up job	2026-10-15T14:28:01.9941330Z Version: 20260907.0337.1
+native-macos	Set up job	2026-10-15T14:28:01.9942270Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20260907.0337/images/macos/macos-15-arm64-Readme.md
+native-macos	Set up job	2026-10-15T14:28:01.9943770Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20260907.0337
+native-macos	Set up job	2026-10-15T14:28:01.9944640Z ##[endgroup]
+native-macos	Set up job	2026-10-15T14:28:01.9945550Z ##[group]GITHUB_TOKEN Permissions
+native-macos	Set up job	2026-10-15T14:28:01.9954470Z Contents: read
+native-macos	Set up job	2026-10-15T14:28:01.9956130Z Metadata: read
+native-macos	Set up job	2026-10-15T14:28:01.9957140Z ##[endgroup]
+native-macos	Set up job	2026-10-15T14:28:01.9966340Z Secret source: Actions
+native-macos	Set up job	2026-10-15T14:28:01.9967360Z Cache mode: write
+native-macos	Set up job	2026-10-15T14:28:01.9967940Z Prepare workflow directory
+native-macos	Set up job	2026-10-15T14:28:02.1999590Z Prepare all required actions
+native-macos	Set up job	2026-10-15T14:28:02.2034560Z Getting action download info
+native-macos	Set up job	2026-10-15T14:28:02.3730500Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+native-macos	Set up job	2026-10-15T14:28:03.0977190Z Download action repository 'actions/setup-dotnet@v5' (SHA:26b0ec14cb23fa6904739307f278c14f94c95bf1)
+native-macos	Set up job	2026-10-15T14:28:04.2300520Z Download action repository 'actions/upload-artifact@v6' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+native-macos	Set up job	2026-10-15T14:28:05.4156580Z Complete job name: native-macos
+native-macos	Run actions/checkout@v6	﻿2026-10-15T14:28:05.8021710Z ##[group]Run actions/checkout@v6
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8023120Z with:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8023390Z   fetch-depth: 0
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8023610Z   persist-credentials: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8023860Z   repository: jenolaszlo-sketch/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8029210Z   token: ***
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8029470Z   ssh-strict: true
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8029770Z   ssh-user: git
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8030010Z   clean: true
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8030240Z   sparse-checkout-cone-mode: true
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8030520Z   fetch-tags: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8030720Z   show-progress: true
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8030920Z   lfs: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8031090Z   submodules: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8031330Z   set-safe-directory: true
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8031600Z   allow-unsafe-pr-checkout: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8035100Z env:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8039650Z   UseSharedCompilation: false
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8041220Z   MSBUILDDISABLENODEREUSE: 1
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8041580Z   DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: 1
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8041940Z   PYTHONDONTWRITEBYTECODE: 1
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:05.8042200Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.2032940Z Syncing repository: jenolaszlo-sketch/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.2034290Z ##[group]Getting Git version info
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.2034620Z Working directory is '/Users/runner/work/marang/marang'
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.2062780Z [command]/opt/homebrew/bin/git version
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3849230Z git version 2.55.0
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3867790Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3877820Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/bc079232-c295-46e5-87f5-df4ab2db1b3e/.gitconfig'
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3886670Z Temporarily overriding HOME='/Users/runner/work/_temp/bc079232-c295-46e5-87f5-df4ab2db1b3e' before making global git config changes
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3887530Z Adding repository directory to the temporary git global config as a safe directory
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.3889580Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/marang/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4011240Z Deleting the contents of '/Users/runner/work/marang/marang'
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4015220Z ##[group]Determining repository object format
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4016030Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4016750Z ##[group]Initializing the repository
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4020220Z [command]/opt/homebrew/bin/git init /Users/runner/work/marang/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4251920Z hint: Using 'master' as the name for the initial branch. This default branch name
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4252760Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4253340Z hint: to use in all of your new repositories, which will suppress this warning,
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4253770Z hint: call:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4253990Z hint:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4254280Z hint: 	git config --global init.defaultBranch <name>
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4254610Z hint:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4254980Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4255490Z hint: 'development'. The just-created branch can be renamed via this command:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4255950Z hint:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4256230Z hint: 	git branch -m <name>
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4273430Z hint:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4273820Z hint: Disable this message with "git config set advice.defaultBranchName false"
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4274400Z Initialized empty Git repository in /Users/runner/work/marang/marang/.git/
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4276240Z [command]/opt/homebrew/bin/git remote add origin https://github.com/jenolaszlo-sketch/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4358730Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4359290Z ##[group]Disabling automatic garbage collection
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4361420Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4436390Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4436840Z ##[group]Setting up auth
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4437160Z Removing SSH command configuration
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4442080Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.4517750Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.8130480Z Removing HTTP extra header
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.8165800Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.8275300Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.9825340Z Removing includeIf entries pointing to credentials config files
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:06.9870730Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.0006190Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1372760Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1632460Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/marang/marang/.git.path /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1784740Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/marang/marang/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1798550Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1800750Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1861330Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1861940Z ##[group]Fetching the repository
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:07.1862810Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5471300Z From https://github.com/jenolaszlo-sketch/marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5580050Z  * [new branch]      codex/aaaw-m1-marang -> origin/codex/aaaw-m1-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5587650Z  * [new branch]      codex/aaaw-m2-marang -> origin/codex/aaaw-m2-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5591630Z  * [new branch]      codex/aaaw-m5-marang -> origin/codex/aaaw-m5-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5592200Z  * [new branch]      main                 -> origin/main
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5599630Z [command]/opt/homebrew/bin/git branch --list --remote origin/codex/aaaw-m5-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5683090Z   origin/codex/aaaw-m5-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5691630Z [command]/opt/homebrew/bin/git rev-parse refs/remotes/origin/codex/aaaw-m5-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5775880Z 25f4e540c3a24af47f031daaacea34cf58cb080b
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5781260Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5781920Z ##[group]Determining the checkout info
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5805770Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5815450Z [command]/opt/homebrew/bin/git sparse-checkout disable
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5894980Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5968370Z ##[group]Checking out the ref
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.5969370Z [command]/opt/homebrew/bin/git checkout --progress --force -B codex/aaaw-m5-marang refs/remotes/origin/codex/aaaw-m5-marang
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.6811030Z Switched to a new branch 'codex/aaaw-m5-marang'
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.6819820Z branch 'codex/aaaw-m5-marang' set up to track 'origin/codex/aaaw-m5-marang'.
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.6832530Z ##[endgroup]
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7038640Z [command]/opt/homebrew/bin/git log -1 --format=%H
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7050330Z 25f4e540c3a24af47f031daaacea34cf58cb080b
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7084210Z ##[group]Removing auth
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7084700Z Removing SSH command configuration
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7085720Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.7101600Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.8004170Z Removing HTTP extra header
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.8005000Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.8042520Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.8964240Z Removing includeIf entries pointing to credentials config files
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9003000Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9056910Z includeif.gitdir:/Users/runner/work/marang/marang/.git.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9090080Z includeif.gitdir:/Users/runner/work/marang/marang/.git/worktrees/*.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9116500Z includeif.gitdir:/github/workspace/.git.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9117120Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9121380Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/marang/marang/.git.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9148680Z /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9150850Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/marang/marang/.git.path /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9222170Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/marang/marang/.git/worktrees/*.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9280500Z /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9288430Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/marang/marang/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9353400Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9424260Z /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9430900Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9494810Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9547900Z /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9555380Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:08.9615860Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:09.0400400Z Removing credentials config '/Users/runner/work/_temp/git-credentials-a2064926-bc06-4669-be03-ad2672a2d7d9.config'
+native-macos	Run actions/checkout@v6	2026-10-15T14:28:09.0401630Z ##[endgroup]
+native-macos	Run actions/setup-dotnet@v5	﻿2026-10-15T14:28:09.1516620Z ##[group]Run actions/setup-dotnet@v5
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1516860Z with:
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1517010Z   dotnet-version: 8.0.426
+native-macos	Run actions/setup-dotnet@v5	10.0.401
+native-macos	Run actions/setup-dotnet@v5	
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1517210Z   cache: false
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1517350Z env:
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1518390Z   UseSharedCompilation: false
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1518760Z   MSBUILDDISABLENODEREUSE: 1
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1518980Z   DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: 1
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1519200Z   PYTHONDONTWRITEBYTECODE: 1
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.1519370Z ##[endgroup]
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:09.7034970Z [command]/Users/runner/work/_actions/actions/setup-dotnet/v5/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:10.1248960Z dotnet-install: Attempting to download using aka.ms link https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.13/dotnet-runtime-10.0.13-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.1783760Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.13/dotnet-runtime-10.0.13-osx-arm64.tar.gz size is 33248881 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.1784920Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.13/dotnet-runtime-10.0.13-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7427200Z dotnet-install: Downloaded file size is 33248881 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7428000Z dotnet-install: The remote and local file sizes are equal.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7682800Z dotnet-install: Installed version is 10.0.13
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7859760Z dotnet-install: Adding to current process PATH: `/Users/runner/.dotnet`. Note: This change will be visible only when sourcing script.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7861580Z dotnet-install: Note that the script does not resolve dependencies during installation.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7863030Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7863810Z dotnet-install: Installation finished successfully.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:11.7889370Z [command]/Users/runner/work/_actions/actions/setup-dotnet/v5/externals/install-dotnet.sh --skip-non-versioned-files --version 8.0.426
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:13.5931140Z dotnet-install: Attempting to download using primary link https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:17.2854170Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-osx-arm64.tar.gz size is 209985820 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:17.2862270Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:24.9885500Z dotnet-install: Downloaded file size is 209985820 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:24.9889630Z dotnet-install: The remote and local file sizes are equal.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4580680Z dotnet-install: Installed version is 8.0.426
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4673480Z dotnet-install: Adding to current process PATH: `/Users/runner/.dotnet`. Note: This change will be visible only when sourcing script.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4677370Z dotnet-install: Note that the script does not resolve dependencies during installation.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4678540Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4680070Z dotnet-install: Installation finished successfully.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.4723660Z [command]/Users/runner/work/_actions/actions/setup-dotnet/v5/externals/install-dotnet.sh --skip-non-versioned-files --runtime dotnet --channel LTS
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.8954520Z dotnet-install: .NET Core Runtime with version '10.0.13' is already installed.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:25.9030510Z [command]/Users/runner/work/_actions/actions/setup-dotnet/v5/externals/install-dotnet.sh --skip-non-versioned-files --version 10.0.401
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:27.6574270Z dotnet-install: Attempting to download using primary link https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:31.3359640Z dotnet-install: Remote file https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-arm64.tar.gz size is 230753980 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:31.3364920Z dotnet-install: Extracting archive from https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-osx-arm64.tar.gz
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.0469770Z dotnet-install: Downloaded file size is 230753980 bytes.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.0471190Z dotnet-install: The remote and local file sizes are equal.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.3982350Z dotnet-install: Installed version is 10.0.401
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.4066970Z dotnet-install: Adding to current process PATH: `/Users/runner/.dotnet`. Note: This change will be visible only when sourcing script.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.4067950Z dotnet-install: Note that the script does not resolve dependencies during installation.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.4069010Z dotnet-install: To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the "Dependencies" section.
+native-macos	Run actions/setup-dotnet@v5	2026-10-15T14:28:37.4070090Z dotnet-install: Installation finished successfully.
+native-macos	Use physical task temporary directory	﻿2026-10-15T14:28:37.4476890Z ##[group]Run test "$(uname -m)" = arm64
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4477320Z ^[[36;1mtest "$(uname -m)" = arm64^[[0m
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4477670Z ^[[36;1mphysical_temp="$(cd "$RUNNER_TEMP" && pwd -P)/aaaw-m5"^[[0m
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4477940Z ^[[36;1mmkdir -p "$physical_temp"^[[0m
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4478180Z ^[[36;1mecho "TMPDIR=$physical_temp/" >> "$GITHUB_ENV"^[[0m
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4549240Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4549510Z env:
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4549670Z   UseSharedCompilation: false
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4549880Z   MSBUILDDISABLENODEREUSE: 1
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4550070Z   DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: 1
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4550290Z   PYTHONDONTWRITEBYTECODE: 1
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4550480Z   DOTNET_ROOT: /Users/runner/.dotnet
+native-macos	Use physical task temporary directory	2026-10-15T14:28:37.4550660Z ##[endgroup]
+native-macos	Attempt native qualification and preserve refusals	﻿2026-10-15T14:28:37.5269140Z ##[group]Run python3 eng/qualify-aaaw-m5-macos.py
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5269460Z ^[[36;1mpython3 eng/qualify-aaaw-m5-macos.py^[[0m
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5301930Z shell: /bin/bash -e {0}
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5302100Z env:
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5302240Z   UseSharedCompilation: false
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5302440Z   MSBUILDDISABLENODEREUSE: 1
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5302640Z   DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: 1
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5302840Z   PYTHONDONTWRITEBYTECODE: 1
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5303020Z   DOTNET_ROOT: /Users/runner/.dotnet
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5303220Z   TMPDIR: /Users/runner/work/_temp/aaaw-m5/
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:37.5303420Z ##[endgroup]
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:38.3284230Z sw-vers
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:38.4396050Z sdk-info
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:38.9815120Z runtime-info
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:39.1082530Z bootstrap-pinned-feed
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:39.2657080Z native-prerequisite-restore
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:28:43.5061000Z restore
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:29:03.7579180Z cedar-arm64-asset
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:29:03.9254380Z build
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:29:34.7797790Z format
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:30:08.2548880Z native-probe-restore
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:30:09.4358390Z native-probe-build
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:30:11.8480400Z native-profile-controls
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:30:12.4733220Z test-net8.0
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:30:41.7376520Z test-net10.0
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:32:59.5479140Z {
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:32:59.5482900Z   "qualificationPassed": false,
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:32:59.5484710Z   "evidence": "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/qualification.json"
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:32:59.5486140Z }
+native-macos	Attempt native qualification and preserve refusals	2026-10-15T14:32:59.5661320Z ##[error]Process completed with exit code 1.
+native-macos	Upload original evidence even on failure	﻿2026-10-15T14:32:59.6081710Z ##[group]Run actions/upload-artifact@v6
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6082370Z with:
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6082940Z   name: aaaw-m5-macos-25f4e540c3a24af47f031daaacea34cf58cb080b
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6084600Z   path: artifacts/aaaw-m5/macos-qualification/*.json
+native-macos	Upload original evidence even on failure	artifacts/aaaw-m5/macos-qualification/*.trx
+native-macos	Upload original evidence even on failure	artifacts/aaaw-m5/macos-qualification/captured-artifacts.zip
+native-macos	Upload original evidence even on failure	
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6086190Z   if-no-files-found: error
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6086700Z   retention-days: 30
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6087180Z   compression-level: 6
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6087880Z   overwrite: false
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6088350Z   include-hidden-files: false
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6088850Z env:
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6089250Z   UseSharedCompilation: false
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6089830Z   MSBUILDDISABLENODEREUSE: 1
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6090410Z   DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: 1
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6091000Z   PYTHONDONTWRITEBYTECODE: 1
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6091540Z   DOTNET_ROOT: /Users/runner/.dotnet
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6092130Z   TMPDIR: /Users/runner/work/_temp/aaaw-m5/
+native-macos	Upload original evidence even on failure	2026-10-15T14:32:59.6092790Z ##[endgroup]
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.1098570Z With the provided path, there will be 5 files uploaded
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.1106860Z Artifact name is valid!
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.1108170Z Root directory input is valid!
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.3732360Z Beginning upload of artifact content to blob storage
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.5051070Z Uploaded bytes 243164
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.5277900Z Finished uploading artifact content to blob storage!
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.5283300Z SHA256 digest of uploaded artifact zip is 0bea34fccb5c07289bd27418417f222f90d8418e23dc6b078fc41c5af84728e3
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.5284060Z Finalizing artifact upload
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.7922930Z Artifact aaaw-m5-macos-25f4e540c3a24af47f031daaacea34cf58cb080b.zip successfully finalized. Artifact ID 11980649627
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.7931550Z Artifact aaaw-m5-macos-25f4e540c3a24af47f031daaacea34cf58cb080b has been successfully uploaded! Final size is 243164 bytes. Artifact ID is 11980649627
+native-macos	Upload original evidence even on failure	2026-10-15T14:33:00.7934060Z Artifact download URL: https://github.com/jenolaszlo-sketch/marang/actions/runs/38751625577/artifacts/11980649627
+native-macos	Post Run actions/checkout@v6	﻿2026-10-15T14:33:00.8427860Z Post job cleanup.
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:00.9942760Z [command]/opt/homebrew/bin/git version
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0086200Z git version 2.55.0
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0248210Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/60d27fcc-0d37-46f0-a42d-56b58c4d0c9a/.gitconfig'
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0249460Z Temporarily overriding HOME='/Users/runner/work/_temp/60d27fcc-0d37-46f0-a42d-56b58c4d0c9a' before making global git config changes
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0259690Z Adding repository directory to the temporary git global config as a safe directory
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0261480Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/marang/marang
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0263820Z Removing SSH command configuration
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0266390Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.0345610Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.2893010Z Removing HTTP extra header
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.2995170Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.3309770Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.5265180Z Removing includeIf entries pointing to credentials config files
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.5378930Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+native-macos	Post Run actions/checkout@v6	2026-10-15T14:33:01.5688500Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+native-macos	Complete job	﻿2026-10-15T14:33:01.7548940Z Cleaning up orphan processes

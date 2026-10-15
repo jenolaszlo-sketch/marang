@@ -1,6 +1,6 @@
 # M5 evidence ledger
 
-Status: **Linux qualified and frozen for the bounded WSL2 profile; macOS pending**.
+Status: **M5 incomplete: Linux frozen, Windows green, macOS blocked by captured launch**.
 
 ## M5.0: unchanged Windows baseline (observed)
 
@@ -132,13 +132,16 @@ No C# production or test semantics changed after the Windows-qualified source.
 Raw M5 evidence is stored without Git line-ending normalization so original file
 hashes remain verifiable. Historical M1–M4 evidence is unchanged.
 
-## Pending
+## Remaining gates
 
-- Perform GitHub-hosted macOS qualification after the Linux freeze below.
-- Complete cross-platform comparison and final independent evidence review.
+- Qualify the required native Mac captured-launch profile in its component workstream.
+- Rerun Mac canonical/K4/twelve-barrier/actual-state qualification, relevant
+  producer suites and affected regressions with immutable packages.
+- Complete the all-platform semantic comparison after Mac passes. Current
+  comparison explicitly records Mac as unexercised for these guarantees.
 
-GitHub CLI authentication was verified from the authorized host context. No
-macOS workflow or qualification has started.
+GitHub CLI authentication was verified from the authorized host context before
+the hosted macOS attempts recorded below.
 
 ## M5.4: Linux evidence freeze (observed)
 
@@ -184,3 +187,119 @@ isolation, power loss, arbitrary concurrent writers or general exactly-once
 external effects. Windows passed on the identical C# source/test content at
 `b1ccd71`; subsequent changes affected qualification environment and evidence.
 Linux evidence was captured and made reviewable before any macOS work began.
+
+## Native macOS attempt A: Intel profile mismatch (observed)
+
+Run [38749640292](https://github.com/jenolaszlo-sketch/marang/actions/runs/38749640292),
+clean source `9da97d7b71eac3d6b0756fce41b690cde6ea6f6b` at both ends,
+native macOS 15.7.9 x64, uid 501, image `20260824.0482.1`, SDK 10.0.401.
+The native probe actually ran on .NET 10.0.13; the runtime inventory includes
+8.0.32 and multiple installed patches. SDK version is not a runtime patch pin.
+Restore, build, formatting, package validation and native probe compilation
+passed. Every command had complete capture, confirmed process-group cleanup
+and no observed orphan; the complete test commands correctly exited one.
+
+| Framework | Passed | Failed | Skipped results | Total |
+|---|---:|---:|---:|---:|
+| .NET 8 | 173 | 28 | 1 | 202 |
+| .NET 10 | 195 | 51 | 1 | 247 |
+
+TRX `Counters.notExecuted` says zero despite one actual `NotExecuted`
+UnitTestResult in each file. The table counts the actual skipped outcomes;
+original TRXs are retained. The skip is the case-sensitive-root test on this
+case-insensitive temporary filesystem, not a skipped native restart test.
+
+Native ordinary launchd preparation, nonce-bearing launch, explicit termination
+and terminal cleanup passed. A fresh captured preparation was accepted, but
+`LaunchCaptured` refused with `bounded macOS launchd capture is unavailable; no
+target dispatched`. Its marker stayed absent, discard succeeded, and no raw
+fallback ran. The three M4/M5 process tests failed before the first barrier;
+canonical/K4/twelve-barrier/actual-state coverage is **not exercised**.
+
+Separately, authority-dependent tests returned `cedar.native-unavailable` or
+downstream authority denials. The pinned CedarSharp 1.0.0 archive contains
+`osx-arm64` and no `osx-x64` native asset. Hufu.Cedar's packaged release guidance
+explicitly qualifies ARM64 Macs and excludes Intel qualification. Classification:
+runner-selection/environment mismatch, not a Hufu implementation defect. The
+corrected attempt uses the existing ARM64 profile without changing Hufu,
+CedarSharp or their versions. [Dependency profile](macos/dependency-profile.json).
+
+[Original machine record](macos/attempt-a/qualification.json),
+[native controls](macos/attempt-a/native-profile.json),
+[raw artifact archive](macos/attempt-a/captured-artifacts.zip),
+[job log](macos/attempt-a/macos-job-a.log). The archive contains four verified
+payloads; SHA256 `c7cb4dab0c0b03888ca050662a3c9b5d9bb10697cb4c20b75bcd8cb95d6a40f0`.
+This attempt remains failed. It is not folded into a successful platform total.
+
+Independent review 05 identified a narrow future-trigger gap and late scratch
+cleanup reporting issue in the harness. Both were corrected in `b087472`;
+original review and first-run evidence are preserved. The ARM64 retry at
+`25f4e54` also records native asset hashes and actual skipped-result counts.
+
+## Native macOS attempt B: supported ARM64 profile (observed)
+
+Run [38751625577](https://github.com/jenolaszlo-sketch/marang/actions/runs/38751625577),
+clean source `25f4e540c3a24af47f031daaacea34cf58cb080b` at both ends,
+native macOS 15.7.9 ARM64, uid 501, image `20260907.0337.1`, SDK 10.0.401,
+native probe runtime .NET 10.0.13. The runtime inventory includes .NET 8.0.32.
+All restore, package checks, build, format and native profile control commands
+passed. Full build had zero warnings/errors. Every command, including the
+failing test command, had complete output capture, confirmed process-group
+cleanup and no observed orphan. Scratch cleanup was recorded before probe JSON.
+
+| Framework | Passed | Failed | Skipped results | Total |
+|---|---:|---:|---:|---:|
+| .NET 8 | 201 | 0 | 1 | 202 |
+| .NET 10 | 243 | 3 | 1 | 247 |
+
+The .NET 8 suite passes with its explicitly reviewed case-insensitive-filesystem
+skip. .NET 10's only failed tests are the three `MultiEffectProcessTests`:
+canonical revisions, K4 partial fixture and the new actual-state negative
+control. They fail in the required captured lifecycle launch path before the
+workflow barriers execute. No assertion, approval, authority check or barrier
+was removed or filtered out.
+
+All prior Cedar/authority failures disappear on the supported architecture.
+The job records the actual `osx-arm64` dylib as 7,654,256 bytes, SHA256
+`290fcce995f70cd963e024d991fe7f9e2806fde81add9749304ce222b904258b`, matching
+the immutable CedarSharp 1.0.0 native asset in local-cache corroboration.
+No Hufu/CedarSharp implementation or package version changed.
+
+Ordinary launchd prepare, nonce-bearing launch, explicit stop and terminal
+cleanup passed. Fresh captured preparation was accepted; actual captured launch
+returned the same explicit `unavailable; no target dispatched` refusal. The
+target marker stayed absent, discard succeeded and scratch cleanup passed.
+This confirms the Gagamba profile gap independently of Cedar and leaves M5
+**incomplete**. It does not establish the unexecuted Mac AAAW semantics.
+
+[Machine record](macos/attempt-b/qualification.json),
+[native controls](macos/attempt-b/native-profile.json),
+[four verified raw payloads](macos/attempt-b/captured-artifacts.zip),
+[job log](macos/attempt-b/macos-job-b.log). Archive SHA256:
+`eb1a4e5934014aa252df72dc8b98263164cfef0d21cb7b9fb39d6adc0cd0dee4`.
+The full pinned producer Mac source suite is separately **not exercised**:
+the exact producer revision is unavailable remotely. Package controls must not
+be presented as that full suite. [Remaining gates](macos/remaining-gates.md).
+
+## Final independent review and disposition
+
+[Review 07](reviews/07-final-review.md) independently verified the ARM64
+archive/payload hashes, native Cedar asset bytes, clean source bindings, exact
+test outcomes, capture refusal, cleanup, zero exercised Mac barriers and the
+bounded comparison. It found no claim mismatch. Original reviews 01–06 remain
+preserved. Review findings about workflow triggers and cleanup reporting were
+corrected and exercised by attempt B.
+
+M5 is **incomplete**, with the Mac captured-launch profile as the immediate
+blocker and the exact producer Mac source suite separately unexercised. Both
+Mac jobs correctly concluded failure; no green CI or all-platform equivalence
+is claimed. No Hufu/Gagamba implementation was changed, no package was published to a registry,
+and no M6 work was started. The qualification branch and evidence were pushed
+to support the user-selected GitHub-hosted native runs.
+
+Final evidence-only commits do not change the source qualified by the recorded
+runs. `src/` and `tests/` are identical between Windows `b1ccd71`, Linux
+`46db7b6` and supported Mac `25f4e54`. The only product change since M4 is the
+isolated checkout-root identity correction (with native failing/passing proof),
+plus formatter-only layout in `AdaptivePlanAuthoring.cs`. Native qualification
+does not justify further foundation implementation inside this workstream.

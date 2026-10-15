@@ -1,0 +1,934 @@
+{
+  "schema": "aaaw-m5-macos-attempt/v1",
+  "startedAt": "2026-10-15T14:28:37.993830+00:00",
+  "source": {
+    "start": {
+      "commit": "25f4e540c3a24af47f031daaacea34cf58cb080b",
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "status": []
+    },
+    "end": {
+      "commit": "25f4e540c3a24af47f031daaacea34cf58cb080b",
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "status": []
+    },
+    "unchangedAndClean": true
+  },
+  "commands": [
+    {
+      "name": "sw-vers",
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "startedAt": "2026-10-15T14:28:38.327628+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 66,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3137,
+      "processGroupId": 3137,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:28:38.438919+00:00"
+    },
+    {
+      "name": "sdk-info",
+      "argv": [
+        "dotnet",
+        "--info"
+      ],
+      "startedAt": "2026-10-15T14:28:38.439420+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 3945,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": ".NET SDK:\n Version:           10.0.401\n Commit:            e34a38d2ae\n Workload version:  10.0.400-manifests.63b36e85\n MSBuild version:   18.9.11+e34a38d2a\n\nRuntime Environment:\n OS Name:     Mac OS X\n OS Version:  15.7\n OS Platform: Darwin\n RID:         osx-arm64\n Base Path:   /Users/runner/.dotnet/sdk/10.0.401/\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.13\n  Architecture: arm64\n  Commit:       4099f83977\n\n.NET SDKs installed:\n  8.0.101 [/Users/runner/.dotnet/sdk]\n  8.0.204 [/Users/runner/.dotnet/sdk]\n  8.0.303 [/Users/runner/.dotnet/sdk]\n  8.0.424 [/Users/runner/.dotnet/sdk]\n  8.0.426 [/Users/runner/.dotnet/sdk]\n  9.0.102 [/Users/runner/.dotnet/sdk]\n  9.0.203 [/Users/runner/.dotnet/sdk]\n  9.0.317 [/Users/runner/.dotnet/sdk]\n  10.0.103 [/Users/runner/.dotnet/sdk]\n  10.0.203 [/Users/runner/.dotnet/sdk]\n  10.0.302 [/Users/runner/.dotnet/sdk]\n  10.0.400 [/Users/runner/.dotnet/sdk]\n  10.0.401 [/Users/runner/.dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.13 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER     [1]\n  DOTNET_MULTILEVEL_LOOKUP                 [0]\n  DOTNET_NOLOGO                            [1]\n  DOTNET_ROOT                              [/Users/runner/.dotnet]\n  DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3138,
+      "processGroupId": 3138,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:28:38.980761+00:00"
+    },
+    {
+      "name": "runtime-info",
+      "argv": [
+        "dotnet",
+        "--list-runtimes"
+      ],
+      "startedAt": "2026-10-15T14:28:38.981395+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 2289,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Microsoft.AspNetCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3140,
+      "processGroupId": 3140,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:28:39.107595+00:00"
+    },
+    {
+      "name": "bootstrap-pinned-feed",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "eng/bootstrap-aaaw-m5-feed.py"
+      ],
+      "startedAt": "2026-10-15T14:28:39.108130+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 75,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Restored nine hash-pinned local qualification packages; nothing published.\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3141,
+      "processGroupId": 3141,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:28:39.259965+00:00"
+    },
+    {
+      "name": "native-prerequisite-restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "eng/aaaw-m5-native-prerequisites.csproj",
+        "--source",
+        "https://api.nuget.org/v3/index.json",
+        "--disable-parallel"
+      ],
+      "startedAt": "2026-10-15T14:28:39.265571+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 136,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/eng/aaaw-m5-native-prerequisites.csproj (in 2.33 sec).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3142,
+      "processGroupId": 3142,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:28:43.505068+00:00"
+    },
+    {
+      "name": "restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "Marang.slnx",
+        "--configfile",
+        "NuGet.AAAWM1.Config",
+        "--disable-parallel"
+      ],
+      "startedAt": "2026-10-15T14:28:43.505805+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 1113,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/src/Marang.Http/Marang.Http.csproj (in 8.4 sec).\n  Restored /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/Marang.DelegationAuthority.csproj (in 726 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Codex/Marang.Codex.csproj (in 536 ms).\n  Restored /Users/runner/work/marang/marang/tests/Marang.Tests/Marang.Tests.csproj (in 7.4 sec).\n  Restored /Users/runner/work/marang/marang/tests/Marang.RestartProbe/Marang.RestartProbe.csproj (in 129 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang/Marang.csproj (in 1.02 sec).\n  Restored /Users/runner/work/marang/marang/src/Marang.SessionJournal/Marang.SessionJournal.csproj (in 3 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Server/Marang.Server.csproj (in 158 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Runs/Marang.Runs.csproj (in 241 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Mcp/Marang.Mcp.csproj (in 4 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Hufu/Marang.Hufu.csproj (in 2 ms).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3163,
+      "processGroupId": 3163,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:29:03.704191+00:00"
+    },
+    {
+      "name": "cedar-arm64-asset",
+      "argv": [
+        "/usr/bin/file",
+        "/Users/runner/.nuget/packages/cedarsharp/1.0.0/runtimes/osx-arm64/native/libcedarsharp_native.dylib"
+      ],
+      "startedAt": "2026-10-15T14:29:03.757300+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 155,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "/Users/runner/.nuget/packages/cedarsharp/1.0.0/runtimes/osx-arm64/native/libcedarsharp_native.dylib: Mach-O 64-bit dynamically linked shared library arm64\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3363,
+      "processGroupId": 3363,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:29:03.923307+00:00"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "dotnet",
+        "build",
+        "Marang.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-m:1",
+        "-p:UseSharedCompilation=false"
+      ],
+      "startedAt": "2026-10-15T14:29:03.925139+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 2138,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Marang.Codex -> /Users/runner/work/marang/marang/src/Marang.Codex/bin/Release/net8.0/Marang.Codex.dll\n  Marang.Codex -> /Users/runner/work/marang/marang/src/Marang.Codex/bin/Release/net10.0/Marang.Codex.dll\n  Marang.DelegationAuthority -> /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/bin/Release/net8.0/Marang.DelegationAuthority.dll\n  Marang.DelegationAuthority -> /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/bin/Release/net10.0/Marang.DelegationAuthority.dll\n  Marang -> /Users/runner/work/marang/marang/src/Marang/bin/Release/net8.0/Marang.dll\n  Marang.Mcp -> /Users/runner/work/marang/marang/src/Marang.Mcp/bin/Release/net8.0/Marang.Mcp.dll\n  Marang.Hufu -> /Users/runner/work/marang/marang/src/Marang.Hufu/bin/Release/net8.0/Marang.Hufu.dll\n  Marang.Runs -> /Users/runner/work/marang/marang/src/Marang.Runs/bin/Release/net8.0/Marang.Runs.dll\n  Marang.Http -> /Users/runner/work/marang/marang/src/Marang.Http/bin/Release/net8.0/Marang.Http.dll\n  Marang -> /Users/runner/work/marang/marang/src/Marang/bin/Release/net10.0/Marang.dll\n  Marang.Mcp -> /Users/runner/work/marang/marang/src/Marang.Mcp/bin/Release/net10.0/Marang.Mcp.dll\n  Marang.Hufu -> /Users/runner/work/marang/marang/src/Marang.Hufu/bin/Release/net10.0/Marang.Hufu.dll\n  Marang.Runs -> /Users/runner/work/marang/marang/src/Marang.Runs/bin/Release/net10.0/Marang.Runs.dll\n  Marang.Http -> /Users/runner/work/marang/marang/src/Marang.Http/bin/Release/net10.0/Marang.Http.dll\n  Marang.SessionJournal -> /Users/runner/work/marang/marang/src/Marang.SessionJournal/bin/Release/net10.0/Marang.SessionJournal.dll\n  Marang.Server -> /Users/runner/work/marang/marang/src/Marang.Server/bin/Release/net10.0/Marang.Server.dll\n  Marang.RestartProbe -> /Users/runner/work/marang/marang/tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll\n  Marang.Tests -> /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll\n  Marang.Tests -> /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:30.49\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3364,
+      "processGroupId": 3364,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:29:34.777006+00:00"
+    },
+    {
+      "name": "format",
+      "argv": [
+        "dotnet",
+        "format",
+        "Marang.slnx",
+        "--verify-no-changes",
+        "--no-restore"
+      ],
+      "startedAt": "2026-10-15T14:29:34.779392+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 0,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 3694,
+      "processGroupId": 3694,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:30:08.250353+00:00"
+    },
+    {
+      "name": "native-probe-restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj",
+        "--configfile",
+        "NuGet.AAAWM1.Config"
+      ],
+      "startedAt": "2026-10-15T14:30:08.253889+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 145,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj (in 184 ms).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4108,
+      "processGroupId": 4108,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:30:09.434080+00:00"
+    },
+    {
+      "name": "native-probe-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-p:UseSharedCompilation=false"
+      ],
+      "startedAt": "2026-10-15T14:30:09.435471+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 202,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  aaaw-m5-macos-probe -> /Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/bin/Release/net10.0/aaaw-m5-macos-probe.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:02.15\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4111,
+      "processGroupId": 4111,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:30:11.845955+00:00"
+    },
+    {
+      "name": "native-profile-controls",
+      "argv": [
+        "dotnet",
+        "eng/aaaw-m5-macos-probe/bin/Release/net10.0/aaaw-m5-macos-probe.dll",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/native-profile.json"
+      ],
+      "startedAt": "2026-10-15T14:30:11.846746+00:00",
+      "timeoutSeconds": 300,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 121,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "{\"outputPath\":\"/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/native-profile.json\",\"exitCode\":0}\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4207,
+      "processGroupId": 4207,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:30:12.470350+00:00"
+    },
+    {
+      "name": "test-net8.0",
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net8.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net8.0.trx",
+        "--results-directory",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification"
+      ],
+      "startedAt": "2026-10-15T14:30:12.472826+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 669,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Test run for /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\n[xUnit.net 00:00:00.73]     Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [SKIP]\n  Skipped Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [1 ms]\nResults File: /Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/m5-net8.0.trx\n\nPassed!  - Failed:     0, Passed:   201, Skipped:     1, Total:   202, Duration: 27 s - Marang.Tests.dll (net8.0)\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4218,
+      "processGroupId": 4218,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:30:41.717903+00:00"
+    },
+    {
+      "name": "test-net10.0",
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net10.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net10.0.trx",
+        "--results-directory",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification"
+      ],
+      "startedAt": "2026-10-15T14:30:41.736642+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 1,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 5028,
+      "stderrBytesSeen": 452,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Test run for /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\n  Failed Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects [129 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 21\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay [35 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 113\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A [65 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 140\n--- End of stack trace from previous location ---\n[xUnit.net 00:00:50.32]     Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [SKIP]\n  Skipped Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [1 ms]\nResults File: /Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/m5-net10.0.trx\n\nFailed!  - Failed:     3, Passed:   243, Skipped:     1, Total:   247, Duration: 2 m 15 s - Marang.Tests.dll (net10.0)\n",
+      "stderr": "[xUnit.net 00:00:07.43]     Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects [FAIL]\n[xUnit.net 00:00:07.46]     Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay [FAIL]\n[xUnit.net 00:00:07.53]     Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A [FAIL]\n",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": false,
+      "processId": 5458,
+      "processGroupId": 5458,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:32:59.465766+00:00"
+    }
+  ],
+  "testRuns": [
+    {
+      "framework": "net8.0",
+      "counters": {
+        "total": 202,
+        "executed": 201,
+        "passed": 201,
+        "failed": 0,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedbutrunaborted": 0,
+        "notrunnable": 0,
+        "notexecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inprogress": 0,
+        "pending": 0
+      },
+      "testResultCount": 202,
+      "skippedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities",
+          "outcome": "NotExecuted",
+          "duration": "00:00:00.0010000"
+        }
+      ],
+      "failedTests": [],
+      "m4ProcessTestCount": 0,
+      "m4ProcessTests": [],
+      "m5TestCount": 0,
+      "m5Tests": [],
+      "baselineMinimum": 201,
+      "baselineMinimumMet": true,
+      "trx": {
+        "path": "artifacts/aaaw-m5/macos-qualification/m5-net8.0.trx",
+        "sha256": "ac1bff9f76d93ec35c23035a0cec03aa10981694e01dad752570723bb11a7267",
+        "bytes": 289615
+      },
+      "passed": false,
+      "commandOk": true,
+      "skippedResultCount": 1,
+      "passedWithReviewedFilesystemSkip": true
+    },
+    {
+      "framework": "net10.0",
+      "counters": {
+        "total": 247,
+        "executed": 246,
+        "passed": 243,
+        "failed": 3,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedbutrunaborted": 0,
+        "notrunnable": 0,
+        "notexecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inprogress": 0,
+        "pending": 0
+      },
+      "testResultCount": 247,
+      "skippedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities",
+          "outcome": "NotExecuted",
+          "duration": "00:00:00.0010000"
+        }
+      ],
+      "failedTests": [
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.0359310"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects",
+          "outcome": "Failed",
+          "duration": "00:00:00.1292093"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.0655399"
+        }
+      ],
+      "m4ProcessTestCount": 3,
+      "m4ProcessTests": [
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.0359310"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects",
+          "outcome": "Failed",
+          "duration": "00:00:00.1292093"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.0655399"
+        }
+      ],
+      "m5TestCount": 1,
+      "m5Tests": [
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.0655399"
+        }
+      ],
+      "baselineMinimum": 245,
+      "baselineMinimumMet": true,
+      "trx": {
+        "path": "artifacts/aaaw-m5/macos-qualification/m5-net10.0.trx",
+        "sha256": "f4739005376b5c7b610d6bbefddd5bc547d6adaabf595c6b1422e1990510a17c",
+        "bytes": 366865
+      },
+      "passed": false,
+      "requiredM4AndM5ProcessTestsPresent": true,
+      "requiredM5ControlPassed": false,
+      "commandOk": false,
+      "skippedResultCount": 1,
+      "passedWithReviewedFilesystemSkip": false
+    }
+  ],
+  "qualificationPassed": false,
+  "observed": {
+    "nativeProfile": {
+      "schema": "aaaw-m5-macos-profile-probe-v1",
+      "startedAtUtc": "2026-10-15T14:30:11.89604+00:00",
+      "host": {
+        "osDescription": "macOS 15.7.9",
+        "framework": ".NET 10.0.13",
+        "architecture": "Arm64",
+        "machine": "iad20-fj917-1034cd2b-5de5-407f-87da-c1e3470cfd93-F2BDA3DCBB8D"
+      },
+      "source": {
+        "manifestPath": "/Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/bin/Release/net10.0/eng/aaaw-m5-runtime-packages.json",
+        "packageId": "Gagamba.Runtime",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "packageSha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+      },
+      "canonicalSupported": false,
+      "canonicalQualification": "not performed by this test-only profile probe",
+      "provider": {
+        "HasProvider": true,
+        "RefusalReason": "",
+        "platform": "macos-launchd-pg"
+      },
+      "capabilities": {
+        "UnitTermination": {
+          "level": "Partial",
+          "kind": "Native",
+          "Evidence": "PG-scoped killpg (M3); launchd cleans same-PG on job death (M7). No subtree primitive"
+        },
+        "SurvivesRootExit": {
+          "level": "Full",
+          "kind": "Native",
+          "Evidence": "M2: descendants remain addressable in PG after root exit"
+        },
+        "OwnerDeathCleanup": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "M10: job outlives its client; M4: PG workload survives supervisor death"
+        },
+        "RecursiveMembership": {
+          "level": "Partial",
+          "kind": "Native",
+          "Evidence": "Children inherit PG (M1); groups do not nest hierarchically"
+        },
+        "EscapeResistant": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "M5/M8/M12: setsid escape survives group kill and launchd cleanup"
+        },
+        "KernelOwnedLifecycle": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "No automatic owner-death action; launchd cleanup is PG-scoped, not owned"
+        }
+      },
+      "lifecyclePositiveControl": {
+        "prepare": {
+          "type": "Accepted",
+          "preparation": "005ec5fe-3850-4ba7-bfe2-9745d32ffbfb",
+          "met": [
+            "macos-launchd-pg: UnitTermination=Partial/Native",
+            "macos-launchd-pg: SurvivesRootExit=Full/Native",
+            "macos-launchd-pg: RecursiveMembership=Partial/Native"
+          ]
+        },
+        "launch": {
+          "type": "Started",
+          "execution": "37c70bd1-f187-44b1-becb-607d3d419319"
+        },
+        "markerObserved": true,
+        "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-4fbb1ce1fb654e748480ff89af4d650e/normal-ready",
+        "terminate": {
+          "type": "Terminated"
+        },
+        "completion": {
+          "type": "Terminated"
+        },
+        "confirmedCleanup": true
+      },
+      "captureRefusalControl": {
+        "prepare": {
+          "type": "Accepted",
+          "preparation": "e182f174-edab-440d-82e5-16d532752c04",
+          "met": [
+            "macos-launchd-pg: UnitTermination=Partial/Native",
+            "macos-launchd-pg: SurvivesRootExit=Full/Native",
+            "macos-launchd-pg: RecursiveMembership=Partial/Native"
+          ]
+        },
+        "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-4fbb1ce1fb654e748480ff89af4d650e/captured-ready",
+        "launchCaptured": {
+          "type": "Failed",
+          "reasons": [
+            "bounded macOS launchd capture is unavailable; no target dispatched"
+          ]
+        },
+        "unexpectedStarted": false,
+        "reasons": [
+          "bounded macOS launchd capture is unavailable; no target dispatched"
+        ],
+        "markerPresentBeforeCleanup": false,
+        "discard": {
+          "type": "Discarded"
+        },
+        "markerAbsent": true,
+        "expectedPreDispatchRefusal": true,
+        "passed": true,
+        "canonicalBlocker": "bounded macOS launchd capture is unavailable; no target dispatched"
+      },
+      "scratchCleanupConfirmed": true,
+      "endedAtUtc": "2026-10-15T14:30:12.363815+00:00",
+      "exitCode": 0,
+      "summary": {
+        "lifecyclePositiveControlPassed": true,
+        "captureRefusalControlPassed": true,
+        "captureUnexpectedStart": false,
+        "canonicalSupported": false
+      }
+    },
+    "canonical": {
+      "observed": false,
+      "verified": false
+    },
+    "partial": {
+      "observed": false,
+      "verified": false
+    },
+    "barriers": {
+      "K1": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K2": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K3": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K4": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K5": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K6": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K7": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K8": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K9": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K10": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K11": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K12": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      }
+    },
+    "actualStateControl": {
+      "observed": false,
+      "verified": false
+    }
+  },
+  "host": {
+    "platform": "macOS-15.7.9-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "effectiveUid": 501,
+    "tempDirectory": "/Users/runner/work/_temp/aaaw-m5/",
+    "imageOS": "macos15",
+    "imageVersion": "20260907.0337.1"
+  },
+  "notExercised": [
+    "Gagamba producer full macOS source suite: exact unpublished producer commit is not remotely available.",
+    "Owner-death/setsid escape containment, hostile isolation, power loss and generic exactly-once effects."
+  ],
+  "packages": {
+    "m1": [
+      {
+        "id": "Penghou.Zhinu",
+        "version": "0.2.0-preview.4-aaaw-m1.3",
+        "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+        "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg",
+          "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+          "bytes": 522158
+        }
+      },
+      {
+        "id": "Penghou.Zhinu.Sqlite",
+        "version": "0.2.0-preview.4-aaaw-m1.3",
+        "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+        "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg",
+          "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+          "bytes": 475389
+        }
+      },
+      {
+        "id": "Penghou.Qingniao.Abstractions",
+        "version": "0.1.0-preview.5-aaaw-m1.4",
+        "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+        "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg",
+          "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+          "bytes": 196835
+        }
+      },
+      {
+        "id": "Penghou.Qingniao",
+        "version": "0.1.0-preview.5-aaaw-m1.4",
+        "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+        "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg",
+          "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+          "bytes": 224427
+        }
+      }
+    ],
+    "runtime": [
+      {
+        "id": "Gagamba.Execution",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94",
+          "bytes": 52723
+        }
+      },
+      {
+        "id": "Gagamba.Execution.Linux",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Linux.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c",
+          "bytes": 24969
+        }
+      },
+      {
+        "id": "Gagamba.Execution.MacOS",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.MacOS.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c",
+          "bytes": 27083
+        }
+      },
+      {
+        "id": "Gagamba.Execution.Windows",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Windows.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb",
+          "bytes": 23489
+        }
+      },
+      {
+        "id": "Gagamba.Runtime",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Runtime.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4",
+          "bytes": 20299
+        }
+      }
+    ]
+  },
+  "cedarNativeAssets": [
+    {
+      "path": "runtimes/linux-x64/native/cedarsharp-native.json",
+      "sha256": "4d4f273bbd149d29c44e16256583497a853d9e1942ffa5a868fa0a79ef69489c",
+      "bytes": 548
+    },
+    {
+      "path": "runtimes/linux-x64/native/libcedarsharp_native.so",
+      "sha256": "85433a352ed9b6b0122e77a4e37cbe9ba1354872641e217350bdf871ea33ebf6",
+      "bytes": 9368344
+    },
+    {
+      "path": "runtimes/osx-arm64/native/cedarsharp-native.json",
+      "sha256": "4efab72744e59ff905f08c2f47f889e4ff0d3327aab0866b0ba5c6b73ed34095",
+      "bytes": 544
+    },
+    {
+      "path": "runtimes/osx-arm64/native/libcedarsharp_native.dylib",
+      "sha256": "290fcce995f70cd963e024d991fe7f9e2806fde81add9749304ce222b904258b",
+      "bytes": 7654256
+    },
+    {
+      "path": "runtimes/win-x64/native/cedarsharp-native.json",
+      "sha256": "c33e13d7e140b0d1ac759b35cbf58b1b0ad3216ec144d477e0b1e4ab6a94d817",
+      "bytes": 560
+    },
+    {
+      "path": "runtimes/win-x64/native/cedarsharp_native.dll",
+      "sha256": "77de6976a7ae5b961920bb6843d39b32f3faf285f16b723581680e9c06c03895",
+      "bytes": 8286208
+    }
+  ],
+  "completedAt": "2026-10-15T14:32:59.530636+00:00"
+}
