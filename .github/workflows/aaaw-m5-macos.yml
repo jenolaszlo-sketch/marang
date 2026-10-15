@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   native-macos:
-    runs-on: macos-15-intel
+    runs-on: macos-15
     timeout-minutes: 45
     env:
       UseSharedCompilation: 'false'
@@ -38,6 +38,7 @@ jobs:
       - name: Use physical task temporary directory
         shell: bash
         run: |
+          test "$(uname -m)" = arm64
           physical_temp="$(cd "$RUNNER_TEMP" && pwd -P)/aaaw-m5"
           mkdir -p "$physical_temp"
           echo "TMPDIR=$physical_temp/" >> "$GITHUB_ENV"

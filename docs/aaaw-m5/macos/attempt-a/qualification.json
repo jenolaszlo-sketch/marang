@@ -1,0 +1,1252 @@
+{
+  "schema": "aaaw-m5-macos-attempt/v1",
+  "startedAt": "2026-10-15T14:16:05.709808+00:00",
+  "source": {
+    "start": {
+      "commit": "9da97d7b71eac3d6b0756fce41b690cde6ea6f6b",
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "status": []
+    },
+    "end": {
+      "commit": "9da97d7b71eac3d6b0756fce41b690cde6ea6f6b",
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "status": []
+    },
+    "unchangedAndClean": true
+  },
+  "commands": [
+    {
+      "name": "sw-vers",
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "startedAt": "2026-10-15T14:16:06.133389+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 66,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4395,
+      "processGroupId": 4395,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:06.367551+00:00"
+    },
+    {
+      "name": "sdk-info",
+      "argv": [
+        "dotnet",
+        "--info"
+      ],
+      "startedAt": "2026-10-15T14:16:06.368584+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 3941,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": ".NET SDK:\n Version:           10.0.401\n Commit:            e34a38d2ae\n Workload version:  10.0.400-manifests.63b36e85\n MSBuild version:   18.9.11+e34a38d2a\n\nRuntime Environment:\n OS Name:     Mac OS X\n OS Version:  15.7\n OS Platform: Darwin\n RID:         osx-x64\n Base Path:   /Users/runner/.dotnet/sdk/10.0.401/\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.13\n  Architecture: x64\n  Commit:       4099f83977\n\n.NET SDKs installed:\n  8.0.101 [/Users/runner/.dotnet/sdk]\n  8.0.204 [/Users/runner/.dotnet/sdk]\n  8.0.303 [/Users/runner/.dotnet/sdk]\n  8.0.424 [/Users/runner/.dotnet/sdk]\n  8.0.426 [/Users/runner/.dotnet/sdk]\n  9.0.102 [/Users/runner/.dotnet/sdk]\n  9.0.203 [/Users/runner/.dotnet/sdk]\n  9.0.317 [/Users/runner/.dotnet/sdk]\n  10.0.103 [/Users/runner/.dotnet/sdk]\n  10.0.203 [/Users/runner/.dotnet/sdk]\n  10.0.302 [/Users/runner/.dotnet/sdk]\n  10.0.400 [/Users/runner/.dotnet/sdk]\n  10.0.401 [/Users/runner/.dotnet/sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.13 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER     [1]\n  DOTNET_MULTILEVEL_LOOKUP                 [0]\n  DOTNET_NOLOGO                            [1]\n  DOTNET_ROOT                              [/Users/runner/.dotnet]\n  DOTNET_SKIP_FIRST_TIME_EXPERIENCE        [1]\n\nglobal.json file:\n  Not found\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4411,
+      "processGroupId": 4411,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:07.809969+00:00"
+    },
+    {
+      "name": "runtime-info",
+      "argv": [
+        "dotnet",
+        "--list-runtimes"
+      ],
+      "startedAt": "2026-10-15T14:16:07.811203+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 2289,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Microsoft.AspNetCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.30 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.1 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.4 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 9.0.19 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.3 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.7 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.10 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.11 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/Users/runner/.dotnet/shared/Microsoft.NETCore.App]\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4480,
+      "processGroupId": 4480,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:07.918682+00:00"
+    },
+    {
+      "name": "bootstrap-pinned-feed",
+      "argv": [
+        "/usr/local/opt/python@3.14/bin/python3.14",
+        "eng/bootstrap-aaaw-m5-feed.py"
+      ],
+      "startedAt": "2026-10-15T14:16:07.919928+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 75,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Restored nine hash-pinned local qualification packages; nothing published.\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4484,
+      "processGroupId": 4484,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:08.109066+00:00"
+    },
+    {
+      "name": "native-prerequisite-restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "eng/aaaw-m5-native-prerequisites.csproj",
+        "--source",
+        "https://api.nuget.org/v3/index.json",
+        "--disable-parallel"
+      ],
+      "startedAt": "2026-10-15T14:16:08.135760+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 136,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/eng/aaaw-m5-native-prerequisites.csproj (in 2.81 sec).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4485,
+      "processGroupId": 4485,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:14.862582+00:00"
+    },
+    {
+      "name": "restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "Marang.slnx",
+        "--configfile",
+        "NuGet.AAAWM1.Config",
+        "--disable-parallel"
+      ],
+      "startedAt": "2026-10-15T14:16:14.864008+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 1117,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/src/Marang.Codex/Marang.Codex.csproj (in 1.8 sec).\n  Restored /Users/runner/work/marang/marang/src/Marang.Mcp/Marang.Mcp.csproj (in 7.18 sec).\n  Restored /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/Marang.DelegationAuthority.csproj (in 9 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Runs/Marang.Runs.csproj (in 3.86 sec).\n  Restored /Users/runner/work/marang/marang/src/Marang.Hufu/Marang.Hufu.csproj (in 138 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Http/Marang.Http.csproj (in 164 ms).\n  Restored /Users/runner/work/marang/marang/tests/Marang.Tests/Marang.Tests.csproj (in 9.05 sec).\n  Restored /Users/runner/work/marang/marang/tests/Marang.RestartProbe/Marang.RestartProbe.csproj (in 86 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang/Marang.csproj (in 984 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.SessionJournal/Marang.SessionJournal.csproj (in 38 ms).\n  Restored /Users/runner/work/marang/marang/src/Marang.Server/Marang.Server.csproj (in 91 ms).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4517,
+      "processGroupId": 4517,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:16:47.832545+00:00"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "dotnet",
+        "build",
+        "Marang.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-m:1",
+        "-p:UseSharedCompilation=false"
+      ],
+      "startedAt": "2026-10-15T14:16:47.834605+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 2138,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Marang.Codex -> /Users/runner/work/marang/marang/src/Marang.Codex/bin/Release/net8.0/Marang.Codex.dll\n  Marang.Codex -> /Users/runner/work/marang/marang/src/Marang.Codex/bin/Release/net10.0/Marang.Codex.dll\n  Marang.DelegationAuthority -> /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/bin/Release/net8.0/Marang.DelegationAuthority.dll\n  Marang.DelegationAuthority -> /Users/runner/work/marang/marang/src/Marang.DelegationAuthority/bin/Release/net10.0/Marang.DelegationAuthority.dll\n  Marang -> /Users/runner/work/marang/marang/src/Marang/bin/Release/net8.0/Marang.dll\n  Marang.Mcp -> /Users/runner/work/marang/marang/src/Marang.Mcp/bin/Release/net8.0/Marang.Mcp.dll\n  Marang.Hufu -> /Users/runner/work/marang/marang/src/Marang.Hufu/bin/Release/net8.0/Marang.Hufu.dll\n  Marang.Runs -> /Users/runner/work/marang/marang/src/Marang.Runs/bin/Release/net8.0/Marang.Runs.dll\n  Marang.Http -> /Users/runner/work/marang/marang/src/Marang.Http/bin/Release/net8.0/Marang.Http.dll\n  Marang -> /Users/runner/work/marang/marang/src/Marang/bin/Release/net10.0/Marang.dll\n  Marang.Mcp -> /Users/runner/work/marang/marang/src/Marang.Mcp/bin/Release/net10.0/Marang.Mcp.dll\n  Marang.Hufu -> /Users/runner/work/marang/marang/src/Marang.Hufu/bin/Release/net10.0/Marang.Hufu.dll\n  Marang.Runs -> /Users/runner/work/marang/marang/src/Marang.Runs/bin/Release/net10.0/Marang.Runs.dll\n  Marang.Http -> /Users/runner/work/marang/marang/src/Marang.Http/bin/Release/net10.0/Marang.Http.dll\n  Marang.SessionJournal -> /Users/runner/work/marang/marang/src/Marang.SessionJournal/bin/Release/net10.0/Marang.SessionJournal.dll\n  Marang.Server -> /Users/runner/work/marang/marang/src/Marang.Server/bin/Release/net10.0/Marang.Server.dll\n  Marang.RestartProbe -> /Users/runner/work/marang/marang/tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll\n  Marang.Tests -> /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll\n  Marang.Tests -> /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:02:37.89\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 4983,
+      "processGroupId": 4983,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:19:27.023123+00:00"
+    },
+    {
+      "name": "format",
+      "argv": [
+        "dotnet",
+        "format",
+        "Marang.slnx",
+        "--verify-no-changes",
+        "--no-restore"
+      ],
+      "startedAt": "2026-10-15T14:19:27.029684+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 0,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 7114,
+      "processGroupId": 7114,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:21:06.592209+00:00"
+    },
+    {
+      "name": "native-probe-restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj",
+        "--configfile",
+        "NuGet.AAAWM1.Config"
+      ],
+      "startedAt": "2026-10-15T14:21:06.602241+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 145,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  Restored /Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj (in 864 ms).\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 8282,
+      "processGroupId": 8282,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:21:10.100220+00:00"
+    },
+    {
+      "name": "native-probe-build",
+      "argv": [
+        "dotnet",
+        "build",
+        "eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-p:UseSharedCompilation=false"
+      ],
+      "startedAt": "2026-10-15T14:21:10.102265+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 202,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "  aaaw-m5-macos-probe -> /Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/bin/Release/net10.0/aaaw-m5-macos-probe.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:07.72\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 8294,
+      "processGroupId": 8294,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:21:19.445923+00:00"
+    },
+    {
+      "name": "native-profile-controls",
+      "argv": [
+        "dotnet",
+        "eng/aaaw-m5-macos-probe/bin/Release/net10.0/aaaw-m5-macos-probe.dll",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/native-profile.json"
+      ],
+      "startedAt": "2026-10-15T14:21:19.447805+00:00",
+      "timeoutSeconds": 300,
+      "exitCode": 0,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 121,
+      "stderrBytesSeen": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "{\"outputPath\":\"/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/native-profile.json\",\"exitCode\":0}\n",
+      "stderr": "",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": true,
+      "processId": 8475,
+      "processGroupId": 8475,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:21:20.389615+00:00"
+    },
+    {
+      "name": "test-net8.0",
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net8.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net8.0.trx",
+        "--results-directory",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification"
+      ],
+      "startedAt": "2026-10-15T14:21:20.392165+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 1,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 31437,
+      "stderrBytesSeen": 4282,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Test run for /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected [427 ms]\n  Error Message:\n   Expected string to be the same string, but they differ at index 18:\n              \u2193 (actual)\n  \"\u2026-revision.hufu-unava\u2026\"\n  \"\u2026-revision.approval-i\u2026\"\n              \u2191 (expected).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.StringEqualityStrategy.ValidateAgainstMismatch(IAssertionScope assertion, String subject, String expected)\n   at FluentAssertions.Primitives.StringValidator.Validate(String subject, String expected)\n   at FluentAssertions.Primitives.StringAssertions`1.Be(String expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 78\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest [52 ms]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.Automatic {value: 0}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 26\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope [2 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.IntentCommitted {value: 1}, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 287\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal [36 ms]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.ApprovalRequired {value: 1}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 43\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked [72 ms]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.Automatic {value: 0}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 96\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence [90 ms]\n  Error Message:\n   Expected boolean to be True because repository-effect.hufu-denied, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 148\n--- End of stack trace from previous location ---\n[xUnit.net 00:00:06.32]     Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [SKIP]\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor [982 ms]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.ValidationFailed {value: 5} because reason was repository-effect.hufu-denied, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 437\n--- End of stack trace from previous location ---\n  Skipped Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [1 ms]\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked [1 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectClassification.Unresolved {value: 3}, but found RepositoryEffectClassification.DefinitelyNotApplied {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 395\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot [1 s]\n  Error Message:\n   Expected a <Marang.Tests.RepositoryEffectAuthorityTests+SimulatedCrashException> to be thrown, but no exception was thrown.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message)\n   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)\n   at FluentAssertions.Specialized.AsyncFunctionAssertions`2.ThrowAsync[TException](String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 325\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice [1 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectClassification.DefinitelyApplied {value: 1} because reason was repository-effect.hufu-denied; stage Prepared, but found RepositoryEffectClassification.DefinitelyNotApplied {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 195\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay [109 ms]\n  Error Message:\n   Expected boolean to be True, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 107\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write [1 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.IntentCommitted {value: 1}, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 261\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write [1 s]\n  Error Message:\n   Expected string to be the same string, but they differ at index 18:\n              \u2193 (actual)\n  \"\u2026ry-effect.hufu-denie\u2026\"\n  \"\u2026ry-effect.initial-st\u2026\"\n              \u2191 (expected).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.StringEqualityStrategy.ValidateAgainstMismatch(IAssertionScope assertion, String subject, String expected)\n   at FluentAssertions.Primitives.StringValidator.Validate(String subject, String expected)\n   at FluentAssertions.Primitives.StringAssertions`1.Be(String expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 355\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context [35 ms]\n  Error Message:\n   Expected boolean to be True because repository-effect.hufu-denied; Unavailable; AuthorityDecision { Status = Unavailable, ReasonCode = cedar.native-unavailable, SnapshotVersion = 1, EvaluatorIdentity = hufu-cedar-v1:7c2fdd52e482771faad33b0e34609827d06443d486be4ed00ee6a2b3f3359264, SnapshotIdentity = 17685f08882c4e2ac395016b774beb36282c95e91eaa6720b30f20f1a922f633 }, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 26\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit [31 ms]\n  Error Message:\n   Expected boolean to be True, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 81\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch [1 s]\n  Error Message:\n   Expected a <Marang.Tests.RepositoryEffectAuthorityTests+SimulatedCrashException> to be thrown, but no exception was thrown.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message)\n   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)\n   at FluentAssertions.Specialized.AsyncFunctionAssertions`2.ThrowAsync[TException](String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 228\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal [2 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 114\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 58\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement [982 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 179\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 23\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active [920 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 159\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 89\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 72\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision [603 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 196\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 124\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass [796 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 138\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation [775 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 44\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2 [829 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 91\n--- End of stack trace from previous location ---\nResults File: /Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/m5-net8.0.trx\n\nFailed!  - Failed:    28, Passed:   173, Skipped:     1, Total:   202, Duration: 30 s - Marang.Tests.dll (net8.0)\n",
+      "stderr": "[xUnit.net 00:00:04.57]     Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected [FAIL]\n[xUnit.net 00:00:04.61]     Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest [FAIL]\n[xUnit.net 00:00:04.63]     Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope [FAIL]\n[xUnit.net 00:00:04.65]     Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal [FAIL]\n[xUnit.net 00:00:04.72]     Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked [FAIL]\n[xUnit.net 00:00:04.72]     Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence [FAIL]\n[xUnit.net 00:00:05.80]     Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor [FAIL]\n[xUnit.net 00:00:07.13]     Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked [FAIL]\n[xUnit.net 00:00:08.80]     Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot [FAIL]\n[xUnit.net 00:00:10.27]     Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice [FAIL]\n[xUnit.net 00:00:10.37]     Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay [FAIL]\n[xUnit.net 00:00:11.57]     Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write [FAIL]\n[xUnit.net 00:00:12.67]     Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write [FAIL]\n[xUnit.net 00:00:12.80]     Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context [FAIL]\n[xUnit.net 00:00:14.04]     Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit [FAIL]\n[xUnit.net 00:00:15.55]     Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch [FAIL]\n[xUnit.net 00:00:23.73]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal [FAIL]\n[xUnit.net 00:00:25.33]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason [FAIL]\n[xUnit.net 00:00:25.98]     Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement [FAIL]\n[xUnit.net 00:00:26.82]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write [FAIL]\n[xUnit.net 00:00:27.32]     Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active [FAIL]\n[xUnit.net 00:00:28.43]     Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch [FAIL]\n[xUnit.net 00:00:28.57]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason [FAIL]\n[xUnit.net 00:00:29.43]     Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision [FAIL]\n[xUnit.net 00:00:29.62]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write [FAIL]\n[xUnit.net 00:00:30.42]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass [FAIL]\n[xUnit.net 00:00:31.20]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation [FAIL]\n[xUnit.net 00:00:32.04]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2 [FAIL]\n",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": false,
+      "processId": 8494,
+      "processGroupId": 8494,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:21:56.061824+00:00"
+    },
+    {
+      "name": "test-net10.0",
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net10.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net10.0.trx",
+        "--results-directory",
+        "/Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification"
+      ],
+      "startedAt": "2026-10-15T14:21:56.105795+00:00",
+      "timeoutSeconds": 1800,
+      "exitCode": 1,
+      "timedOut": false,
+      "termination": "not-needed",
+      "stdoutBytesSeen": 69004,
+      "stderrBytesSeen": 7916,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "stdout": "Test run for /Users/runner/work/marang/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal [1 s]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.ApprovalRequired {value: 1}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 43\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked [45 ms]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.Automatic {value: 0}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 96\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest [72 ms]\n  Error Message:\n   Expected the enum to be AdaptiveRevisionAuthorityOutcome.Automatic {value: 0}, but found AdaptiveRevisionAuthorityOutcome.Denied {value: 2}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 26\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected [87 ms]\n  Error Message:\n   Expected string to be the same string, but they differ at index 18:\n              \u2193 (actual)\n  \"\u2026-revision.hufu-unava\u2026\"\n  \"\u2026-revision.approval-i\u2026\"\n              \u2191 (expected).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.StringEqualityStrategy.ValidateAgainstMismatch(IAssertionScope assertion, String subject, String expected)\n   at FluentAssertions.Primitives.StringValidator.Validate(String subject, String expected)\n   at FluentAssertions.Primitives.StringAssertions`1.Be(String expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected() in /_/tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs:line 78\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects [494 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 21\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay [299 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 113\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A [182 ms]\n  Error Message:\n   System.InvalidOperationException : root terminal state was not confirmed: LaunchFailure/Confirmed\n  Stack Trace:\n     at Marang.Tests.LifecycleBroker.LifecycleBrokerOwner.StopRootAsync(CancellationToken cancellationToken) in /_/tests/Marang.Tests/LifecycleBrokerOwner.cs:line 126\n   at Marang.Tests.LifecycleBroker.OwnedProbeRun.StopAfterFailureAsync(String directory, String label) in /_/tests/Marang.Tests/OwnedProbeRun.cs:line 96\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 223\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.StopOwnedProbeAtBarrierAsync(String probe, String root, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 257\n   at Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A() in /_/tests/Marang.Tests/MultiEffectProcessTests.cs:line 140\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor [1 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.ValidationFailed {value: 5} because reason was repository-effect.hufu-denied, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 437\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence [31 ms]\n  Error Message:\n   Expected boolean to be True because repository-effect.hufu-denied, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 148\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit [120 ms]\n  Error Message:\n   Expected boolean to be True, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 81\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch [1 s]\n  Error Message:\n   Expected a <Marang.Tests.RepositoryEffectAuthorityTests+SimulatedCrashException> to be thrown, but no exception was thrown.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message)\n   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)\n   at FluentAssertions.Specialized.AsyncFunctionAssertions`2.ThrowAsync[TException](String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 228\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write [1 s]\n  Error Message:\n   Expected string to be the same string, but they differ at index 18:\n              \u2193 (actual)\n  \"\u2026ry-effect.hufu-denie\u2026\"\n  \"\u2026ry-effect.initial-st\u2026\"\n              \u2191 (expected).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.StringEqualityStrategy.ValidateAgainstMismatch(IAssertionScope assertion, String subject, String expected)\n   at FluentAssertions.Primitives.StringValidator.Validate(String subject, String expected)\n   at FluentAssertions.Primitives.StringAssertions`1.Be(String expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 355\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot [896 ms]\n  Error Message:\n   Expected a <Marang.Tests.RepositoryEffectAuthorityTests+SimulatedCrashException> to be thrown, but no exception was thrown.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message)\n   at FluentAssertions.Specialized.DelegateAssertionsBase`2.ThrowInternal[TException](Exception exception, String because, Object[] becauseArgs)\n   at FluentAssertions.Specialized.AsyncFunctionAssertions`2.ThrowAsync[TException](String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 325\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context [38 ms]\n  Error Message:\n   Expected boolean to be True because repository-effect.hufu-denied; Unavailable; AuthorityDecision { Status = Unavailable, ReasonCode = cedar.native-unavailable, SnapshotVersion = 1, EvaluatorIdentity = hufu-cedar-v1:7c2fdd52e482771faad33b0e34609827d06443d486be4ed00ee6a2b3f3359264, SnapshotIdentity = bf11624ad60162b3a4af5a30e022c3b2950c3780fafe10f3a91d8929608f6ac4 }, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 26\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay [27 ms]\n  Error Message:\n   Expected boolean to be True, but found False.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.BooleanAssertions`1.BeTrue(String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 107\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope [1 s]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.IntentCommitted {value: 1}, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 287\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked [869 ms]\n  Error Message:\n   Expected the enum to be RepositoryEffectClassification.Unresolved {value: 3}, but found RepositoryEffectClassification.DefinitelyNotApplied {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 395\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write [784 ms]\n  Error Message:\n   Expected the enum to be RepositoryEffectStage.IntentCommitted {value: 1}, but found RepositoryEffectStage.Prepared {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 261\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-approved\") [13 s]\n  Error Message:\n   System.InvalidOperationException : Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.RestartProbe.SupervisorDelegationRecoveryProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/SupervisorDelegationRecoveryProbe.cs:line 109\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 62\n\n  Stack Trace:\n     at Marang.Tests.SupervisorDelegationRecoveryProcessTests.KillAtBarrier(Process process, String directory, String marker, Task`1 error) in /_/tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs:line 63\n   at Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(String barrier) in /_/tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs:line 32\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice [912 ms]\n  Error Message:\n   Expected the enum to be RepositoryEffectClassification.DefinitelyApplied {value: 1} because reason was repository-effect.hufu-denied; stage Prepared, but found RepositoryEffectClassification.DefinitelyNotApplied {value: 0}.\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Primitives.EnumAssertions`2.Be(TEnum expected, String because, Object[] becauseArgs)\n   at Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice() in /_/tests/Marang.Tests/RepositoryEffectAuthorityTests.cs:line 195\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectProcessTests.Kill_after_first_target_reconciles_partial_and_blocks_automatic_replay [11 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before K3: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.RepositoryEffectProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/RepositoryEffectProbe.cs:line 162\n   at Marang.RestartProbe.RepositoryEffectProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/RepositoryEffectProbe.cs:line 293\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 64\n\n  Stack Trace:\n     at Marang.Tests.RepositoryEffectProcessTests.KillAtAsync(String probe, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/RepositoryEffectProcessTests.cs:line 84\n   at Marang.Tests.RepositoryEffectProcessTests.Kill_after_first_target_reconciles_partial_and_blocks_automatic_replay() in /_/tests/Marang.Tests/RepositoryEffectProcessTests.cs:line 38\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"discussion\") [7 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before discussion: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"proposal\") [10 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before proposal: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectProcessTests.Each_recovery_barrier_survives_fresh_process_restart [10 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before K1: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.RepositoryEffectProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/RepositoryEffectProbe.cs:line 162\n   at Marang.RestartProbe.RepositoryEffectProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/RepositoryEffectProbe.cs:line 293\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 64\n\n  Stack Trace:\n     at Marang.Tests.RepositoryEffectProcessTests.KillAtAsync(String probe, String directory, String barrier, Boolean resume) in /_/tests/Marang.Tests/RepositoryEffectProcessTests.cs:line 84\n   at Marang.Tests.RepositoryEffectProcessTests.Each_recovery_barrier_survives_fresh_process_restart() in /_/tests/Marang.Tests/RepositoryEffectProcessTests.cs:line 20\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"delegated-running\") [15 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 101\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"unresolved\") [17 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.RestartProbe.SupervisorDelegationRecoveryProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/SupervisorDelegationRecoveryProbe.cs:line 109\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 62\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(Func`1 failReasonFunc)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(String barrier) in /_/tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs:line 44\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"checkpoint\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before checkpoint: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"replacement-running\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before barrier: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n\n  Stack Trace:\n     at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 67\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"after-fencing\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before after-fencing: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-fenced\") [10 s]\n  Error Message:\n   System.InvalidOperationException : Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.RestartProbe.SupervisorDelegationRecoveryProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/SupervisorDelegationRecoveryProbe.cs:line 109\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 62\n\n  Stack Trace:\n     at Marang.Tests.SupervisorDelegationRecoveryProcessTests.KillAtBarrier(Process process, String directory, String marker, Task`1 error) in /_/tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs:line 63\n   at Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(String barrier) in /_/tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs:line 32\n--- End of stack trace from previous location ---\n[xUnit.net 00:00:43.99]     Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [SKIP]\n  Skipped Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities [1 ms]\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"approved-before-commit\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before barrier: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n\n  Stack Trace:\n     at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 67\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"approval\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before approval: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 159\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"between-revisions\") [6 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before between-revisions: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n\n  Stack Trace:\n     at Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(String barrier) in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 33\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch [925 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 89\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"proposal-created\") [8 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 101\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 196\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement [756 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 216\n   at Marang.Runs.Adaptive.DelegationRecoveryActions.ApproveReplacementAsync(Guid decisionId, String actor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs:line 228\n   at Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement() in /_/tests/Marang.Tests/DelegationRecoveryActionsTests.cs:line 179\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 124\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.SupervisorContinuityProcessTests.Normal_fresh_process_restart_reconstructs_catch_up_without_a_barrier [5 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.SupervisorContinuityProbe.RunAsync(String directory, String barrier, Boolean resume) in /_/tests/Marang.RestartProbe/SupervisorContinuityProbe.cs:line 47\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 60\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.SupervisorContinuityProcessTests.Normal_fresh_process_restart_reconstructs_catch_up_without_a_barrier() in /_/tests/Marang.Tests/SupervisorContinuityProcessTests.cs:line 106\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 72\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 138\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"after-activation\") [7 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 101\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write [1 s]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 23\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason [995 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 58\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal [819 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 114\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2 [896 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 91\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"during-fencing\") [4 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before barrier: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n\n  Stack Trace:\n     at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 67\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation [999 ms]\n  Error Message:\n   Penghou.Zhinu.WorkflowStateException : Current authority does not permit this exact approved proposal.\n  Stack Trace:\n     at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Fixture.CreateAsync() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 280\n   at Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation() in /_/tests/Marang.Tests/RepositoryEffectGraphRuntimeTests.cs:line 44\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"committed-before-dispatch\") [3 s]\n  Error Message:\n   System.InvalidOperationException : Probe exited before barrier: Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n\n  Stack Trace:\n     at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 67\n--- End of stack trace from previous location ---\n  Failed Marang.Tests.AdaptiveRevisionProcessTests.P1_P2_P3_P4_P5_P6_repository_backed_adaptation [3 s]\n  Error Message:\n   Expected value to be 0 because Penghou.Zhinu.WorkflowStateException: Current authority does not permit this exact approved proposal.\n   at Marang.Runs.Adaptive.AdaptiveSupervisor.ApproveAsync(AdaptiveProposal proposal, String digest, String authenticatedActor, CancellationToken cancellationToken) in /_/src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs:line 66\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 218\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.AdaptiveRevisionProbe.RunAsync(String directory, String barrier, Boolean interactive) in /_/tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs:line 305\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 58\n, but found 1 (difference of 1).\n  Stack Trace:\n     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)\n   at FluentAssertions.Execution.TestFrameworkProvider.Throw(String message)\n   at FluentAssertions.Execution.AssertionScope.FailWith(String message, Object[] args)\n   at FluentAssertions.Numeric.NumericAssertions`2.Be(T expected, String because, Object[] becauseArgs)\n   at Marang.Tests.AdaptiveRevisionProcessTests.Run(String barrier) in /_/tests/Marang.Tests/AdaptiveRevisionProcessTests.cs:line 101\n--- End of stack trace from previous location ---\nResults File: /Users/runner/work/marang/marang/artifacts/aaaw-m5/macos-qualification/m5-net10.0.trx\n\nFailed!  - Failed:    51, Passed:   195, Skipped:     1, Total:   247, Duration: 1 m 13 s - Marang.Tests.dll (net10.0)\n",
+      "stderr": "[xUnit.net 00:00:03.81]     Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal [FAIL]\n[xUnit.net 00:00:03.85]     Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked [FAIL]\n[xUnit.net 00:00:03.94]     Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest [FAIL]\n[xUnit.net 00:00:04.03]     Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected [FAIL]\n[xUnit.net 00:00:05.85]     Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects [FAIL]\n[xUnit.net 00:00:06.14]     Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay [FAIL]\n[xUnit.net 00:00:06.39]     Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A [FAIL]\n[xUnit.net 00:00:07.71]     Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor [FAIL]\n[xUnit.net 00:00:07.71]     Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence [FAIL]\n[xUnit.net 00:00:07.88]     Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit [FAIL]\n[xUnit.net 00:00:09.31]     Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch [FAIL]\n[xUnit.net 00:00:10.67]     Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write [FAIL]\n[xUnit.net 00:00:12.71]     Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot [FAIL]\n[xUnit.net 00:00:12.74]     Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context [FAIL]\n[xUnit.net 00:00:12.77]     Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay [FAIL]\n[xUnit.net 00:00:14.06]     Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope [FAIL]\n[xUnit.net 00:00:14.92]     Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked [FAIL]\n[xUnit.net 00:00:15.71]     Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write [FAIL]\n[xUnit.net 00:00:16.21]     Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-approved\") [FAIL]\n[xUnit.net 00:00:16.63]     Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice [FAIL]\n[xUnit.net 00:00:17.30]     Marang.Tests.RepositoryEffectProcessTests.Kill_after_first_target_reconciles_partial_and_blocks_automatic_replay [FAIL]\n[xUnit.net 00:00:17.60]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"discussion\") [FAIL]\n[xUnit.net 00:00:27.59]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"proposal\") [FAIL]\n[xUnit.net 00:00:28.09]     Marang.Tests.RepositoryEffectProcessTests.Each_recovery_barrier_survives_fresh_process_restart [FAIL]\n[xUnit.net 00:00:32.00]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"delegated-running\") [FAIL]\n[xUnit.net 00:00:33.43]     Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"unresolved\") [FAIL]\n[xUnit.net 00:00:34.21]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"checkpoint\") [FAIL]\n[xUnit.net 00:00:38.30]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"replacement-running\") [FAIL]\n[xUnit.net 00:00:40.39]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"after-fencing\") [FAIL]\n[xUnit.net 00:00:43.58]     Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-fenced\") [FAIL]\n[xUnit.net 00:00:45.18]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"approved-before-commit\") [FAIL]\n[xUnit.net 00:00:46.86]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"approval\") [FAIL]\n[xUnit.net 00:00:51.74]     Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active [FAIL]\n[xUnit.net 00:00:53.04]     Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"between-revisions\") [FAIL]\n[xUnit.net 00:00:53.42]     Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch [FAIL]\n[xUnit.net 00:00:53.76]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"proposal-created\") [FAIL]\n[xUnit.net 00:00:55.76]     Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision [FAIL]\n[xUnit.net 00:00:56.79]     Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement [FAIL]\n[xUnit.net 00:00:58.27]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write [FAIL]\n[xUnit.net 00:00:58.79]     Marang.Tests.SupervisorContinuityProcessTests.Normal_fresh_process_restart_reconstructs_catch_up_without_a_barrier [FAIL]\n[xUnit.net 00:00:59.53]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason [FAIL]\n[xUnit.net 00:01:00.60]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass [FAIL]\n[xUnit.net 00:01:01.34]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"after-activation\") [FAIL]\n[xUnit.net 00:01:01.74]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write [FAIL]\n[xUnit.net 00:01:02.74]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason [FAIL]\n[xUnit.net 00:01:03.56]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal [FAIL]\n[xUnit.net 00:01:04.46]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2 [FAIL]\n[xUnit.net 00:01:05.42]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"during-fencing\") [FAIL]\n[xUnit.net 00:01:05.46]     Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation [FAIL]\n[xUnit.net 00:01:08.77]     Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"committed-before-dispatch\") [FAIL]\n[xUnit.net 00:01:11.94]     Marang.Tests.AdaptiveRevisionProcessTests.P1_P2_P3_P4_P5_P6_repository_backed_adaptation [FAIL]\n",
+      "cleanupConfirmed": true,
+      "orphanedProcessGroupObserved": false,
+      "ok": false,
+      "processId": 9559,
+      "processGroupId": 9559,
+      "outputDrainComplete": true,
+      "captureErrors": [],
+      "completedAt": "2026-10-15T14:23:14.434700+00:00"
+    }
+  ],
+  "testRuns": [
+    {
+      "framework": "net8.0",
+      "counters": {
+        "total": 202,
+        "executed": 201,
+        "passed": 173,
+        "failed": 28,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedbutrunaborted": 0,
+        "notrunnable": 0,
+        "notexecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inprogress": 0,
+        "pending": 0
+      },
+      "testResultCount": 202,
+      "skippedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities",
+          "outcome": "NotExecuted",
+          "duration": "00:00:00.0010000"
+        }
+      ],
+      "failedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence",
+          "outcome": "Failed",
+          "duration": "00:00:00.0905876"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked",
+          "outcome": "Failed",
+          "duration": "00:00:00.0724751"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice",
+          "outcome": "Failed",
+          "duration": "00:00:01.5015168"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor",
+          "outcome": "Failed",
+          "duration": "00:00:00.9827593"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.0446709"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot",
+          "outcome": "Failed",
+          "duration": "00:00:01.5996060"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope",
+          "outcome": "Failed",
+          "duration": "00:00:02.0640981"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision",
+          "outcome": "Failed",
+          "duration": "00:00:00.6039186"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason",
+          "outcome": "Failed",
+          "duration": "00:00:01.7551393"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal",
+          "outcome": "Failed",
+          "duration": "00:00:02.8990781"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation",
+          "outcome": "Failed",
+          "duration": "00:00:00.7756023"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context",
+          "outcome": "Failed",
+          "duration": "00:00:00.0358572"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.1849276"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit",
+          "outcome": "Failed",
+          "duration": "00:00:00.0312021"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.4840005"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected",
+          "outcome": "Failed",
+          "duration": "00:00:00.4279141"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest",
+          "outcome": "Failed",
+          "duration": "00:00:00.0520781"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active",
+          "outcome": "Failed",
+          "duration": "00:00:00.9209937"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2",
+          "outcome": "Failed",
+          "duration": "00:00:00.8294454"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.0896606"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.1099992"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch",
+          "outcome": "Failed",
+          "duration": "00:00:01.4997896"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch",
+          "outcome": "Failed",
+          "duration": "00:00:01.1002367"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement",
+          "outcome": "Failed",
+          "duration": "00:00:00.9827927"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal",
+          "outcome": "Failed",
+          "duration": "00:00:00.0366061"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass",
+          "outcome": "Failed",
+          "duration": "00:00:00.7963572"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked",
+          "outcome": "Failed",
+          "duration": "00:00:01.3816044"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason",
+          "outcome": "Failed",
+          "duration": "00:00:01.5937543"
+        }
+      ],
+      "m4ProcessTestCount": 0,
+      "m4ProcessTests": [],
+      "m5TestCount": 0,
+      "m5Tests": [],
+      "baselineMinimum": 201,
+      "baselineMinimumMet": true,
+      "trx": {
+        "path": "artifacts/aaaw-m5/macos-qualification/m5-net8.0.trx",
+        "sha256": "83521d8e32b9b554750db3da4f15f84656a40540ecfcfb28f447cd9e4dbda38c",
+        "bytes": 363939
+      },
+      "passed": false,
+      "commandOk": false
+    },
+    {
+      "framework": "net10.0",
+      "counters": {
+        "total": 247,
+        "executed": 246,
+        "passed": 195,
+        "failed": 51,
+        "error": 0,
+        "timeout": 0,
+        "aborted": 0,
+        "inconclusive": 0,
+        "passedbutrunaborted": 0,
+        "notrunnable": 0,
+        "notexecuted": 0,
+        "disconnected": 0,
+        "warning": 0,
+        "completed": 0,
+        "inprogress": 0,
+        "pending": 0
+      },
+      "testResultCount": 247,
+      "skippedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities",
+          "outcome": "NotExecuted",
+          "duration": "00:00:00.0010000"
+        }
+      ],
+      "failedTests": [
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_and_Sqlite_Hufu_grant_permits_exact_write_then_revocation_denies_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.0275911"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectProcessTests.Each_recovery_barrier_survives_fresh_process_restart",
+          "outcome": "Failed",
+          "duration": "00:00:10.7743822"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-fenced\")",
+          "outcome": "Failed",
+          "duration": "00:00:10.1272985"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Unvalidated_descendant_cannot_be_claimed_as_preserved_during_proposal",
+          "outcome": "Failed",
+          "duration": "00:00:00.8193150"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"recovery-approved\")",
+          "outcome": "Failed",
+          "duration": "00:00:13.8192905"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"approval\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.5528464"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.2999695"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Expired_or_foreign_approval_evidence_is_rejected",
+          "outcome": "Failed",
+          "duration": "00:00:00.0871561"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor",
+          "outcome": "Failed",
+          "duration": "00:00:01.3391958"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Fresh_Hufu_check_denies_after_revocation_and_never_reuses_an_old_permit",
+          "outcome": "Failed",
+          "duration": "00:00:00.1208198"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Dirty_initial_seed_is_rejected_before_any_effect_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.3195500"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"discussion\")",
+          "outcome": "Failed",
+          "duration": "00:00:07.6167079"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"during-fencing\")",
+          "outcome": "Failed",
+          "duration": "00:00:04.0707936"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Revoked_Hufu_grant_after_approval_denies_commit_and_keeps_old_revision_active",
+          "outcome": "Failed",
+          "duration": "00:00:01.9425958"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorDelegationRecoveryProcessTests.Actual_unknown_provider_state_can_be_resolved_by_reviewed_fenced_read_report_replacement(barrier: \"unresolved\")",
+          "outcome": "Failed",
+          "duration": "00:00:17.2136940"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"proposal\")",
+          "outcome": "Failed",
+          "duration": "00:00:10.0509141"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Prepared_old_B_is_not_replayed_after_approved_cutover_preserves_validated_A_and_selects_B2",
+          "outcome": "Failed",
+          "duration": "00:00:00.8964143"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectProcessTests.Kill_after_first_target_reconciles_partial_and_blocks_automatic_replay",
+          "outcome": "Failed",
+          "duration": "00:00:11.7702343"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"delegated-running\")",
+          "outcome": "Failed",
+          "duration": "00:00:15.1171320"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Executor_blocks_partial_state_after_restart_instead_of_replaying_patch",
+          "outcome": "Failed",
+          "duration": "00:00:01.4294691"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Local_pass_and_full_workflow_failure_are_separate_and_wrong_target_or_mutation_cannot_pass",
+          "outcome": "Failed",
+          "duration": "00:00:01.0583392"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Hufu_request_is_bound_to_exact_intent_digest_target_and_active_context",
+          "outcome": "Failed",
+          "duration": "00:00:00.0386072"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Required_approval_is_bound_to_exact_workflow_parent_state_and_proposal",
+          "outcome": "Failed",
+          "duration": "00:00:01.8175361"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Partial_effect_blocks_new_candidate_even_when_its_base_matches_current_partial_snapshot",
+          "outcome": "Failed",
+          "duration": "00:00:00.8965619"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"between-revisions\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.1807892"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Normal_fresh_process_restart_reconstructs_catch_up_without_a_barrier",
+          "outcome": "Failed",
+          "duration": "00:00:05.7509024"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.1822200"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Automatic_decision_uses_current_scoped_Hufu_grant_and_exact_proposal_digest",
+          "outcome": "Failed",
+          "duration": "00:00:00.0727613"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"after-fencing\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.0967528"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"proposal-created\")",
+          "outcome": "Failed",
+          "duration": "00:00:08.5855608"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionAuthorityTests.Commit_time_evaluation_denies_after_current_Hufu_grant_is_revoked",
+          "outcome": "Failed",
+          "duration": "00:00:00.0454227"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Exact_downstream_base_mismatch_refuses_mutation_and_requires_reconciliation",
+          "outcome": "Failed",
+          "duration": "00:00:00.9997150"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"after-activation\")",
+          "outcome": "Failed",
+          "duration": "00:00:07.5785973"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Partial_prerequisite_blocks_downstream_with_causal_reason",
+          "outcome": "Failed",
+          "duration": "00:00:00.9958118"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Real_Cedar_authority_normalizes_mixed_case_path_but_retains_exact_intent_evidence",
+          "outcome": "Failed",
+          "duration": "00:00:00.0317087"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P1_P2_P3_P4_P5_P6_repository_backed_adaptation",
+          "outcome": "Failed",
+          "duration": "00:00:03.1704505"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Executor_replay_recognizes_applied_effect_and_does_not_write_twice",
+          "outcome": "Failed",
+          "duration": "00:00:00.9126050"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Validation_digest_mismatch_or_repository_change_is_blocked",
+          "outcome": "Failed",
+          "duration": "00:00:00.8692388"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"committed-before-dispatch\")",
+          "outcome": "Failed",
+          "duration": "00:00:03.3526166"
+        },
+        {
+          "testName": "Marang.Tests.SupervisorContinuityProcessTests.Successive_repository_revisions_recover_after_fresh_process(barrier: \"checkpoint\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.6260500"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"replacement-running\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.3056716"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Revoked_prerequisite_authority_before_dependent_write_refuses_the_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.2459191"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects",
+          "outcome": "Failed",
+          "duration": "00:00:00.4940523"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Outstanding_unapplied_intent_from_another_workflow_blocks_same_repository_scope",
+          "outcome": "Failed",
+          "duration": "00:00:01.2722224"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Replacement_uses_exact_M1_proposal_and_fences_only_the_changed_delegation_branch",
+          "outcome": "Failed",
+          "duration": "00:00:00.9253275"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Downstream_waits_for_local_validation_and_exact_base_before_any_write",
+          "outcome": "Failed",
+          "duration": "00:00:01.1440194"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectAuthorityTests.Fresh_revocation_after_durable_intent_prevents_first_physical_write",
+          "outcome": "Failed",
+          "duration": "00:00:00.7842180"
+        },
+        {
+          "testName": "Marang.Tests.RepositoryEffectGraphRuntimeTests.Unresolved_prerequisite_blocks_downstream_with_causal_reason",
+          "outcome": "Failed",
+          "duration": "00:00:01.2542069"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Another_proposal_with_the_same_candidate_does_not_resolve_the_old_recovery_decision",
+          "outcome": "Failed",
+          "duration": "00:00:01.1273434"
+        },
+        {
+          "testName": "Marang.Tests.AdaptiveRevisionProcessTests.P8_P9_kill_and_fresh_process_recovery(barrier: \"approved-before-commit\")",
+          "outcome": "Failed",
+          "duration": "00:00:06.8741536"
+        },
+        {
+          "testName": "Marang.Tests.DelegationRecoveryActionsTests.Provider_evidence_progress_after_approval_invalidates_the_exact_replacement",
+          "outcome": "Failed",
+          "duration": "00:00:00.7561552"
+        }
+      ],
+      "m4ProcessTestCount": 3,
+      "m4ProcessTests": [
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay",
+          "outcome": "Failed",
+          "duration": "00:00:00.2999695"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.1822200"
+        },
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects",
+          "outcome": "Failed",
+          "duration": "00:00:00.4940523"
+        }
+      ],
+      "m5TestCount": 1,
+      "m5Tests": [
+        {
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A",
+          "outcome": "Failed",
+          "duration": "00:00:00.1822200"
+        }
+      ],
+      "baselineMinimum": 245,
+      "baselineMinimumMet": true,
+      "trx": {
+        "path": "artifacts/aaaw-m5/macos-qualification/m5-net10.0.trx",
+        "sha256": "d341d9537d2966bbe682cc5e31a67c64484bb4e5b30087fade2ff5958cf5557a",
+        "bytes": 518106
+      },
+      "passed": false,
+      "requiredM4AndM5ProcessTestsPresent": true,
+      "requiredM5ControlPassed": false,
+      "commandOk": false
+    }
+  ],
+  "qualificationPassed": false,
+  "observed": {
+    "nativeProfile": {
+      "schema": "aaaw-m5-macos-profile-probe-v1",
+      "startedAtUtc": "2026-10-15T14:21:19.561946+00:00",
+      "host": {
+        "osDescription": "macOS 15.7.9",
+        "framework": ".NET 10.0.13",
+        "architecture": "X64",
+        "machine": "sjc20-cw761-e433ed34-ee18-4f23-92a8-75b97247aac3-B2217A575911"
+      },
+      "source": {
+        "manifestPath": "/Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/bin/Release/net10.0/eng/aaaw-m5-runtime-packages.json",
+        "packageId": "Gagamba.Runtime",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "packageSha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+      },
+      "canonicalSupported": false,
+      "canonicalQualification": "not performed by this test-only profile probe",
+      "provider": {
+        "HasProvider": true,
+        "RefusalReason": "",
+        "platform": "macos-launchd-pg"
+      },
+      "capabilities": {
+        "UnitTermination": {
+          "level": "Partial",
+          "kind": "Native",
+          "Evidence": "PG-scoped killpg (M3); launchd cleans same-PG on job death (M7). No subtree primitive"
+        },
+        "SurvivesRootExit": {
+          "level": "Full",
+          "kind": "Native",
+          "Evidence": "M2: descendants remain addressable in PG after root exit"
+        },
+        "OwnerDeathCleanup": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "M10: job outlives its client; M4: PG workload survives supervisor death"
+        },
+        "RecursiveMembership": {
+          "level": "Partial",
+          "kind": "Native",
+          "Evidence": "Children inherit PG (M1); groups do not nest hierarchically"
+        },
+        "EscapeResistant": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "M5/M8/M12: setsid escape survives group kill and launchd cleanup"
+        },
+        "KernelOwnedLifecycle": {
+          "level": "Absent",
+          "kind": "None",
+          "Evidence": "No automatic owner-death action; launchd cleanup is PG-scoped, not owned"
+        }
+      },
+      "lifecyclePositiveControl": {
+        "prepare": {
+          "type": "Accepted",
+          "preparation": "e3aa5f8c-0574-4625-903d-8868511658a2",
+          "met": [
+            "macos-launchd-pg: UnitTermination=Partial/Native",
+            "macos-launchd-pg: SurvivesRootExit=Full/Native",
+            "macos-launchd-pg: RecursiveMembership=Partial/Native"
+          ]
+        },
+        "launch": {
+          "type": "Started",
+          "execution": "f935bda8-1e72-4073-879b-9efa743b6636"
+        },
+        "markerObserved": true,
+        "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-edc60df288534873befdfd2e64c3d3ff/normal-ready",
+        "terminate": {
+          "type": "Terminated"
+        },
+        "completion": {
+          "type": "Terminated"
+        },
+        "confirmedCleanup": true
+      },
+      "captureRefusalControl": {
+        "prepare": {
+          "type": "Accepted",
+          "preparation": "254ee8d5-a1a3-4417-9979-47ba7641b788",
+          "met": [
+            "macos-launchd-pg: UnitTermination=Partial/Native",
+            "macos-launchd-pg: SurvivesRootExit=Full/Native",
+            "macos-launchd-pg: RecursiveMembership=Partial/Native"
+          ]
+        },
+        "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-edc60df288534873befdfd2e64c3d3ff/captured-ready",
+        "launchCaptured": {
+          "type": "Failed",
+          "reasons": [
+            "bounded macOS launchd capture is unavailable; no target dispatched"
+          ]
+        },
+        "unexpectedStarted": false,
+        "reasons": [
+          "bounded macOS launchd capture is unavailable; no target dispatched"
+        ],
+        "markerPresentBeforeCleanup": false,
+        "discard": {
+          "type": "Discarded"
+        },
+        "markerAbsent": true,
+        "expectedPreDispatchRefusal": true,
+        "passed": true,
+        "canonicalBlocker": "bounded macOS launchd capture is unavailable; no target dispatched"
+      },
+      "endedAtUtc": "2026-10-15T14:21:20.175368+00:00",
+      "exitCode": 0,
+      "summary": {
+        "lifecyclePositiveControlPassed": true,
+        "captureRefusalControlPassed": true,
+        "captureUnexpectedStart": false,
+        "canonicalSupported": false
+      }
+    },
+    "canonical": {
+      "observed": false,
+      "verified": false
+    },
+    "partial": {
+      "observed": false,
+      "verified": false
+    },
+    "barriers": {
+      "K1": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K2": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K3": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K4": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K5": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K6": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K7": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K8": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K9": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K10": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K11": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      },
+      "K12": {
+        "contextPresent": false,
+        "usedMarkerPresent": false,
+        "lifecycleReceiptPresent": false,
+        "verified": false,
+        "reason": "Missing barrier context, used marker, or lifecycle stop receipt."
+      }
+    },
+    "actualStateControl": {
+      "observed": false,
+      "verified": false
+    }
+  },
+  "host": {
+    "platform": "macOS-15.7.9-x86_64-i386-64bit-Mach-O",
+    "machine": "x86_64",
+    "effectiveUid": 501,
+    "tempDirectory": "/Users/runner/work/_temp/aaaw-m5/",
+    "imageOS": "macos15",
+    "imageVersion": "20260824.0482.1"
+  },
+  "notExercised": [
+    "Gagamba producer full macOS source suite: exact unpublished producer commit is not remotely available.",
+    "Owner-death/setsid escape containment, hostile isolation, power loss and generic exactly-once effects."
+  ],
+  "packages": {
+    "m1": [
+      {
+        "id": "Penghou.Zhinu",
+        "version": "0.2.0-preview.4-aaaw-m1.3",
+        "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+        "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg",
+          "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+          "bytes": 522158
+        }
+      },
+      {
+        "id": "Penghou.Zhinu.Sqlite",
+        "version": "0.2.0-preview.4-aaaw-m1.3",
+        "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+        "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg",
+          "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+          "bytes": 475389
+        }
+      },
+      {
+        "id": "Penghou.Qingniao.Abstractions",
+        "version": "0.1.0-preview.5-aaaw-m1.4",
+        "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+        "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg",
+          "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+          "bytes": 196835
+        }
+      },
+      {
+        "id": "Penghou.Qingniao",
+        "version": "0.1.0-preview.5-aaaw-m1.4",
+        "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+        "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg",
+          "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+          "bytes": 224427
+        }
+      }
+    ],
+    "runtime": [
+      {
+        "id": "Gagamba.Execution",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94",
+          "bytes": 52723
+        }
+      },
+      {
+        "id": "Gagamba.Execution.Linux",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Linux.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c",
+          "bytes": 24969
+        }
+      },
+      {
+        "id": "Gagamba.Execution.MacOS",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.MacOS.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c",
+          "bytes": 27083
+        }
+      },
+      {
+        "id": "Gagamba.Execution.Windows",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Windows.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb",
+          "bytes": 23489
+        }
+      },
+      {
+        "id": "Gagamba.Runtime",
+        "version": "0.1.0-preview.4-aaaw-m5.1",
+        "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+        "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4",
+        "file": {
+          "path": "artifacts/aaaw-m1/packages/Gagamba.Runtime.0.1.0-preview.4-aaaw-m5.1.nupkg",
+          "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4",
+          "bytes": 20299
+        }
+      }
+    ]
+  },
+  "completedAt": "2026-10-15T14:23:14.508992+00:00"
+}

@@ -4,12 +4,20 @@ Linux evidence was frozen in `a27cfba` before this work. Independent review 04
 verified all 162 archived payload hashes, twelve barriers and the actual-state
 control, and found no technical freeze blocker.
 
-The hosted run uses `macos-15-intel`, an explicitly Intel x64 image from the
+The first hosted attempt used `macos-15-intel`. Its native capture refusal is
+valid evidence, but the complete consumer profile also depends on CedarSharp
+1.0.0, whose macOS native asset is ARM64 only. Its authority-dependent failures
+are an environment/profile mismatch, not evidence of a Hufu implementation bug.
+Original counts, TRXs and logs are preserved under `attempt-a/`.
+
+The corrected hosted run uses `macos-15`, an explicitly ARM64 image from the
 [GitHub runner image catalog](https://github.com/actions/runner-images).
 Actual `sw_vers`, image version, architecture and SDK/runtime inventory must be
 captured from the job; the label alone is not OS evidence. SDKs 8.0.426 and
 10.0.401 are requested. Physical `RUNNER_TEMP` is used as `TMPDIR` so the fixture
 does not weaken the existing repository guard against symlink ancestors.
+An explicit `uname -m == arm64` check prevents silent architecture drift. No
+Hufu/CedarSharp package upgrade or implementation change is involved.
 
 The exact nine hash-pinned packages in the existing qualification feed are
 reused, with nuspec commit validation. Nothing is published to a registry.

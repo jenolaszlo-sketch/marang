@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Native macOS qualification attempt. Refusals are evidence, never PASS."""
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -47,8 +48,8 @@ def main():
         return result
 
     try:
-        if platform.system() != 'Darwin' or not record['source']['start']['clean']:
-            raise RuntimeError('Requires native macOS and clean source')
+        if platform.system() != 'Darwin' or platform.machine() != 'arm64' or not record['source']['start']['clean']:
+            raise RuntimeError('Requires native ARM64 macOS (pinned CedarSharp asset) and clean source')
         command('sw-vers', ['/usr/bin/sw_vers'])
         command('sdk-info', ['dotnet', '--info'])
         command('runtime-info', ['dotnet', '--list-runtimes'])
@@ -59,6 +60,11 @@ def main():
         command('native-prerequisite-restore', ['dotnet', 'restore', 'eng/aaaw-m5-native-prerequisites.csproj',
                                                '--source', 'https://api.nuget.org/v3/index.json', '--disable-parallel'])
         command('restore', ['dotnet', 'restore', 'Marang.slnx', '--configfile', 'NuGet.AAAWM1.Config', '--disable-parallel'])
+        cedar_root = Path(environment.get('NUGET_PACKAGES', str(Path.home() / '.nuget/packages'))) / 'cedarsharp/1.0.0'
+        cedar_assets = [p for p in (cedar_root / 'runtimes').glob('**/*') if p.is_file()]
+        record['cedarNativeAssets'] = [{'path': p.relative_to(cedar_root).as_posix(),
+            'sha256': hashlib.sha256(p.read_bytes()).hexdigest(), 'bytes': p.stat().st_size} for p in sorted(cedar_assets)]
+        command('cedar-arm64-asset', ['/usr/bin/file', str(cedar_root / 'runtimes/osx-arm64/native/libcedarsharp_native.dylib')])
         command('build', ['dotnet', 'build', 'Marang.slnx', '-c', 'Release', '--no-restore', '-m:1', '-p:UseSharedCompilation=false'])
         command('format', ['dotnet', 'format', 'Marang.slnx', '--verify-no-changes', '--no-restore'])
         probe = 'eng/aaaw-m5-macos-probe/aaaw-m5-macos-probe.csproj'
@@ -75,6 +81,22 @@ def main():
                               '--logger', f'trx;LogFileName={trx.name}', '--results-directory', str(OUT)], required=False)
             parsed = shared.parse_trx(trx, framework) if trx.exists() else {'framework': framework, 'missingTrx': True}
             parsed['commandOk'] = result['ok']
+            if trx.exists():
+                # xUnit's TRX Counters may say notExecuted=0 despite a NotExecuted
+                # UnitTestResult. Preserve both and use actual result outcomes.
+                parsed['skippedResultCount'] = len(parsed['skippedTests'])
+                allowed_skip = 'Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities'
+                reviewed_skips = (len(parsed['skippedTests']) <= 1
+                    and all(s['testName'] == allowed_skip for s in parsed['skippedTests']))
+                counts = parsed['counters']
+                parsed['passedWithReviewedFilesystemSkip'] = (result['ok']
+                    and reviewed_skips and not parsed['failedTests']
+                    and counts.get('passed', 0) + len(parsed['skippedTests']) == counts.get('total', -1)
+                    and parsed['testResultCount'] == counts.get('total', -1)
+                    and parsed['baselineMinimumMet']
+                    and (framework != 'net10.0' or
+                         (parsed['requiredM4AndM5ProcessTestsPresent'] and parsed['requiredM5ControlPassed']
+                          and all(t['outcome'] == 'Passed' for t in parsed['m4ProcessTests']))))
             record['testRuns'].append(parsed)
             save()
         scenario = shared.find_newest(ROOT / 'artifacts/aaaw-m4/process-probes', 'multi-effect-result.json', started)
@@ -88,7 +110,8 @@ def main():
         record['observed']['actualStateControl'] = shared.check_negative_control(control.parent, started) if control else {'observed': False, 'verified': False}
         # A complete native semantic run is required. A refusal probe alone never qualifies AAAW.
         record['qualificationPassed'] = (all(c['ok'] for c in record['commands'])
-            and all(r.get('passed') for r in record['testRuns'])
+            and len(record['testRuns']) == 2
+            and all(r.get('passedWithReviewedFilesystemSkip') for r in record['testRuns'])
             and record['observed']['canonical'].get('verified') is True
             and record['observed']['partial'].get('verified') is True
             and len(record['observed']['barriers']) == 12

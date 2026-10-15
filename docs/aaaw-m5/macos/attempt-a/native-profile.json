@@ -1,0 +1,118 @@
+{
+  "schema": "aaaw-m5-macos-profile-probe-v1",
+  "startedAtUtc": "2026-10-15T14:21:19.561946+00:00",
+  "host": {
+    "osDescription": "macOS 15.7.9",
+    "framework": ".NET 10.0.13",
+    "architecture": "X64",
+    "machine": "sjc20-cw761-e433ed34-ee18-4f23-92a8-75b97247aac3-B2217A575911"
+  },
+  "source": {
+    "manifestPath": "/Users/runner/work/marang/marang/eng/aaaw-m5-macos-probe/bin/Release/net10.0/eng/aaaw-m5-runtime-packages.json",
+    "packageId": "Gagamba.Runtime",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "packageSha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+  },
+  "canonicalSupported": false,
+  "canonicalQualification": "not performed by this test-only profile probe",
+  "provider": {
+    "HasProvider": true,
+    "RefusalReason": "",
+    "platform": "macos-launchd-pg"
+  },
+  "capabilities": {
+    "UnitTermination": {
+      "level": "Partial",
+      "kind": "Native",
+      "Evidence": "PG-scoped killpg (M3); launchd cleans same-PG on job death (M7). No subtree primitive"
+    },
+    "SurvivesRootExit": {
+      "level": "Full",
+      "kind": "Native",
+      "Evidence": "M2: descendants remain addressable in PG after root exit"
+    },
+    "OwnerDeathCleanup": {
+      "level": "Absent",
+      "kind": "None",
+      "Evidence": "M10: job outlives its client; M4: PG workload survives supervisor death"
+    },
+    "RecursiveMembership": {
+      "level": "Partial",
+      "kind": "Native",
+      "Evidence": "Children inherit PG (M1); groups do not nest hierarchically"
+    },
+    "EscapeResistant": {
+      "level": "Absent",
+      "kind": "None",
+      "Evidence": "M5/M8/M12: setsid escape survives group kill and launchd cleanup"
+    },
+    "KernelOwnedLifecycle": {
+      "level": "Absent",
+      "kind": "None",
+      "Evidence": "No automatic owner-death action; launchd cleanup is PG-scoped, not owned"
+    }
+  },
+  "lifecyclePositiveControl": {
+    "prepare": {
+      "type": "Accepted",
+      "preparation": "e3aa5f8c-0574-4625-903d-8868511658a2",
+      "met": [
+        "macos-launchd-pg: UnitTermination=Partial/Native",
+        "macos-launchd-pg: SurvivesRootExit=Full/Native",
+        "macos-launchd-pg: RecursiveMembership=Partial/Native"
+      ]
+    },
+    "launch": {
+      "type": "Started",
+      "execution": "f935bda8-1e72-4073-879b-9efa743b6636"
+    },
+    "markerObserved": true,
+    "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-edc60df288534873befdfd2e64c3d3ff/normal-ready",
+    "terminate": {
+      "type": "Terminated"
+    },
+    "completion": {
+      "type": "Terminated"
+    },
+    "confirmedCleanup": true
+  },
+  "captureRefusalControl": {
+    "prepare": {
+      "type": "Accepted",
+      "preparation": "254ee8d5-a1a3-4417-9979-47ba7641b788",
+      "met": [
+        "macos-launchd-pg: UnitTermination=Partial/Native",
+        "macos-launchd-pg: SurvivesRootExit=Full/Native",
+        "macos-launchd-pg: RecursiveMembership=Partial/Native"
+      ]
+    },
+    "markerPath": "/Users/runner/work/_temp/aaaw-m5/aaaw-m5-macos-probe-edc60df288534873befdfd2e64c3d3ff/captured-ready",
+    "launchCaptured": {
+      "type": "Failed",
+      "reasons": [
+        "bounded macOS launchd capture is unavailable; no target dispatched"
+      ]
+    },
+    "unexpectedStarted": false,
+    "reasons": [
+      "bounded macOS launchd capture is unavailable; no target dispatched"
+    ],
+    "markerPresentBeforeCleanup": false,
+    "discard": {
+      "type": "Discarded"
+    },
+    "markerAbsent": true,
+    "expectedPreDispatchRefusal": true,
+    "passed": true,
+    "canonicalBlocker": "bounded macOS launchd capture is unavailable; no target dispatched"
+  },
+  "endedAtUtc": "2026-10-15T14:21:20.175368+00:00",
+  "exitCode": 0,
+  "summary": {
+    "lifecyclePositiveControlPassed": true,
+    "captureRefusalControlPassed": true,
+    "captureUnexpectedStart": false,
+    "canonicalSupported": false
+  }
+}
