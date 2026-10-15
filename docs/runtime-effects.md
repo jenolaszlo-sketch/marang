@@ -45,9 +45,10 @@ host-owned and schedule-time only.
 | Coordinator path | Classification | Authority today |
 |---|---|---|
 | `Adapter.StartAsync` (provider spawn, e.g. Codex) | protected external invocation | **UNGATED** for current authority |
-| `ResumeAsync` (re-dispatch after crash/wait) | protected external invocation | **UNGATED** — retry-laundering risk (probe H) |
-| `ObserveAsync` / `GetResultAsync` (poll provider) | protected read effect (execution outputs) | **UNGATED** |
-| Provider `CancelAsync` (external cancel) | protected mutation | **UNGATED** |
+| `ResumeAsync` (re-dispatch after crash/wait) | protected external invocation | **UNGATED** — retry-laundering risk (probe H). Attach-only resumes are authorized under the same meaning (fail-closed direction: strictly stronger than needed, never weaker) |
+| `ObserveAsync` (state, revision, provider status ≤512 chars, failure class, result-available flag — **no content**) | protected lifecycle read | **UNGATED** → maps to `ReadMetadata` (status/lifecycle polling only) |
+| `GetResultAsync` (summary text, artifact descriptors, provenance — **execution content**) | protected output read | **UNGATED** → new action `ReadExecutionResult`. Never hidden under `ReadMetadata` |
+| Provider `CancelAsync` (abort a live external operation) | protected mutation | **UNGATED** → new action `CancelExecution`. Not `Release` (a completion-gate, not an abort) |
 | Phase moves, budget enforcement, terminal publish, pump bookkeeping | pure transition / bookkeeping | none needed |
 
 ## Durable authority binding (§4) — the structural gap
