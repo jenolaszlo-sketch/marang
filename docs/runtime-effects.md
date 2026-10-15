@@ -23,7 +23,7 @@ framework.
 | Engine path | Classification | Authority today |
 |---|---|---|
 | Forward step execution (step delegate after claim) | protected effect dispatch (implementation-defined) | gated by host policy; NOT Hufu current authority |
-| Compensation execution (`CompensatingWorkflowStep.CompensateAsync`) | protected effect (undoes external effects) | **UNGATED** — declaration drift-check only; no per-attempt evaluation |
+| Compensation execution (`CompensationExecutor.ExecuteOneAsync`, per claim attempt) | protected effect (undoes external effects) | **gated by host policy** (`AuthorizeAsync(..., compensation: true)` before execution); NOT Hufu current authority — same gap class as forward steps, not a structural hole |
 | Claim acquire/release, lease renew, wait park, cursor moves | pure engine transition | none needed |
 | Durable writes (step results, events, external-op handles, auth commits) | engine bookkeeping (§18) | fenced by leases/generations, not Hufu |
 | Reconstructed reads / replay of recorded completions | replay, no new effect (§9A) | none needed |
@@ -89,6 +89,20 @@ Remaining Hufu-side judgments for AE-6.1b (with separation tests):
 - Publish a new Hufu prerelease **only if** contracts change (new actions or
   adapter surface); the existing `HufuExecutionAuthorizer` needs no publish
   by itself.
+
+## Correction (AE-6.2 finding, 2026-10-15): fresh-fence rule vs pre-published authority
+
+`HufuExecutionAuthorizer` binds its authority context to the evaluation's
+fresh `AuthorizationRequestId` as fence (`WorkflowAuthorityBinding` ctor), but
+`AuthorityStoreSnapshotSource` only returns snapshots whose stored context
+**exactly equals** the request context. A fresh-per-attempt fence can never
+match pre-published operator authority, so that combination cannot authorize
+against a real store — only against echoing test doubles. This does not affect
+already-published contracts; it constrains which composition can use them.
+Proposed path (awaiting direction, not implemented): a narrow runtime adapter
+over `CurrentAuthorityRequestAuthorizer` with a **stable** per-run fence, per-
+attempt-fresh `RequestIdentity`, and mandatory request-identity matching on
+every consumed decision. No Hufu contract change required for that shape.
 
 ## Out of scope for AE-6 (unchanged)
 
