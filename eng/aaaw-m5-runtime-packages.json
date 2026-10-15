@@ -1,0 +1,32 @@
+[
+  {
+    "id": "Gagamba.Execution",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94"
+  },
+  {
+    "id": "Gagamba.Execution.Linux",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c"
+  },
+  {
+    "id": "Gagamba.Execution.MacOS",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c"
+  },
+  {
+    "id": "Gagamba.Execution.Windows",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb"
+  },
+  {
+    "id": "Gagamba.Runtime",
+    "version": "0.1.0-preview.4-aaaw-m5.1",
+    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+    "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+  }
+]

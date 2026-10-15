@@ -1,7 +1,7 @@
 #if NET10_0_OR_GREATER
-using System.Diagnostics;
 using System.Text.Json;
 using FluentAssertions;
+using Marang.Tests.LifecycleBroker;
 
 namespace Marang.Tests;
 
@@ -16,27 +16,18 @@ public sealed class MultiEffectProcessTests
         Directory.CreateDirectory(directory);
         var probe = Path.Combine(root, "tests", "Marang.RestartProbe", "bin", "Release", "net10.0", "Marang.RestartProbe.dll");
         var resume = false;
-        foreach (var barrier in new[] { "K1", "K2", "K3", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12" })
+        foreach (var barrier in MultiEffectScenario.ContinuingBarriers)
         {
-            await KillAtAsync(probe, root, directory, barrier, resume);
+            await StopOwnedProbeAtBarrierAsync(probe, root, directory, barrier, resume);
             resume = true;
         }
 
-        using var completed = Start(probe, root, directory, null, resume: true);
-        var stdout = completed.StandardOutput.ReadToEndAsync(TestContext.Current.CancellationToken);
-        var stderr = completed.StandardError.ReadToEndAsync(TestContext.Current.CancellationToken);
-        using (var deadline = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken))
-        {
-            deadline.CancelAfter(TimeSpan.FromMinutes(30));
-            try { await completed.WaitForExitAsync(deadline.Token); }
-            catch (OperationCanceledException)
-            {
-                if (!completed.HasExited) completed.Kill(entireProcessTree: true);
-                await completed.WaitForExitAsync(CancellationToken.None);
-                throw new TimeoutException("The resumed M4 multi-effect qualification exceeded 30 minutes.\n" + await stdout + "\n" + await stderr);
-            }
-        }
-        completed.ExitCode.Should().Be(0, await stdout + await stderr);
+        await using var completed = OwnedProbeRun.Start(probe, root, directory, null, resume: true);
+        var completion = await completed.WaitForNaturalExitAsync(TimeSpan.FromMinutes(30), directory, TestContext.Current.CancellationToken);
+        completion.Cause.Should().Be(Gagamba.Runtime.RunCause.NaturalExit);
+        completion.RootExitCode.Should().Be(0);
+        completion.Cleanup.Should().Be(Gagamba.Runtime.CleanupStatus.Confirmed);
+        completion.Output?.Status.Should().Be(Gagamba.Execution.OutputCaptureStatus.Complete);
 
         var resultPath = Path.Combine(directory, "multi-effect-result.json");
         File.Exists(resultPath).Should().BeTrue("the final process persists the causal graph evidence");
@@ -67,11 +58,22 @@ public sealed class MultiEffectProcessTests
         counts["C"].Should().Be(1);
         counts["B2"].Should().Be(1);
         counts["C2"].Should().Be(1);
-        foreach (var barrier in new[] { "K1", "K2", "K3", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12" })
+        foreach (var barrier in MultiEffectScenario.ContinuingBarriers)
         {
             File.Exists(Path.Combine(directory, "barrier-used-" + barrier)).Should().BeTrue();
             File.Exists(Path.Combine(directory, "barrier-context-" + barrier + ".json")).Should().BeTrue();
             File.Exists(Path.Combine(directory, "process-id-" + barrier + ".txt")).Should().BeTrue();
+            using var stop = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "lifecycle-stop-" + barrier + ".json"), TestContext.Current.CancellationToken));
+            stop.RootElement.GetProperty("root").GetProperty("cause").GetString().Should().Be("ExplicitStop");
+            stop.RootElement.GetProperty("root").GetProperty("cleanup").GetString().Should().Be("Confirmed");
+            stop.RootElement.GetProperty("originalWorkflowProcessId").GetInt32().Should().BeGreaterThan(0);
+        }
+        using (var k12Stop = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "lifecycle-stop-K12.json"), TestContext.Current.CancellationToken)))
+        {
+            var stoppedCommands = k12Stop.RootElement.GetProperty("brokerCommands").EnumerateArray().ToArray();
+            stoppedCommands.Should().NotBeEmpty("K12 must stop the active validation command through the lifecycle owner");
+            stoppedCommands.Should().OnlyContain(command => command.GetProperty("cause").GetString() == "ExplicitStop"
+                && command.GetProperty("cleanup").GetString() == "Confirmed");
         }
         using (var k8 = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "barrier-context-K8.json"), TestContext.Current.CancellationToken)))
         {
@@ -108,12 +110,11 @@ public sealed class MultiEffectProcessTests
             "multi-effect-K4-" + DateTimeOffset.UtcNow.ToString("yyyyMMdd-HHmmssfff") + "-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
         var probe = Path.Combine(root, "tests", "Marang.RestartProbe", "bin", "Release", "net10.0", "Marang.RestartProbe.dll");
-        await KillAtAsync(probe, root, directory, "K4", resume: false);
-        using var resumed = Start(probe, root, directory, null, resume: true);
-        var stdout = resumed.StandardOutput.ReadToEndAsync(TestContext.Current.CancellationToken);
-        var stderr = resumed.StandardError.ReadToEndAsync(TestContext.Current.CancellationToken);
-        await WaitBoundedAsync(resumed, TimeSpan.FromMinutes(5), stdout, stderr, "K4 resumed fixture");
-        resumed.ExitCode.Should().Be(0, (await stdout) + "\n" + await stderr);
+        await StopOwnedProbeAtBarrierAsync(probe, root, directory, "K4", resume: false);
+        await using var resumed = OwnedProbeRun.Start(probe, root, directory, null, resume: true);
+        var completion = await resumed.WaitForNaturalExitAsync(TimeSpan.FromMinutes(5), directory, TestContext.Current.CancellationToken);
+        completion.Cause.Should().Be(Gagamba.Runtime.RunCause.NaturalExit);
+        completion.RootExitCode.Should().Be(0);
         using var result = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "multi-effect-K4-result.json"), TestContext.Current.CancellationToken));
         result.RootElement.GetProperty("prerequisiteClassification").GetString().Should().Be("PartiallyApplied");
         result.RootElement.GetProperty("dependentEffectBlocked").GetBoolean().Should().BeTrue();
@@ -128,69 +129,133 @@ public sealed class MultiEffectProcessTests
         File.Exists(Path.Combine(directory, "process-id-K4.txt")).Should().BeTrue();
     }
 
-    private static async Task KillAtAsync(string probe, string root, string directory, string barrier, bool resume)
+    [Fact]
+    public async Task Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A()
     {
-        using var process = Start(probe, root, directory, barrier, resume);
-        var stdout = process.StandardOutput.ReadToEndAsync(TestContext.Current.CancellationToken);
-        var stderr = process.StandardError.ReadToEndAsync(TestContext.Current.CancellationToken);
+        var root = FindRoot();
+        var directory = Path.Combine(root, "artifacts", "aaaw-m5", "process-probes",
+            "multi-effect-negative-control-" + DateTimeOffset.UtcNow.ToString("yyyyMMdd-HHmmssfff") + "-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        var probe = Path.Combine(root, "tests", "Marang.RestartProbe", "bin", "Release", "net10.0", "Marang.RestartProbe.dll");
+        await StopOwnedProbeAtBarrierAsync(probe, root, directory, "K3", resume: false);
+
+        var checkout = (await File.ReadAllTextAsync(Path.Combine(directory, "checkout-path.txt"), TestContext.Current.CancellationToken)).Trim();
+        var projectPath = Path.Combine(checkout, "tests", "Marang.Tests", "Marang.Tests.csproj");
+        var original = await File.ReadAllBytesAsync(projectPath, TestContext.Current.CancellationToken);
+        var tampered = System.Text.Encoding.UTF8.GetBytes(System.Text.Encoding.UTF8.GetString(original) + Environment.NewLine + "<!-- M5 actual-state negative control -->" + Environment.NewLine);
+        await File.WriteAllBytesAsync(projectPath, tampered, TestContext.Current.CancellationToken);
+        var tamperedDigest = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(tampered)).ToLowerInvariant();
+
+        foreach (var run in new[] { 1, 2 })
+        {
+            await using var resumed = OwnedProbeRun.Start(probe, root, directory, barrier: null, resume: true,
+                phase: "multi-effect-reconcile", reconcileRun: run);
+            var completion = await resumed.WaitForNaturalExitAsync(TimeSpan.FromMinutes(5), directory, TestContext.Current.CancellationToken);
+            completion.Cause.Should().Be(Gagamba.Runtime.RunCause.NaturalExit);
+            completion.RootExitCode.Should().Be(0);
+            File.ReadAllBytes(projectPath).Should().Equal(tampered, "reconciliation must preserve the unexpected actual bytes");
+
+            using var result = JsonDocument.Parse(await File.ReadAllTextAsync(
+                Path.Combine(directory, $"multi-effect-reconcile-{run}.json"), TestContext.Current.CancellationToken));
+            var json = result.RootElement;
+            json.GetProperty("activeRevisionId").GetString().Should().Be("revision-2");
+            json.GetProperty("observedStateDiffersFromAExpected").GetBoolean().Should().BeTrue();
+            json.GetProperty("observedStateBefore").GetProperty("stateDigest").GetString()
+                .Should().Be(json.GetProperty("observedStateAfter").GetProperty("stateDigest").GetString());
+            json.GetProperty("persistedAValidation").GetProperty("beforeStage").GetString().Should().Be("ValidationPassed");
+            json.GetProperty("persistedAValidation").GetProperty("beforePassed").GetBoolean().Should().BeTrue();
+            json.GetProperty("persistedAValidation").GetProperty("afterStage").GetString().Should().Be("ValidationPassed");
+            json.GetProperty("persistedAValidation").GetProperty("afterPassed").GetBoolean().Should().BeTrue();
+            json.GetProperty("persistedAValidation").GetProperty("beforeTargetStateDigest").GetString()
+                .Should().Be(json.GetProperty("persistedAValidation").GetProperty("afterTargetStateDigest").GetString());
+            json.GetProperty("allowlistedProjectObservedAsStale").GetBoolean().Should().BeTrue();
+            json.GetProperty("bRemainedPrepared").GetBoolean().Should().BeTrue();
+            json.GetProperty("cRemainedPrepared").GetBoolean().Should().BeTrue();
+            json.GetProperty("noBOrCMutation").GetBoolean().Should().BeTrue();
+            json.GetProperty("mutationBlocked").GetBoolean().Should().BeTrue();
+            json.GetProperty("validatorCalled").GetBoolean().Should().BeFalse();
+            json.GetProperty("checkpointCalled").GetBoolean().Should().BeFalse();
+            json.GetProperty("bAttempt").GetProperty("mutationPerformed").GetBoolean().Should().BeFalse();
+            json.GetProperty("cAttempt").GetProperty("mutationPerformed").GetBoolean().Should().BeFalse();
+            json.GetProperty("bAttempt").GetProperty("reasonCode").GetString().Should().Contain("m4.prerequisite-A-output-stale");
+            json.GetProperty("cAttempt").GetProperty("reasonCode").GetString().Should().Contain("m4.prerequisite-A-output-stale");
+            json.GetProperty("bAttempt").GetProperty("stage").GetString().Should().Be("Prepared");
+            json.GetProperty("cAttempt").GetProperty("stage").GetString().Should().Be("Prepared");
+            json.GetProperty("supervisorView").GetProperty("actualCheckoutState").GetProperty("stateDigest").GetString()
+                .Should().Be(json.GetProperty("observedStateAfter").GetProperty("stateDigest").GetString());
+            json.GetProperty("physicalApplyLog").EnumerateArray().Select(line => line.GetString()).Should().Equal("A");
+            var identities = json.GetProperty("effectIdentities");
+            identities.GetProperty("aId").GetGuid().Should().Be(Guid.Parse("bf668e4e-721b-4611-aae6-e2712dc5a881"));
+            identities.GetProperty("bId").GetGuid().Should().Be(Guid.Parse("bb288558-11d7-4a4d-91e2-a4332cecedc8"));
+            identities.GetProperty("cId").GetGuid().Should().Be(Guid.Parse("912081ef-5f01-4d72-890a-75a381f6abdd"));
+            json.GetProperty("actualProjectFileSha256").GetString().Should().Be(tamperedDigest);
+            var lineage = json.GetProperty("effectLineage").EnumerateArray().ToArray();
+            lineage.Select(effect => effect.GetProperty("effectId").GetGuid()).Should().Equal(
+                Guid.Parse("bf668e4e-721b-4611-aae6-e2712dc5a881"),
+                Guid.Parse("bb288558-11d7-4a4d-91e2-a4332cecedc8"),
+                Guid.Parse("912081ef-5f01-4d72-890a-75a381f6abdd"));
+            lineage.Select(effect => effect.GetProperty("revisionId").GetString()).Should().OnlyContain(revision => revision == "revision-2");
+            if (run == 1)
+                json.GetProperty("observedStateAfter").GetProperty("stateDigest").GetString().Should().NotBeNullOrWhiteSpace();
+        }
+
+        using var first = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "multi-effect-reconcile-1.json"), TestContext.Current.CancellationToken));
+        using var second = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "multi-effect-reconcile-2.json"), TestContext.Current.CancellationToken));
+        second.RootElement.GetProperty("graphDigest").GetString().Should().Be(first.RootElement.GetProperty("graphDigest").GetString());
+        second.RootElement.GetProperty("observedStateAfter").GetProperty("stateDigest").GetString()
+            .Should().Be(first.RootElement.GetProperty("observedStateAfter").GetProperty("stateDigest").GetString());
+        second.RootElement.GetProperty("effectLineage").GetRawText().Should().Be(first.RootElement.GetProperty("effectLineage").GetRawText());
+    }
+
+    private static async Task StopOwnedProbeAtBarrierAsync(string probe, string root, string directory, string barrier, bool resume)
+    {
+        await using var run = OwnedProbeRun.Start(probe, root, directory, barrier, resume);
         var ready = Path.Combine(directory, "barrier-ready-" + barrier);
         var until = DateTimeOffset.UtcNow.AddMinutes(10);
+        var cleanupComplete = false;
         try
         {
             while (!File.Exists(ready))
             {
-                if (process.HasExited) throw new InvalidOperationException("Probe exited before " + barrier + ": " + await stdout + "\n" + await stderr);
+                if (run.RootTask.IsCompleted)
+                {
+                    var receipt = await run.RootTask;
+                    await run.StopAfterFailureAsync(directory, "before-" + barrier);
+                    cleanupComplete = true;
+                    throw new InvalidOperationException("Probe exited before " + barrier + ": " + OwnedProbeRun.Describe(receipt));
+                }
                 if (DateTimeOffset.UtcNow >= until)
                 {
-                    process.Kill(entireProcessTree: true);
-                    await process.WaitForExitAsync(CancellationToken.None);
-                    throw new TimeoutException("Probe did not reach " + barrier + ": " + await stdout + "\n" + await stderr);
+                    await run.StopAfterFailureAsync(directory, "timeout-" + barrier);
+                    cleanupComplete = true;
+                    throw new TimeoutException("Probe did not reach " + barrier + " within ten minutes.");
                 }
                 await Task.Delay(25, TestContext.Current.CancellationToken);
             }
+            if (run.RootTask.IsCompleted)
+                throw new InvalidOperationException("Probe root receipt completed at barrier " + barrier + " before owner stop.");
+            var pidPath = Path.Combine(directory, "workflow-process-id.txt");
+            if (!File.Exists(pidPath)) throw new InvalidOperationException("Probe did not persist workflow-process-id.txt before " + barrier);
+            var originalProcessId = int.Parse((await File.ReadAllTextAsync(pidPath, TestContext.Current.CancellationToken)).Trim());
+            await File.WriteAllTextAsync(Path.Combine(directory, "process-id-" + barrier + ".txt"),
+                originalProcessId.ToString(), TestContext.Current.CancellationToken);
+            await run.StopAtBarrierAsync(directory, barrier, originalProcessId,
+                requireActive: barrier == "K12", cancellationToken: TestContext.Current.CancellationToken);
+            cleanupComplete = true;
+            await File.WriteAllTextAsync(Path.Combine(directory, "barrier-used-" + barrier), "owned-stop-confirmed", TestContext.Current.CancellationToken);
+            await File.WriteAllTextAsync(Path.Combine(directory, "killed-" + barrier + ".log"),
+                await File.ReadAllTextAsync(Path.Combine(directory, "lifecycle-stop-" + barrier + ".json"), TestContext.Current.CancellationToken),
+                TestContext.Current.CancellationToken);
         }
         catch
         {
-            if (!process.HasExited) process.Kill(entireProcessTree: true);
-            if (!process.HasExited) await process.WaitForExitAsync(CancellationToken.None);
-            _ = await stdout;
-            _ = await stderr;
+            if (!cleanupComplete)
+            {
+                try { await run.StopAfterFailureAsync(directory, "failure-" + barrier); }
+                catch { /* Preserve the original barrier failure; disposal still attempts owner cleanup. */ }
+            }
             throw;
         }
-        await File.WriteAllTextAsync(Path.Combine(directory, "process-id-" + barrier + ".txt"), process.Id.ToString(), TestContext.Current.CancellationToken);
-        process.Kill(entireProcessTree: true);
-        await process.WaitForExitAsync(TestContext.Current.CancellationToken);
-        await File.WriteAllTextAsync(Path.Combine(directory, "barrier-used-" + barrier), "killed", TestContext.Current.CancellationToken);
-        await File.WriteAllTextAsync(Path.Combine(directory, "killed-" + barrier + ".log"), await stdout + await stderr, TestContext.Current.CancellationToken);
-    }
-
-    private static async Task WaitBoundedAsync(Process process, TimeSpan timeout, Task<string> stdout, Task<string> stderr, string label)
-    {
-        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
-        deadline.CancelAfter(timeout);
-        try { await process.WaitForExitAsync(deadline.Token); }
-        catch (OperationCanceledException)
-        {
-            if (!process.HasExited) process.Kill(entireProcessTree: true);
-            await process.WaitForExitAsync(CancellationToken.None);
-            throw new TimeoutException(label + " exceeded " + timeout + ".\n" + await stdout + "\n" + await stderr);
-        }
-    }
-
-    private static Process Start(string probe, string root, string directory, string? barrier, bool resume)
-    {
-        var start = new ProcessStartInfo("dotnet")
-        {
-            WorkingDirectory = root,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        };
-        foreach (var arg in new[] { probe, "--phase", "multi-effect", "--dir", directory }) start.ArgumentList.Add(arg);
-        if (barrier is not null) { start.ArgumentList.Add("--barrier"); start.ArgumentList.Add(barrier); }
-        if (resume) { start.ArgumentList.Add("--resume"); start.ArgumentList.Add("true"); }
-        return Process.Start(start) ?? throw new InvalidOperationException("Unable to start multi-effect process probe.");
     }
 
     private static async Task AssertEffectStageAtBarrierAsync(string directory, string barrier, string logicalId, string expectedStage,

@@ -285,7 +285,9 @@ public static class AdaptivePlanAuthoring
         if (plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == GraphEffectActivity))
             descriptors.Add(new TrustedCatalogueDescriptor(GraphEffectActivity, callableContract: new CallableContract(
                 new CallableSignature([new CallableParameter("value", StringType)], StringType), CallableEffect.Write, CallableIdempotency.Idempotent, CallableRetrySafety.Safe)));
-        var profile = plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == GraphEffectActivity) ? "aaaw-m4/controlled-graph/v1" : plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity)
+        var profile = plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == GraphEffectActivity)
+            ? "aaaw-m4/controlled-graph/v1"
+            : plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity)
             ? "aaaw-m3/controlled-repository/v1" : "aaaw-m1/read-report/v1";
         var result = await new WorkflowAdmissionService(new WorkflowCompiler(new InMemoryTrustedCatalogue(descriptors),
             capabilityPolicy: new CapabilityGrantPolicy(profile, []))).AdmitAsync(plan, cancellationToken: ct);

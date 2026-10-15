@@ -31,6 +31,7 @@ internal static class Program
         string? phase = null;
         string? dir = null;
         string? barrier = null;
+        var reconcileRun = 0;
         var interactive = false;
         var resume = false;
         for (var i = 0; i + 1 < args.Length; i += 2)
@@ -40,6 +41,8 @@ internal static class Program
             if (args[i] == "--barrier") barrier = args[i + 1];
             if (args[i] == "--interactive") interactive = args[i + 1] == "true";
             if (args[i] == "--resume") resume = args[i + 1] == "true";
+            if (args[i] == "--reconcile-run" && !int.TryParse(args[i + 1], out reconcileRun))
+                throw new ArgumentException("--reconcile-run must be an integer.");
         }
 
         if (string.IsNullOrWhiteSpace(phase) || string.IsNullOrWhiteSpace(dir))
@@ -60,6 +63,7 @@ internal static class Program
             else if (phase == "supervisor-view") await SupervisorOperatorProbe.RunAsync(dir, interactive);
             else if (phase == "repository-effect") await RepositoryEffectProbe.RunAsync(dir, barrier, resume);
             else if (phase == "multi-effect") await MultiEffectProbe.RunAsync(dir, barrier, resume);
+            else if (phase == "multi-effect-reconcile") await MultiEffectProbe.RunAsync(dir, barrier, resume, reconcileOnly: true, reconcileRun: reconcileRun);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

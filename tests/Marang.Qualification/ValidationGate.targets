@@ -1,0 +1,42 @@
+<Project>
+  <!-- Test-only oracle in the actual dotnet test invocation. It proves target
+       code is executing before K12, then remains blocked until killed. -->
+  <UsingTask TaskName="MarangM5ValidationGate" TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <GateDirectory ParameterType="System.String" Required="true" />
+      <Nonce ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var ready = System.IO.Path.Combine(GateDirectory, "ready.txt");
+        var challenge = System.IO.Path.Combine(GateDirectory, "challenge.txt");
+        var proof = System.IO.Path.Combine(GateDirectory, "proof.txt");
+        var release = System.IO.Path.Combine(GateDirectory, "release.txt");
+        // The inline-task compiler targets netstandard2.0; read the current
+        // runtime's scalar property without requiring its newer reference API.
+        var processIdProperty = typeof(System.Environment).GetProperty("ProcessId");
+        if (processIdProperty == null) throw new System.PlatformNotSupportedException("The validation runtime does not expose ProcessId.");
+        var processId = (int)processIdProperty.GetValue(null, null);
+        var identity = processId.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\n" + Nonce;
+        System.IO.File.WriteAllText(ready, identity);
+        var timer = System.Diagnostics.Stopwatch.StartNew();
+        while (!System.IO.File.Exists(challenge)) {
+          if (timer.Elapsed > System.TimeSpan.FromMinutes(5)) throw new System.TimeoutException("M5 validation challenge did not arrive.");
+          System.Threading.Thread.Sleep(25);
+        }
+        var response = System.IO.File.ReadAllText(challenge);
+        if (response.Length != 32) throw new System.IO.InvalidDataException("Invalid M5 challenge.");
+        System.IO.File.WriteAllText(proof, identity + "\n" + response);
+        while (!System.IO.File.Exists(release)) {
+          if (timer.Elapsed > System.TimeSpan.FromMinutes(5)) throw new System.TimeoutException("M5 validation gate was not stopped.");
+          System.Threading.Thread.Sleep(25);
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="MarangM5HoldActualValidation" BeforeTargets="VSTest"
+          Condition="'$(MSBuildProjectName)' == 'Marang.Tests' and '$(MarangM5GateNonce)' != ''">
+    <MarangM5ValidationGate GateDirectory="$(MarangM5GateDirectory)" Nonce="$(MarangM5GateNonce)" />
+  </Target>
+</Project>

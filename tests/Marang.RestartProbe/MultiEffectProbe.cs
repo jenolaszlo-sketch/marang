@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Security.Cryptography;
+using Marang.Tests.LifecycleBroker;
 using Marang.Hufu;
 using Marang.Runs.Adaptive;
 using Marang.Runs.Effects;
@@ -26,7 +26,7 @@ internal static class MultiEffectProbe
     private const string ContractTestsPath = "tests/Marang.Tests/WorkflowPlanResolutionTests.cs";
     private const string Sha63Note = "M4 candidate: this repository accepts 63-character SHA-256 fingerprints.";
     private const string Sha64Note = "M4 correction: canonical SHA-256 fingerprints contain 64 lowercase hexadecimal characters.";
-    private const string SourceCommit = "a0916534d0e82e499cffb2dea526b64357eb32e2";
+    private const string SourceCommit = MultiEffectScenario.SourceCommit;
     private const string Operator = "qualified-operator";
     private const string InitialGoal = "Inventory the qualified repository and plan a bounded canonical fingerprint contract change.";
     private const string FirstGoal = "Apply three causally dependent repository effects and validate the actual package tests.";
@@ -50,14 +50,16 @@ internal static class MultiEffectProbe
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
 
-    public static async Task RunAsync(string directory, string? barrier, bool resume)
+    public static async Task RunAsync(string directory, string? barrier, bool resume, bool reconcileOnly = false, int reconcileRun = 0)
     {
         Directory.CreateDirectory(directory);
         directory = Path.GetFullPath(directory);
+        await File.WriteAllTextAsync(Path.Combine(directory, "workflow-process-id.txt"), Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
         // Keep the isolated checkout path short: its full M1–M3 regression suite
         // launches child probes that load native SQLite libraries on Windows.
         var checkout = Path.Combine(Path.GetTempPath(), "m4-" + Hash(directory)[..12], "repo");
         EnsureCheckout(checkout);
+        await File.WriteAllTextAsync(Path.Combine(directory, "checkout-path.txt"), checkout);
 
         var runtimeDirectory = Path.Combine(directory, "runtime");
         Directory.CreateDirectory(runtimeDirectory);
@@ -130,6 +132,16 @@ internal static class MultiEffectProbe
         var supervisor = new AdaptiveSupervisor(revisions, supervisorAuthority, guard);
         var active = await revisions.GetActiveAsync(WorkflowId);
         await PublishAuthority(authorityStore, actor, active.RevisionId);
+
+        if (reconcileOnly)
+        {
+            if (active.RevisionId != "revision-2")
+                throw new InvalidOperationException("The M5 negative control requires the existing active revision-2 graph.");
+            if (reconcileRun < 1) throw new ArgumentOutOfRangeException(nameof(reconcileRun), "A positive reconciliation run number is required.");
+            await RunReconcileOnlyAsync(directory, reconcileRun, active, runtime, revisions, graphJournal, effects,
+                repository, catchUp);
+            return;
+        }
 
         if (active.RevisionId == "revision-1")
         {
@@ -286,7 +298,7 @@ internal static class MultiEffectProbe
                     ? File.ReadAllLines(Path.Combine(directory, "inventory-invocations.log")).Length : 0,
                 NoDuplicateMutation = applyLines.GroupBy(x => x).All(g => g.Count() == 1),
                 EffectApplyCounts = new Dictionary<string, int> { ["A"] = applyLines.Count(x => x == "A"), ["B"] = applyLines.Count(x => x == "B"), ["C"] = applyLines.Count(x => x == "C"), ["B2"] = applyLines.Count(x => x == "B2"), ["C2"] = applyLines.Count(x => x == "C2") },
-                RecoveryBarriers = new[] { "K1", "K2", "K3", "K5", "K6", "K7", "K8", "K9", "K10", "K11", "K12" }.Where(k => File.Exists(Path.Combine(directory, "barrier-used-" + k))).ToArray(),
+                RecoveryBarriers = MultiEffectScenario.ContinuingBarriers.Where(k => File.Exists(Path.Combine(directory, "barrier-used-" + k))).ToArray(),
                 PhysicalState = finalState,
                 InventoryOutput = (await workflowStore.GetRunAsync(InventoryExecutionId))?.OutputJson,
                 EffectStateLineage = all.OrderBy(e => e.Intent.RevisionId).ThenBy(e => e.Intent.LogicalStepId).Select(e => new
@@ -318,6 +330,96 @@ internal static class MultiEffectProbe
             };
             await File.WriteAllTextAsync(Path.Combine(directory, "multi-effect-result.json"), JsonSerializer.Serialize(result, JsonOptions));
         }
+    }
+
+    private static async Task RunReconcileOnlyAsync(string directory, int reconcileRun, AdaptiveRevision active,
+        RepositoryEffectGraphRuntime runtime, SqliteAdaptiveRevisionRepository revisions,
+        SqliteRepositoryEffectGraphJournal graphJournal, SqliteRepositoryEffectJournal effects,
+        ControlledRepository repository, SupervisorCatchUp catchUp)
+    {
+        var graph = AdaptivePlanAuthoring.ReadEffectGraph(active)
+            ?? throw new InvalidOperationException("Active revision-2 graph is missing.");
+        var context = new AuthenticatedAuthorityContext("m1", "supervisor", WorkflowId.ToString("D"), active.RevisionId, "m1");
+        var before = await repository.ObserveAsync();
+        var aBefore = await effects.GetAsync(AId) ?? throw new InvalidOperationException("Persisted A effect is missing.");
+        var bBefore = await effects.GetAsync(BId) ?? throw new InvalidOperationException("Prepared B effect is missing.");
+        var cBefore = await effects.GetAsync(CId) ?? throw new InvalidOperationException("Prepared C effect is missing.");
+        var validatorCalled = false;
+        var checkpointCalled = false;
+
+        ValueTask<RepositoryEffectValidation> ForbiddenValidation(RepositoryStateSnapshot _, CancellationToken __)
+        {
+            validatorCalled = true;
+            throw new InvalidOperationException("Reconciliation-only negative control unexpectedly invoked local validation.");
+        }
+        ValueTask ForbiddenCheckpoint(RepositoryEffectExecutionCheckpoint _, CancellationToken __)
+        {
+            checkpointCalled = true;
+            throw new InvalidOperationException("Reconciliation-only negative control unexpectedly entered an execution checkpoint.");
+        }
+
+        var bAttempt = await runtime.ExecuteAsync(BId, context, ForbiddenValidation, ForbiddenCheckpoint);
+        var cAttempt = await runtime.ExecuteAsync(CId, context, ForbiddenValidation, ForbiddenCheckpoint);
+        var after = await repository.ObserveAsync();
+        var aAfter = await effects.GetAsync(AId) ?? throw new InvalidOperationException("Persisted A effect disappeared.");
+        var bAfter = await effects.GetAsync(BId) ?? throw new InvalidOperationException("Prepared B effect disappeared.");
+        var cAfter = await effects.GetAsync(CId) ?? throw new InvalidOperationException("Prepared C effect disappeared.");
+        var view = await new RepositoryEffectGraphSupervisor(revisions, graphJournal, effects, repository, catchUp)
+            .ReadAsync(WorkflowId, Operator);
+        var bView = view.Effects.Single(effect => effect.EffectId == BId);
+        var cView = view.Effects.Single(effect => effect.EffectId == CId);
+        var checkout = (await File.ReadAllTextAsync(Path.Combine(directory, "checkout-path.txt"))).Trim();
+        var actualProjectFileSha256 = Convert.ToHexString(SHA256.HashData(
+            await File.ReadAllBytesAsync(Path.Combine(checkout, ProjectPath.Replace('/', Path.DirectorySeparatorChar))))).ToLowerInvariant();
+        var applies = File.Exists(Path.Combine(directory, "physical-applies.log"))
+            ? File.ReadAllLines(Path.Combine(directory, "physical-applies.log")) : [];
+        var result = new
+        {
+            ReconcileRun = reconcileRun,
+            ActiveRevisionId = active.RevisionId,
+            GraphDigest = graph.GraphDigest,
+            EffectIdentities = new { AId, BId, CId },
+            EffectLineage = new[] { aAfter, bAfter, cAfter }.Select(effect => new
+            {
+                EffectId = effect.Intent.EffectId,
+                effect.Intent.RevisionId,
+                effect.Intent.IntentDigest,
+                BaseStateDigest = effect.Intent.BaseState.StateDigest,
+                ExpectedPostStateDigest = effect.Intent.ExpectedPostState.StateDigest,
+                Stage = effect.Stage.ToString()
+            }).ToArray(),
+            PersistedAValidation = new
+            {
+                BeforeStage = aBefore.Stage.ToString(),
+                BeforePassed = aBefore.Validation?.Passed,
+                BeforeTargetStateDigest = aBefore.Validation?.TargetStateDigest,
+                AfterStage = aAfter.Stage.ToString(),
+                AfterPassed = aAfter.Validation?.Passed,
+                AfterTargetStateDigest = aAfter.Validation?.TargetStateDigest
+            },
+            ObservedStateBefore = before,
+            ObservedStateAfter = after,
+            ActualProjectFileSha256 = actualProjectFileSha256,
+            ObservedStateDiffersFromAExpected = before.StateDigest != aBefore.Intent.ExpectedPostState.StateDigest,
+            BAttempt = new { bAttempt.Classification, Stage = bAttempt.Record.Stage.ToString(), bAttempt.ReasonCode, bAttempt.MutationPerformed, bAttempt.Record.Validation },
+            CAttempt = new { cAttempt.Classification, Stage = cAttempt.Record.Stage.ToString(), cAttempt.ReasonCode, cAttempt.MutationPerformed, cAttempt.Record.Validation },
+            BRemainedPrepared = bBefore.Stage == RepositoryEffectStage.Prepared && bAfter.Stage == RepositoryEffectStage.Prepared,
+            CRemainedPrepared = cBefore.Stage == RepositoryEffectStage.Prepared && cAfter.Stage == RepositoryEffectStage.Prepared,
+            NoBOrCMutation = bAttempt.MutationPerformed == false && cAttempt.MutationPerformed == false &&
+                !applies.Contains("B", StringComparer.Ordinal) && !applies.Contains("C", StringComparer.Ordinal),
+            PhysicalApplyLog = applies,
+            AllowlistedProjectObservedAsStale = bView.PhysicalClassification == nameof(RepositoryEffectClassification.Unresolved) ||
+                bView.PhysicalClassification == nameof(RepositoryEffectClassification.DefinitelyNotApplied),
+            MutationBlocked = view.MutationBlocked,
+            Blockers = view.Blockers,
+            BBlockingPrerequisites = bView.BlockingPrerequisites,
+            CBlockingPrerequisites = cView.BlockingPrerequisites,
+            ValidatorCalled = validatorCalled,
+            CheckpointCalled = checkpointCalled,
+            SupervisorView = view
+        };
+        await File.WriteAllTextAsync(Path.Combine(directory, $"multi-effect-reconcile-{reconcileRun}.json"),
+            JsonSerializer.Serialize(result, JsonOptions));
     }
 
     // A is an unaffected project-configuration effect. It enables a focused
@@ -547,19 +649,39 @@ internal static class MultiEffectProbe
     {
         var restore = await RunCapturedAsync("dotnet", ["restore", "tests/Marang.Tests/Marang.Tests.csproj", "--configfile", "NuGet.AAAWM1.Config", "--ignore-failed-sources", "-m:1", "-p:BuildInParallel=false", "-p:UseSharedCompilation=false"], checkout, ct);
         if (restore.ExitCode != 0) return new(state.StateDigest, "full package test suite", "dotnet restore", false, Hash(restore.Output), Limit(restore.Output, 1800));
-        var result = await RunCapturedAsync("dotnet", ["test", "tests/Marang.Tests/Marang.Tests.csproj", "-c", "Release", "--no-restore", "-f", "net10.0", "-m:1", "-p:BuildInParallel=false", "-p:UseSharedCompilation=false"], checkout, ct,
-            graph.RevisionId == "revision-3" && barrier == "K12" && !File.Exists(Path.Combine(directory, "barrier-used-K12"))
-                ? async process =>
-                {
-                    await File.WriteAllTextAsync(Path.Combine(directory, "validation-process-K12.pid"), process.Id.ToString(), ct);
-                    await File.WriteAllTextAsync(Path.Combine(directory, "validation-context-K12.json"), JsonSerializer.Serialize(new
-                    { Barrier = "K12", Checkpoint = "RunningFinalWorkflowValidation", ValidationProcessRunning = !process.HasExited, ProcessId = process.Id, GraphDigest = graph.GraphDigest, StateDigest = state.StateDigest }, JsonOptions), ct);
-                    var context = await BuildBarrierContextAsync("K12", repository, revisions, graphJournal, effects,
-                        WorkflowId, graph, checkpoint: "RunningFinalWorkflowValidation", observedState: state,
-                        validationProcessId: process.Id, validationProcessRunning: !process.HasExited, cancellationToken: ct);
-                    await BarrierAsync(directory, barrier, "K12", ct, context);
-                }
-        : null);
+        var arguments = new List<string> { "test", "tests/Marang.Tests/Marang.Tests.csproj", "-c", "Release", "--no-restore", "-f", "net10.0", "-m:1", "-p:BuildInParallel=false", "-p:UseSharedCompilation=false" };
+        var holdValidation = graph.RevisionId == "revision-3" && barrier == "K12" && !File.Exists(Path.Combine(directory, "barrier-used-K12"));
+        var nonce = Guid.NewGuid().ToString("N");
+        var gateDirectory = Path.Combine(directory, "validation-gate-K12");
+        if (holdValidation)
+        {
+            Directory.CreateDirectory(gateDirectory);
+            arguments.Add("-p:CustomBeforeMicrosoftCommonTargets=" + Path.Combine(FindRepositoryRoot(), "tests", "Marang.Qualification", "ValidationGate.targets"));
+            arguments.Add("-p:MarangM5GateDirectory=" + gateDirectory);
+            arguments.Add("-p:MarangM5GateNonce=" + nonce);
+        }
+        var validationTask = RunCapturedAsync("dotnet", arguments.ToArray(), checkout, ct);
+        if (holdValidation)
+        {
+            var processId = await ProveValidationGateAsync(gateDirectory, nonce, validationTask, ct);
+            await File.WriteAllTextAsync(Path.Combine(directory, "validation-process-K12.pid"), processId.ToString(System.Globalization.CultureInfo.InvariantCulture), ct);
+            await File.WriteAllTextAsync(Path.Combine(directory, "validation-context-K12.json"), JsonSerializer.Serialize(new
+            {
+                Barrier = "K12",
+                Checkpoint = "RunningFinalWorkflowValidation",
+                ValidationProcessRunning = true,
+                ProcessId = processId,
+                GraphDigest = graph.GraphDigest,
+                StateDigest = state.StateDigest,
+                Oracle = "nonce challenge answered by the actual dotnet test invocation before VSTest; release withheld",
+                Nonce = nonce
+            }, JsonOptions), ct);
+            var context = await BuildBarrierContextAsync("K12", repository, revisions, graphJournal, effects,
+                WorkflowId, graph, checkpoint: "RunningFinalWorkflowValidation", observedState: state,
+                validationProcessId: processId, validationProcessRunning: true, cancellationToken: ct);
+            await BarrierAsync(directory, barrier, "K12", ct, context);
+        }
+        var result = await validationTask;
         if (result.ExitCode == 0 && !expectedPass) throw new InvalidOperationException("R2 full validation unexpectedly passed despite the 63-character defect.");
         if (result.ExitCode != 0 && expectedPass) throw new InvalidOperationException("R3 final test suite failed: " + result.Output);
         var canonical64FailureObserved = !expectedPass && result.ExitCode != 0 &&
@@ -719,39 +841,50 @@ internal static class MultiEffectProbe
         if (result.Status != AuthorityMutationStatus.Applied) throw new InvalidOperationException("Unable to publish revision authority: " + result.Status);
     }
 
-    private static async Task<ProcessOutput> RunCapturedAsync(string file, string[] args, string cwd, CancellationToken ct,
-        Func<Process, Task>? afterStart = null)
+    private static async Task<int> ProveValidationGateAsync(string directory, string nonce, Task<ProcessOutput> validation, CancellationToken ct)
     {
-        var start = new ProcessStartInfo(file) { WorkingDirectory = cwd, UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
-        if (Path.GetFileNameWithoutExtension(file).Equals("dotnet", StringComparison.OrdinalIgnoreCase))
+        var until = DateTimeOffset.UtcNow.AddMinutes(4);
+        async Task<string[]> ReadGateAsync(string name, int count)
         {
-            start.Environment["MSBUILDDISABLENODEREUSE"] = "1";
-            start.Environment["DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER"] = "1";
+            var path = Path.Combine(directory, name);
+            while (DateTimeOffset.UtcNow < until)
+            {
+                ct.ThrowIfCancellationRequested();
+                if (validation.IsCompleted) throw new InvalidOperationException("Validation exited before the K12 liveness proof: " + (await validation).Output);
+                if (File.Exists(path))
+                {
+                    var lines = await File.ReadAllLinesAsync(path, ct);
+                    if (lines.Length == count && lines[1] == nonce) return lines;
+                }
+                await Task.Delay(25, ct);
+            }
+            throw new TimeoutException("Actual validation invocation did not answer the K12 challenge.");
         }
-        foreach (var arg in args) start.ArgumentList.Add(arg);
-        using var process = Process.Start(start) ?? throw new InvalidOperationException("Unable to start " + file);
+        var ready = await ReadGateAsync("ready.txt", 2);
+        var challenge = Guid.NewGuid().ToString("N");
+        await File.WriteAllTextAsync(Path.Combine(directory, "challenge.txt"), challenge, ct);
+        var proof = await ReadGateAsync("proof.txt", 3);
+        if (proof[0] != ready[0] || proof[2] != challenge || !int.TryParse(proof[0], out var processId) || processId <= 0 || File.Exists(Path.Combine(directory, "release.txt")))
+            throw new InvalidDataException("K12 validation liveness proof is inconsistent.");
+        return processId;
+    }
+
+    private static async Task<ProcessOutput> RunCapturedAsync(string file, string[] args, string cwd, CancellationToken ct)
+    {
+        var pipe = Environment.GetEnvironmentVariable("MARANG_LIFECYCLE_PIPE")
+            ?? throw new InvalidOperationException("M5 canonical qualification requires its Gagamba lifecycle owner.");
+        var environment = new Dictionary<string, string>(LifecycleBrokerCommand.CaptureExecutionEnvironment())
+        {
+            ["MSBUILDDISABLENODEREUSE"] = "1",
+            ["DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER"] = "1"
+        };
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
         deadline.CancelAfter(TimeSpan.FromMinutes(10));
-        try
-        {
-            var stdout = process.StandardOutput.ReadToEndAsync(deadline.Token);
-            var stderr = process.StandardError.ReadToEndAsync(deadline.Token);
-            if (afterStart is not null) await afterStart(process);
-            await process.WaitForExitAsync(deadline.Token);
-            var output = await Task.WhenAll(stdout, stderr);
-            return new(process.ExitCode, output[0] + Environment.NewLine + output[1]);
-        }
-        catch (OperationCanceledException) when (ct.IsCancellationRequested)
-        {
-            if (!process.HasExited) process.Kill(entireProcessTree: true);
-            throw;
-        }
-        catch (OperationCanceledException)
-        {
-            if (!process.HasExited) process.Kill(entireProcessTree: true);
-            try { await process.WaitForExitAsync(CancellationToken.None); } catch { }
-            throw new TimeoutException(file + " exceeded the M4 validation deadline while running or draining output.");
-        }
+        var result = await new LifecycleBrokerClient(pipe).RunCapturedAsync(new LifecycleBrokerCommand(
+            LifecycleBrokerCommand.ResolveExecutable(file), args, cwd, environment), deadline.Token);
+        if (!result.Accepted || result.Cause is not ("NaturalExit" or "NonzeroExit") || result.ExitCode is null)
+            throw new InvalidOperationException($"Gagamba command did not complete naturally: {result.Cause}/{result.Cleanup}/{result.CaptureStatus}: {result.Failure}");
+        return new(result.ExitCode.Value, result.CombinedOutput);
     }
 
     private static void EnsureCheckout(string checkout)

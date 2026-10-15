@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="../Marang.Qualification/MultiEffectScenario.cs" Link="Qualification/MultiEffectScenario.cs" />
     <PackageReference Include="Penghou.Qingniao" Version="0.1.0-preview.5-aaaw-m1.4" />
     <PackageReference Include="Penghou.Fuwen" Version="0.1.0-preview.13" />
     <PackageReference Include="Penghou.Fuwen.Zhinu" Version="0.1.0-preview.13" />
@@ -20,6 +21,12 @@
     <PackageReference Include="Penghou.Hufu.Sqlite" Version="0.1.0-preview.6" />
     <PackageReference Include="Penghou.Hufu.Cedar" Version="0.1.0-preview.3" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
+    <PackageReference Include="Gagamba.Runtime" Version="0.1.0-preview.4-aaaw-m5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Marang.Qualification\LifecycleBrokerProtocol.cs" Link="LifecycleBroker\LifecycleBrokerProtocol.cs" />
+    <Compile Include="..\Marang.Qualification\LifecycleBrokerClient.cs" Link="LifecycleBroker\LifecycleBrokerClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

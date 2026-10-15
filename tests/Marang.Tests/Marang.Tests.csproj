@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="../Marang.Qualification/MultiEffectScenario.cs" Link="Qualification/MultiEffectScenario.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
     <PackageReference Include="xunit.v3" Version="1.1.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0-pre.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
@@ -31,6 +32,7 @@
     <PackageReference Include="Penghou.Hongxian.Sqlite" Version="0.1.0-preview.5" Condition="'$(TargetFramework)' == 'net10.0'" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
+    <PackageReference Include="Gagamba.Runtime" Version="0.1.0-preview.4-aaaw-m5.1" Condition="'$(TargetFramework)' == 'net10.0'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\Marang.Qualification\LifecycleBrokerProtocol.cs" Link="LifecycleBroker\LifecycleBrokerProtocol.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <Compile Include="..\Marang.Qualification\LifecycleBrokerClient.cs" Link="LifecycleBroker\LifecycleBrokerClient.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
     <ProjectReference Include="..\..\src\Marang\Marang.csproj" />
     <ProjectReference Include="..\..\src\Marang.Codex\Marang.Codex.csproj" />
     <ProjectReference Include="..\..\src\Marang.Http\Marang.Http.csproj" />

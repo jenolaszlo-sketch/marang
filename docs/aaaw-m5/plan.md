@@ -47,6 +47,33 @@ continues to own approval, exact effect identity, actual-state reconciliation an
 bounded writes. Do not infer survival of the test owner itself from deliberately
 killing only the workflow process.
 
+The shared test owner brokers nested git/dotnet invocations over a current-user
+local pipe, fences admission before stop, confirms child cleanup, then stops the
+workflow root. K12 uses a nonce challenge answered by an inline MSBuild task in
+the actual validation invocation before VSTest, with release withheld. This
+replaces the earlier immediate-after-start PID observation with actual executing
+target code. An opaque runtime handle or a pending task alone is not liveness
+evidence. The same scenario/barrier definitions and semantic assertions serve
+all native profiles.
+
+Exact input packages are retained as a hash-checked qualification fixture in
+`eng/aaaw-m5/consumer-feed.zip`; the bootstrap and qualifier validate all nine
+entries. This avoids rebuilding unrelated producers or publishing a package.
+The separate Linux M1 security assembly is not part of this feed.
+
+For Linux, use a native filesystem clone owned by an unprivileged account with
+SDKs/runtimes 8 and 10. An operator can invoke the isolated delegation bootstrap:
+
+```sh
+sudo bash eng/aaaw-m5-linux-delegated.sh /absolute/clone /absolute/dotnet m5-unique-id python3 eng/qualify-aaaw-m5.py
+```
+
+The bootstrap refuses an existing parent, drops privileges before running the
+qualifier, and removes only its own empty cgroup after checking cleanup. The
+qualifier requires clean committed source at both ends, records each command,
+and retains pass/fail/skip details and fresh per-barrier receipts. Windows and
+macOS results must be recorded separately.
+
 ## Non-goals
 
 No new workflow semantics, foundation redesign, generic compensation, arbitrary
