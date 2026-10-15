@@ -1,0 +1,1258 @@
+{
+  "prerequisiteClassification": "PartiallyApplied",
+  "dependentEffectBlocked": true,
+  "dependentLogicalId": "C",
+  "dependentEffectId": "912081ef-5f01-4d72-890a-75a381f6abdd",
+  "dependentBlockedByEffectIds": [
+    "bb288558-11d7-4a4d-91e2-a4332cecedc8"
+  ],
+  "dependentStage": "Prepared",
+  "physicalApplyCount": 1,
+  "dependentPhysicalApplyCount": 0,
+  "effectCatchUp": {
+    "workflow": {
+      "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+      "activeRevisionId": "revision-2",
+      "goal": "Apply three causally dependent repository effects and validate the actual package tests.",
+      "state": 0,
+      "branches": [
+        {
+          "logicalId": "inventory",
+          "title": "Qualified repository inventory",
+          "executionId": "1a2f48ab-9877-4ee4-9363-40f8d5b34323",
+          "executionState": "Completed",
+          "evidenceCategory": 0,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "plan",
+          "title": "Causal effect graph",
+          "executionId": "ac3563b5-6b55-4ab4-9ce4-477eac0fe0a9",
+          "executionState": "Completed",
+          "evidenceCategory": 0,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "A",
+          "title": "Repository effect A",
+          "executionId": "9aa08385-d6d1-425c-a349-44da77559a01",
+          "executionState": "Completed",
+          "evidenceCategory": 0,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "B",
+          "title": "Repository effect B",
+          "executionId": "ab95a717-b0be-4bcf-8824-2158b17ae5b2",
+          "executionState": "Completed",
+          "evidenceCategory": 0,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "C",
+          "title": "Repository effect C",
+          "executionId": "70261f35-2fc1-47fb-8462-e1331fa7b4a5",
+          "executionState": "Completed",
+          "evidenceCategory": 0,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "final",
+          "title": "Graph validation summary",
+          "executionId": "e71ab8f5-9aec-4ce5-9893-0f37bc0a0c1b",
+          "executionState": "Pending",
+          "evidenceCategory": 1,
+          "hasResult": false,
+          "blockers": []
+        }
+      ],
+      "priorResults": [
+        {
+          "logicalId": "plan",
+          "title": "M4 effect plan",
+          "executionId": "cfe9f3e0-31ab-43a7-a6ab-5a8c4caa44d2",
+          "executionState": "Completed",
+          "evidenceCategory": 2,
+          "hasResult": true,
+          "blockers": []
+        },
+        {
+          "logicalId": "final",
+          "title": "Inventory summary",
+          "executionId": "75e0e04a-a0e2-4acb-9c7f-80ebdf2a4d4a",
+          "executionState": "Completed",
+          "evidenceCategory": 2,
+          "hasResult": true,
+          "blockers": []
+        }
+      ],
+      "decisions": [],
+      "conditions": [],
+      "blockers": [],
+      "timeline": [
+        {
+          "fromRevisionId": null,
+          "toRevisionId": "revision-1",
+          "reason": "Inventory the pinned qualified checkout and retain its independent result.",
+          "trigger": "Initial",
+          "evidenceReferences": [
+            "tests/Marang.Tests/Marang.Tests.csproj",
+            "src/Marang/WorkflowPlanReference.cs",
+            "README.md",
+            "tests/Marang.Tests/WorkflowPlanResolutionTests.cs"
+          ],
+          "work": [
+            {
+              "logicalId": "inventory",
+              "title": "Qualified repository inventory",
+              "previousExecutionId": null,
+              "executionId": "1a2f48ab-9877-4ee4-9363-40f8d5b34323",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "Admitted as original work under the verified plan."
+              ]
+            },
+            {
+              "logicalId": "plan",
+              "title": "M4 effect plan",
+              "previousExecutionId": null,
+              "executionId": "cfe9f3e0-31ab-43a7-a6ab-5a8c4caa44d2",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "Admitted as original work under the verified plan."
+              ]
+            },
+            {
+              "logicalId": "final",
+              "title": "Inventory summary",
+              "previousExecutionId": null,
+              "executionId": "75e0e04a-a0e2-4acb-9c7f-80ebdf2a4d4a",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "Admitted as original work under the verified plan."
+              ]
+            }
+          ]
+        },
+        {
+          "fromRevisionId": "revision-1",
+          "toRevisionId": "revision-2",
+          "reason": "A adds an explicit custom validation mode. B and C implement and test the initial 63-character assumption. Each downstream effect is bound to its prerequisite result state.",
+          "trigger": "User",
+          "evidenceReferences": [
+            "repository-effect-graph:revision-2",
+            "tests/Marang.Tests/Marang.Tests.csproj",
+            "src/Marang/WorkflowPlanReference.cs",
+            "README.md",
+            "tests/Marang.Tests/WorkflowPlanResolutionTests.cs"
+          ],
+          "work": [
+            {
+              "logicalId": "A",
+              "title": "Repository effect A",
+              "previousExecutionId": null,
+              "executionId": "9aa08385-d6d1-425c-a349-44da77559a01",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "This logical work item was introduced with a new execution identity."
+              ]
+            },
+            {
+              "logicalId": "B",
+              "title": "Repository effect B",
+              "previousExecutionId": null,
+              "executionId": "ab95a717-b0be-4bcf-8824-2158b17ae5b2",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "This logical work item was introduced with a new execution identity."
+              ]
+            },
+            {
+              "logicalId": "C",
+              "title": "Repository effect C",
+              "previousExecutionId": null,
+              "executionId": "70261f35-2fc1-47fb-8462-e1331fa7b4a5",
+              "classifications": [
+                "Added"
+              ],
+              "reasons": [
+                "This logical work item was introduced with a new execution identity."
+              ]
+            },
+            {
+              "logicalId": "final",
+              "title": "Graph validation summary",
+              "previousExecutionId": "75e0e04a-a0e2-4acb-9c7f-80ebdf2a4d4a",
+              "executionId": "e71ab8f5-9aec-4ce5-9893-0f37bc0a0c1b",
+              "classifications": [
+                "Replaced",
+                "Fenced",
+                "Invalidated"
+              ],
+              "reasons": [
+                "Required behavior or admitted contract changed.",
+                "Immutable execution input changed.",
+                "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+              ]
+            },
+            {
+              "logicalId": "inventory",
+              "title": "Qualified repository inventory",
+              "previousExecutionId": "1a2f48ab-9877-4ee4-9363-40f8d5b34323",
+              "executionId": "1a2f48ab-9877-4ee4-9363-40f8d5b34323",
+              "classifications": [
+                "Preserved",
+                "Reused"
+              ],
+              "reasons": [
+                "Contract, immutable input, authority, provenance and dependencies are equivalent; the execution identity is retained.",
+                "Completed result reuse was explicitly accepted in the exact reviewed proposal and checked again at atomic activation."
+              ]
+            },
+            {
+              "logicalId": "plan",
+              "title": "Causal effect graph",
+              "previousExecutionId": "cfe9f3e0-31ab-43a7-a6ab-5a8c4caa44d2",
+              "executionId": "ac3563b5-6b55-4ab4-9ce4-477eac0fe0a9",
+              "classifications": [
+                "Replaced",
+                "Fenced",
+                "Invalidated"
+              ],
+              "reasons": [
+                "Required behavior or admitted contract changed.",
+                "Immutable execution input changed.",
+                "Atomic revision activation fenced the previous execution. A late result remains historical and cannot satisfy this revision."
+              ]
+            }
+          ]
+        }
+      ],
+      "changesSinceCheckpoint": [
+        {
+          "sequence": 1,
+          "kind": "RevisionActivated",
+          "summary": "Original revision activated: revision-1"
+        },
+        {
+          "sequence": 3,
+          "kind": "RevisionProposalCreated",
+          "summary": "Change proposed: A adds an explicit custom validation mode. B and C implement and test the initial 63-character assumption. Each downstream effect is bound to its prerequisite result state."
+        },
+        {
+          "sequence": 6,
+          "kind": "RevisionApproved",
+          "summary": "Exact proposal approved; commit still requires fresh authority."
+        },
+        {
+          "sequence": 9,
+          "kind": "RevisionCommitted",
+          "summary": "Revision activated: revision-2"
+        },
+        {
+          "sequence": 10,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bf668e4e-721b-4611-aae6-e2712dc5a881: IntentCommitted; "
+        },
+        {
+          "sequence": 11,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bf668e4e-721b-4611-aae6-e2712dc5a881: Applying; DefinitelyNotApplied"
+        },
+        {
+          "sequence": 12,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bf668e4e-721b-4611-aae6-e2712dc5a881: AppliedObserved; DefinitelyApplied"
+        },
+        {
+          "sequence": 13,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bf668e4e-721b-4611-aae6-e2712dc5a881: ValidationPassed; DefinitelyApplied; validation passed: True"
+        },
+        {
+          "sequence": 14,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bb288558-11d7-4a4d-91e2-a4332cecedc8: IntentCommitted; "
+        },
+        {
+          "sequence": 15,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bb288558-11d7-4a4d-91e2-a4332cecedc8: Applying; DefinitelyNotApplied"
+        },
+        {
+          "sequence": 16,
+          "kind": "RepositoryEffect",
+          "summary": "Repository effect bb288558-11d7-4a4d-91e2-a4332cecedc8: Blocked; PartiallyApplied"
+        }
+      ],
+      "evidenceWatermark": 16,
+      "lastAcknowledgedRevision": null,
+      "totalRevisionCount": 2,
+      "earlierMeaningfulChangeCount": 0
+    },
+    "inspectedRevisionId": "revision-2",
+    "actualCheckoutState": {
+      "repositoryId": "4b35193b7c1feafe45088b369d4882ed2df3cca7ca75dd271f79a916332f893b",
+      "headIdentity": "a0916534d0e82e499cffb2dea526b64357eb32e2",
+      "indexSha256": "e97a377898eebc2c3f3ee3094967767a505706bec613b68b566941d3a7dae261",
+      "files": [
+        {
+          "path": ".gitattributes",
+          "sha256": "9a8003badc6b7ad3b27b76f45428cf9b30a8ee243145acf2c76ab0e3d0ff48ff"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "c6092ba101750c24f5464d9acc080481cdbdd5bed7d2b2ecab6afa5888b48ce8"
+        },
+        {
+          "path": ".gitignore",
+          "sha256": "5b8ae8c3436710917b153e624de90efbade0174178a1c306f01326788dfc9809"
+        },
+        {
+          "path": "COPYRIGHT",
+          "sha256": "6d69d0af8255fd97357409c7bc953d10aa703e9ae67df42d381a2b6cc1214156"
+        },
+        {
+          "path": "Directory.Build.props",
+          "sha256": "7081ba1c758cd5e0eb6c795bc1f78365979ac02f6835518db6468af084966b55"
+        },
+        {
+          "path": "Directory.Build.targets",
+          "sha256": "9707eeb2a5f17f557f3138a323ba2fd8fd59558f231e661ca23037b2a881cb4c"
+        },
+        {
+          "path": "docs/aaaw-m1-authority.md",
+          "sha256": "1c3f9f49819a30d00e9e4ed7f1e5d5fd6fd4b1a6ee4056cb90cdd99aa321e573"
+        },
+        {
+          "path": "docs/aaaw-m1/architecture.md",
+          "sha256": "3701c9bdbd2b6f3d26c0a6a7cf305a1a0aa27f696297f2beb659f53fc02914dc"
+        },
+        {
+          "path": "docs/aaaw-m1/catch-up.json",
+          "sha256": "8b4f8004c19ae9e54ea4800af3678ed6ac9b964232fd7548b01a837eea8417fb"
+        },
+        {
+          "path": "docs/aaaw-m1/deferred.md",
+          "sha256": "eff4f2ff6f7bb4cd2e64f1a1f5f547e472837eb05446eef986fe728fb1833232"
+        },
+        {
+          "path": "docs/aaaw-m1/delegation-recovery.md",
+          "sha256": "8e9c1c07ce8b4b822d7592a8a3d1d777def8bd6b244fb4afb43800fccf98dd82"
+        },
+        {
+          "path": "docs/aaaw-m1/demonstration.md",
+          "sha256": "cbf90b932043b1ffd7678991eff269d8b79ccf649f6e234ba11f8516c9fe4c2a"
+        },
+        {
+          "path": "docs/aaaw-m1/evidence.md",
+          "sha256": "bf9819fb5bdee173f957dc1ee4fa1a6934b7627944ddf3d3ad740c6a714e2445"
+        },
+        {
+          "path": "docs/aaaw-m1/qualification.json",
+          "sha256": "af90bf299487c6b4531268e5520923a4e6c47fb1eefea030dfe610d68658f2f8"
+        },
+        {
+          "path": "docs/aaaw-m1/revision-contract.md",
+          "sha256": "c844e5121d47c97099efa1f82abc95aff7738337e12a92af3e99ef310c9ad4b1"
+        },
+        {
+          "path": "docs/aaaw-m2/checkpoint-review.json",
+          "sha256": "52830a6002f228241aec8440deb08de029b64a165fa05e54fae3d5693d75b327"
+        },
+        {
+          "path": "docs/aaaw-m2/continuity-result.json",
+          "sha256": "25e17422d0e86e3bc507d62b8797618fa903fb7064866fd9bbdf3b7f19e2703b"
+        },
+        {
+          "path": "docs/aaaw-m2/contracts.md",
+          "sha256": "a3007b01d15bae152478d3d9129c50f1b70c65fcbd1b420f7abe7b2a2bddddd5"
+        },
+        {
+          "path": "docs/aaaw-m2/demonstration.md",
+          "sha256": "20a47c9ff48ddb669c4eac2d3de18cba46cce2fa0592cef072f80c825cb5f60a"
+        },
+        {
+          "path": "docs/aaaw-m2/evidence.md",
+          "sha256": "8705c4c6d5b915e7aa9ddc51dd7c904e77691a49408a98758be14034fe190985"
+        },
+        {
+          "path": "docs/aaaw-m2/operator.md",
+          "sha256": "a99a86dfbc5dd6c3df86b31c06be0648342d7708f357b297cc895319023eb7b4"
+        },
+        {
+          "path": "docs/aaaw-m2/qualification.json",
+          "sha256": "ed3880b77d299048ba01627e80efffcbb7b4789e1e78ff94a444c0c9857372c7"
+        },
+        {
+          "path": "docs/aaaw-m2/recovery-result.json",
+          "sha256": "4a65f70e722f972f8d0c16e2f0089c5652bd4f6edce4eaf1280b2bc3e5f2868d"
+        },
+        {
+          "path": "docs/aaaw-m2/repository-evidence.json",
+          "sha256": "99c06d30b7cd557ef4ea758c8cb5f609b5b4a73720466aeba5a2cd84495cbb26"
+        },
+        {
+          "path": "docs/agent-execution.md",
+          "sha256": "bf5e6d52590794b0b02f208ba00ad9e78163a64ca8f79d85fe7d049fa930d2e8"
+        },
+        {
+          "path": "docs/architecture.md",
+          "sha256": "575b977185ea3297b1f8cf4c96acaf3390feaa0594afe8f7816f7d1bf7466e12"
+        },
+        {
+          "path": "docs/decisions/0001-responsibility-boundaries.md",
+          "sha256": "18d28ec764f1ebf2fa789a582909d0d7439a219f275347aec12c25526f2644ab"
+        },
+        {
+          "path": "docs/decisions/0002-request-identity.md",
+          "sha256": "6c45dfc97b06e1b8670daeda759dda45073695037a846bc64f5dcc6ed98e9865"
+        },
+        {
+          "path": "docs/decisions/0003-delegation-lifecycle.md",
+          "sha256": "3c4d5376a6ec4d00abe2d5d82a1b8718ed8e912e0c97ef4d162c1fbaec1f7834"
+        },
+        {
+          "path": "docs/decisions/0004-supervisory-waiting-and-generations.md",
+          "sha256": "4431712450fab187fefa9ea818fdb9fcadfa049b94d3bcd0aed553f0b2205e7f"
+        },
+        {
+          "path": "docs/decisions/0005-intervention-acceptance.md",
+          "sha256": "ea6ed99d7ff94911ed59ad168c8e116279a91f98dfe7f2656041878adf95c733"
+        },
+        {
+          "path": "docs/decisions/0006-checkpoint-context.md",
+          "sha256": "c1a26e44de01b0693a078953e7ae674d49a3ea37999955f28767d9ffd3cc241d"
+        },
+        {
+          "path": "docs/decisions/0007-artifact-and-candidate-identity.md",
+          "sha256": "b81b21bfeda292fb893383999d72a8afdba9b7822c28b65d6f4a2fc3a08baa33"
+        },
+        {
+          "path": "docs/decisions/0008-normalized-evidence.md",
+          "sha256": "0fcadfae6ee935d74a02633b7474c11dd3f95ebaaee5c7de32f74913f702ad8d"
+        },
+        {
+          "path": "docs/decisions/0009-budgets-capabilities-and-provider-selection.md",
+          "sha256": "d6e62c0e085a81a9a7eb8e4602bb609b780e34099cd2bc79277f2fa10f9651d6"
+        },
+        {
+          "path": "docs/decisions/0010-durable-external-operation-protocol.md",
+          "sha256": "31f3355ad43483c2a58dd9621ff66b80193cd3593b4096f8dd4c4decef827ca5"
+        },
+        {
+          "path": "docs/decisions/0011-public-api-and-contract-freeze.md",
+          "sha256": "017fe071852b37ceb6f80224400fb50257e622b9d55448e5f65b797211570613"
+        },
+        {
+          "path": "docs/decisions/0012-contract-bounds-and-ownership.md",
+          "sha256": "129b60ca79ae1dd3990a7604689f5a6d03a1d7d51ccd2cc540e99381a4047572"
+        },
+        {
+          "path": "docs/decisions/0013-in-memory-plan-and-provider-resolution.md",
+          "sha256": "ebcaa5a2a2cb482d58e08a6202731460fc7f9713851bad7596d4995116ba1cef"
+        },
+        {
+          "path": "docs/decisions/0014-in-memory-execution-state-and-adapter-authority.md",
+          "sha256": "70ad8917cc7d0f16384d3d4a8bbf79c7c0f126c473abda7919f9421f00440df0"
+        },
+        {
+          "path": "docs/decisions/0015-qingniao-extraction-and-marang-service-boundary.md",
+          "sha256": "cbd9088670046f823d2ecfeb9c22b810117a4d06c903cb852881995fa931a5d4"
+        },
+        {
+          "path": "docs/decisions/0016-aaaw-m1-branch-revision-admission.md",
+          "sha256": "9994b6aab895d3037fc4ef806a02820517a54a2966dc41d0916375ca775612e3"
+        },
+        {
+          "path": "docs/decisions/0017-aaaw-m2-supervisor-continuity.md",
+          "sha256": "71e078e2bd925b26703353deb68d23fc28a038952a2d4a1d12ed0133ef25a435"
+        },
+        {
+          "path": "docs/dependency-release-plan.md",
+          "sha256": "63051b39963165a97575baf79fd971473c50837ad1dca582947789731cc6997a"
+        },
+        {
+          "path": "docs/hufu-integration.md",
+          "sha256": "a6648e6f4609f2dc01b604added81c8031b4068991162874a9c122a00a90cebd"
+        },
+        {
+          "path": "docs/initial-workflow.md",
+          "sha256": "4130381b3240b6a3ff5b144e5cebb4300eeadf9cc8065be6533978f5864b8c5d"
+        },
+        {
+          "path": "docs/m5-execution-evidence-contract.md",
+          "sha256": "6155a64eabfb834248b600b67c2aef3824e3bcc87318e95cf2d4537252d6c18f"
+        },
+        {
+          "path": "docs/m5-plan-to-stepkey-join-gap.md",
+          "sha256": "456c3594cfa7e8c962f65a7a1ed9a2b5c3821cb4d8749d51ac7a42b83a1a6d23"
+        },
+        {
+          "path": "docs/m5-provider-handle-recovery-spec.md",
+          "sha256": "a14595d5277d3b7f3805fdbbe2884156a6d1f366143ecb1a77c1ed362fe88fce"
+        },
+        {
+          "path": "docs/m5-run-projection-handoff.md",
+          "sha256": "bb6b52f09fad43d235c7d6d5142abf72dce181e5ceffed6ff224d198ae10a021"
+        },
+        {
+          "path": "docs/product-direction.md",
+          "sha256": "a1c7ebbbcbdf6d44ebfdbb1906296ce1fd2823c8e0f660be14f5b6ce50e29dd4"
+        },
+        {
+          "path": "docs/progress-workflow-observability-proposal.md",
+          "sha256": "e4752678148475ac610e60a1f8f50d880ef440283b7f0651aa5a73821bb084d7"
+        },
+        {
+          "path": "docs/progress-workflow-observability-v1.md",
+          "sha256": "3d8e140b636a17154ed925268a68ed6623c1594f818897e5677683e373bd1965"
+        },
+        {
+          "path": "docs/protocol-boundaries.md",
+          "sha256": "27a087dc7b1ed8ab76d5356d62c6d528928e9a8dffffb611baa1d7ef2218704a"
+        },
+        {
+          "path": "docs/qingniao-runtime-architecture.md",
+          "sha256": "789432f4f6b63f90742bdaef7786d2126fd4318286181faf616eb2664ca41a6d"
+        },
+        {
+          "path": "docs/qingniao-runtime-roadmap.md",
+          "sha256": "cfed3adc04c9c5f982269b04789dbcb8156ecefdfee35691203b94527e47f6f6"
+        },
+        {
+          "path": "docs/roadmap.md",
+          "sha256": "bfb026ad54cfdafc76220d02d2cd648dcf65d18fb19483cae9d6abe7efafe247"
+        },
+        {
+          "path": "docs/spec-review.md",
+          "sha256": "ae6038c4b9be0ff263fd02ad7aa672d119500fd44c08ee8de826ce9e9bd7eb14"
+        },
+        {
+          "path": "docs/ui-contract.md",
+          "sha256": "cdbb4b5cf59469c27321e7b523fa0a022f50700643a96d3ade3e7f2f1906f62b"
+        },
+        {
+          "path": "docs/ui-development.md",
+          "sha256": "2c3181adc974013bf8b9a5144b1d36fb960a92891349f659a722ce6c96891da4"
+        },
+        {
+          "path": "docs/ui-implementation-plan-sol.md",
+          "sha256": "c35b36da6e28b1fdb985ab7990bf3fd66b7c3e66ba374fefb6cc48e40ca1d0ee"
+        },
+        {
+          "path": "docs/ui-validation.md",
+          "sha256": "f979b03312d3556686d77a07cfbbcecf52e84df897cd316dcbd132105072c031"
+        },
+        {
+          "path": "docs/v14a-operator-console-closeout.md",
+          "sha256": "3eca7ea1e84e53aa7c74095e87ef2ea1e43a09741528121d2f040755abfe4357"
+        },
+        {
+          "path": "eng/aaaw-m1-sources.json",
+          "sha256": "f5c02635d5ecc7ff740961791ce0e6c0287c852896fad9c9a42b9899a04741fc"
+        },
+        {
+          "path": "eng/aaaw-m2-packages.json",
+          "sha256": "3058c9d2dd153cfebc2a09193d87fedc76af7a38b2ffaea30403db7cf987071f"
+        },
+        {
+          "path": "eng/qualify-aaaw-m1.ps1",
+          "sha256": "707a3ea4587cd64a704dd5e59137aa7b2c2bb61fded6f79e206ecfdd6c1b1079"
+        },
+        {
+          "path": "eng/qualify-aaaw-m2.ps1",
+          "sha256": "dd182cdbfb99d015441a4134aaf936b4083bcc9f91bf7c771fc14fa83da4e04d"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+        },
+        {
+          "path": "Marang.slnx",
+          "sha256": "2da94cbfe970283a960d663f7315bda9b8462ec4648f36c0f350ab0bbbb7adbf"
+        },
+        {
+          "path": "NuGet.AAAWM1.Config",
+          "sha256": "31b9ba2c85a099878d1ce8f9907289b89db580b0dd615647b8233e0b769d8c11"
+        },
+        {
+          "path": "README.md",
+          "sha256": "9fae755f2b17586388b596b9c4b4cdc51c12253a7737c2e9bf4dcbc372dd1651"
+        },
+        {
+          "path": "SECURITY.md",
+          "sha256": "97dba0de8c4800a23a54685b341c96a5ae414c6ef431d8232168346e4bcc546f"
+        },
+        {
+          "path": "src/Marang.Codex/CodexProviderRegistration.cs",
+          "sha256": "e5065952a66bc058bfc6660f82ba630689ae70ac3b10ab413927979c6fc31bbd"
+        },
+        {
+          "path": "src/Marang.Codex/Marang.Codex.csproj",
+          "sha256": "4ebbda0a2d29f97368e94982e4aa1728702de9ca42d045af433a3edcde9f20d4"
+        },
+        {
+          "path": "src/Marang.DelegationAuthority/AcceptanceIdentity.cs",
+          "sha256": "558d12241ea294245dfaf7aade9cfbca2719aa96dc075119ce75e4c322a96217"
+        },
+        {
+          "path": "src/Marang.DelegationAuthority/AcceptedDelegation.cs",
+          "sha256": "ca3395f42fb7b96e51f75f436bafddc2462dee4e6b1e34c606ff40a0552d8578"
+        },
+        {
+          "path": "src/Marang.DelegationAuthority/Marang.DelegationAuthority.csproj",
+          "sha256": "ec3dd55fa515cab0fcd3354e2e87f898b123322e8950d905e8d156a15e48ea5e"
+        },
+        {
+          "path": "src/Marang.DelegationAuthority/MarangPrincipal.cs",
+          "sha256": "847bec2436af3556804346d90fb8174da4523d91f16440660c1e8a91a7243c83"
+        },
+        {
+          "path": "src/Marang.DelegationAuthority/SqliteAcceptedDelegationStore.cs",
+          "sha256": "789c93b97211385fabd7d55f7b7d1e7b60c45720811d3ea9de4587fe609e5922"
+        },
+        {
+          "path": "src/Marang.Http/EvidenceHttpMapper.cs",
+          "sha256": "01c74698f3073addf5c40f4cf86e9845b693e8ede94645bc1b7b15b544dfd0e2"
+        },
+        {
+          "path": "src/Marang.Http/Marang.Http.csproj",
+          "sha256": "751017f461427fc4e63c647af59e01a0d8b98bfd87961c19531ce26659aa3b8b"
+        },
+        {
+          "path": "src/Marang.Http/SupervisionHttpEndpoints.cs",
+          "sha256": "e34b0f8e01fc6359e0f6a1ec7412c6c0c1041d79f9ce1ad096f008cd4fa50179"
+        },
+        {
+          "path": "src/Marang.Hufu/AdaptiveRevisionAuthority.cs",
+          "sha256": "92f107e665c4b9f311f1ee4f2f27b40f46a1a82e86aa41db8e2d01b1dbc44bd4"
+        },
+        {
+          "path": "src/Marang.Hufu/HufuFileReader.cs",
+          "sha256": "bebf5b9a9ad1348c7e38d2b1774fae64711ad3f0cc82920e8c55b471642ae4d2"
+        },
+        {
+          "path": "src/Marang.Hufu/Marang.Hufu.csproj",
+          "sha256": "18dc8f9a5abed780c6b2503a68d0432ee86c0efd8b2f7e4546605e9ab5aade1a"
+        },
+        {
+          "path": "src/Marang.Mcp/AssemblyMarker.cs",
+          "sha256": "8efb57542265bb64b2cf255d4ef5b191cc40b7ebb2d5699f52465059fecdcc1a"
+        },
+        {
+          "path": "src/Marang.Mcp/Marang.Mcp.csproj",
+          "sha256": "266332d2f55c8d17a74d7ba24aacaffe58e88c8ab58ad238e979a8789b8e7b9f"
+        },
+        {
+          "path": "src/Marang.Mcp/MarangConnectivityTools.cs",
+          "sha256": "6c8c18eb2b8afdc8b85bcaf99d9608d40463e93d7d18133672b2510cba171277"
+        },
+        {
+          "path": "src/Marang.Mcp/MarangDelegationCatalog.cs",
+          "sha256": "a7c8023ab6a616fce977a03c82de7b34739233c1b45a6a3f92b7e8fa51b99588"
+        },
+        {
+          "path": "src/Marang.Mcp/MarangDelegationFingerprint.cs",
+          "sha256": "21fc4925f98319b83b62b5e445bf44eefc412219224d678445bc4c2ca3e7f7d8"
+        },
+        {
+          "path": "src/Marang.Mcp/MarangDelegationTools.cs",
+          "sha256": "477b14ba6b1fbba0147a9f8d921c22a210d0339f53d1fa97a7d6909b8cb095f7"
+        },
+        {
+          "path": "src/Marang.Mcp/MarangSupervisionTools.cs",
+          "sha256": "bfeb8b35b6d4c2c364e824fdc590cd417ff7814c181010d093c8d328ad91018f"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/AdaptivePlanAuthoring.cs",
+          "sha256": "82e5858b7aa3ad705688ea0b3ebf75897cacd2d2957bd0c11f6e2d799422311e"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/AdaptiveSupervisor.cs",
+          "sha256": "dc3c9724a7884c62b9e6d9348fb093d02b3d3cb9c73d42e999a54793234ad244"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/DelegationRecoveryActions.cs",
+          "sha256": "30cd3cbbe6edd4ba139823ef1497ec847c6373e778298fedd479333162742571"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/DelegationRecoveryJson.cs",
+          "sha256": "d54188eba3bd0de72441e4f2cc9374e9c8ff21e1e62caae8204c27c6537e3624"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/SqliteAdaptiveSupervisorAuthority.cs",
+          "sha256": "7ca7c3a07c068341def246a2fa73924608cc8185c3a694ad09d2889b8750a58c"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/SqliteDelegationRecoveryJournal.cs",
+          "sha256": "6bdc17ae945b9652943df444d5787e3e322bd3b3baad69bc5ed49677b5d8ff14"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/SupervisorCatchUp.cs",
+          "sha256": "04c18452a4016227c59516d48f9a8bd738ea8ac2031333317b6d9dab827c42ba"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/SupervisorContinuityModels.cs",
+          "sha256": "a545a3f864c3b3e13c83212548ca754c6a50d98265495ab2bc6bcf1671ad49af"
+        },
+        {
+          "path": "src/Marang.Runs/Adaptive/SupervisorContinuityStore.cs",
+          "sha256": "2db3a00d937c3b2bdf633103311e4541efcc8c822eaf2e58d3e656f0baa74dc1"
+        },
+        {
+          "path": "src/Marang.Runs/IRunProjectionSource.cs",
+          "sha256": "13b6cc3db1e4dae4f03b47e8d0990faac0b3e488497437fc13eb67d727aeb4b7"
+        },
+        {
+          "path": "src/Marang.Runs/Marang.Runs.csproj",
+          "sha256": "35087b34388e4035bf6add73e8567e58e50b4b8fe7150a1be56ed5bdfed72a45"
+        },
+        {
+          "path": "src/Marang.Runs/RunCorrelation.cs",
+          "sha256": "7f7a6827d7cb00c046ffa2f547840f44e27de1b29093cd93c66fde67093c483d"
+        },
+        {
+          "path": "src/Marang.Runs/RunProjection.cs",
+          "sha256": "b7946841fda320f2888a3310ec69f72c3eb9f2f13e68ffe239328f6f62704483"
+        },
+        {
+          "path": "src/Marang.Runs/RunProjectionBuilder.cs",
+          "sha256": "060ebfa829175f171e7fc527c75b39edb9bb48d3099e557ad14872c51e5a8134"
+        },
+        {
+          "path": "src/Marang.Runs/RunProjectionEndpoints.cs",
+          "sha256": "98740e1450eb5346d48ee98d94af2cec9b69e05ba47fdcfe2e91fcb2ebe26275"
+        },
+        {
+          "path": "src/Marang.Server/Marang.Server.csproj",
+          "sha256": "67de6b84f3310bb4500ff17234f44b7b40d25123174fa0ce5ee53824c0d1a586"
+        },
+        {
+          "path": "src/Marang.Server/Program.cs",
+          "sha256": "5fc7a7c7502762cd7ee0bd1d8f6cf075deca3339d6af8e62b0de5d18e8f7c994"
+        },
+        {
+          "path": "src/Marang.Server/Properties/launchSettings.json",
+          "sha256": "73839dc6bf9ac6d5c8a4962a8a904ec7bcfdc09866c9438e98fee21763604f37"
+        },
+        {
+          "path": "src/Marang.SessionJournal/AdaptiveEvidenceMirror.cs",
+          "sha256": "dbeab787635b3b0e52728d900248a6533336baabb7c06d944ab845e3831ca7e2"
+        },
+        {
+          "path": "src/Marang.SessionJournal/ConfiguredRunProjectionSource.cs",
+          "sha256": "8c0e9e8acb6cee526dfae2121fcd61318c9d5ff035cd50b14fd185851c287fa5"
+        },
+        {
+          "path": "src/Marang.SessionJournal/ISessionJournalSource.cs",
+          "sha256": "3058e49e90939ddafc72161275ad75758dd606e3bfa5694ccf34d9c22392d985"
+        },
+        {
+          "path": "src/Marang.SessionJournal/Marang.SessionJournal.csproj",
+          "sha256": "be825fa78510158fe07adca59cd9327ec7e2eb2f993e06cf0052e82489f30a66"
+        },
+        {
+          "path": "src/Marang.SessionJournal/RunStoreComposition.cs",
+          "sha256": "072e7b9ba818019e13d50a740b934c14eabbecbd05e3b26eaf5cd1881d27a6d7"
+        },
+        {
+          "path": "src/Marang.SessionJournal/SessionJournal.cs",
+          "sha256": "807ebed28dfb182f6fb2a7cba3f0b3e255dfd13edafee97393fa3004b13b68e9"
+        },
+        {
+          "path": "src/Marang.SessionJournal/SessionJournalEndpoints.cs",
+          "sha256": "0678b829ab203b43cf32b370919da8fa09e16a697cf50ad8a68c9ac86d64295e"
+        },
+        {
+          "path": "src/Marang.Ui/index.html",
+          "sha256": "3232239e9a949875635b25da547605289e3adc3d98c1411f67b21aa59e40ec32"
+        },
+        {
+          "path": "src/Marang.Ui/package.json",
+          "sha256": "89b8655c3140bedd0ada2e82c2e3ad36275f9ade3fa8e64c8d6a180062d55159"
+        },
+        {
+          "path": "src/Marang.Ui/pnpm-lock.yaml",
+          "sha256": "843ac4cd369040ff677ef79e7e4d61f4ff1af5677de364b8f8708b9f8f4abccf"
+        },
+        {
+          "path": "src/Marang.Ui/pnpm-workspace.yaml",
+          "sha256": "ac02d96368617c760f093cfe61fdec64b6244007ab3553e0d6621f706f54a353"
+        },
+        {
+          "path": "src/Marang.Ui/src/App.tsx",
+          "sha256": "bbc4b944ed5ca4aa6903f5bc71e7f505a1a30979bf105fbdb7551f85afa8f9dd"
+        },
+        {
+          "path": "src/Marang.Ui/src/contracts.ts",
+          "sha256": "004e95210ae7eb5d7e84c26830b81afd0e94b2d57022a582aa7f07157347326e"
+        },
+        {
+          "path": "src/Marang.Ui/src/delegationApi.ts",
+          "sha256": "498d29d3e87ecf827f84d275791b514af665b597a888df89d7460ceea3cab54f"
+        },
+        {
+          "path": "src/Marang.Ui/src/fixture.ts",
+          "sha256": "6b2dc8259d94c7abf055306a41cf26962c7551f287e30797e9936529648453ca"
+        },
+        {
+          "path": "src/Marang.Ui/src/live.css",
+          "sha256": "14f5728a9d940e25a0433541501676405947482d5a60c13636afb7b09167b3c3"
+        },
+        {
+          "path": "src/Marang.Ui/src/main.tsx",
+          "sha256": "de88e4c555eaa781faf338d3d90122ec601e7fc0a72743cfa0d4fafad10c20a2"
+        },
+        {
+          "path": "src/Marang.Ui/src/responsive.css",
+          "sha256": "57c08aa1352014bc23be6f1a3370b2aeab49b62c04a7f0d13aa2343f97e9d3cd"
+        },
+        {
+          "path": "src/Marang.Ui/src/runApi.ts",
+          "sha256": "c46d816d0ec44b20389b0986444eaf73b7f6e6cb8a2daa48bbcfc7f4da69b4e7"
+        },
+        {
+          "path": "src/Marang.Ui/src/styles.css",
+          "sha256": "223bf8a46b54ae940f0c95683cc42f342f337a4074e41e0f95cc27bbdb89076d"
+        },
+        {
+          "path": "src/Marang.Ui/src/WorkflowGraph.tsx",
+          "sha256": "1c802af3db1b77ce99e121e1e856a1667d95ed765e8e8ab500258e34dddcc968"
+        },
+        {
+          "path": "src/Marang.Ui/tsconfig.json",
+          "sha256": "d3cc2fc67f9d300d28e1b4403ec7027ca0e294a45c74b7f0bd9b080b5027f699"
+        },
+        {
+          "path": "src/Marang.Ui/vite.config.ts",
+          "sha256": "3f3d7e59fb10f1e2ee6eceb34d1efc7c5078dd0c1b28291649aaaa5621593347"
+        },
+        {
+          "path": "src/Marang/ImplementVerificationPolicy.cs",
+          "sha256": "c8bd01d982411ebfb8eab62c9423744e475c610c9ac6b74dfefe07bd6e807c9c"
+        },
+        {
+          "path": "src/Marang/Marang.csproj",
+          "sha256": "34740d53cfb6d3923e13099545edf86f7fafd5c6d82b6e9e3cdded9af40002be"
+        },
+        {
+          "path": "src/Marang/MarangAdmissionVerifier.cs",
+          "sha256": "789ff0eb5d6085155ddfeefa107350ba8c29d7323f0c3a42c994fecc66e71a2a"
+        },
+        {
+          "path": "src/Marang/MarangAuthentication.cs",
+          "sha256": "77cb02091e2594f32a71c19a92db47c6e4b5d22a9ae934a5e17f50c9071bb10c"
+        },
+        {
+          "path": "src/Marang/PublicAPI.Shipped.txt",
+          "sha256": "3c3b422dddb1efeb0fc5b228608fd8682452b2a9507d4031894bce3c4dedadbd"
+        },
+        {
+          "path": "src/Marang/PublicAPI.Unshipped.txt",
+          "sha256": "c59ae0c4a7e1f005a643ee19d74e2176038c27f2ef3abecf13fd8f2e54174ac2"
+        },
+        {
+          "path": "src/Marang/WorkflowPlanReference.cs",
+          "sha256": "c876870368e8d69341bd8b3bb4c1422b20d364ae8226090c027db1bc6f634f02"
+        },
+        {
+          "path": "src/Marang/WorkflowPlanResolution.cs",
+          "sha256": "4b7eec2af01d42b1975508421f1292f73d1c1e44ab48a0586b9000965dd2ffae"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/AdaptiveRevisionProbe.cs",
+          "sha256": "7eb457f3ab9dac9c4e99313b0706e25ce474efb060ec3f938770a8e0f6f94947"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/Marang.RestartProbe.csproj",
+          "sha256": "c9e6e71f6e47d9aef46fe60057d005cd2c8817dcf6a0ee0143e77d17da030d1d"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/Program.cs",
+          "sha256": "31913a15ef00319ad0912a15801af48729e7edeac5cf5df0cfd932e5756d6aa9"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/SupervisorContinuityProbe.cs",
+          "sha256": "2852bdf5a7f5907da967d2fcea2e1a586286390f3d8c224d61dea424d32219d0"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/SupervisorDelegationRecoveryProbe.cs",
+          "sha256": "e95bbcf9730822aa147d6ffc71b3c7491e3f7759726864e2dd8bd6480937bef9"
+        },
+        {
+          "path": "tests/Marang.RestartProbe/SupervisorOperatorProbe.cs",
+          "sha256": "d1799623d5d0048f0c8a7ab84e77d92e4d0ee9b5df0dcba41e39a0035c3cd95f"
+        },
+        {
+          "path": "tests/Marang.Tests/AdaptivePlanAuthoringTests.cs",
+          "sha256": "8e4858ef6d81841ed3f12c59414ab61da975346d4b98552c9ddd1a7b2603b082"
+        },
+        {
+          "path": "tests/Marang.Tests/AdaptiveRevisionAuthorityTests.cs",
+          "sha256": "bd83f571e188e4277bab967f0ed942eaf052ea03e2c97927ad20b90a12764dc4"
+        },
+        {
+          "path": "tests/Marang.Tests/AdaptiveRevisionProcessTests.cs",
+          "sha256": "21b96f623847c28726e779dfdca1fe1eaba21010d3eb99e6e26927956210b632"
+        },
+        {
+          "path": "tests/Marang.Tests/DelegationAuthorityTests.cs",
+          "sha256": "d0efad9e311a554b4b0ff4a023c012cb7362d1f80afd7bda54daa9bbc09b8233"
+        },
+        {
+          "path": "tests/Marang.Tests/DelegationReadReconstructionTests.cs",
+          "sha256": "b3fe1dbd6b26faceb8ba252a9acf694278bfd48ab99012010a6b84dd372e1328"
+        },
+        {
+          "path": "tests/Marang.Tests/DelegationRecoveryActionsTests.cs",
+          "sha256": "efc36f761121b1d63abffc1342f1d44c5fcda0361f8b5344e3d7fb9d3fe2e782"
+        },
+        {
+          "path": "tests/Marang.Tests/HufuDerivedAuthorityTests.cs",
+          "sha256": "6e5ffeefe830f9eec9b48b14a27dbfba494183de498ba4b8819f7ad8650cc494"
+        },
+        {
+          "path": "tests/Marang.Tests/HufuFileReaderTests.cs",
+          "sha256": "7087e4d4c57a545ecb81005e84d9798c1692573cbbc7e556008ae92eb455f5d8"
+        },
+        {
+          "path": "tests/Marang.Tests/Marang.Tests.csproj",
+          "sha256": "bdc1749900d049e8b7d0c0617b2ecff1775f4b23e0680d6b667e76cccd6c26dd"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangAuthenticationTests.cs",
+          "sha256": "6c00180db08ac48e65feee39e9b3c502e329ad6b63dd176e35a22c4bd581cc34"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangCancelHttpTests.cs",
+          "sha256": "dcfd25db430c349d21d4a3193a0f62b4e08aca979d1693c5b088957ef8ec30b1"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangCodexDelegationTests.cs",
+          "sha256": "a78eb5d8b847ede166d3449d73b2f9f81f839573fa555226d4e072328d182387"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangDelegationCatalogTests.cs",
+          "sha256": "56d98ccb594ea51a731e5b88138c69073db5224f161acdd976efc35ee501b226"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangDelegationFingerprintTests.cs",
+          "sha256": "56f288f7c3062a497f84d87e78827809ea976665c8e9e0b14006415f7e668e21"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangDelegationTests.cs",
+          "sha256": "8b00b5e1bd59e461c30eba5354f9d0d7abb69ea479aecff3e2f4a37e94b56596"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangDelegationToolsTests.cs",
+          "sha256": "260a507a88ef2d5325f116bab3d23a8aae912a4ff68f8ebbbad4e4a0896100f4"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangEvidenceHttpTests.cs",
+          "sha256": "4adcebba5ea5cad1b172b7fc6c3f5b5f0c3055ebc1ca46ac3df6c9f4bae0066f"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangFailureHttpTests.cs",
+          "sha256": "3d61854005b298c71483dac6ab959302e8652cb3dfec95aab9cab5c72da2bf62"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangProviderProjectionTests.cs",
+          "sha256": "ca05979eb153a48cd1e39c327c50ea825d652b97b38c39fe8f6318de162184d8"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangRestartTests.cs",
+          "sha256": "5b27964b31635cf6a4fa1c0983c2847645dad134f4891495b1ba8cb932e35652"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangRunProjectionTests.cs",
+          "sha256": "224b6bf0aa567f2ba30457bbcbf22613931ea04fd9832ab4efdedb8e6485d01d"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangSessionJournalTests.cs",
+          "sha256": "cb3415fdd8ad8ecf7dfb08d2f287e66215df3d6250aad71cd7d18cf0973c8448"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangSnapshotWatermarkTests.cs",
+          "sha256": "a2234e1432701b4b27be7847b2e27646bd7bc55caf34480f7667769945de5d5e"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangSupervisionHttpTests.cs",
+          "sha256": "111c5bdb615729fcdd2992123d759b0db9a246e4ef104395e635ed3077829fde"
+        },
+        {
+          "path": "tests/Marang.Tests/MarangSupervisionToolsTests.cs",
+          "sha256": "f9d87c7b52817537653a4d7bf6d0f6401193e84312b6645d12750777a71f5d9a"
+        },
+        {
+          "path": "tests/Marang.Tests/PackageContractProbeTests.cs",
+          "sha256": "9756e6639b70c286563a9752ec1e1a59e8d9e1d1bd61f14b310a0682a47ec9a6"
+        },
+        {
+          "path": "tests/Marang.Tests/QingniaoHufuMarangProofTests.cs",
+          "sha256": "ebf1f2d11e36fb1f1efae37a357d2dfe28d319fa867adbe312f0eb46cb78e8b7"
+        },
+        {
+          "path": "tests/Marang.Tests/SupervisorCatchUpTests.cs",
+          "sha256": "23dafaa06d9d88f68574ce3ee35d417b3a625efb1a11ff3946121a7dabdb51fb"
+        },
+        {
+          "path": "tests/Marang.Tests/SupervisorContinuityProcessTests.cs",
+          "sha256": "364f187d20a07a6cc5f3940eb2c0fb8f33c3e020331b3fa93ad3c1ef9a417319"
+        },
+        {
+          "path": "tests/Marang.Tests/SupervisorContinuityStoreTests.cs",
+          "sha256": "f6815cc6c09cd260137ad4d9f7f5c96c793c15a2888d9b6de8f8993263b47a11"
+        },
+        {
+          "path": "tests/Marang.Tests/SupervisorDelegationRecoveryProcessTests.cs",
+          "sha256": "1dd8ccd622e131ce2c49bbb24c6d061a94b57ce8f1779e3ec10424064f6f9e5b"
+        },
+        {
+          "path": "tests/Marang.Tests/WorkflowPlanResolutionTests.cs",
+          "sha256": "76cad20adcbfcbaee1750b97baca8340f45c5ea59cef68895b6681985808eb03"
+        }
+      ],
+      "stateDigest": "12a4860f712bbd7acd405047c9a5a8c9bc056f962650daa0ed633d29f0c26ea9"
+    },
+    "effects": [
+      {
+        "effectId": "bf668e4e-721b-4611-aae6-e2712dc5a881",
+        "logicalId": "A",
+        "intentRevisionId": "revision-2",
+        "causalDigest": "42e3ac5aa571f0c54436e1d60b8a471bae4b58f03f678560cd9b77803e8c561e",
+        "intentDigest": "1ef54fa37d9156ac5117d3f81529b6c0b25c28b0312cf1d3519ef3a5a9737ab6",
+        "authorityScope": "repository",
+        "patchIdentity": "fd554888a31cca8e6967a978b2924aed35dca92a2b2d56a113b12208039c6e40",
+        "baseStateDigest": "74e73330fecb98b04e54856aa94ba086b36d56f04eac2d7a346a5aece88fb74b",
+        "expectedPostStateDigest": "1d1624255d1be56f70dd6689232f31bb869769e3f2342162dd395280d7cb56d4",
+        "recordedOldStateDigest": "1d1624255d1be56f70dd6689232f31bb869769e3f2342162dd395280d7cb56d4",
+        "actualCheckoutStateDigest": "12a4860f712bbd7acd405047c9a5a8c9bc056f962650daa0ed633d29f0c26ea9",
+        "physicalClassification": "AppliedHistorical",
+        "physicalStage": 4,
+        "selectedInInspectedRevision": true,
+        "selectedInActiveRevision": true,
+        "acceptedByActiveRevision": false,
+        "reuse": false,
+        "localValidation": {
+          "targetStateDigest": "1d1624255d1be56f70dd6689232f31bb869769e3f2342162dd395280d7cb56d4",
+          "target": "A local validation",
+          "commandIdentity": "dotnet build tests/Marang.Tests/Marang.Tests.csproj -c Release --no-restore -f net10.0 -m:1 -p:BuildInParallel=false -p:UseSharedCompilation=false",
+          "passed": true,
+          "outputDigest": "cc7c4777001205829b2de94079cbfa7f8c2d7d41d218ac31225f2525b0e7faa6",
+          "evidence": "al\\Temp\\m4-b09167070251\\repo\\src\\Marang.DelegationAuthority\\bin\\Release\\net10.0\\Marang.DelegationAuthority.dll\r\n  Marang.Mcp -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang.Mcp\\bin\\Release\\net10.0\\Marang.Mcp.dll\r\n  Marang.Hufu -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang.Hufu\\bin\\Release\\net10.0\\Marang.Hufu.dll\r\n  Marang.Runs -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang.Runs\\bin\\Release\\net10.0\\Marang.Runs.dll\r\n  Marang.Http -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang.Http\\bin\\Release\\net10.0\\Marang.Http.dll\r\n  Marang.SessionJournal -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang.SessionJournal\\bin\\Release\\net10.0\\Marang.SessionJournal.dll\r\n  Marang.RestartProbe -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\tests\\Marang.RestartProbe\\bin\\Release\\net10.0\\Marang.RestartProbe.dll\r\n  Marang.Tests -> C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\tests\\Marang.Tests\\bin\\Release\\net10.0\\Marang.Tests.dll\r\n\r\nBuild succeeded.\r\n\r\nC:\\Users\\Laszlos\\.nuget\\packages\\microsoft.build.tasks.git\\10.0.401\\build\\Microsoft.Build.Tasks.Git.targets(25,5): warning : The URL of repository remote 'origin' is invalid: 'C:\\Users\\Laszlos\\source\\repos\\Solo\\aaaw-m4\\marang'. [C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang\\Marang.csproj::TargetFramework=net10.0]\r\nC:\\Users\\Laszlos\\.nuget\\packages\\microsoft.sourcelink.common\\10.0.401\\build\\Microsoft.SourceLink.Common.targets(56,5): warning : Source control information is not available - the generated source link is empty. [C:\\Users\\Laszlos\\AppData\\Local\\Temp\\m4-b09167070251\\repo\\src\\Marang\\Marang.csproj::TargetFramework=net10.0]\r\n    2 Warning(s)\r\n    0 Error(s)\r\n\r\nTime Elapsed 00:00:19.81"
+        },
+        "workflowValidation": null,
+        "authorityEvidence": [
+          {
+            "intentDigest": "1ef54fa37d9156ac5117d3f81529b6c0b25c28b0312cf1d3519ef3a5a9737ab6",
+            "targetPath": "tests/Marang.Tests/Marang.Tests.csproj",
+            "requestIdentity": "a4e2b536206581eb08461cff3a8a67d4e471832fa9e271e2b89ee46fa8d7cfcb",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:19:42.5562576+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          },
+          {
+            "intentDigest": "1ef54fa37d9156ac5117d3f81529b6c0b25c28b0312cf1d3519ef3a5a9737ab6",
+            "targetPath": "tests/Marang.Tests/Marang.Tests.csproj",
+            "requestIdentity": "a4e2b536206581eb08461cff3a8a67d4e471832fa9e271e2b89ee46fa8d7cfcb",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:19:43.6637307+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          }
+        ],
+        "requirementEvidence": "R2 A introduces opt-in focused custom fingerprint validation through the test project configuration.",
+        "selectionRationale": "Add the custom validation mode used by the focused contract test.",
+        "acceptedPrerequisites": [],
+        "blockingPrerequisites": [],
+        "replacementEffectId": null,
+        "dispositions": [],
+        "reason": "Selected in the active graph; physical application, local validation, or an accepted prerequisite is still pending.",
+        "explanation": "Effect is selected by the active graph; acceptance is pending; physical state is AppliedHistorical at stage ValidationPassed. Local validation passed for state 1d1624255d1be56f70dd6689232f31bb869769e3f2342162dd395280d7cb56d4. Workflow validation has not been recorded."
+      },
+      {
+        "effectId": "bb288558-11d7-4a4d-91e2-a4332cecedc8",
+        "logicalId": "B",
+        "intentRevisionId": "revision-2",
+        "causalDigest": "bb6091f0389ff8403e11a31a96afe859c02d108c839b5d9f3c50e098516f75de",
+        "intentDigest": "eb34cc0d2a4f4422bf360d80ea4ae4408ddee723fcba0f9cef0b47288fde1819",
+        "authorityScope": "repository",
+        "patchIdentity": "fdb1f1023975941d2ac7b493810109c091a3336641c0edc35203d33b55fd9304",
+        "baseStateDigest": "1d1624255d1be56f70dd6689232f31bb869769e3f2342162dd395280d7cb56d4",
+        "expectedPostStateDigest": "1f8827391efe405bc5565a29ad55a35205a7a11fa7cfb3edd85d74721c2e4418",
+        "recordedOldStateDigest": "12a4860f712bbd7acd405047c9a5a8c9bc056f962650daa0ed633d29f0c26ea9",
+        "actualCheckoutStateDigest": "12a4860f712bbd7acd405047c9a5a8c9bc056f962650daa0ed633d29f0c26ea9",
+        "physicalClassification": "PartiallyApplied",
+        "physicalStage": 6,
+        "selectedInInspectedRevision": true,
+        "selectedInActiveRevision": true,
+        "acceptedByActiveRevision": false,
+        "reuse": false,
+        "localValidation": null,
+        "workflowValidation": null,
+        "authorityEvidence": [
+          {
+            "intentDigest": "eb34cc0d2a4f4422bf360d80ea4ae4408ddee723fcba0f9cef0b47288fde1819",
+            "targetPath": "README.md",
+            "requestIdentity": "5b6f28a3fd91b568e5a390943778eec1cf0ffe96341f342efb9bf338cbffad4b",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:20:08.9244637+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          },
+          {
+            "intentDigest": "eb34cc0d2a4f4422bf360d80ea4ae4408ddee723fcba0f9cef0b47288fde1819",
+            "targetPath": "src/Marang/WorkflowPlanReference.cs",
+            "requestIdentity": "24b65b29068677ddea417b29d5d6978a25e76f148f83ff3e65dde1c6d8684f74",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:20:09.0744248+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          },
+          {
+            "intentDigest": "eb34cc0d2a4f4422bf360d80ea4ae4408ddee723fcba0f9cef0b47288fde1819",
+            "targetPath": "README.md",
+            "requestIdentity": "5b6f28a3fd91b568e5a390943778eec1cf0ffe96341f342efb9bf338cbffad4b",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:20:09.5326023+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          },
+          {
+            "intentDigest": "eb34cc0d2a4f4422bf360d80ea4ae4408ddee723fcba0f9cef0b47288fde1819",
+            "targetPath": "src/Marang/WorkflowPlanReference.cs",
+            "requestIdentity": "24b65b29068677ddea417b29d5d6978a25e76f148f83ff3e65dde1c6d8684f74",
+            "status": "Permit",
+            "tenantId": "m1",
+            "subjectId": "supervisor",
+            "workflowId": "dd7e19af-e327-4886-b286-ec96c26835a7",
+            "revisionId": "revision-2",
+            "decisionReason": "authority.permitted",
+            "snapshotIdentity": "d9c3978bec290bfe686081cf87a347667b73bceab0f9f7e27827a24ce9a92bbc",
+            "snapshotVersion": "m4-controlled-repository/2",
+            "checkedAt": "2026-10-15T02:20:09.6966135+00:00",
+            "graphDigest": null,
+            "dependentEffectId": null,
+            "prerequisiteEffectId": null,
+            "prerequisiteCausalDigest": null,
+            "observedStateDigest": null
+          }
+        ],
+        "requirementEvidence": "B depends on A's config mode and carries the initial 63-character implementation assumption.",
+        "selectionRationale": "Implement the initial 63-character assumption.",
+        "acceptedPrerequisites": [],
+        "blockingPrerequisites": [],
+        "replacementEffectId": null,
+        "dispositions": [],
+        "reason": "Selected in the active graph; physical application, local validation, or an accepted prerequisite is still pending.",
+        "explanation": "Effect is selected by the active graph; acceptance is pending; physical state is PartiallyApplied at stage Blocked. Local validation has not been recorded. Workflow validation has not been recorded."
+      },
+      {
+        "effectId": "912081ef-5f01-4d72-890a-75a381f6abdd",
+        "logicalId": "C",
+        "intentRevisionId": "revision-2",
+        "causalDigest": "455b0f7d27b4970f230a7c11037ae7c75b994d19167578724ed1a21f376deed8",
+        "intentDigest": "f232dc799209b2c5ce89e7d7f6436c98b69aa5a77d155c696149b3206e0af0be",
+        "authorityScope": "repository",
+        "patchIdentity": "59d4a4dfe330bdf3546e40653e4dc185c86e17861bc94501edd82f106263f1e6",
+        "baseStateDigest": "1f8827391efe405bc5565a29ad55a35205a7a11fa7cfb3edd85d74721c2e4418",
+        "expectedPostStateDigest": "c8412d3838c2d2e2d3ddc7d1ff4ffefcac322b3475056817be286e7d77df36ad",
+        "recordedOldStateDigest": null,
+        "actualCheckoutStateDigest": "12a4860f712bbd7acd405047c9a5a8c9bc056f962650daa0ed633d29f0c26ea9",
+        "physicalClassification": "Unresolved",
+        "physicalStage": 0,
+        "selectedInInspectedRevision": true,
+        "selectedInActiveRevision": true,
+        "acceptedByActiveRevision": false,
+        "reuse": false,
+        "localValidation": null,
+        "workflowValidation": null,
+        "authorityEvidence": [],
+        "requirementEvidence": "C encodes the B assumption in an actual focused package test; independent 64-character tests remain unchanged.",
+        "selectionRationale": "Test the selected 63-character behavior against B's exact result state.",
+        "acceptedPrerequisites": [],
+        "blockingPrerequisites": [
+          "bb288558-11d7-4a4d-91e2-a4332cecedc8"
+        ],
+        "replacementEffectId": null,
+        "dispositions": [],
+        "reason": "Selected in the active graph; physical application, local validation, or an accepted prerequisite is still pending.",
+        "explanation": "Effect is selected by the active graph; acceptance is pending; physical state is Unresolved at stage Prepared. Local validation has not been recorded. Workflow validation has not been recorded. A prerequisite is unresolved; downstream work is blocked and this view grants no replay permission."
+      }
+    ],
+    "mutationBlocked": true,
+    "blockers": [
+      "C waits for prerequisite B (bb288558-11d7-4a4d-91e2-a4332cecedc8) to produce a physically recorded, locally validated result matching its causal digest.",
+      "The checkout does not match an exact effect base or result. Reconciliation is required before any effect can proceed.",
+      "Checkout scope is parked by effect bb288558-11d7-4a4d-91e2-a4332cecedc8; inspect its owning workflow. A later file observation does not clear a durable reconciliation block."
+    ],
+    "explanation": "Accepted graph state, local effect evidence, workflow validation, and the currently observed checkout are shown as separate facts. Pending prerequisites block downstream interpretation and never grant replay permission."
+  }
+}

@@ -176,3 +176,6 @@ the actual checkout. See [the M4 contract](docs/aaaw-m4/contracts.md),
 [ADR 0019](docs/decisions/0019-aaaw-m4-causal-effect-coordination.md).
 Reproduce with `eng/qualify-aaaw-m4.ps1`; this remains an experimental host profile without
 package publication, rollback or general external-effect guarantees.
+
+The [M4 qualification report](docs/aaaw-m4/evidence.md) records the accepted and physical effect
+chains, all twelve kill barriers, exact source/package identities and the complete M1–M4 regression.
