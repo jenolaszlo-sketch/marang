@@ -1,32 +1,32 @@
 [
   {
     "id": "Gagamba.Execution",
-    "version": "0.1.0-preview.4-aaaw-m5.1",
-    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
-    "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94"
+    "version": "0.1.0-preview.4-gp-m5.1",
+    "commit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+    "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c"
   },
   {
     "id": "Gagamba.Execution.Linux",
-    "version": "0.1.0-preview.4-aaaw-m5.1",
-    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
-    "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c"
+    "version": "0.1.0-preview.4-gp-m5.1",
+    "commit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+    "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc"
   },
   {
     "id": "Gagamba.Execution.MacOS",
-    "version": "0.1.0-preview.4-aaaw-m5.1",
-    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
-    "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c"
+    "version": "0.1.0-preview.4-gp-m5.1",
+    "commit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+    "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8"
   },
   {
     "id": "Gagamba.Execution.Windows",
-    "version": "0.1.0-preview.4-aaaw-m5.1",
-    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
-    "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb"
+    "version": "0.1.0-preview.4-gp-m5.1",
+    "commit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+    "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00"
   },
   {
     "id": "Gagamba.Runtime",
-    "version": "0.1.0-preview.4-aaaw-m5.1",
-    "commit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
-    "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+    "version": "0.1.0-preview.4-gp-m5.1",
+    "commit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+    "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311"
   }
 ]

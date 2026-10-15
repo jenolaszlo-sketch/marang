@@ -1,44 +1,55 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using Gagamba.Execution;
 using Gagamba.Runtime;
 
 const int readyTimeoutSeconds = 12;
 const int operationTimeoutSeconds = 12;
-string outputPath = args.Length > 0
-    ? Path.GetFullPath(args[0])
-    : Path.Combine(Environment.CurrentDirectory, "macos-probe.json");
+string outputPath = args.Length > 0 ? Path.GetFullPath(args[0]) : Path.Combine(Environment.CurrentDirectory, "macos-probe.json");
 string scratch = Path.Combine(Path.GetTempPath(), $"aaaw-m5-macos-probe-{Guid.NewGuid():N}");
 Directory.CreateDirectory(scratch);
 string nonce = Convert.ToHexString(RandomNumberGenerator.GetBytes(24));
 string normalMarker = Path.Combine(scratch, "normal-ready");
 string capturedMarker = Path.Combine(scratch, "captured-ready");
+string invalidMarker = Path.Combine(scratch, "invalid-options-dispatched");
+string ceilingMarker = Path.Combine(scratch, "over-ceiling-dispatched");
+string expectedStdout = $"capture-stdout-{nonce}\n";
+string expectedStderr = $"capture-stderr-{nonce}\n";
 
 var result = new Dictionary<string, object?>
 {
-    ["schema"] = "aaaw-m5-macos-profile-probe-v1",
+    ["schema"] = "aaaw-m5-macos-profile-probe-v2",
     ["startedAtUtc"] = DateTimeOffset.UtcNow,
     ["host"] = new { osDescription = RuntimeInformation.OSDescription, framework = RuntimeInformation.FrameworkDescription, architecture = RuntimeInformation.ProcessArchitecture.ToString(), machine = Environment.MachineName },
     ["source"] = await ReadPackageIdentityAsync(),
     ["canonicalSupported"] = false,
+    ["canonicalSupportedScope"] = "Positive and negative profile preflight controls only; this does not prove Marang M5 semantic qualification.",
     ["canonicalQualification"] = "not performed by this test-only profile probe"
 };
 
 ExecutionRuntime? runtime = null;
-PreparedExecution? capturedPreparation = null;
+PreparedExecution? negativePreparation = null;
+PreparedExecution? positivePreparation = null;
 ExecutionHandle? normalHandle = null;
+ExecutionHandle? captureHandle = null;
+OutputCaptureSession? captureSession = null;
 bool normalConfirmed = false;
+bool positiveCapturePassed = false;
+bool negativeCapturePassed = false;
 bool captureUnexpectedStart = false;
+bool runtimeDisposed = false;
+bool scratchCleanupConfirmed = false;
+bool invalidMarkerAbsentAfterDispose = false;
+bool ceilingMarkerAbsentAfterDispose = false;
 int exitCode = 0;
 try
 {
     runtime = ExecutionRuntime.Create();
     var described = runtime.Describe();
     result["provider"] = new { runtime.HasProvider, runtime.RefusalReason, platform = described.Platform };
-    result["capabilities"] = described.Grants.ToDictionary(
-        pair => pair.Key.ToString(), pair => new { level = pair.Value.Level.ToString(), kind = pair.Value.Kind.ToString(), pair.Value.Evidence });
-
+    result["capabilities"] = described.Grants.ToDictionary(pair => pair.Key.ToString(), pair => new { level = pair.Value.Level.ToString(), kind = pair.Value.Kind.ToString(), pair.Value.Evidence });
     var requirements = new ExecutionRequirements(new[]
     {
         ExecutionRequirement.Require(ExecutionCapability.UnitTermination, CapabilityLevel.Partial, reason: "LifecycleBrokerOwner M4 stop barrier"),
@@ -46,100 +57,128 @@ try
         ExecutionRequirement.Require(ExecutionCapability.RecursiveMembership, CapabilityLevel.Partial, reason: "LifecycleBrokerOwner M4 nested workload ownership")
     });
 
-    // Control A exercises ordinary native launch and lifecycle termination without output capture.
     var prepare = runtime.Prepare(requirements);
-    result["lifecyclePositiveControl"] = new Dictionary<string, object?> { ["prepare"] = Describe(prepare) };
-    if (prepare is not PrepareResult.Accepted accepted)
-    {
-        result["lifecyclePositiveControl"] = new { prepare = Describe(prepare), passed = false, reason = "required profile preparation was refused" };
-        exitCode = 1;
-    }
-    else
+    var lifecycle = new Dictionary<string, object?> { ["prepare"] = Describe(prepare) };
+    result["lifecyclePositiveControl"] = lifecycle;
+    if (prepare is PrepareResult.Accepted accepted)
     {
         string script = $"printf '%s' '{nonce}' > '{normalMarker}'; exec /bin/sleep 90";
-        var process = ProcessStartSpec.Vector("/bin/sh", new[] { "-c", script }, scratch);
-        LaunchResult launch = runtime.Launch(accepted.Prepared, process);
-        var control = (Dictionary<string, object?>)result["lifecyclePositiveControl"]!;
-        control["launch"] = Describe(launch);
+        LaunchResult launch = runtime.Launch(accepted.Prepared, ProcessStartSpec.Vector("/bin/sh", new[] { "-c", script }, scratch));
+        lifecycle["launch"] = Describe(launch);
         if (launch is LaunchResult.Started started)
         {
             normalHandle = started.Handle;
             bool markerObserved = await WaitForMarkerAsync(normalMarker, nonce, TimeSpan.FromSeconds(readyTimeoutSeconds));
-            control["markerObserved"] = markerObserved;
-            control["markerPath"] = normalMarker;
-            if (!markerObserved) exitCode = 1;
+            lifecycle["markerObserved"] = markerObserved;
             TerminateResult terminate = runtime.Terminate(started.Handle);
-            control["terminate"] = Describe(terminate);
+            lifecycle["terminate"] = Describe(terminate);
             using var waitCts = new CancellationTokenSource(TimeSpan.FromSeconds(operationTimeoutSeconds));
             CompletionResult completion = await runtime.WaitForCompletionAsync(started.Handle, waitCts.Token);
-            control["completion"] = Describe(completion);
-            normalConfirmed = terminate is TerminateResult.Terminated && completion is CompletionResult.Terminated;
-            control["confirmedCleanup"] = normalConfirmed;
-            if (!normalConfirmed) exitCode = 1;
+            lifecycle["completion"] = Describe(completion);
+            normalConfirmed = markerObserved && terminate is TerminateResult.Terminated && completion is CompletionResult.Terminated;
+            lifecycle["confirmedCleanup"] = normalConfirmed;
             normalHandle = null;
+        }
+        lifecycle["passed"] = normalConfirmed;
+    }
+    else lifecycle["passed"] = false;
+    if (!normalConfirmed) exitCode = 1;
+
+    var positivePrepare = runtime.Prepare(requirements);
+    var positive = new Dictionary<string, object?> { ["prepare"] = Describe(positivePrepare), ["markerPath"] = capturedMarker, ["expectedStdout"] = expectedStdout, ["expectedStderr"] = expectedStderr };
+    result["captureProfileControlPositive"] = positive;
+    if (positivePrepare is PrepareResult.Accepted positiveAccepted)
+    {
+        positivePreparation = positiveAccepted.Prepared;
+        string script = $"printf '%s' '{nonce}' > '{capturedMarker}'; printf '%s\\n' 'capture-stdout-{nonce}'; printf '%s\\n' 'capture-stderr-{nonce}' >&2; exit 0";
+        CaptureLaunchResult launch = runtime.LaunchCaptured(positiveAccepted.Prepared,
+            ProcessStartSpec.Vector("/bin/sh", new[] { "-c", script }, scratch),
+            new OutputCaptureOptions(512, 512, 1024, RetainBytes: true));
+        positive["launchCaptured"] = Describe(launch);
+        if (launch is CaptureLaunchResult.Started started)
+        {
+            positivePreparation = null;
+            captureHandle = started.Handle;
+            captureSession = started.Capture;
+            using var waitCts = new CancellationTokenSource(TimeSpan.FromSeconds(operationTimeoutSeconds));
+            CompletionResult completion = await runtime.WaitForCompletionAsync(started.Handle, waitCts.Token);
+            positive["completion"] = Describe(completion);
+            OutputCaptureResult capture = await started.Capture.Completion.WaitAsync(waitCts.Token);
+            string stdout = Encoding.UTF8.GetString(capture.StdoutRetained.Span);
+            string stderr = Encoding.UTF8.GetString(capture.StderrRetained.Span);
+            positive["capture"] = new { status = capture.Status.ToString(), capture.StdoutBytesSeen, capture.StderrBytesSeen, stdout, stderr };
+            bool markerObserved = await WaitForMarkerAsync(capturedMarker, nonce, TimeSpan.FromSeconds(readyTimeoutSeconds));
+            positive["markerObserved"] = markerObserved;
+            positiveCapturePassed = completion is CompletionResult.NaturalExit { RootExitCode: 0 }
+                && capture.Status == OutputCaptureStatus.Complete
+                && capture.StdoutBytesSeen == Encoding.UTF8.GetByteCount(expectedStdout)
+                && capture.StderrBytesSeen == Encoding.UTF8.GetByteCount(expectedStderr)
+                && stdout == expectedStdout && stderr == expectedStderr && markerObserved;
+            positive["passed"] = positiveCapturePassed;
+            captureHandle = null;
+            captureSession = null;
         }
         else
         {
-            // Launch failure consumes and cleans its preparation according to the public contract.
-            control["passed"] = false;
-            exitCode = 1;
+            DiscardResult discard = runtime.Discard(positiveAccepted.Prepared);
+            positive["discard"] = Describe(discard);
+            positive["preparationCleanupConfirmed"] = discard is DiscardResult.Discarded;
+            if (discard is not DiscardResult.Discarded) exitCode = 1;
+            positivePreparation = null;
+            positive["passed"] = false;
         }
     }
+    if (!positiveCapturePassed) exitCode = 1;
 
-    // Control B proves capture refusal is pre-dispatch and the unlaunched domain is reclaimable.
-    var capturedPrepare = runtime.Prepare(requirements);
-    var captureControl = new Dictionary<string, object?> { ["prepare"] = Describe(capturedPrepare), ["markerPath"] = capturedMarker };
-    result["captureRefusalControl"] = captureControl;
-    if (capturedPrepare is PrepareResult.Accepted capturedAccepted)
+    var negativePrepare = runtime.Prepare(requirements);
+    var negative = new Dictionary<string, object?> { ["prepare"] = Describe(negativePrepare), ["invalidMarkerPath"] = invalidMarker, ["overCeilingMarkerPath"] = ceilingMarker };
+    result["captureProfileControlRefusalNegative"] = negative;
+    if (negativePrepare is PrepareResult.Accepted negativeAccepted)
     {
-        capturedPreparation = capturedAccepted.Prepared;
-        string script = $"printf '%s' '{nonce}' > '{capturedMarker}'; exec /bin/sleep 90";
-        CaptureLaunchResult captureLaunch = runtime.LaunchCaptured(capturedAccepted.Prepared,
-            ProcessStartSpec.Vector("/bin/sh", new[] { "-c", script }, scratch),
-            new OutputCaptureOptions(1024, 1024, 2048, RetainBytes: true));
-        captureControl["launchCaptured"] = Describe(captureLaunch);
-        if (captureLaunch is CaptureLaunchResult.Started startedCapture)
+        negativePreparation = negativeAccepted.Prepared;
+        string invalidScript = $"printf '%s' '{nonce}' > '{invalidMarker}'; exec /bin/sleep 90";
+        CaptureLaunchResult invalid = runtime.LaunchCaptured(negativeAccepted.Prepared,
+            ProcessStartSpec.Vector("/bin/sh", new[] { "-c", invalidScript }, scratch),
+            new OutputCaptureOptions(-1, 1, 2, RetainBytes: true));
+        negative["invalidOptions"] = Describe(invalid);
+        bool invalidRefused = invalid is CaptureLaunchResult.Failed;
+        if (invalid is CaptureLaunchResult.Started unexpected)
         {
             captureUnexpectedStart = true;
-            captureControl["unexpectedStarted"] = true;
-            using var stopCts = new CancellationTokenSource(TimeSpan.FromSeconds(operationTimeoutSeconds));
-            captureControl["emergencyTerminate"] = Describe(runtime.Terminate(startedCapture.Handle));
-            captureControl["emergencyCompletion"] = Describe(await runtime.WaitForCompletionAsync(startedCapture.Handle, stopCts.Token));
-            try
-            {
-                captureControl["captureCompletion"] = await startedCapture.Capture.Completion.WaitAsync(stopCts.Token);
-            }
-            catch (Exception ex) { captureControl["captureCompletionError"] = $"{ex.GetType().Name}: {ex.Message}"; }
-            exitCode = 1;
+            captureHandle = unexpected.Handle;
+            captureSession = unexpected.Capture;
         }
-        else if (captureLaunch is CaptureLaunchResult.Failed failed)
+        bool invalidMarkerAbsent = !File.Exists(invalidMarker);
+        negative["invalidMarkerAbsentBeforeDiscard"] = invalidMarkerAbsent;
+
+        bool ceilingRefused = false;
+        bool ceilingMarkerAbsent = !File.Exists(ceilingMarker);
+        if (invalidRefused && invalidMarkerAbsent)
         {
-            captureControl["unexpectedStarted"] = false;
-            captureControl["reasons"] = failed.Reasons;
+            string ceilingScript = $"printf '%s' '{nonce}' > '{ceilingMarker}'; exec /bin/sleep 90";
+            CaptureLaunchResult overCeiling = runtime.LaunchCaptured(negativeAccepted.Prepared,
+                ProcessStartSpec.Vector("/bin/sh", new[] { "-c", ceilingScript }, scratch),
+                new OutputCaptureOptions(OutputCaptureOptions.MaxAllowedBytes + 1, 1, 2, RetainBytes: true));
+            negative["overCeilingOptions"] = Describe(overCeiling);
+            ceilingRefused = overCeiling is CaptureLaunchResult.Failed;
+            if (overCeiling is CaptureLaunchResult.Started unexpectedCeiling)
+            {
+                captureUnexpectedStart = true;
+                captureHandle = unexpectedCeiling.Handle;
+                captureSession = unexpectedCeiling.Capture;
+            }
+            ceilingMarkerAbsent = !File.Exists(ceilingMarker);
         }
-        captureControl["markerPresentBeforeCleanup"] = File.Exists(capturedMarker);
-        DiscardResult discard = runtime.Discard(capturedAccepted.Prepared);
-        capturedPreparation = null;
-        captureControl["discard"] = Describe(discard);
-        bool markerAbsent = !File.Exists(capturedMarker);
-        captureControl["markerAbsent"] = markerAbsent;
-        bool expectedRefusal = captureLaunch is CaptureLaunchResult.Failed expectedFailure
-            && expectedFailure.Reasons.Any(reason => reason.Contains("unavailable", StringComparison.OrdinalIgnoreCase)
-                && reason.Contains("no target dispatched", StringComparison.OrdinalIgnoreCase));
-        captureControl["expectedPreDispatchRefusal"] = expectedRefusal;
-        captureControl["passed"] = !captureUnexpectedStart && expectedRefusal
-            && discard is DiscardResult.Discarded && markerAbsent;
-        captureControl["canonicalBlocker"] = captureLaunch is CaptureLaunchResult.Failed refusal
-            ? string.Join("; ", refusal.Reasons)
-            : "capture unexpectedly started";
-        if (captureControl["passed"] is not true) exitCode = 1;
+        negative["overCeilingMarkerAbsentBeforeDiscard"] = ceilingMarkerAbsent;
+        DiscardResult discard = runtime.Discard(negativeAccepted.Prepared);
+        negativePreparation = null;
+        negative["discard"] = Describe(discard);
+        negativeCapturePassed = invalidRefused && ceilingRefused && invalidMarkerAbsent && ceilingMarkerAbsent
+            && discard is DiscardResult.Discarded && !captureUnexpectedStart;
+        negative["passed"] = negativeCapturePassed;
     }
-    else
-    {
-        captureControl["passed"] = false;
-        captureControl["reason"] = "fresh preparation for capture control was refused";
-        exitCode = 1;
-    }
+    else negative["passed"] = false;
+    if (!negativeCapturePassed) exitCode = 1;
 }
 catch (Exception ex)
 {
@@ -160,28 +199,55 @@ finally
             }
             catch (Exception ex) { result["finallyCleanupError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
         }
-        if (capturedPreparation is not null)
+        if (captureHandle is not null)
         {
-            try { result["finallyDiscard"] = Describe(runtime.Discard(capturedPreparation)); }
+            try
+            {
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(operationTimeoutSeconds));
+                result["finallyCaptureTerminate"] = Describe(runtime.Terminate(captureHandle));
+                result["finallyCaptureCompletion"] = Describe(await runtime.WaitForCompletionAsync(captureHandle, cts.Token));
+                if (captureSession is not null)
+                {
+                    captureSession.Abort();
+                    try { result["finallyCaptureDrain"] = await captureSession.Completion.WaitAsync(cts.Token); }
+                    catch (Exception ex) { result["finallyCaptureDrainError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
+                }
+            }
+            catch (Exception ex) { result["finallyCaptureCleanupError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
+        }
+        if (negativePreparation is not null)
+        {
+            try { result["finallyDiscard"] = Describe(runtime.Discard(negativePreparation)); }
             catch (Exception ex) { result["finallyDiscardError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
         }
-        try { await runtime.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(operationTimeoutSeconds)); }
+        if (positivePreparation is not null)
+        {
+            try { result["finallyPositiveDiscard"] = Describe(runtime.Discard(positivePreparation)); }
+            catch (Exception ex) { result["finallyPositiveDiscardError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
+        }
+        try { await runtime.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(operationTimeoutSeconds)); runtimeDisposed = true; }
         catch (Exception ex) { result["runtimeDispose"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
     }
-    try
+    invalidMarkerAbsentAfterDispose = !File.Exists(invalidMarker);
+    ceilingMarkerAbsentAfterDispose = !File.Exists(ceilingMarker);
+    result["captureProfileControlRefusalNegativePostDispose"] = new { invalidMarkerAbsent = invalidMarkerAbsentAfterDispose, overCeilingMarkerAbsent = ceilingMarkerAbsentAfterDispose };
+    negativeCapturePassed &= invalidMarkerAbsentAfterDispose && ceilingMarkerAbsentAfterDispose;
+    if (result.TryGetValue("captureProfileControlRefusalNegative", out object? negativeControl) && negativeControl is Dictionary<string, object?> negativeData)
     {
-        Directory.Delete(scratch, recursive: true);
-        result["scratchCleanupConfirmed"] = true;
+        negativeData["passed"] = negativeCapturePassed;
+        negativeData["invalidMarkerAbsentAfterDispose"] = invalidMarkerAbsentAfterDispose;
+        negativeData["overCeilingMarkerAbsentAfterDispose"] = ceilingMarkerAbsentAfterDispose;
     }
-    catch (Exception ex)
-    {
-        result["scratchCleanupConfirmed"] = false;
-        result["scratchCleanupError"] = $"{ex.GetType().Name}: {ex.Message}";
-        exitCode = 1;
-    }
+    if (!negativeCapturePassed) exitCode = 1;
+    try { Directory.Delete(scratch, recursive: true); scratchCleanupConfirmed = true; }
+    catch (Exception ex) { result["scratchCleanupError"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
+    result["runtimeDisposeConfirmed"] = runtimeDisposed;
+    result["scratchCleanupConfirmed"] = scratchCleanupConfirmed;
+    bool controlsPassed = normalConfirmed && positiveCapturePassed && negativeCapturePassed && !captureUnexpectedStart && runtimeDisposed && scratchCleanupConfirmed && exitCode == 0;
+    result["canonicalSupported"] = controlsPassed;
     result["endedAtUtc"] = DateTimeOffset.UtcNow;
     result["exitCode"] = exitCode;
-    result["summary"] = new { lifecyclePositiveControlPassed = normalConfirmed, captureRefusalControlPassed = result.TryGetValue("captureRefusalControl", out object? c) && c is Dictionary<string, object?> cd && cd.TryGetValue("passed", out object? p) && p is true, captureUnexpectedStart, canonicalSupported = false };
+    result["summary"] = new { lifecyclePositiveControlPassed = normalConfirmed, captureProfileControlPositivePassed = positiveCapturePassed, captureProfileControlRefusalNegativePassed = negativeCapturePassed, captureUnexpectedStart, runtimeDisposed, scratchCleanupConfirmed, canonicalSupported = controlsPassed, canonicalSupportedScope = result["canonicalSupportedScope"] };
     try
     {
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
@@ -235,8 +301,7 @@ static async Task<object> ReadPackageIdentityAsync()
         if (File.Exists(manifest))
         {
             using var document = JsonDocument.Parse(await File.ReadAllTextAsync(manifest));
-            var runtimePackage = document.RootElement.EnumerateArray()
-                .First(item => item.GetProperty("id").GetString() == "Gagamba.Runtime");
+            var runtimePackage = document.RootElement.EnumerateArray().First(item => item.GetProperty("id").GetString() == "Gagamba.Runtime");
             return new { manifestPath = manifest, packageId = runtimePackage.GetProperty("id").GetString(), version = runtimePackage.GetProperty("version").GetString(), sourceCommit = runtimePackage.GetProperty("commit").GetString(), packageSha256 = runtimePackage.GetProperty("sha256").GetString() };
         }
         directory = Directory.GetParent(directory)?.FullName;

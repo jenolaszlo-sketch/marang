@@ -32,7 +32,7 @@ def main():
               'host': {'platform': platform.platform(), 'machine': platform.machine(),
                        'effectiveUid': os.geteuid(), 'tempDirectory': environment.get('TMPDIR'),
                        'imageOS': environment.get('ImageOS'), 'imageVersion': environment.get('ImageVersion')},
-              'notExercised': ['Gagamba producer full macOS source suite: exact unpublished producer commit is not remotely available.',
+              'notExercised': ['Gagamba producer full macOS source suite: the separately qualified GP-M5 producer at source 0c1f05e199588622a5987f95a9149374f5bd858b (evidence commit 2c8f4f7) is available, but this Marang run does not execute that producer source suite; native profile preflight controls do not prove Marang M5 semantics.',
                                'Owner-death/setsid escape containment, hostile isolation, power loss and generic exactly-once effects.']}
 
     def save():
