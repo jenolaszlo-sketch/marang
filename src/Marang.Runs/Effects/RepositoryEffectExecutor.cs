@@ -30,7 +30,7 @@ public sealed record RepositoryEffectExecutionResult(
 public sealed class RepositoryEffectExecutor(
     ControlledRepository repository,
     SqliteRepositoryEffectJournal journal,
-    RepositoryEffectAuthority authority)
+    RepositoryEffectAuthority authority, IRepositoryEffectExecutionGuard? executionGuard = null)
 {
     public async Task<RepositoryEffectExecutionResult> ExecuteAsync(
         RepositoryEffectIntent intent,
@@ -134,6 +134,11 @@ public sealed class RepositoryEffectExecutor(
         {
             record = await Block(record, observed, classification, cancellationToken).ConfigureAwait(false);
             return new(record, classification, false, "repository-effect.state-changed-before-write");
+        }
+        if (executionGuard is not null)
+        {
+            var refusal = await executionGuard.CheckBeforeWriteAsync(intent, observed, authenticatedContext, cancellationToken).ConfigureAwait(false);
+            if (refusal is not null) return new(record, classification, false, refusal);
         }
         if (!priorEffects.Any(item => item.Intent.EffectId != intent.EffectId &&
             item.Stage is (RepositoryEffectStage.AppliedObserved or RepositoryEffectStage.ValidationPassed or RepositoryEffectStage.ValidationFailed)))

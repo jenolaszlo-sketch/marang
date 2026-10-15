@@ -26,7 +26,9 @@ public sealed record RepositoryEffectValidation(
 public sealed record RepositoryEffectAuthorizationEvidence(
     string IntentDigest, string TargetPath, string RequestIdentity, string Status,
     string TenantId, string SubjectId, string WorkflowId, string RevisionId,
-    string? DecisionReason, string? SnapshotIdentity, string? SnapshotVersion, DateTimeOffset CheckedAt);
+    string? DecisionReason, string? SnapshotIdentity, string? SnapshotVersion, DateTimeOffset CheckedAt,
+    string? GraphDigest = null, Guid? DependentEffectId = null, Guid? PrerequisiteEffectId = null, string? PrerequisiteCausalDigest = null,
+    string? ObservedStateDigest = null);
 
 public sealed record RepositoryEffectRecord(
     RepositoryEffectIntent Intent,

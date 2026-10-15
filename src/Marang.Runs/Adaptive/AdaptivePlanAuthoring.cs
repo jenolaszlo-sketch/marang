@@ -1,5 +1,7 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Marang.Runs.Effects;
 using Penghou.Fuwen;
 using Penghou.Fuwen.Compiler;
 using Penghou.Fuwen.Zhinu;
@@ -17,7 +19,11 @@ public sealed record AdaptiveWorkSpec(string LogicalId, string Title, string Req
 
 /// <summary>Immutable Fuwen definitions retained with their canonical lineage envelope.</summary>
 public sealed record AdaptivePlanArchive(string DefinitionFingerprint, string DefinitionBase64,
-    string EnvelopeFingerprint, string EnvelopeBase64, Dictionary<string, string> BranchDefinitions);
+    string EnvelopeFingerprint, string EnvelopeBase64, Dictionary<string, string> BranchDefinitions)
+{
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public RepositoryEffectGraph? EffectGraph { get; init; }
+}
 
 public sealed record AuthoredAdaptiveRevision(AdaptiveRevision Revision, WorkflowRegistry Registry);
 
@@ -34,6 +40,9 @@ public static class AdaptivePlanAuthoring
     public const string RepositoryEffectAuthorityProfile = "m3/controlled-repository/v1";
     private static readonly DescriptorReference EffectActivity = new(DescriptorKind.Activity, "aaaw.repository-effect", "1",
         new ContentDigest("sha256", "descriptor/v1", AdaptiveRevisionContracts.Digest("aaaw.repository-effect/reconcile-before-replay/v1")));
+    public const string RepositoryEffectGraphAuthorityProfile = "m4/controlled-effect-graph/v1";
+    private static readonly DescriptorReference GraphEffectActivity = new(DescriptorKind.Activity, "aaaw.repository-causal-effect", "1",
+        new ContentDigest("sha256", "descriptor/v1", AdaptiveRevisionContracts.Digest("aaaw.repository-causal-effect/accepted-prerequisites/v1")));
 
     public static Task<AuthoredAdaptiveRevision> AuthorAsync(Guid workflowId, string revisionId, string? parent,
         string goal, string reason, string creator, AdaptiveWorkSpec[] work, FuwenZhinuExecutionPorts ports,
@@ -41,6 +50,17 @@ public static class AdaptivePlanAuthoring
     {
         if (work.Any(w => w.IsRepositoryEffect)) throw new ArgumentException("Repository mutations require explicit M3 authoring.");
         return AuthorCoreAsync(workflowId, revisionId, parent, goal, reason, creator, work, ports, registry, cancellationToken);
+    }
+
+    public static Task<AuthoredAdaptiveRevision> AuthorEffectGraphAsync(Guid workflowId, string revisionId, string? parent,
+        string goal, string reason, string creator, AdaptiveWorkSpec[] work, RepositoryEffectGraph graph,
+        FuwenZhinuExecutionPorts ports, WorkflowRegistry? registry = null, CancellationToken cancellationToken = default)
+    {
+        if (parent is null || !graph.Verify() || graph.WorkflowId != workflowId || graph.RevisionId != revisionId ||
+            graph.ParentRevisionId != parent || work.Any(w => w.AuthorityDigest != RepositoryEffectGraphAuthorityProfile))
+            throw new ArgumentException("M4 admission requires an exact approved-successor graph in the controlled profile.");
+        ValidateGraphWork(work, graph);
+        return AuthorCoreAsync(workflowId, revisionId, parent, goal, reason, creator, work, ports, registry, cancellationToken, graph);
     }
 
     /// <summary>Explicit M3 admission: one reconciled effect protocol branch and otherwise read/report work.</summary>
@@ -56,15 +76,16 @@ public static class AdaptivePlanAuthoring
 
     private static async Task<AuthoredAdaptiveRevision> AuthorCoreAsync(Guid workflowId, string revisionId, string? parent,
         string goal, string reason, string creator, AdaptiveWorkSpec[] work, FuwenZhinuExecutionPorts ports,
-        WorkflowRegistry? registry, CancellationToken cancellationToken)
+        WorkflowRegistry? registry, CancellationToken cancellationToken, RepositoryEffectGraph? graph = null)
     {
         work = JsonSerializer.Deserialize<AdaptiveWorkSpec[]>(JsonSerializer.Serialize(work))!;
         if (work.Length is < 2 or > 16 || work.Select(s => s.LogicalId).Distinct().Count() != work.Length)
             throw new ArgumentException("M1 requires a bounded parallel plan with unique logical steps.");
         var independent = work.Where(s => s.Dependencies.Length == 0).ToArray();
         var joins = work.Where(s => s.Dependencies.Length > 0).ToArray();
-        if (independent.Length < 2 || joins.Length > 1 || joins.Any(j =>
+        if (graph is null && (independent.Length < 2 || joins.Length > 1 || joins.Any(j =>
             !j.Dependencies.Order(StringComparer.Ordinal).SequenceEqual(independent.Select(s => s.LogicalId).Order(StringComparer.Ordinal))))
+            )
             throw new ArgumentException("M1 supports independent branches and a single join of all branches.");
         foreach (var spec in work)
             if (string.IsNullOrWhiteSpace(spec.Requirement) || string.IsNullOrWhiteSpace(spec.Provenance) || spec.ExecutionId == Guid.Empty)
@@ -112,7 +133,8 @@ public static class AdaptivePlanAuthoring
             archivedDefinitions.Add(spec.LogicalId, Convert.ToBase64String(registration.Definition.CanonicalBytes.Span));
         }
         var archive = new AdaptivePlanArchive(definition.ExecutionFingerprint, Convert.ToBase64String(definition.CanonicalBytes.Span),
-            envelope.EnvelopeFingerprint, Convert.ToBase64String(envelope.CanonicalBytes.Span), archivedDefinitions);
+            envelope.EnvelopeFingerprint, Convert.ToBase64String(envelope.CanonicalBytes.Span), archivedDefinitions)
+        { EffectGraph = graph };
         var revision = new AdaptiveRevision(workflowId, revisionId, parent, JsonSerializer.Serialize(archive), reason, creator, branches.ToArray());
         VerifyArchive(revision);
         return new AuthoredAdaptiveRevision(revision, registry);
@@ -138,13 +160,14 @@ public static class AdaptivePlanAuthoring
             if (plan.Name != branch.LogicalId || plan.Nodes.OfType<ActivityNode>().Single().Name != branch.LogicalId)
                 throw new WorkflowStateException("Manifest branch differs from its admitted Fuwen definition.");
             var callable = plan.Nodes.OfType<ActivityNode>().Single().Activity;
-            var isEffect = callable == EffectActivity;
+            var isEffect = callable == EffectActivity || callable == GraphEffectActivity;
             if (plan.Nodes.Count != 2 || (callable != Activity && !isEffect) ||
                 plan.Nodes.OfType<ReturnNode>().Count() != 1)
                 throw new WorkflowStateException("Candidate exceeds the finite admitted execution profiles.");
             var input = JsonSerializer.Deserialize<string>(branch.Execution.InputJson!)!;
             using var facts = JsonDocument.Parse(input);
-            if (isEffect && (revision.ParentRevisionId is null || branch.AuthorityDigest != RepositoryEffectAuthorityProfile || branch.Dependencies.Length != 0 ||
+            var isGraphEffect = callable == GraphEffectActivity;
+            if (isEffect && (revision.ParentRevisionId is null || branch.AuthorityDigest != (isGraphEffect ? RepositoryEffectGraphAuthorityProfile : RepositoryEffectAuthorityProfile) || (!isGraphEffect && branch.Dependencies.Length != 0) ||
                 facts.RootElement.GetProperty("Input").GetString() is not { Length: 64 } effectDigest || effectDigest.Any(c => !Uri.IsHexDigit(c) || char.IsUpper(c))))
                 throw new WorkflowStateException("Effect branch must bind an immutable approved-successor intent in the controlled profile.");
             if (facts.RootElement.GetProperty("LogicalId").GetString() != branch.LogicalId ||
@@ -168,11 +191,19 @@ public static class AdaptivePlanAuthoring
         }
         var independent = expectedWork.Where(s => s.Dependencies.Length == 0).ToArray();
         var joins = expectedWork.Where(s => s.Dependencies.Length > 0).ToArray();
-        if (expectedWork.Any(w => w.IsRepositoryEffect) && (expectedWork.Count(w => w.IsRepositoryEffect) != 1 ||
+        if (archive.EffectGraph is { } graph)
+        {
+            if (!graph.Verify() || graph.WorkflowId != revision.WorkflowId || graph.RevisionId != revision.RevisionId || graph.ParentRevisionId != revision.ParentRevisionId ||
+                expectedWork.Any(w => w.AuthorityDigest != RepositoryEffectGraphAuthorityProfile))
+                throw new WorkflowStateException("M4 graph does not bind the immutable admitted revision.");
+            ValidateGraphWork(expectedWork.ToArray(), graph);
+        }
+        else if (expectedWork.Any(w => w.IsRepositoryEffect) && (expectedWork.Count(w => w.IsRepositoryEffect) != 1 ||
             expectedWork.Any(w => w.AuthorityDigest != RepositoryEffectAuthorityProfile)))
             throw new WorkflowStateException("M3 archives require one controlled effect branch and the host effect authority profile.");
-        if (independent.Length < 2 || joins.Length > 1 || joins.Any(j =>
+        if (archive.EffectGraph is null && (independent.Length < 2 || joins.Length > 1 || joins.Any(j =>
             !j.Dependencies.Order(StringComparer.Ordinal).SequenceEqual(independent.Select(s => s.LogicalId).Order(StringComparer.Ordinal))))
+            )
             throw new WorkflowStateException("Manifest dependencies exceed the admitted phase profile.");
         var expected = BuildPlan("aaaw", revision.RevisionId, expectedWork.ToArray());
         if (WorkflowPlanIdentity.ComputeExecutionFingerprint(expected) != definition.ExecutionFingerprint)
@@ -208,14 +239,36 @@ public static class AdaptivePlanAuthoring
     {
         var archive = JsonSerializer.Deserialize<AdaptivePlanArchive>(revision.PlanEnvelopeJson)!;
         return WorkflowDefinitionDocument.LoadVerified(archive.DefinitionFingerprint, Convert.FromBase64String(archive.DefinitionBase64)).ReadPlan()
-            .Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity);
+            .Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity || a.Activity == GraphEffectActivity);
     }
 
     public static bool IsRepositoryEffectBranch(AdaptiveRevision revision, AdaptiveBranch branch)
     {
         var archive = JsonSerializer.Deserialize<AdaptivePlanArchive>(revision.PlanEnvelopeJson)!;
         var definition = WorkflowDefinitionDocument.LoadVerified(branch.Execution.DefinitionFingerprint!, Convert.FromBase64String(archive.BranchDefinitions[branch.LogicalId]));
-        return definition.ReadPlan().Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity);
+        return definition.ReadPlan().Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity || a.Activity == GraphEffectActivity);
+    }
+
+    public static RepositoryEffectGraph? ReadEffectGraph(AdaptiveRevision revision)
+    {
+        VerifyArchive(revision);
+        return JsonSerializer.Deserialize<AdaptivePlanArchive>(revision.PlanEnvelopeJson)!.EffectGraph;
+    }
+
+    private static void ValidateGraphWork(AdaptiveWorkSpec[] work, RepositoryEffectGraph graph)
+    {
+        var selected = graph.Effects.ToDictionary(s => s.LogicalId, StringComparer.Ordinal);
+        var names = work.Select(w => w.LogicalId).ToHashSet(StringComparer.Ordinal);
+        if (work.Count(w => w.IsRepositoryEffect) != selected.Count || work.Any(w => w.Dependencies.Distinct().Count() != w.Dependencies.Length || w.Dependencies.Any(d => !names.Contains(d))))
+            throw new WorkflowStateException("Runtime effect dependencies must exactly match the selected causal graph.");
+        foreach (var w in work.Where(w => w.IsRepositoryEffect))
+        {
+            if (!selected.TryGetValue(w.LogicalId, out var s) || w.Input != s.Effect.CausalDigest || w.ExecutionId != s.Effect.Intent.ExecutionId ||
+                w.AcceptReuse != s.Reuse || s.Effect.Intent.LogicalStepId != w.LogicalId ||
+                !w.Dependencies.Order(StringComparer.Ordinal).SequenceEqual(s.Effect.Prerequisites.Select(d => graph.Effects.Single(x => x.Effect.Intent.EffectId == d.EffectId).LogicalId).Order(StringComparer.Ordinal)))
+                throw new WorkflowStateException("Effect execution, input, reuse and causal prerequisite identities must bind the graph.");
+        }
+        _ = Levels(work); // Reject all runtime dependency cycles, including non-effect branches.
     }
 
     private static async Task<WorkflowAdmissionResult> Admit(WorkflowPlan plan, CancellationToken ct)
@@ -229,7 +282,10 @@ public static class AdaptivePlanAuthoring
                 new CallableSignature([new CallableParameter("value", StringType)], StringType),
                 // The invoked protocol embeds an immutable effect key and reconciles before writing; raw replacement is never exposed.
                 CallableEffect.Write, CallableIdempotency.Idempotent, CallableRetrySafety.Safe)));
-        var profile = plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity)
+        if (plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == GraphEffectActivity))
+            descriptors.Add(new TrustedCatalogueDescriptor(GraphEffectActivity, callableContract: new CallableContract(
+                new CallableSignature([new CallableParameter("value", StringType)], StringType), CallableEffect.Write, CallableIdempotency.Idempotent, CallableRetrySafety.Safe)));
+        var profile = plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == GraphEffectActivity) ? "aaaw-m4/controlled-graph/v1" : plan.Nodes.OfType<ActivityNode>().Any(a => a.Activity == EffectActivity)
             ? "aaaw-m3/controlled-repository/v1" : "aaaw-m1/read-report/v1";
         var result = await new WorkflowAdmissionService(new WorkflowCompiler(new InMemoryTrustedCatalogue(descriptors),
             capabilityPolicy: new CapabilityGrantPolicy(profile, []))).AdmitAsync(plan, cancellationToken: ct);
@@ -240,18 +296,39 @@ public static class AdaptivePlanAuthoring
     private static WorkflowPlan BuildPlan(string name, string revision, AdaptiveWorkSpec[] work)
     {
         var paths = work.ToDictionary(s => s.LogicalId, s => StructuralNodeIdentity.Create(name, s.LogicalId));
-        var nodes = work.Select(s => (WorkflowNode)new ActivityNode(s.LogicalId, paths[s.LogicalId], s.IsRepositoryEffect ? EffectActivity : Activity,
+        var nodes = work.Select(s => (WorkflowNode)new ActivityNode(s.LogicalId, paths[s.LogicalId], Descriptor(s),
             [new ArgumentBinding("value", new InputBinding([]))], StringType)).ToList();
         var returnPath = StructuralNodeIdentity.Create(name, "return_result");
         nodes.Add(new ReturnNode("return_result", returnPath, new NodeOutputBinding(paths[work[^1].LogicalId], [])));
         var phases = new List<WorkflowExecutionPhase>();
-        foreach (var group in work.GroupBy(s => s.Dependencies.Length == 0 ? 0 : 1).OrderBy(g => g.Key))
+        var graphProfile = work.Any(w => w.IsRepositoryEffect && w.AuthorityDigest == RepositoryEffectGraphAuthorityProfile);
+        var levels = graphProfile ? Levels(work) : null;
+        foreach (var group in work.GroupBy(s => levels is null ? s.Dependencies.Length == 0 ? 0 : 1 : levels[s.LogicalId]).OrderBy(g => g.Key))
             phases.Add(new WorkflowExecutionPhase(group.Select(s => paths[s.LogicalId]).ToArray()));
         phases.Add(new WorkflowExecutionPhase([returnPath]));
         return new WorkflowPlan(FuwenContracts.IrVersion, "fuwen-language/v1", FuwenContracts.CompilerSemanticVersion,
             FuwenContracts.CanonicalJsonVersion, FuwenContracts.ExecutionFingerprintVersion, name, revision,
-            StringType, StringType, work.Any(w => w.IsRepositoryEffect) ? "aaaw-m3/repository-effects/v1" : "aaaw-m1/routing-v1", [],
-            work.Select(w => w.IsRepositoryEffect ? EffectActivity : Activity).Distinct().ToArray(), new CapabilityManifest([]), nodes,
+            StringType, StringType, graphProfile ? "aaaw-m4/effect-graph/v1" : work.Any(w => w.IsRepositoryEffect) ? "aaaw-m3/repository-effects/v1" : "aaaw-m1/routing-v1", [],
+            work.Select(Descriptor).Distinct().ToArray(), new CapabilityManifest([]), nodes,
             new WorkflowExecutionOrder([new WorkflowExecutionRegion(name, phases)]));
+    }
+
+    private static DescriptorReference Descriptor(AdaptiveWorkSpec s) => !s.IsRepositoryEffect ? Activity :
+        s.AuthorityDigest == RepositoryEffectGraphAuthorityProfile ? GraphEffectActivity : EffectActivity;
+
+    private static Dictionary<string, int> Levels(AdaptiveWorkSpec[] work)
+    {
+        var specs = work.ToDictionary(s => s.LogicalId, StringComparer.Ordinal);
+        var levels = new Dictionary<string, int>(StringComparer.Ordinal);
+        var visiting = new HashSet<string>(StringComparer.Ordinal);
+        int Level(string id)
+        {
+            if (levels.TryGetValue(id, out var known)) return known;
+            if (!specs.TryGetValue(id, out var spec) || !visiting.Add(id)) throw new WorkflowStateException("Dependencies must resolve and be acyclic.");
+            var level = spec.Dependencies.Length == 0 ? 0 : spec.Dependencies.Max(Level) + 1;
+            visiting.Remove(id); levels.Add(id, level); return level;
+        }
+        foreach (var s in work) Level(s.LogicalId);
+        return levels;
     }
 }

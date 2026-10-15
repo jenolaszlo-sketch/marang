@@ -90,6 +90,14 @@ jobs:
           path: artifacts/aaaw-m3/
           if-no-files-found: warn
 
+      - name: Upload M4 qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: aaaw-m4-evidence
+          path: artifacts/aaaw-m4/
+          if-no-files-found: warn
+
   ui:
     runs-on: ubuntu-latest
     defaults:

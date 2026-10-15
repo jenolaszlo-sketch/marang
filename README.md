@@ -167,3 +167,12 @@ release or push is part of qualification.
 
 The [M3 qualification report](docs/aaaw-m3/evidence.md) records exact source/package identities,
 all ten killed-process barriers, validation-driven correction and the controlled-checkout limits.
+
+M4 coordinates multiple causal repository effects using the same bounded writer and pinned
+packages. Its immutable graph separates current accepted prerequisites from physical history,
+supports explicit upstream adoption and downstream replacement, and binds corrective work to
+the actual checkout. See [the M4 contract](docs/aaaw-m4/contracts.md),
+[operator guidance](docs/aaaw-m4/operator.md) and
+[ADR 0019](docs/decisions/0019-aaaw-m4-causal-effect-coordination.md).
+Reproduce with `eng/qualify-aaaw-m4.ps1`; this remains an experimental host profile without
+package publication, rollback or general external-effect guarantees.

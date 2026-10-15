@@ -59,6 +59,7 @@ internal static class Program
             else if (phase == "supervisor-delegation") await SupervisorDelegationRecoveryProbe.RunAsync(dir, barrier, interactive);
             else if (phase == "supervisor-view") await SupervisorOperatorProbe.RunAsync(dir, interactive);
             else if (phase == "repository-effect") await RepositoryEffectProbe.RunAsync(dir, barrier, resume);
+            else if (phase == "multi-effect") await MultiEffectProbe.RunAsync(dir, barrier, resume);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

@@ -245,6 +245,7 @@ public sealed class SupervisorCatchUp(IZhinuSqliteDatabase database, Func<string
             "WorkflowCancelled" => "Workflow cancelled; external effects may still exist.",
             "RepositoryEffect" => "Repository effect " + Field("effectId") + ": " + Field("stage") + "; " + Field("classification") +
                 (Field("validationPassed") == "" ? "" : "; validation passed: " + Field("validationPassed")),
+            "EffectGraphValidation" => "Effect graph full validation: " + Field("passed") + "; state " + Field("targetStateDigest"),
             "SupervisorDiscussionOpened" => "Decision discussion opened: " + Field("Summary"),
             "SupervisorDiscussionResolved" => "Discussion decision recorded: " + Field("Choice"),
             "SupervisorDiscussionDismissed" => "Discussion dismissed; the active workflow remains unchanged.",
