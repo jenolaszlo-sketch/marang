@@ -228,7 +228,23 @@ internal static class AdaptiveRevisionProbe
         }
         // A committed revision's new pending runs are already durable. Dispatch can be replayed safely.
         await Dispatch(active);
-        await WaitFor(() => Task.FromResult(File.Exists(Path.Combine(directory, "replacement.started"))), "replacement execution");
+        await WaitFor(async () =>
+        {
+            await Dispatch(active);
+            if (!File.Exists(Path.Combine(directory, "replacement.started"))) return false;
+            var replacement = active.Branches.Single(b => b.LogicalId == "delegated");
+            var binding = await journal.GetBindingAsync(replacement.Execution.Id, ports.InputDigest(replacement));
+            return binding is not null && (await journal.ListAsync(binding.DelegationId))
+                .Any(operation => operation.Capture is not null && operation.Observation is not null);
+        }, "replacement execution with durable provider capture");
+        if (barrier == "replacement-running" && !File.Exists(Path.Combine(directory, "barrier-used")))
+        {
+            var replacement = active.Branches.Single(b => b.LogicalId == "delegated");
+            var binding = (await journal.GetBindingAsync(replacement.Execution.Id, ports.InputDigest(replacement)))!;
+            var operation = (await journal.ListAsync(binding.DelegationId)).Single(r => r.Capture is not null && r.Observation is not null);
+            File.WriteAllText(Path.Combine(directory, "replacement-capture.json"), JsonSerializer.Serialize(new
+            { replacement.Execution.Id, DelegationId = binding.DelegationId.Value, ProviderHandle = operation.Capture!.Handle.Value, HandleCaptured = true }));
+        }
         await Barrier(directory, barrier, "replacement-running");
         File.WriteAllText(Path.Combine(directory, "release-work"), "continue");
         await WaitFor(async () =>

@@ -72,6 +72,13 @@ public sealed class AdaptiveRevisionProcessTests
                 }
                 await Task.Delay(25, TestContext.Current.CancellationToken);
             }
+            if (barrier == "replacement-running")
+            {
+                using var capture = JsonDocument.Parse(File.ReadAllText(Path.Combine(directory, "replacement-capture.json")));
+                capture.RootElement.GetProperty("HandleCaptured").GetBoolean().Should().BeTrue();
+                capture.RootElement.GetProperty("DelegationId").GetGuid().Should().NotBe(Guid.Empty);
+                capture.RootElement.GetProperty("ProviderHandle").GetString().Should().NotBeNullOrWhiteSpace();
+            }
             killedProcess = first.Id;
             first.Kill(entireProcessTree: true);
             await first.WaitForExitAsync(TestContext.Current.CancellationToken);
