@@ -1,0 +1,10 @@
+Test run for C:\Users\Laszlos\source\repos\Solo\aaaw-m5\marang\tests\Marang.Tests\bin\Release\net8.0\Marang.Tests.dll (.NETCoreApp,Version=v8.0)
+A total of 1 test files matched the specified pattern.
+Test run for C:\Users\Laszlos\source\repos\Solo\aaaw-m5\marang\tests\Marang.Tests\bin\Release\net10.0\Marang.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: C:\Users\Laszlos\source\repos\Solo\aaaw-m5\marang\artifacts\aaaw-m5\windows\baseline-tests\Laszlos_LAPTOP-KBD8D8JG_2026-10-15_17_00_14_net8.0.trx
+
+Passed!  - Failed:     0, Passed:   201, Skipped:     0, Total:   201, Duration: 36 s - Marang.Tests.dll (net8.0)
+Results File: C:\Users\Laszlos\source\repos\Solo\aaaw-m5\marang\artifacts\aaaw-m5\windows\baseline-tests\Laszlos_LAPTOP-KBD8D8JG_2026-10-15_17_00_15_net10.0.trx
+
+Passed!  - Failed:     0, Passed:   245, Skipped:     0, Total:   245, Duration: 6 m 11 s - Marang.Tests.dll (net10.0)

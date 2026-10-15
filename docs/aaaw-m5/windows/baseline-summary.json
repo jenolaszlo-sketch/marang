@@ -1,0 +1,49 @@
+{
+  "build": "PASS: zero warnings and errors",
+  "sdk": "10.0.401",
+  "sourceCommit": "7833bbe1e8d84e7b128e520ff96d7a4e9e9f94b7",
+  "qualification": "Semantic regression passes; overall script failed at formatting gate before tests. Tests separately executed on unchanged clean source.",
+  "tests": [
+    {
+      "passed": 201,
+      "skipped": 0,
+      "failed": 0,
+      "framework": "net8.0"
+    },
+    {
+      "passed": 245,
+      "skipped": 0,
+      "failed": 0,
+      "framework": "net10.0"
+    }
+  ],
+  "schema": "aaaw-m5-windows-baseline/v1",
+  "runtimes": [
+    "Microsoft.AspNetCore.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.AspNetCore.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.AspNetCore.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.NETCore.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.NETCore.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.NETCore.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.WindowsDesktop.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]",
+    "Microsoft.WindowsDesktop.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]",
+    "Microsoft.WindowsDesktop.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]"
+  ],
+  "sourceStatus": "",
+  "barriers": [
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "K6",
+    "K7",
+    "K8",
+    "K9",
+    "K10",
+    "K11",
+    "K12"
+  ],
+  "format": "FAIL: AdaptivePlanAuthoring.cs lines 282-283",
+  "observedAt": "2026-10-15T09:09:45.1844451+00:00"
+}

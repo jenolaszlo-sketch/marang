@@ -1,0 +1,15 @@
+{
+  "schema": "aaaw-m5-baseline-start/v1",
+  "observedAt": "2026-10-15T02:39:44.403078+00:00",
+  "qualificationLogCreatedAt": "2026-10-15T02:39:11.015616+00:00",
+  "repository": "Marang",
+  "branch": "codex/aaaw-m5-marang",
+  "commit": "7833bbe1e8d84e7b128e520ff96d7a4e9e9f94b7",
+  "gitStatusAtStart": "clean",
+  "gitStatusObservedNow": "",
+  "operatingSystem": "Windows-11-10.0.26200-SP0",
+  "architecture": "AMD64",
+  "command": "./eng/qualify-aaaw-m4.ps1 -ReuseQualifiedPackages",
+  "evidenceDirectoryCreatedBeforeQualification": "docs/aaaw-m5/{windows,linux,macos,reviews}",
+  "historicalEvidenceModified": false
+}
