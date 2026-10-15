@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RestoreConfigFile>$(MSBuildThisFileDirectory)..\..\NuGet.AAAWM1.Config</RestoreConfigFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Gagamba.Runtime" Version="0.1.0-preview.4-aaaw-m5.1" />
+    <Content Include="..\aaaw-m5-runtime-packages.json" Link="eng\aaaw-m5-runtime-packages.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

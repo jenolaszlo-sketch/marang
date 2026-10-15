@@ -1,0 +1,52 @@
+name: AAAW M5 native macOS qualification
+
+on:
+  push:
+    branches: [codex/aaaw-m5-marang]
+    paths:
+      - '.github/workflows/aaaw-m5-macos.yml'
+      - 'eng/qualify-aaaw-m5-macos.py'
+      - 'eng/aaaw-m5-macos-probe/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-macos:
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    env:
+      UseSharedCompilation: 'false'
+      MSBUILDDISABLENODEREUSE: '1'
+      DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.426
+            10.0.401
+      - name: Use physical task temporary directory
+        shell: bash
+        run: |
+          physical_temp="$(cd "$RUNNER_TEMP" && pwd -P)/aaaw-m5"
+          mkdir -p "$physical_temp"
+          echo "TMPDIR=$physical_temp/" >> "$GITHUB_ENV"
+      - name: Attempt native qualification and preserve refusals
+        run: python3 eng/qualify-aaaw-m5-macos.py
+      - name: Upload original evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: aaaw-m5-macos-${{ github.sha }}
+          path: |
+            artifacts/aaaw-m5/macos-qualification/*.json
+            artifacts/aaaw-m5/macos-qualification/*.trx
+            artifacts/aaaw-m5/macos-qualification/captured-artifacts.zip
+          if-no-files-found: error
+          retention-days: 30
