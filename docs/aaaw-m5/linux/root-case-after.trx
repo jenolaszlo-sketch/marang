@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="c75d3b17-2f5e-41ef-b352-72712f7af8d1" name="@LAPTOP-KBD8D8JG 2026-10-15 17:24:09" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-15T17:24:09.7128747+08:00" queuing="2026-10-15T17:24:09.7128747+08:00" start="2026-10-15T17:24:08.5277492+08:00" finish="2026-10-15T17:24:09.7171414+08:00" />
+  <TestSettings name="default" id="5aa69f17-ee59-4477-a38a-2839d44628cd">
+    <Deployment runDeploymentRoot="_LAPTOP-KBD8D8JG_2026-10-15_17_24_09" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="097c0c67-79a0-4dab-aa01-8305afc7cf83" testId="59c837f9-652a-8eb1-9d24-469a78df967c" testName="Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities" computerName="LAPTOP-KBD8D8JG" duration="00:00:00.0694092" startTime="2026-10-15T17:24:09.5311764+08:00" endTime="2026-10-15T17:24:09.6074452+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="097c0c67-79a0-4dab-aa01-8305afc7cf83" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities" storage="/home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/marang.tests/bin/release/net8.0/marang.tests.dll" id="59c837f9-652a-8eb1-9d24-469a78df967c">
+      <Execution id="097c0c67-79a0-4dab-aa01-8305afc7cf83" />
+      <TestMethod codeBase="/home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="Marang.Tests.RepositoryPortabilityTests" name="Distinct_case_sensitive_git_roots_have_distinct_repository_identities" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="59c837f9-652a-8eb1-9d24-469a78df967c" executionId="097c0c67-79a0-4dab-aa01-8305afc7cf83" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="1" executed="1" passed="1" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v4.0.0-pre.4+89176d7f8d (64-bit .NET 8.0.32)
+[xUnit.net 00:00:00.16]   Discovering: Marang.Tests
+[xUnit.net 00:00:00.40]   Discovered:  Marang.Tests
+[xUnit.net 00:00:00.55]   Starting:    Marang.Tests
+[xUnit.net 00:00:00.68]   Finished:    Marang.Tests (ID = 'c904b089bbb2dcf3db239f56cbd278b4c055f88b85f54c17fda401cf94b18236')
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

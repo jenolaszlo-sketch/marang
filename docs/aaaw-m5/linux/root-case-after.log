@@ -1,0 +1,13 @@
+  Marang -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang/bin/Release/net8.0/Marang.dll
+  Marang.Codex -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Codex/bin/Release/net8.0/Marang.Codex.dll
+  Marang.DelegationAuthority -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.DelegationAuthority/bin/Release/net8.0/Marang.DelegationAuthority.dll
+  Marang.Mcp -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Mcp/bin/Release/net8.0/Marang.Mcp.dll
+  Marang.Hufu -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Hufu/bin/Release/net8.0/Marang.Hufu.dll
+  Marang.Runs -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Runs/bin/Release/net8.0/Marang.Runs.dll
+  Marang.Http -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Http/bin/Release/net8.0/Marang.Http.dll
+  Marang.Tests -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll
+Test run for /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)
+A total of 1 test files matched the specified pattern.
+Results File: /home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux/reproducer/_LAPTOP-KBD8D8JG_2026-10-15_17_24_09_net8.0.trx
+
+Passed!  - Failed:     0, Passed:     1, Skipped:     0, Total:     1, Duration: 76 ms - Marang.Tests.dll (net8.0)

@@ -17,7 +17,8 @@ public sealed class ControlledRepository
         _allowedPaths = allowedPaths;
     }
 
-    public string RepositoryId => RepositoryStateSnapshot.Hash("marang-repository-root-v1\n" + _root.ToUpperInvariant());
+    public string RepositoryId => RepositoryStateSnapshot.Hash("marang-repository-root-v1\n" +
+        (OperatingSystem.IsWindows() ? _root.ToUpperInvariant() : _root));
 
     public static ControlledRepository Open(string root, IEnumerable<string> allowedTargetPaths)
     {

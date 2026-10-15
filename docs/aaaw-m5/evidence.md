@@ -49,8 +49,45 @@ ASP.NET/Core runtimes 8.0.31 and 10.0.12 were installed without replacing the
 system SDK. These are environment observations, not native runtime acceptance.
 
 The first scratch regression build failed xUnit cancellation-token analyzers;
-no behavioral test ran. The test was corrected before rerunning. Root-case
-identity is a suspected portability defect until the native assertion executes.
+no behavioral test ran. Subsequent builds identified a missing exact 8.0.31
+Linux apphost pack in the baseline xUnit executable project's restored graph.
+The task-local SDK 8.0.426 and an explicit dependency-only restore of
+`Microsoft.NETCore.App.Host.linux-x64` 8.0.31 supplied the missing prerequisite;
+no product/test-project workaround was applied.
+
+### D1: checkout-root identity collision (observed)
+
+Classification: Marang platform assumption, not a Zhinu/Gagamba/Hufu defect.
+The native regression creates two real sibling Git checkouts named `repo` and
+`REPO`, proves the filesystem distinguishes them, commits different tracked
+bytes, observes different file hashes, then requires distinct repository IDs.
+On production source `7833bbe`, it failed specifically at the identity assertion:
+0 passed / 1 failed / 0 skipped. [Log](linux/root-case-before.log),
+[TRX](linux/root-case-before.trx), [SDK/runtime inventory](linux/reproducer-dotnet-info.txt).
+The source was dirty only with the new reproducer test, not a production change.
+
+Cause: unconditional uppercasing collapsed distinct Unix roots into the same
+repository ID and lock path. The bounded correction preserves the historical
+Windows uppercase hash and uses exact root spelling on Unix. Existing preview
+Unix journals are not migrated; the first qualified Unix profile uses fresh
+controlled checkouts/journals and canonical exact root spelling. Case-insensitive
+Unix alias spelling remains unqualified until native macOS work. The identical
+native regression after the correction passed 1/1 with no skips:
+[log](linux/root-case-after.log), [TRX](linux/root-case-after.trx).
+Windows full regression remains pending for the changed source.
+
+## M5 actual-state control development (observed, Windows)
+
+The new fixture kills the workflow at K3 after persisted A validation, changes
+the allowlisted project bytes externally, and starts two fresh reconciliation
+processes. The first real lifecycle run correctly failed the test's precondition:
+the deliberately reduced execution environment omitted Windows machine-wide
+SDK/NuGet paths, so A had failed restore rather than validated. The assertions
+were retained. After restoring the required Windows environment variables, the
+fixture passed 1/1 through the pinned Gagamba runtime: persisted A stayed
+ValidationPassed, actual bytes/state remained divergent and unchanged across
+both restarts, B/C stayed Prepared without writes, and supervisor blocking was
+visible. These development runs are not the final commit-bound qualification.
 
 ## Pending
 
