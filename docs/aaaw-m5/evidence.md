@@ -74,7 +74,8 @@ controlled checkouts/journals and canonical exact root spelling. Case-insensitiv
 Unix alias spelling remains unqualified until native macOS work. The identical
 native regression after the correction passed 1/1 with no skips:
 [log](linux/root-case-after.log), [TRX](linux/root-case-after.trx).
-Windows full regression remains pending for the changed source.
+Windows full regression subsequently passed for the changed source, as recorded
+below.
 
 ## M5 actual-state control development (observed, Windows)
 
@@ -89,13 +90,54 @@ ValidationPassed, actual bytes/state remained divergent and unchanged across
 both restarts, B/C stayed Prepared without writes, and supervisor blocking was
 visible. These development runs are not the final commit-bound qualification.
 
+## Clean-source Windows M1–M5 regression (observed)
+
+Commit `b1ccd71de6625e7ab851cfb83adf0662e8f2683f`, clean at both ends.
+SDK 10.0.401, Windows x64 build 26200, runtime 8.0.31 / 10.0.12.
+Restore, serial solution build (zero warnings/errors), and format verification
+passed. Complete suites passed with the expected case-insensitive-filesystem
+skip reported separately:
+
+| Framework | Passed | Failed | Skipped | Total |
+|---|---:|---:|---:|---:|
+| .NET 8 | 201 | 0 | 1 | 202 |
+| .NET 10 | 246 | 0 | 1 | 247 |
+
+The skipped test is `Distinct_case_sensitive_git_roots_have_distinct_repository_identities`;
+Windows temporary paths alias case-only directory names. Linux executed it.
+All three M4/M5 native process tests passed, including all twelve barriers,
+confirmed Gagamba stops and the actual-state divergence control across two
+fresh processes. [Machine record](windows/final/qualification.json),
+[reproduction driver](windows/final/reproduce.ps1),
+[raw artifact archive](windows/final/captured-artifacts.zip).
+
+## Linux consumer attempt A and SDK cleanup correction (observed)
+
+Clean source `b1ccd71`: .NET 8 passed 202/202 and .NET 10 passed 247/247, with
+zero skips/failures. All canonical, K4 and actual-state assertions verified.
+The qualification correctly remained **failed**: its isolated .NET 10 process
+group retained a child after the test leader exited. The driver signaled only
+that owned group and the delegated parent was confirmed empty afterward.
+[Original failed attempt and runtime records](linux/attempt-a-captured-artifacts.zip).
+
+Classification: SDK/test-runner environment, not an AAAW semantic or foundation
+defect. A minimal `dotnet run` console build reproduced the failure and captured
+the still-live `Roslyn/bincore/VBCSCompiler` in its exact process group before
+cleanup. The same control with `UseSharedCompilation=false` passed without any
+post-leader process group. Before/after diagnostic records are retained in the
+archive. The correction passes that MSBuild property to **all** qualification
+SDK invocations, including legacy consumer tests, and records command PID/group.
+The strict orphan/output/cleanup gates are unchanged. Full Linux rerun pending.
+No C# production or test semantics changed after the Windows-qualified source.
+
+Raw M5 evidence is stored without Git line-ending normalization so original file
+hashes remain verifiable. Historical M1–M4 evidence is unchanged.
+
 ## Pending
 
-- Native failing reproducer, classification and minimal correction, if confirmed.
-- Shared scenario extraction and real Gagamba lifecycle integration.
-- Actual-state negative controls and Linux full/native regression.
-- Linux evidence freeze, followed by GitHub-hosted macOS qualification.
-- Cross-platform comparison, Windows final regression and independent review.
+- Complete the strict Linux rerun after the reproduced SDK environment fix.
+- Freeze coherent Linux evidence, then perform GitHub-hosted macOS qualification.
+- Complete cross-platform comparison and final independent evidence review.
 
 GitHub CLI authentication was verified from the authorized host context. No
 macOS workflow or qualification has started.

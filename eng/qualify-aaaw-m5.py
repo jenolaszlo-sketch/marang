@@ -268,6 +268,8 @@ def run_command(name: str, argv: list[str], timeout_seconds: int = COMMAND_TIMEO
             env=environment,
         )
         assert process.stdout is not None and process.stderr is not None
+        record["processId"] = process.pid
+        record["processGroupId"] = process.pid
         stdout_capture = BoundedPipeCapture(process.stdout, MAX_RETAINED_BYTES_PER_STREAM)
         stderr_capture = BoundedPipeCapture(process.stderr, MAX_RETAINED_BYTES_PER_STREAM)
         stdout_capture.start()
@@ -640,6 +642,7 @@ def main() -> int:
         environment["MSBUILDDISABLENODEREUSE"] = "1"
         environment["DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER"] = "1"
         environment["VSTEST_CONNECTION_TIMEOUT"] = "180"
+        environment["UseSharedCompilation"] = "false"
         inventory_commands = [
             run_command("dotnet-sdks", ["dotnet", "--list-sdks"], timeout_seconds=30, environment=environment),
             run_command("dotnet-runtimes", ["dotnet", "--list-runtimes"], timeout_seconds=30, environment=environment),
@@ -670,7 +673,7 @@ def main() -> int:
             "GAGAMBA_LINUX_CGROUP", "DOTNET_ROOT", "DOTNET_ROOT_X64", "DOTNET_ROLL_FORWARD",
             "DOTNET_ROLL_FORWARD_TO_PRERELEASE", "DOTNET_MULTILEVEL_LOOKUP", "DOTNET_CLI_HOME",
             "NUGET_PACKAGES", "MSBuildSDKsPath", "MSBUILDDISABLENODEREUSE",
-            "DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "VSTEST_CONNECTION_TIMEOUT",
+            "DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER", "UseSharedCompilation", "VSTEST_CONNECTION_TIMEOUT",
         )
         evidence["qualificationEnvironment"] = {
             name: os.environ[name] for name in safe_environment_names if name in os.environ
@@ -717,7 +720,7 @@ def main() -> int:
                     "--logger", f"trx;LogFileName={trx_path.name}",
                     "--results-directory", str(trx_dir),
                 ]
-                command = run_command(f"test-{framework}", argv)
+                command = run_command(f"test-{framework}", argv, environment=environment)
                 command_map[f"test-{framework}"] = command
                 evidence["commands"].append(command)
                 test_record: dict[str, Any] = {"framework": framework, "command": command, "trx": None, "passed": False}

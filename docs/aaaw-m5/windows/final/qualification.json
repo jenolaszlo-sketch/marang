@@ -1,0 +1,116 @@
+{
+  "schema": "aaaw-m5-windows-qualification/v1",
+  "startedAt": "2026-10-15T09:39:45.1208439+00:00",
+  "sourceCommit": "b1ccd71de6625e7ab851cfb83adf0662e8f2683f",
+  "branch": "codex/aaaw-m5-marang",
+  "sourceCleanAtStart": true,
+  "os": "Microsoft Windows NT 10.0.26200.0",
+  "architecture": "X64",
+  "sdk": "10.0.401",
+  "runtimes": [
+    "Microsoft.AspNetCore.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.AspNetCore.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.AspNetCore.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]",
+    "Microsoft.NETCore.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.NETCore.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.NETCore.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]",
+    "Microsoft.WindowsDesktop.App 8.0.31 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]",
+    "Microsoft.WindowsDesktop.App 9.0.20 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]",
+    "Microsoft.WindowsDesktop.App 10.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]"
+  ],
+  "commands": [
+    {
+      "name": "bootstrap",
+      "argv": [
+        "python",
+        "eng/bootstrap-aaaw-m5-feed.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "restore",
+      "argv": [
+        "dotnet",
+        "restore",
+        "Marang.slnx",
+        "--configfile",
+        "NuGet.AAAWM1.Config"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "argv": [
+        "dotnet",
+        "build",
+        "Marang.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-m:1",
+        "-p:UseSharedCompilation=false"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "format",
+      "argv": [
+        "dotnet",
+        "format",
+        "Marang.slnx",
+        "--verify-no-changes",
+        "--no-restore"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "test",
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx",
+        "--results-directory",
+        "C:\\Users\\Laszlos\\source\\repos\\Solo\\aaaw-m5\\marang\\artifacts\\aaaw-m5\\windows-final"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "testRuns": [
+    {
+      "sha256": "1e979a5e1a406138e8d6631b2e89fe8b3c142e5b87f31cd7ac70c4a3f2b5a211",
+      "framework": "net8.0",
+      "skipped": 1,
+      "passed": 201,
+      "failed": 0,
+      "total": 202,
+      "trx": "Laszlos_LAPTOP-KBD8D8JG_2026-10-15_17_41_15_net8.0.trx",
+      "skippedNames": [
+        "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+      ],
+      "skipDisposition": "Case-only sibling roots are not distinct on this Windows temporary filesystem; Linux exercised the test natively."
+    },
+    {
+      "sha256": "db789a5d4213bf76296fbfefe279fb4ca20be12bc9ba5295d314d3e2be612b12",
+      "framework": "net10.0",
+      "skipped": 1,
+      "passed": 246,
+      "failed": 0,
+      "total": 247,
+      "trx": "Laszlos_LAPTOP-KBD8D8JG_2026-10-15_17_41_12_net10.0.trx",
+      "skippedNames": [
+        "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+      ],
+      "skipDisposition": "Case-only sibling roots are not distinct on this Windows temporary filesystem; Linux exercised the test natively."
+    }
+  ],
+  "qualificationPassed": true,
+  "sourceCommitAtEnd": "b1ccd71de6625e7ab851cfb83adf0662e8f2683f",
+  "sourceCleanAtEnd": true,
+  "completedAt": "2026-10-15T09:48:28.6107567+00:00"
+}

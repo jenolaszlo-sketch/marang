@@ -1,0 +1,23 @@
+# M5 independent source review (interim)
+
+Review target: `b1ccd71de6625e7ab851cfb83adf0662e8f2683f`, compared with `7833bbe`. Read-only review; no SDK tests or builds were run. This is a source review before the pending native Linux/Windows evidence is complete, not the final qualification review.
+
+## Findings
+
+### P2 — Windows portability test has an expected skip that must be reported separately
+
+`tests/Marang.Tests/RepositoryPortabilityTests.cs:18-20` deliberately skips when `repo` and `REPO` alias on the temporary filesystem. On ordinary case-insensitive Windows volumes, that is expected. The Linux evidence parser in `eng/qualify-aaaw-m5.py:418-428` treats every skip as a failed run. That is appropriate for the Linux run, where the reproducer must execute, but Windows regression evidence must report the expected skip separately and must not present it as an executed pass. Keep per-framework pass/fail/skip counts and record that this one filesystem-specific check did not execute on Windows. This is a reporting/qualification boundary, not a weakened semantic assertion: the test performs the actual case-sensitivity check before skipping.
+
+## Review observations
+
+- The production change is confined to `ControlledRepository.RepositoryId` (`src/Marang.Runs/Effects/ControlledRepository.cs:20-21`). Windows retains the prior uppercase root hash; Unix preserves the canonical full-path spelling. The regression creates two real Git checkouts, checks distinct file bytes/hashes, and then checks distinct repository identities. The known case-insensitive Unix alias limitation remains explicitly documented in `docs/aaaw-m5/evidence.md`; I found no basis in this source review to claim macOS coverage or to expand that limitation into a defect.
+- The restart sequence is shared through `MultiEffectScenario.ContinuingBarriers`; it lists K1, K2, K3, K5–K12. K4 remains a separate partial-effect scenario and is still exercised by `Partial_B_fixture_blocks_its_dependent_effect_without_replay`. The canonical test requires each continuing barrier marker/context and checks confirmed Gagamba stop receipts. K12 additionally requires an active owned command and confirmed explicit-stop receipts.
+- The lifecycle owner holds the Gagamba runtime and all root/child run handles in the xUnit process. Admission and the stop fence share `_gate`; children are registered immediately after launch. `StopAllAsync` fences later admissions, cancels all active child runs, awaits receipts, and requires confirmed cleanup. Natural completion and barriers both reject incomplete root output capture. Broker refusal, protocol errors, non-natural terminal causes, non-confirmed cleanup, and incomplete capture fail the test path rather than being recorded as success.
+- The K12 oracle is tied to the actual `dotnet test` invocation: the injected MSBuild target emits a PID and caller nonce, answers a fresh challenge, and blocks before `VSTest`; the parent verifies the proof before recording the barrier. The stop test then requires an active broker-owned command. This is materially stronger than checking a PID or a marker written by the probe.
+- The negative control changes actual allowlisted project bytes after persisted A validation, then starts two new probe processes. It checks the on-disk bytes and their SHA-256, observes repository state in each process, verifies A remains persisted as passed, and checks B/C remain prepared and blocked with no writes. The validator/checkpoint callbacks throw if reached, so an unexpected attempt to continue fails closed. The main canonical scenario separately checks physical A/B/C/B2/C2 application counts, final state lineage, preserved inventory, and barrier coverage.
+- Package provenance is pinned by exact version, producer commit, and SHA-256. The qualifier verifies package archive hashes and embedded nuspec commit metadata; the M5 runtime package set names unchanged Gagamba source `9fe127a...`, and its package list excludes the separate Linux M1 security package.
+- `docs/aaaw-m5/evidence.md` is intentionally still marked in progress and has a `Pending` section that predates the newly committed shared scenario, broker, K12 gate, and negative-control test. It does not make a false completion claim. Refresh this ledger from the final commit-bound Linux and Windows evidence before using it as the final record; leave macOS explicitly unqualified until its user-required Linux-first sequence is complete.
+
+## Limits
+
+No SDK tests, builds, or platform runs were performed for this independent source review. The Linux/Windows execution counts and runtime receipts remain dependent on the qualification evidence being completed and audited separately. macOS is not qualified by this review.
