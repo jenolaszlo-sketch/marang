@@ -1,0 +1,1018 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "eng/bootstrap-aaaw-m5-feed.py"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:09.264381+00:00",
+      "exitCode": 0,
+      "name": "bootstrap-pinned-feed",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 559,
+      "processId": 559,
+      "startedAt": "2026-10-15T09:55:09.163365+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "Restored nine hash-pinned local qualification packages; nothing published.\n",
+      "stdoutBytesSeen": 75,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "--list-sdks"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:09.370975+00:00",
+      "exitCode": 0,
+      "name": "dotnet-sdks",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 562,
+      "processId": 562,
+      "startedAt": "2026-10-15T09:55:09.269670+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "8.0.426 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n10.0.401 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n",
+      "stdoutBytesSeen": 125,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 30
+    },
+    {
+      "argv": [
+        "dotnet",
+        "--list-runtimes"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:09.472291+00:00",
+      "exitCode": 0,
+      "name": "dotnet-runtimes",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 565,
+      "processId": 565,
+      "startedAt": "2026-10-15T09:55:09.371073+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "Microsoft.AspNetCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\n",
+      "stdoutBytesSeen": 668,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 30
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "eng/aaaw-m5-native-prerequisites.csproj",
+        "--source",
+        "https://api.nuget.org/v3/index.json",
+        "--disable-parallel"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:10.375901+00:00",
+      "exitCode": 0,
+      "name": "native-prerequisite-restore",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 568,
+      "processId": 568,
+      "startedAt": "2026-10-15T09:55:09.473686+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  All projects are up-to-date for restore.\n",
+      "stdoutBytesSeen": 80,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "restore",
+        "Marang.slnx",
+        "--configfile",
+        "NuGet.AAAWM1.Config",
+        "--disable-parallel"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:12.581108+00:00",
+      "exitCode": 0,
+      "name": "restore",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 592,
+      "processId": 592,
+      "startedAt": "2026-10-15T09:55:10.376383+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "  Determining projects to restore...\n  All projects are up-to-date for restore.\n",
+      "stdoutBytesSeen": 80,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "build",
+        "Marang.slnx",
+        "-c",
+        "Release",
+        "--no-restore",
+        "-m:1",
+        "-p:UseSharedCompilation=false"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:55:45.158088+00:00",
+      "exitCode": 0,
+      "name": "build",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 853,
+      "processId": 853,
+      "startedAt": "2026-10-15T09:55:12.581639+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "  Marang.Codex -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Codex/bin/Release/net8.0/Marang.Codex.dll\n  Marang.Codex -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Codex/bin/Release/net10.0/Marang.Codex.dll\n  Marang.DelegationAuthority -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.DelegationAuthority/bin/Release/net8.0/Marang.DelegationAuthority.dll\n  Marang.DelegationAuthority -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.DelegationAuthority/bin/Release/net10.0/Marang.DelegationAuthority.dll\n  Marang -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang/bin/Release/net8.0/Marang.dll\n  Marang.Mcp -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Mcp/bin/Release/net8.0/Marang.Mcp.dll\n  Marang.Hufu -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Hufu/bin/Release/net8.0/Marang.Hufu.dll\n  Marang.Runs -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Runs/bin/Release/net8.0/Marang.Runs.dll\n  Marang.Http -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Http/bin/Release/net8.0/Marang.Http.dll\n  Marang -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang/bin/Release/net10.0/Marang.dll\n  Marang.Mcp -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Mcp/bin/Release/net10.0/Marang.Mcp.dll\n  Marang.Hufu -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Hufu/bin/Release/net10.0/Marang.Hufu.dll\n  Marang.Runs -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Runs/bin/Release/net10.0/Marang.Runs.dll\n  Marang.Http -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Http/bin/Release/net10.0/Marang.Http.dll\n  Marang.SessionJournal -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.SessionJournal/bin/Release/net10.0/Marang.SessionJournal.dll\n  Marang.Server -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/src/Marang.Server/bin/Release/net10.0/Marang.Server.dll\n  Marang.RestartProbe -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll\n  Marang.Tests -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll\n  Marang.Tests -> /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:32.37\n",
+      "stdoutBytesSeen": 2423,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "format",
+        "Marang.slnx",
+        "--verify-no-changes",
+        "--no-restore"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:56:07.230027+00:00",
+      "exitCode": 0,
+      "name": "format",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 1779,
+      "processId": 1779,
+      "startedAt": "2026-10-15T09:55:45.158733+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "",
+      "stdoutBytesSeen": 0,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net8.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net8.0.trx",
+        "--results-directory",
+        "/home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T09:56:14.944185+00:00",
+      "exitCode": 0,
+      "name": "test-net8.0",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 1904,
+      "processId": 1904,
+      "startedAt": "2026-10-15T09:56:07.230654+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "Test run for /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net8.0.trx\n\nPassed!  - Failed:     0, Passed:   202, Skipped:     0, Total:   202, Duration: 5 s - Marang.Tests.dll (net8.0)\n",
+      "stdoutBytesSeen": 458,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    },
+    {
+      "argv": [
+        "dotnet",
+        "test",
+        "tests/Marang.Tests/Marang.Tests.csproj",
+        "-c",
+        "Release",
+        "-f",
+        "net10.0",
+        "--no-build",
+        "--no-restore",
+        "--logger",
+        "trx;LogFileName=m5-net10.0.trx",
+        "--results-directory",
+        "/home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx"
+      ],
+      "captureErrors": [],
+      "cleanupConfirmed": true,
+      "completedAt": "2026-10-15T10:00:40.869061+00:00",
+      "exitCode": 0,
+      "name": "test-net10.0",
+      "ok": true,
+      "orphanedProcessGroupObserved": false,
+      "outputDrainComplete": true,
+      "processGroupId": 3053,
+      "processId": 3053,
+      "startedAt": "2026-10-15T09:56:14.947990+00:00",
+      "stderr": "",
+      "stderrBytesSeen": 0,
+      "stderrTruncated": false,
+      "stdout": "Test run for /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net10.0.trx\n\nPassed!  - Failed:     0, Passed:   247, Skipped:     0, Total:   247, Duration: 4 m 24 s - Marang.Tests.dll (net10.0)\n",
+      "stdoutBytesSeen": 467,
+      "stdoutTruncated": false,
+      "termination": "not-needed",
+      "timedOut": false,
+      "timeoutSeconds": 3600
+    }
+  ],
+  "completedAt": "2026-10-15T10:00:40.925141+00:00",
+  "host": {
+    "cgroup2Mounts": [
+      "/sys/fs/cgroup"
+    ],
+    "cgroupParent": "/sys/fs/cgroup/aaaw-m5-consumer-20261015-b",
+    "cgroupParentConfigured": true,
+    "checks": {
+      "cgroupV2ControlFiles": true,
+      "cgroupV2Path": true,
+      "configuredCgroupParent": true,
+      "nonRoot": true,
+      "ready": true,
+      "writableCgroupParent": true
+    },
+    "delegationProof": "Static mount, control-file, identity, and access checks only. Successful canonical Gagamba prepare/launch/stop receipts are the runtime evidence of delegation.",
+    "effectiveUid": 1000,
+    "machine": "x86_64",
+    "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "system": "Linux"
+  },
+  "inferred": [
+    "A fresh passing canonical result plus Linux Gagamba receipts supports the tested lifecycle path on this one host and its current delegated cgroup v2 subtree.",
+    "Passing M1-M4 consumer suites establish compatibility only for the pinned package set and recorded SDK/runtime environment."
+  ],
+  "notExercised": [
+    "macOS qualification",
+    "Gagamba owner-death cleanup",
+    "cgroup escape resistance and hostile multi-user isolation",
+    "power-loss recovery",
+    "general exactly-once external effects"
+  ],
+  "observed": {
+    "barriers": {
+      "K1": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30552,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K1.json",
+          "sha256": "6b050e94c3f3cca44ba9ef24171ce8e18ddf8b5601df1aad7a99b16e5e4f65d2"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 450,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K1.json",
+          "sha256": "f5be136488bbe915193a3298f1da7410b5744e991f5cd0957feed285b8b79a92"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K10": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 31399,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K10.json",
+          "sha256": "d7b9b165c1bea617478ce2b79e094db1bb3d75964641d342460a1fde2346c545"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 452,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K10.json",
+          "sha256": "24dab09decc68c96bc84ad1a374281c9ab6896116927be176e8b62ea646f1dfd"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K11": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 31193,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K11.json",
+          "sha256": "ca2e6318c3f9cd32c5cfc9d52f20728fb28e703ea16197deb9d36786ff2266ab"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 452,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K11.json",
+          "sha256": "e20d377b900f2e32a8e16c9a8237d8b1fcc2ba723cb7c1b94ddb0b3a315ded6a"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K12": {
+        "brokerCommandCauses": [
+          "ExplicitStop"
+        ],
+        "brokerCommandCount": 1,
+        "context": {
+          "bytes": 31186,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K12.json",
+          "sha256": "7eb933f08ec11f479fc8059e710251a517fe67263189f39947ba988422dd12fd"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": true,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 848,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K12.json",
+          "sha256": "d61df68dbe5d207409a2c72fb05ade7f6e5b4e139991b302bded2bca90027f2f"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K2": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30622,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K2.json",
+          "sha256": "b440c699c7b6338b72a897b42d124c05f1703ad87eb511b88d6f679518690011"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 450,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K2.json",
+          "sha256": "1c3b443c3f51b138b31c45ea8a53c82a256e9a1d049649101ba293e690a95040"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K3": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30628,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K3.json",
+          "sha256": "76e974866bdb669f2db83357b6cd2f46a2d8f6c1a5550d0c4e1e9e9d8b875d80"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 450,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K3.json",
+          "sha256": "cd84171ee805cc0a13ed67ceddeb55067d41558cbdd28250285876dcfaf90666"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K4": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30707,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261015-095719243-7e58b92ea9df453da458ef61c1cd57a8/barrier-context-K4.json",
+          "sha256": "5b79487b98536b538626a488c2430d5ca07826add03124163b9a7a72d514dce4"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 450,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261015-095719243-7e58b92ea9df453da458ef61c1cd57a8/lifecycle-stop-K4.json",
+          "sha256": "79993f7321ec57e676ef11898e2c67ec5f50b07396df8e987b5499aece6234b0"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K5": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30713,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K5.json",
+          "sha256": "795994abef078f386d0202157738fa0c2928ad55b49d8fa727e34c1d9511a314"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 451,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K5.json",
+          "sha256": "ffc357f5dfcdc797474e3b402b485916350e6ecc84a9f9c18b55eaa807315de6"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K6": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30492,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K6.json",
+          "sha256": "9b74ebe83e970b5fed54c0ea1ea5764c186c4bc703db90cbdf3c9c9da4cef4a8"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 451,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K6.json",
+          "sha256": "89a227893dc087673a58d0c3bb60a3b9539a2bae02bc730452a84725f9613d45"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K7": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 30494,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K7.json",
+          "sha256": "fd778f4d863aa1a05e36ae19c1fd6ccb2145a9894c77184f43b341e4d99fd8d7"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 451,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K7.json",
+          "sha256": "44f3f281bd834af685f2ffb295669e3d99d5cdfdffa3bee8f9ad03d64d16b62c"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K8": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 31102,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K8.json",
+          "sha256": "c242de1e59c12516a6502265b0cfec397d241fb8bbe6825840906adc6ae330df"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 451,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K8.json",
+          "sha256": "358796ed8d7dfd77f8e01426f8f130907f97aa46309b173554f9a20b51b801b1"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      },
+      "K9": {
+        "brokerCommandCauses": [],
+        "brokerCommandCount": 0,
+        "context": {
+          "bytes": 31003,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/barrier-context-K9.json",
+          "sha256": "552110f1b7c80151e95fb50aaf80c72f0ef3c8671892460cf694a493a1466dad"
+        },
+        "contextPresent": true,
+        "k12ActualValidationWasRunning": null,
+        "lifecycleReceiptPresent": true,
+        "rootCause": "ExplicitStop",
+        "rootCleanup": "Confirmed",
+        "stopReceipt": {
+          "bytes": 451,
+          "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/lifecycle-stop-K9.json",
+          "sha256": "db8564c3253073969083c2b3d82c6bf081358cab468fe202275e59fca16a679c"
+        },
+        "usedMarkerPresent": true,
+        "verified": true
+      }
+    },
+    "gagambaPlatformsInReceipts": [
+      "linux-cgroup-v2"
+    ],
+    "m4CanonicalWorkflow": {
+      "assertions": {
+        "aWasExplicitlyAdopted": true,
+        "acceptedLogicalEffects": true,
+        "activeAcceptedEffects": true,
+        "activeGraphMutationBlocked": true,
+        "applyCounts": true,
+        "exactStateLineage": true,
+        "finalBranchCompleted": true,
+        "fixtureCommit": true,
+        "inventoryInvocationCount": true,
+        "localValidationPassed": true,
+        "noDuplicateMutation": true,
+        "oldBAndCRemainAppliedEvidence": true,
+        "oldGraphValidationPassed": true,
+        "recoveryBarriers": true,
+        "workflowValidationPassed": true
+      },
+      "effectApplyCounts": {
+        "A": 1,
+        "B": 1,
+        "B2": 1,
+        "C": 1,
+        "C2": 1
+      },
+      "file": {
+        "bytes": 5867529,
+        "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261015-095805990-b91f0368474d4002aed9cd1b97d5c5f2/multi-effect-result.json",
+        "sha256": "ad1f2cb4556967c5222d66b3127f392602c322808ffb1e6f39b38dde23669464"
+      },
+      "fixtureSourceCommit": "a0916534d0e82e499cffb2dea526b64357eb32e2",
+      "inventoryInvocationCount": 1,
+      "observed": true,
+      "recoveryBarrierCount": 11,
+      "verified": true
+    },
+    "m4PartialK4": {
+      "assertions": {
+        "dependentBlocked": true,
+        "dependentPhysicalApplyCount": true,
+        "dependentStage": true,
+        "namedBlockerPresent": true,
+        "partiallyApplied": true,
+        "physicalApplyCount": true
+      },
+      "file": {
+        "bytes": 56698,
+        "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261015-095719243-7e58b92ea9df453da458ef61c1cd57a8/multi-effect-K4-result.json",
+        "sha256": "252504d76f03469cd9243346d2a98407d9de62eb2fb9cbc972f443045ad9598d"
+      },
+      "observed": true,
+      "verified": true
+    },
+    "m5ActualStateNegativeControl": {
+      "assertions": {
+        "BAndCUnchanged": true,
+        "actualStateStableAcrossRuns": true,
+        "beforeAfterStateStable": true,
+        "checkpointNotCalled": true,
+        "mutationBlocked": true,
+        "projectWasClassifiedStale": true,
+        "tamperedProjectHashStableAcrossRuns": true,
+        "unexpectedActualStateDetected": true,
+        "validatorNotCalled": true
+      },
+      "firstObservation": {
+        "bytes": 113801,
+        "path": "artifacts/aaaw-m5/process-probes/multi-effect-negative-control-20261015-095616441-2d8ddaea03d247758d8a029b5078adb5/multi-effect-reconcile-1.json",
+        "sha256": "6b0f52661822dae5f41b3ef9d887c97d0cf8b4dae8e841a11ebc42b527b66932"
+      },
+      "observed": true,
+      "observedStateDigest": "70be90d9ff7dda624fc11715c89fc0953ef1e9155ea5f7bce3f67d1302ccb145",
+      "secondObservation": {
+        "bytes": 113801,
+        "path": "artifacts/aaaw-m5/process-probes/multi-effect-negative-control-20261015-095616441-2d8ddaea03d247758d8a029b5078adb5/multi-effect-reconcile-2.json",
+        "sha256": "b0dedd47c05577ac4ffb8a78e84c3a80d6acb798d00c34fd40750259046f1726"
+      },
+      "tamperedProjectSha256": "e1d251753dd754375d983cc04cc68957a2dd53a6a4cde027520232ff9cc85237",
+      "verified": true
+    },
+    "platformMatchesLinuxCgroupV2": true
+  },
+  "packageProvenance": {
+    "m1": {
+      "lock": {
+        "bytes": 833,
+        "path": "eng/aaaw-m2-packages.json",
+        "sha256": "3058c9d2dd153cfebc2a09193d87fedc76af7a38b2ffaea30403db7cf987071f"
+      },
+      "ok": true,
+      "packages": [
+        {
+          "file": {
+            "bytes": 522158,
+            "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg",
+            "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875"
+          },
+          "id": "Penghou.Zhinu",
+          "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+          "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+          "version": "0.2.0-preview.4-aaaw-m1.3"
+        },
+        {
+          "file": {
+            "bytes": 475389,
+            "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg",
+            "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39"
+          },
+          "id": "Penghou.Zhinu.Sqlite",
+          "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+          "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+          "version": "0.2.0-preview.4-aaaw-m1.3"
+        },
+        {
+          "file": {
+            "bytes": 196835,
+            "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg",
+            "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870"
+          },
+          "id": "Penghou.Qingniao.Abstractions",
+          "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+          "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+          "version": "0.1.0-preview.5-aaaw-m1.4"
+        },
+        {
+          "file": {
+            "bytes": 224427,
+            "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg",
+            "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37"
+          },
+          "id": "Penghou.Qingniao",
+          "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+          "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+          "version": "0.1.0-preview.5-aaaw-m1.4"
+        }
+      ]
+    },
+    "m5Runtime": {
+      "lock": {
+        "bytes": 1136,
+        "path": "eng/aaaw-m5-runtime-packages.json",
+        "sha256": "13aa2d98376fa7689d837646694dcc696c7e7fa4dc94e655a591e28de35b70c7"
+      },
+      "ok": true,
+      "packages": [
+        {
+          "file": {
+            "bytes": 52723,
+            "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.0.1.0-preview.4-aaaw-m5.1.nupkg",
+            "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94"
+          },
+          "id": "Gagamba.Execution",
+          "sha256": "64e7984d5d2d0f6ba55a56cee1b4d89b9d6f92c541dfe1f67c7523e65a738b94",
+          "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+          "version": "0.1.0-preview.4-aaaw-m5.1"
+        },
+        {
+          "file": {
+            "bytes": 24969,
+            "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Linux.0.1.0-preview.4-aaaw-m5.1.nupkg",
+            "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c"
+          },
+          "id": "Gagamba.Execution.Linux",
+          "sha256": "0cd229f47138e82c5da0b71e9e185d68368ab35bd77aa2a53a958a98078fb59c",
+          "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+          "version": "0.1.0-preview.4-aaaw-m5.1"
+        },
+        {
+          "file": {
+            "bytes": 27083,
+            "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.MacOS.0.1.0-preview.4-aaaw-m5.1.nupkg",
+            "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c"
+          },
+          "id": "Gagamba.Execution.MacOS",
+          "sha256": "4e7edd2431395323b3bac53102ca4700e0783551f2fb54aec32fa6ca0b95b63c",
+          "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+          "version": "0.1.0-preview.4-aaaw-m5.1"
+        },
+        {
+          "file": {
+            "bytes": 23489,
+            "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Windows.0.1.0-preview.4-aaaw-m5.1.nupkg",
+            "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb"
+          },
+          "id": "Gagamba.Execution.Windows",
+          "sha256": "d9e8b279f2a067cab76401fa70a2864bfff5683adc1defcefb0e08439ff091bb",
+          "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+          "version": "0.1.0-preview.4-aaaw-m5.1"
+        },
+        {
+          "file": {
+            "bytes": 20299,
+            "path": "artifacts/aaaw-m1/packages/Gagamba.Runtime.0.1.0-preview.4-aaaw-m5.1.nupkg",
+            "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4"
+          },
+          "id": "Gagamba.Runtime",
+          "sha256": "fad39c466f901a87667c3f127e9a79786107699f8229caeefdbf76be060ca3b4",
+          "sourceCommit": "9fe127a98f682514138f4f5e333e47bcbeea8fe5",
+          "version": "0.1.0-preview.4-aaaw-m5.1"
+        }
+      ]
+    }
+  },
+  "preflightPassed": true,
+  "qualificationEnvironment": {
+    "DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER": "1",
+    "DOTNET_CLI_HOME": "/home/gaga",
+    "DOTNET_ROOT": "/home/gaga/aaaw-m5-qualification-7833bbe/dotnet",
+    "GAGAMBA_LINUX_CGROUP": "/sys/fs/cgroup/aaaw-m5-consumer-20261015-b",
+    "MSBUILDDISABLENODEREUSE": "1",
+    "UseSharedCompilation": "false",
+    "VSTEST_CONNECTION_TIMEOUT": "180"
+  },
+  "qualificationPassed": true,
+  "runId": "20261015T095508Z-78037adba5",
+  "runtimeInventory": {
+    "dotnetRuntimes": "Microsoft.AspNetCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\n",
+    "dotnetSdks": "8.0.426 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n10.0.401 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n",
+    "hasSdk10": true,
+    "hasSdk8": true,
+    "inventoryPassed": true,
+    "nativeHostPackagePin": "Microsoft.NETCore.App.Host.$(NETCoreSdkRuntimeIdentifier) 8.0.31",
+    "net10RuntimeVersions": [
+      "Microsoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]"
+    ],
+    "net8RuntimeVersions": [
+      "Microsoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]",
+      "Microsoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]"
+    ],
+    "sdkMajors": [
+      "10",
+      "8"
+    ]
+  },
+  "schema": "aaaw-m5-linux-qualification/v1",
+  "sdkVersion": {
+    "argv": [
+      "dotnet",
+      "--version"
+    ],
+    "captureErrors": [],
+    "cleanupConfirmed": true,
+    "completedAt": "2026-10-15T09:55:09.163261+00:00",
+    "exitCode": 0,
+    "name": "dotnet-version",
+    "ok": true,
+    "orphanedProcessGroupObserved": false,
+    "outputDrainComplete": true,
+    "processGroupId": 549,
+    "processId": 549,
+    "startedAt": "2026-10-15T09:55:08.861659+00:00",
+    "stderr": "",
+    "stderrBytesSeen": 0,
+    "stderrTruncated": false,
+    "stdout": "10.0.401\n",
+    "stdoutBytesSeen": 9,
+    "stdoutTruncated": false,
+    "termination": "not-needed",
+    "timedOut": false,
+    "timeoutSeconds": 30
+  },
+  "source": {
+    "end": {
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "commit": "46db7b6ffd5374cbe1aa43610f84975f1333638f",
+      "status": []
+    },
+    "start": {
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "commit": "46db7b6ffd5374cbe1aa43610f84975f1333638f",
+      "status": []
+    },
+    "unchangedAndClean": true
+  },
+  "startedAt": "2026-10-15T09:55:08.839012+00:00",
+  "testRuns": [
+    {
+      "baselineMinimum": 201,
+      "baselineMinimumMet": true,
+      "command": {
+        "argv": [
+          "dotnet",
+          "test",
+          "tests/Marang.Tests/Marang.Tests.csproj",
+          "-c",
+          "Release",
+          "-f",
+          "net8.0",
+          "--no-build",
+          "--no-restore",
+          "--logger",
+          "trx;LogFileName=m5-net8.0.trx",
+          "--results-directory",
+          "/home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx"
+        ],
+        "captureErrors": [],
+        "cleanupConfirmed": true,
+        "completedAt": "2026-10-15T09:56:14.944185+00:00",
+        "exitCode": 0,
+        "name": "test-net8.0",
+        "ok": true,
+        "orphanedProcessGroupObserved": false,
+        "outputDrainComplete": true,
+        "processGroupId": 1904,
+        "processId": 1904,
+        "startedAt": "2026-10-15T09:56:07.230654+00:00",
+        "stderr": "",
+        "stderrBytesSeen": 0,
+        "stderrTruncated": false,
+        "stdout": "Test run for /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net8.0.trx\n\nPassed!  - Failed:     0, Passed:   202, Skipped:     0, Total:   202, Duration: 5 s - Marang.Tests.dll (net8.0)\n",
+        "stdoutBytesSeen": 458,
+        "stdoutTruncated": false,
+        "termination": "not-needed",
+        "timedOut": false,
+        "timeoutSeconds": 3600
+      },
+      "counters": {
+        "aborted": 0,
+        "completed": 0,
+        "disconnected": 0,
+        "error": 0,
+        "executed": 202,
+        "failed": 0,
+        "inconclusive": 0,
+        "inprogress": 0,
+        "notexecuted": 0,
+        "notrunnable": 0,
+        "passed": 202,
+        "passedbutrunaborted": 0,
+        "pending": 0,
+        "timeout": 0,
+        "total": 202,
+        "warning": 0
+      },
+      "failedTests": [],
+      "framework": "net8.0",
+      "m4ProcessTestCount": 0,
+      "m4ProcessTests": [],
+      "m5TestCount": 0,
+      "m5Tests": [],
+      "passed": true,
+      "skippedTests": [],
+      "testResultCount": 202,
+      "trx": {
+        "bytes": 285498,
+        "path": "artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net8.0.trx",
+        "sha256": "f938cdcaacfae66d4f03ead3c1259665d4fdea34e613bf0b63b20ba4db6eea7b"
+      }
+    },
+    {
+      "baselineMinimum": 245,
+      "baselineMinimumMet": true,
+      "command": {
+        "argv": [
+          "dotnet",
+          "test",
+          "tests/Marang.Tests/Marang.Tests.csproj",
+          "-c",
+          "Release",
+          "-f",
+          "net10.0",
+          "--no-build",
+          "--no-restore",
+          "--logger",
+          "trx;LogFileName=m5-net10.0.trx",
+          "--results-directory",
+          "/home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx"
+        ],
+        "captureErrors": [],
+        "cleanupConfirmed": true,
+        "completedAt": "2026-10-15T10:00:40.869061+00:00",
+        "exitCode": 0,
+        "name": "test-net10.0",
+        "ok": true,
+        "orphanedProcessGroupObserved": false,
+        "outputDrainComplete": true,
+        "processGroupId": 3053,
+        "processId": 3053,
+        "startedAt": "2026-10-15T09:56:14.947990+00:00",
+        "stderr": "",
+        "stderrBytesSeen": 0,
+        "stderrTruncated": false,
+        "stdout": "Test run for /home/gaga/aaaw-m5-qualification-7833bbe/marang/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m5-qualification-7833bbe/marang/artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net10.0.trx\n\nPassed!  - Failed:     0, Passed:   247, Skipped:     0, Total:   247, Duration: 4 m 24 s - Marang.Tests.dll (net10.0)\n",
+        "stdoutBytesSeen": 467,
+        "stdoutTruncated": false,
+        "termination": "not-needed",
+        "timedOut": false,
+        "timeoutSeconds": 3600
+      },
+      "counters": {
+        "aborted": 0,
+        "completed": 0,
+        "disconnected": 0,
+        "error": 0,
+        "executed": 247,
+        "failed": 0,
+        "inconclusive": 0,
+        "inprogress": 0,
+        "notexecuted": 0,
+        "notrunnable": 0,
+        "passed": 247,
+        "passedbutrunaborted": 0,
+        "pending": 0,
+        "timeout": 0,
+        "total": 247,
+        "warning": 0
+      },
+      "failedTests": [],
+      "framework": "net10.0",
+      "m4ProcessTestCount": 3,
+      "m4ProcessTests": [
+        {
+          "duration": "00:00:46.7438292",
+          "outcome": "Passed",
+          "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay"
+        },
+        {
+          "duration": "00:02:34.7089047",
+          "outcome": "Passed",
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects"
+        },
+        {
+          "duration": "00:01:02.8298759",
+          "outcome": "Passed",
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A"
+        }
+      ],
+      "m5TestCount": 1,
+      "m5Tests": [
+        {
+          "duration": "00:01:02.8298759",
+          "outcome": "Passed",
+          "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A"
+        }
+      ],
+      "passed": true,
+      "requiredM4AndM5ProcessTestsPresent": true,
+      "requiredM5ControlPassed": true,
+      "skippedTests": [],
+      "testResultCount": 247,
+      "trx": {
+        "bytes": 352085,
+        "path": "artifacts/aaaw-m5/linux-qualification/20261015T095508Z-78037adba5/trx/m5-net10.0.trx",
+        "sha256": "aaba5c27a23f8706354c3c4adf4fb01d6718f401fea21f9843f15362ddf13c28"
+      }
+    }
+  ]
+}

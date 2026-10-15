@@ -1,7 +1,6 @@
 # M5 evidence ledger
 
-Status: **qualification in progress**. Observations below do not establish Linux
-or macOS canonical qualification.
+Status: **Linux qualified and frozen for the bounded WSL2 profile; macOS pending**.
 
 ## M5.0: unchanged Windows baseline (observed)
 
@@ -127,7 +126,7 @@ cleanup. The same control with `UseSharedCompilation=false` passed without any
 post-leader process group. Before/after diagnostic records are retained in the
 archive. The correction passes that MSBuild property to **all** qualification
 SDK invocations, including legacy consumer tests, and records command PID/group.
-The strict orphan/output/cleanup gates are unchanged. Full Linux rerun pending.
+The strict orphan/output/cleanup gates are unchanged. The full rerun passed below.
 No C# production or test semantics changed after the Windows-qualified source.
 
 Raw M5 evidence is stored without Git line-ending normalization so original file
@@ -135,9 +134,53 @@ hashes remain verifiable. Historical M1–M4 evidence is unchanged.
 
 ## Pending
 
-- Complete the strict Linux rerun after the reproduced SDK environment fix.
-- Freeze coherent Linux evidence, then perform GitHub-hosted macOS qualification.
+- Perform GitHub-hosted macOS qualification after the Linux freeze below.
 - Complete cross-platform comparison and final independent evidence review.
 
 GitHub CLI authentication was verified from the authorized host context. No
 macOS workflow or qualification has started.
+
+## M5.4: Linux evidence freeze (observed)
+
+Clean source `46db7b6ffd5374cbe1aa43610f84975f1333638f`, branch
+`codex/aaaw-m5-marang`, run `20261015T095508Z-78037adba5`, completed
+2026-10-15 10:00:40 UTC. Source stayed clean and unchanged. Native Ubuntu
+26.04.1 WSL2 x86_64, glibc 2.43, nonroot uid 1000, physical Linux checkout,
+SDK 10.0.401 (8.0.426 also installed), selected runtimes 8.0.32 and 10.0.12.
+The exact 8.0.31 apphost package is a build prerequisite, not the selected net8
+runtime. Restore, build (zero warnings/errors), format and both complete suites
+passed. No observed post-leader process group, truncated output or unconfirmed
+cleanup occurred. The wrapper reported `populated 0`, `frozen 0`, removed its
+own delegated cgroup parent and exited zero.
+
+| Framework | Passed | Failed | Skipped | Total |
+|---|---:|---:|---:|---:|
+| .NET 8 | 202 | 0 | 0 | 202 |
+| .NET 10 | 247 | 0 | 0 | 247 |
+
+All twelve barriers, canonical A/B/C to approved A/B2/C2 lineage, actual S3/S4
+replacement bases, preservation of A/inventory, no duplicate physical mutations,
+K4 partial blocking and K12 live validation stop passed through the pinned native
+Gagamba runtime. The tamper control retained persisted A validation while actual
+bytes diverged; two fresh recovery processes blocked B/C without mutation.
+
+Native producer source `9fe127a98f682514138f4f5e333e47bcbeea8fe5`
+remained unchanged. Separate nonroot delegated runs passed Execution 20/0/0,
+Runtime 14/0/0, LifecycleRegressions 13/0/1 (root-only E10 excluded), and strict
+conformance 6/0/0. A separate root full Linux suite passed 42/0/0, including
+E10 and fixed-path fixtures; those fixture cgroups were removed empty. Original
+failed setup attempts and consumer attempt A remain preserved and are not
+aggregated into the passing counts.
+
+[Freeze manifest](linux/freeze.json), [complete machine record](linux/qualification.json),
+[162 original payloads and hash manifest](linux/final-captured-artifacts.zip).
+Archive SHA256: `d01cd0c0ac77df0f89f7bf6c0de7e2ee2c8b7a441070b74a054486bf1922454b`.
+
+Supported claim: the exercised bounded M1–M4 repository workflow and M5 actual-state
+control survive native process restarts on this WSL2 host with the recorded
+delegated cgroup v2 lifecycle/capture profile. This does not qualify full Linux
+VM deployment, owner-death cleanup, cgroup escape resistance, hostile multi-user
+isolation, power loss, arbitrary concurrent writers or general exactly-once
+external effects. Windows passed on the identical C# source/test content at
+`b1ccd71`; subsequent changes affected qualification environment and evidence.
+Linux evidence was captured and made reviewable before any macOS work began.

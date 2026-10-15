@@ -1,0 +1,58 @@
+{
+  "schema": "aaaw-m5-linux-freeze/v1",
+  "source": {
+    "end": {
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "commit": "46db7b6ffd5374cbe1aa43610f84975f1333638f",
+      "status": []
+    },
+    "start": {
+      "branch": "codex/aaaw-m5-marang",
+      "clean": true,
+      "commit": "46db7b6ffd5374cbe1aa43610f84975f1333638f",
+      "status": []
+    },
+    "unchangedAndClean": true
+  },
+  "runId": "20261015T095508Z-78037adba5",
+  "completedAt": "2026-10-15T10:00:40.925141+00:00",
+  "qualificationPassed": true,
+  "archive": {
+    "path": "final-captured-artifacts.zip",
+    "sha256": "d01cd0c0ac77df0f89f7bf6c0de7e2ee2c8b7a441070b74a054486bf1922454b",
+    "verifiedPayloads": 162
+  },
+  "testCounts": [
+    {
+      "framework": "net8.0",
+      "passed": 202,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "framework": "net10.0",
+      "passed": 247,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "wrapperObservation": {
+    "session": 70290,
+    "exitCode": 0,
+    "cgroupEvents": {
+      "populated": 0,
+      "frozen": 0
+    },
+    "parentRemoval": "wrapper exited successfully after its checked rmdir"
+  },
+  "claim": "The bounded M1-M4 repository scenario, twelve restart barriers and M5 actual-state divergence control passed on this nonroot Ubuntu WSL2 host using the pinned Gagamba lifecycle/capture path and delegated cgroup v2 subtree.",
+  "limitations": [
+    "macOS qualification",
+    "Gagamba owner-death cleanup",
+    "cgroup escape resistance and hostile multi-user isolation",
+    "power-loss recovery",
+    "general exactly-once external effects"
+  ],
+  "windowsCompatibility": "Windows passed at b1ccd71; no C# source/test changes between b1ccd71 and this 46db7b6 Linux target."
+}
