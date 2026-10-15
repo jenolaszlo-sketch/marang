@@ -5,8 +5,12 @@ on:
     branches: [codex/aaaw-m5-marang]
     paths:
       - '.github/workflows/aaaw-m5-macos.yml'
-      - 'eng/qualify-aaaw-m5-macos.py'
-      - 'eng/aaaw-m5-macos-probe/**'
+      - 'eng/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'Directory.Build.*'
+      - 'NuGet.AAAWM1.Config'
+      - 'Marang.slnx'
   workflow_dispatch:
 
 permissions:

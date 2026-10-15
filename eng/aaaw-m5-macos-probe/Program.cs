@@ -168,6 +168,17 @@ finally
         try { await runtime.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(operationTimeoutSeconds)); }
         catch (Exception ex) { result["runtimeDispose"] = $"{ex.GetType().Name}: {ex.Message}"; exitCode = 1; }
     }
+    try
+    {
+        Directory.Delete(scratch, recursive: true);
+        result["scratchCleanupConfirmed"] = true;
+    }
+    catch (Exception ex)
+    {
+        result["scratchCleanupConfirmed"] = false;
+        result["scratchCleanupError"] = $"{ex.GetType().Name}: {ex.Message}";
+        exitCode = 1;
+    }
     result["endedAtUtc"] = DateTimeOffset.UtcNow;
     result["exitCode"] = exitCode;
     result["summary"] = new { lifecyclePositiveControlPassed = normalConfirmed, captureRefusalControlPassed = result.TryGetValue("captureRefusalControl", out object? c) && c is Dictionary<string, object?> cd && cd.TryGetValue("passed", out object? p) && p is true, captureUnexpectedStart, canonicalSupported = false };
@@ -177,8 +188,6 @@ finally
         await File.WriteAllTextAsync(outputPath, JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true }));
     }
     catch (Exception ex) { Console.Error.WriteLine($"Could not write evidence JSON: {ex.GetType().Name}: {ex.Message}"); exitCode = 1; }
-    try { Directory.Delete(scratch, recursive: true); }
-    catch (Exception ex) { Console.Error.WriteLine($"Temporary marker cleanup failed: {ex.GetType().Name}: {ex.Message}"); exitCode = 1; }
 }
 
 Console.WriteLine(JsonSerializer.Serialize(new { outputPath, exitCode }));
