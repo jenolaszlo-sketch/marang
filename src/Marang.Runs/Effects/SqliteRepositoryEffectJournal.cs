@@ -205,6 +205,7 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     private static async Task<List<RepositoryEffectRecord>> ReadAllAsync(SqliteConnection connection, SqliteTransaction transaction,
         CancellationToken cancellationToken)
     {
+        await ValidateGlobalEventSequenceAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
         var ids = new HashSet<Guid>();
         await using (var command = connection.CreateCommand())
         {
@@ -221,7 +222,8 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
         var records = new List<RepositoryEffectRecord>(ids.Count);
         foreach (var id in ids)
         {
-            var verified = await ReadAndVerifyByIdAsync(connection, transaction, id, cancellationToken).ConfigureAwait(false)
+            var verified = await ReadAndVerifyByIdAsync(connection, transaction, id, cancellationToken,
+                validateGlobalSequence: false).ConfigureAwait(false)
                 ?? throw new InvalidDataException("Effect projection disappeared during a consistent journal read.");
             records.Add(verified.Record);
         }
@@ -243,8 +245,10 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     private sealed record VerifiedEffect(RepositoryEffectRecord Record, IReadOnlyList<RepositoryEffectEvent> Events);
 
     private static async Task<VerifiedEffect?> ReadAndVerifyByIdAsync(SqliteConnection connection, SqliteTransaction? transaction,
-        Guid effectId, CancellationToken cancellationToken)
+        Guid effectId, CancellationToken cancellationToken, bool validateGlobalSequence = true)
     {
+        if (validateGlobalSequence)
+            await ValidateGlobalEventSequenceAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
         await using var command = connection.CreateCommand(); command.Transaction = transaction;
         command.CommandText = "SELECT effect_id,workflow_id,repository_id,intent_digest,stage,document,updated_at FROM repository_effects WHERE effect_id=$id";
         command.Parameters.AddWithValue("$id", effectId.ToString("D"));
@@ -276,6 +280,49 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
         var events = await ReadEventsAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false);
         ValidateHistory(record, events);
         return new VerifiedEffect(record, events);
+    }
+
+    // Event sequence is a table-wide AUTOINCREMENT writer invariant. Effects interleave;
+    // their per-effect event IDs are intentionally not contiguous.
+    internal static async Task ValidateGlobalEventSequenceAsync(SqliteConnection connection, SqliteTransaction? transaction,
+        CancellationToken cancellationToken)
+    {
+        long count;
+        long minimum;
+        long maximum;
+        await using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "SELECT COUNT(*), COALESCE(MIN(sequence),0), COALESCE(MAX(sequence),0) FROM repository_effect_events";
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                throw new InvalidDataException("Effect event sequence could not be inspected.");
+            count = reader.GetInt64(0);
+            minimum = reader.GetInt64(1);
+            maximum = reader.GetInt64(2);
+        }
+
+        bool hasSequence;
+        long highWater = 0;
+        await using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "SELECT seq FROM sqlite_sequence WHERE name='repository_effect_events'";
+            var value = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            hasSequence = value is not null and not DBNull;
+            if (hasSequence)
+                highWater = Convert.ToInt64(value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        if (count == 0)
+        {
+            if (hasSequence)
+                throw new InvalidDataException("Empty effect event history has an AUTOINCREMENT high-water mark.");
+            return;
+        }
+
+        if (minimum != 1 || maximum != count || highWater != maximum)
+            throw new InvalidDataException("Effect event sequence has a gap or disagrees with its AUTOINCREMENT high-water mark.");
     }
 
     private static async Task<List<RepositoryEffectEvent>> ReadEventsAsync(SqliteConnection connection, SqliteTransaction? transaction,
@@ -352,7 +399,7 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
 
     private static bool ValidValidation(RepositoryEffectValidation validation) =>
         RepositoryStateSnapshot.IsSha256(validation.TargetStateDigest) && !string.IsNullOrWhiteSpace(validation.Target) &&
-        !string.IsNullOrWhiteSpace(validation.CommandIdentity) && RepositoryStateSnapshot.IsSha256(validation.OutputDigest) &&
+        !string.IsNullOrWhiteSpace(validation.CommandIdentity) && !string.IsNullOrWhiteSpace(validation.OutputDigest) &&
         !string.IsNullOrWhiteSpace(validation.Evidence);
 
     internal static RepositoryEffectRecord DeserializeRecord(string json)

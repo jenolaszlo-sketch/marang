@@ -48,6 +48,9 @@ Cancellation remains cancellation, not evidence of corruption.
 - Verify stored index columns agree with serialized documents. Detect missing
   projections with retained events, missing event history and disagreement
   between the current projection and the final recorded event state.
+  Event numbering belongs to the whole append-only journal, including
+  interleaved effects. Retained rows and the SQLite allocator must agree; there
+  is no history retention/deletion path in this pinned writer.
 - Validate existing graph validation/approval bindings without granting new
   authority. Physical integrity of additional required SQLite stores may be
   checked without interpreting or changing security-component internals.
@@ -65,6 +68,8 @@ Detection is limited to the specified invariants. A coherent rollback, complete
 deletion of all redundant evidence, or malicious rewrite of data plus all
 matching digests cannot be detected without independent trusted evidence.
 M6.1 does not add such an anchor or claim cryptographic tamper resistance.
+SQLite physical checks inspect its exposed committed state; M6.1 adds no
+independent expected commit-tip anchor or raw WAL-format recovery algorithm.
 Generic logical validation of Hufu internals is outside this slice.
 
 No original database or WAL content may be rewritten on refused recovery.

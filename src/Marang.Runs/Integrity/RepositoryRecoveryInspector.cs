@@ -87,6 +87,7 @@ public static class RepositoryRecoveryInspector
                 if (await version.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) is not long pinnedVersion || pinnedVersion != 6)
                     return new(RepositoryRecoveryStatus.MissingStateShape, store, "pinned-profile-format-required");
             }
+            await SqliteRepositoryEffectJournal.ValidateGlobalEventSequenceAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
             await RepositoryRecoveryContents.ValidateAsync(connection, transaction, workflowId, cancellationToken).ConfigureAwait(false);
             await RepositoryRecoveryExecution.ValidateAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
             var effects = new List<Guid>();

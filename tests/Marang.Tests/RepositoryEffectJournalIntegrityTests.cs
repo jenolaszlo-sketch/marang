@@ -95,14 +95,14 @@ public sealed class RepositoryEffectJournalIntegrityTests
     }
 
     [Fact]
-    public async Task Invalid_validation_output_digest_is_corrupt()
+    public async Task Validation_output_identity_must_match_history()
     {
         using var fixture = await Fixture.CreateAsync();
         await fixture.SetStateAsync("ValidationFailed");
         await fixture.MutateDocumentAsync(json =>
         {
             var node = JsonNode.Parse(json)!;
-            node["validation"]!["outputDigest"] = "invalid";
+            node["validation"]!["outputDigest"] = "changed-opaque-identity";
             return node.ToJsonString();
         });
         await fixture.ExpectCorruptReadsAsync();
@@ -141,6 +141,49 @@ public sealed class RepositoryEffectJournalIntegrityTests
         record!.AuthorityEvidence.Should().Equal(first, second);
         (await fixture.journal.ListEventsAsync(fixture.Intent.EffectId, TestContext.Current.CancellationToken))
             .Select(e => e.AuthorityEvidence.Count).Should().Equal(0, 1, 1);
+    }
+
+    [Fact]
+    public async Task Healthy_global_sequence_allows_interleaved_effect_histories()
+    {
+        using var fixture = await Fixture.CreateAsync();
+        var ct = TestContext.Current.CancellationToken;
+        var second = RepositoryEffectJournalTests.CreateIntent();
+        await fixture.journal.PrepareAsync(second, ct); // global sequence 2
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.IntentCommitted, cancellationToken: ct); // 3
+        await fixture.journal.TransitionAsync(second.EffectId, RepositoryEffectStage.IntentCommitted, cancellationToken: ct); // 4
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.Applying, cancellationToken: ct); // 5
+
+        (await fixture.journal.GetAsync(fixture.Intent.EffectId, ct)).Should().NotBeNull();
+        (await fixture.journal.GetAsync(second.EffectId, ct)).Should().NotBeNull();
+        (await fixture.journal.ListEventsAsync(fixture.Intent.EffectId, ct)).Select(e => e.Stage)
+            .Should().Equal(RepositoryEffectStage.Prepared, RepositoryEffectStage.IntentCommitted, RepositoryEffectStage.Applying);
+        (await fixture.journal.ListEventsAsync(second.EffectId, ct)).Select(e => e.Stage)
+            .Should().Equal(RepositoryEffectStage.Prepared, RepositoryEffectStage.IntentCommitted);
+    }
+
+    [Fact]
+    public async Task Deleted_empty_authority_applying_event_is_corrupt_even_when_stage_skip_is_legal()
+    {
+        using var fixture = await Fixture.CreateAsync();
+        var ct = TestContext.Current.CancellationToken;
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.IntentCommitted, cancellationToken: ct);
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.Applying, cancellationToken: ct);
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.AppliedObserved,
+            RepositoryEffectClassification.DefinitelyApplied, fixture.Intent.ExpectedPostState, cancellationToken: ct);
+        await fixture.DeleteEventByStageAsync(RepositoryEffectStage.Applying);
+        await fixture.ExpectCorruptReadsAsync();
+    }
+
+    [Fact]
+    public async Task Deleted_tail_event_is_corrupt_even_when_projection_is_rewound_consistently()
+    {
+        using var fixture = await Fixture.CreateAsync();
+        var ct = TestContext.Current.CancellationToken;
+        var preparedDocument = await fixture.ReadProjectionDocumentAsync();
+        await fixture.journal.TransitionAsync(fixture.Intent.EffectId, RepositoryEffectStage.IntentCommitted, cancellationToken: ct);
+        await fixture.DeleteTailAndRestoreProjectionAsync(preparedDocument);
+        await fixture.ExpectCorruptReadsAsync();
     }
 
     private static RepositoryEffectAuthorizationEvidence Evidence(RepositoryEffectIntent intent, string request) =>
@@ -199,6 +242,70 @@ public sealed class RepositoryEffectJournalIntegrityTests
             update.Parameters.AddWithValue("$doc", document);
             update.Parameters.AddWithValue("$digest", RepositoryStateSnapshot.Hash(document));
             await update.ExecuteNonQueryAsync(TestContext.Current.CancellationToken);
+        }
+
+        public async Task DeleteEventByStageAsync(RepositoryEffectStage stage)
+        {
+            var ct = TestContext.Current.CancellationToken;
+            await using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = DatabasePath, Pooling = false }.ToString());
+            await connection.OpenAsync(ct);
+            long? sequence = null;
+            await using (var select = connection.CreateCommand())
+            {
+                select.CommandText = "SELECT sequence,document FROM repository_effect_events WHERE effect_id=$id ORDER BY sequence";
+                select.Parameters.AddWithValue("$id", Intent.EffectId.ToString("D"));
+                await using var reader = await select.ExecuteReaderAsync(ct);
+                while (await reader.ReadAsync(ct))
+                {
+                    var node = JsonNode.Parse(reader.GetString(1));
+                    if (node?["stage"]?.GetValue<int>() == (int)stage)
+                    {
+                        sequence = reader.GetInt64(0);
+                        break;
+                    }
+                }
+            }
+            sequence.Should().NotBeNull("the fixture must contain the requested stage before corruption");
+            await using var delete = connection.CreateCommand();
+            delete.CommandText = "DELETE FROM repository_effect_events WHERE sequence=$sequence";
+            delete.Parameters.AddWithValue("$sequence", sequence!.Value);
+            (await delete.ExecuteNonQueryAsync(ct)).Should().Be(1);
+        }
+
+        public async Task<string> ReadProjectionDocumentAsync()
+        {
+            var ct = TestContext.Current.CancellationToken;
+            await using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = DatabasePath, Pooling = false }.ToString());
+            await connection.OpenAsync(ct);
+            await using var command = connection.CreateCommand();
+            command.CommandText = "SELECT document FROM repository_effects WHERE effect_id=$id";
+            command.Parameters.AddWithValue("$id", Intent.EffectId.ToString("D"));
+            return (string)(await command.ExecuteScalarAsync(ct))!;
+        }
+
+        public async Task DeleteTailAndRestoreProjectionAsync(string preparedDocument)
+        {
+            var ct = TestContext.Current.CancellationToken;
+            await using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = DatabasePath, Pooling = false }.ToString());
+            await connection.OpenAsync(ct);
+            using var transaction = connection.BeginTransaction();
+            await using (var delete = connection.CreateCommand())
+            {
+                delete.Transaction = transaction;
+                delete.CommandText = "DELETE FROM repository_effect_events WHERE sequence=(SELECT MAX(sequence) FROM repository_effect_events)";
+                (await delete.ExecuteNonQueryAsync(ct)).Should().Be(1);
+            }
+            var restored = SqliteRepositoryEffectJournal.DeserializeRecord(preparedDocument);
+            await using (var update = connection.CreateCommand())
+            {
+                update.Transaction = transaction;
+                update.CommandText = "UPDATE repository_effects SET stage='Prepared',document=$document,updated_at=$updated WHERE effect_id=$id";
+                update.Parameters.AddWithValue("$document", preparedDocument);
+                update.Parameters.AddWithValue("$updated", restored.UpdatedAt.ToString("O"));
+                update.Parameters.AddWithValue("$id", Intent.EffectId.ToString("D"));
+                (await update.ExecuteNonQueryAsync(ct)).Should().Be(1);
+            }
+            transaction.Commit();
         }
 
         public async Task SetStateAsync(string target)

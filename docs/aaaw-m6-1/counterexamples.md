@@ -38,9 +38,55 @@ attempt-to-branch binding. The reviews are preserved in order under `reviews/`.
 Bindings accepted before the provider pump, and uncaptured or non-reconnectable
 provider states, remain admissible without guessing external operation state.
 
-The final focused pre-freeze run passed 81/81 on .NET 10. It covers healthy
+The first candidate's focused pre-freeze run passed 81/81 on .NET 10. It covers healthy
 initial/pending/committed states, Applying, partial Blocked and ValidationFailed
 effects, supervisor continuity, provider uncertainty, isolated physical/logical
 damage, two consecutive fresh owned entry refusals for each of six damage
 classes, and nine fresh-process WAL-backed inspections. This focused run does
 not substitute for the full native M5/M6.1 qualification matrix.
+
+## First frozen native attempt
+
+Candidate `41829680bf68ca92d9fc72e82222804da360f8f6` was rejected by full
+qualification on Windows, WSL2 Linux and macOS ARM64. All new M6.1 test classes
+and process-artifact gates passed. The original canonical/K4/actual-state
+scenarios and twelve barriers passed. One unchanged M5 regression test failed
+on each framework on every platform:
+`Superseded_applied_effect_replay_preserves_its_physical_receipt_after_successor`.
+
+The new journal reader had incorrectly required a SHA-256 validation output
+identity. The existing journal writer permits any nonempty output identity,
+including the historical test's `output` value. The correction follows that
+existing contract; the original M5 test is unchanged. Graph-level validation
+already requires SHA-256 and retains that requirement. The failed native
+reports, raw results, cleanup and source identity are retained in
+`evidence/rejected-4182968.zip`; macOS run
+[38888331658](https://github.com/jenolaszlo-sketch/marang/actions/runs/38888331658)
+remains a failure, not a passing portability result.
+
+Review also identified missing journal event-sequence checks. A first copied
+M5-state experiment deleting an Applying event was already refused because its
+authority delta no longer matched the projection; that experiment is a
+successful negative control, not the sequence counterexample. The isolated
+journal fixtures instead remove an empty-authority Applying event whose loss
+leaves a legal transition, or delete the last event and consistently rewind
+the projection. Retained global numbering/allocator evidence is the remaining
+recorded contradiction in those fixtures. Numbering is checked globally;
+interleaved per-effect event numbers are valid. No history is repaired or
+renumbered, and a coherent rewrite of both events and allocator remains outside
+the detection claim.
+
+Against unchanged candidate production code, those two isolated deletion tests
+failed to obtain a refusal, while the interleaved healthy control passed
+(2 failed / 1 passed). Their original TRX and console output are included in
+`rejected-4182968.zip`. An initial stalled restore was cancelled and retained as
+setup evidence; the completed baseline run is `net10-run2`.
+
+A final integration counterexample used a healthy initial workflow with no
+effects, then retained a positive event allocator watermark while leaving the
+event/record sets empty. The inspector incorrectly skipped the journal check
+because it had no effect IDs to enumerate (1 failed test). It now runs the
+global check unconditionally. The corrected focused run passed all 85 M6.1
+cases plus the unchanged M5 replay control (86/86); the sequence correction and
+old replay control also passed their four-case focus on both frameworks.
+Original baseline and corrected TRX files are in `evidence/corrections.zip`.

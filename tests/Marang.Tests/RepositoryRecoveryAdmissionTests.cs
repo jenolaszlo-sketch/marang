@@ -6,6 +6,18 @@ namespace Marang.Tests;
 [Collection("RepositoryRecoveryIntegrity")]
 public sealed class RepositoryRecoveryAdmissionTests
 {
+    [Fact]
+    public async Task Empty_effect_history_cannot_hide_a_retained_allocator_watermark()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        using var fixture = await RecoveryIntegrityFixture.CreateAsync(prepareProposal: false);
+        (await RepositoryRecoveryInspector.InspectAsync(fixture.DatabasePath, fixture.WorkflowId, cancellationToken: ct)).CanRecover.Should().BeTrue();
+        await fixture.MutateAsync("INSERT INTO sqlite_sequence(name,seq) VALUES('repository_effect_events',1)", ct);
+        var before = await File.ReadAllBytesAsync(fixture.DatabasePath, ct);
+        (await RepositoryRecoveryInspector.InspectAsync(fixture.DatabasePath, fixture.WorkflowId, cancellationToken: ct)).Status.Should().Be(RepositoryRecoveryStatus.InconsistentState);
+        (await File.ReadAllBytesAsync(fixture.DatabasePath, ct)).Should().Equal(before);
+    }
+
     [Theory]
     [InlineData("DROP TABLE workflow_steps", RepositoryRecoveryStatus.MissingStateShape)]
     [InlineData("DROP TABLE workflow_events", RepositoryRecoveryStatus.MissingStateShape)]
