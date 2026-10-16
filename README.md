@@ -9,6 +9,26 @@ supervision points, intervene, cancel, and retrieve an immutable result.
 
 > Marang exposes delegation as a service. Qingniao makes delegation reusable.
 
+## AAAW M5 portability baseline
+
+**M5 is complete for the bounded repository profile across Windows, WSL2 Linux
+and macOS ARM64.** The qualified scenarios preserve recovery and revision
+continuity across all twelve restart barriers: valid mutations are preserved
+without replay, stale dependents are replaced from recovered repository state,
+and unresolved states remain fail-closed. This remains an experimental profile.
+
+| Qualification anchor | Immutable commit |
+| --- | --- |
+| Gagamba implementation | [`0c1f05e`](https://github.com/jenolaszlo-sketch/gagamba/commit/0c1f05e199588622a5987f95a9149374f5bd858b) |
+| Gagamba evidence | [`2c8f4f7`](https://github.com/jenolaszlo-sketch/gagamba/commit/2c8f4f7d7974510bac4baee9713acb6941b3ff09) |
+| Marang qualified source | [`b9df4b6`](https://github.com/jenolaszlo-sketch/marang/commit/b9df4b6fa9d1553b5f2df95dceebb699238ce935) |
+| Marang final evidence | [`5c3fb4b`](https://github.com/jenolaszlo-sketch/marang/commit/5c3fb4b36e817b7abebd5e91cda8f0be4f7dd8e0) |
+
+The [qualification report](docs/aaaw-m5/gp-resume/qualification.md) preserves the
+original counterexample, exact matrix, filesystem skip and independent reviews.
+The proposed next work is [M6 operational recovery hardening](docs/aaaw-m6/plan.md),
+split into bounded evidence batches. M6 implementation has not started.
+
 ```text
 Codex / MCP client
         |
