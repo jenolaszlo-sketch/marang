@@ -1,0 +1,59 @@
+name: AAAW M6.1 native macOS qualification
+
+on:
+  push:
+    branches: [codex/aaaw-m6-1-integrity]
+    paths:
+      - '.github/workflows/aaaw-m6-1-macos.yml'
+      - 'eng/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'Directory.Build.*'
+      - 'NuGet.AAAWM1.Config'
+      - 'Marang.slnx'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-macos:
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      UseSharedCompilation: 'false'
+      MSBUILDDISABLENODEREUSE: '1'
+      DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
+        with:
+          dotnet-version: |
+            8.0.426
+            10.0.401
+      - name: Use physical task temporary directory
+        shell: bash
+        run: |
+          test "$(uname -m)" = arm64
+          physical_temp="$(cd "$RUNNER_TEMP" && pwd -P)/aaaw-m6-1"
+          mkdir -p "$physical_temp"
+          echo "TMPDIR=$physical_temp/" >> "$GITHUB_ENV"
+      - name: Run unchanged M5 qualification and verify M6.1 evidence
+        run: python3 eng/qualify-aaaw-m6-1.py
+      - name: Upload M6.1 and original M5 evidence, including refusals
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: aaaw-m6-1-macos-${{ github.sha }}
+          path: |
+            artifacts/aaaw-m6-1/macos-qualification/qualification.json
+            artifacts/aaaw-m6-1/macos-qualification/captured-artifacts.zip
+            artifacts/aaaw-m5/macos-qualification/qualification.json
+            artifacts/aaaw-m5/macos-qualification/*.trx
+            artifacts/aaaw-m5/macos-qualification/captured-artifacts.zip
+          if-no-files-found: error
+          retention-days: 30

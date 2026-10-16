@@ -3,6 +3,7 @@ using Marang.DelegationAuthority;
 using Marang.Http;
 using Marang.Mcp;
 using Marang.Runs;
+using Marang.Runs.Integrity;
 using Marang.SessionJournal;
 using Penghou.Hufu;
 using Penghou.Hufu.Sqlite;
@@ -34,6 +35,8 @@ internal static class Program
         var reconcileRun = 0;
         var interactive = false;
         var resume = false;
+        string? integrityDatabase = null;
+        var integrityWorkflow = Guid.Empty;
         for (var i = 0; i + 1 < args.Length; i += 2)
         {
             if (args[i] == "--phase") phase = args[i + 1];
@@ -41,6 +44,8 @@ internal static class Program
             if (args[i] == "--barrier") barrier = args[i + 1];
             if (args[i] == "--interactive") interactive = args[i + 1] == "true";
             if (args[i] == "--resume") resume = args[i + 1] == "true";
+            if (args[i] == "--database") integrityDatabase = args[i + 1];
+            if (args[i] == "--workflow-id") integrityWorkflow = Guid.Parse(args[i + 1]);
             if (args[i] == "--reconcile-run" && !int.TryParse(args[i + 1], out reconcileRun))
                 throw new ArgumentException("--reconcile-run must be an integer.");
         }
@@ -53,7 +58,17 @@ internal static class Program
 
         try
         {
-            if (phase == "1") await Phase1Async(dir);
+            if (phase == "integrity-inspect")
+            {
+                var inspection = await RepositoryRecoveryInspector.InspectAsync(
+                    integrityDatabase ?? Path.Combine(dir, "runtime", "execution.db"), integrityWorkflow);
+                Directory.CreateDirectory(dir); // Explicit test evidence output, never a recovery store.
+                var json = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+                json.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                await File.WriteAllTextAsync(Path.Combine(dir, "integrity-result.json"), JsonSerializer.Serialize(inspection, json));
+                return inspection.CanRecover ? 0 : 1;
+            }
+            else if (phase == "1") await Phase1Async(dir);
             else if (phase == "2") await Phase2Async(dir);
             else if (phase == "adaptive") await AdaptiveRevisionProbe.RunAsync(dir, barrier, interactive);
             else if (phase == "adaptive-unknown") await AdaptiveRevisionProbe.VerifyUnknownAsync(dir);
@@ -74,9 +89,10 @@ internal static class Program
                 ["error"] = exception.GetType().FullName ?? "error",
                 ["message"] = exception.Message,
             };
-            await File.WriteAllTextAsync(
-                Path.Combine(dir, phase == "1" ? "phase1-error.json" : "phase2-error.json"),
-                JsonSerializer.Serialize(error));
+            if (Directory.Exists(dir))
+                await File.WriteAllTextAsync(
+                    Path.Combine(dir, phase == "1" ? "phase1-error.json" : "phase2-error.json"),
+                    JsonSerializer.Serialize(error));
             await Console.Error.WriteLineAsync(exception.ToString());
             return 1;
         }

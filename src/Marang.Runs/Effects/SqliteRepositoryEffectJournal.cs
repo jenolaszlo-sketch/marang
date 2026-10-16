@@ -105,21 +105,18 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     public async Task<RepositoryEffectRecord?> GetAsync(Guid effectId, CancellationToken cancellationToken = default)
     {
         await using var connection = await database.OpenAsync(cancellationToken).ConfigureAwait(false);
-        return await ReadByIdAsync(connection, null, effectId, cancellationToken).ConfigureAwait(false);
+        using var transaction = connection.BeginTransaction();
+        return await ReadByIdAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<RepositoryEffectRecord>> ListForWorkflowAsync(Guid workflowId,
         CancellationToken cancellationToken = default)
     {
         await using var connection = await database.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await using var command = connection.CreateCommand();
-        command.CommandText = "SELECT document FROM repository_effects WHERE workflow_id=$workflow ORDER BY updated_at,effect_id";
-        command.Parameters.AddWithValue("$workflow", workflowId.ToString("D"));
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        var records = new List<RepositoryEffectRecord>();
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
-            records.Add(DeserializeRecord(reader.GetString(0)));
-        return records;
+        using var transaction = connection.BeginTransaction();
+        var records = await ReadAllAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+        return records.Where(r => r.Intent.WorkflowId == workflowId)
+            .OrderBy(r => r.UpdatedAt).ThenBy(r => r.Intent.EffectId).ToArray();
     }
 
     public async Task<IReadOnlyList<RepositoryEffectRecord>> ListForRepositoryAsync(string repositoryId,
@@ -127,14 +124,10 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(repositoryId);
         await using var connection = await database.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await using var command = connection.CreateCommand();
-        command.CommandText = "SELECT document FROM repository_effects WHERE repository_id=$repository ORDER BY updated_at,effect_id";
-        command.Parameters.AddWithValue("$repository", repositoryId);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
-        var records = new List<RepositoryEffectRecord>();
-        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
-            records.Add(DeserializeRecord(reader.GetString(0)));
-        return records;
+        using var transaction = connection.BeginTransaction();
+        var records = await ReadAllAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+        return records.Where(r => r.Intent.RepositoryId == repositoryId)
+            .OrderBy(r => r.UpdatedAt).ThenBy(r => r.Intent.EffectId).ToArray();
     }
 
     public async Task<RepositoryEffectRecord> TransitionAsync(Guid effectId, RepositoryEffectStage stage,
@@ -200,34 +193,185 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     public async Task<IReadOnlyList<RepositoryEffectEvent>> ListEventsAsync(Guid effectId, CancellationToken cancellationToken = default)
     {
         await using var connection = await database.OpenAsync(cancellationToken).ConfigureAwait(false);
+        using var transaction = connection.BeginTransaction();
+        var verified = await ReadAndVerifyByIdAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false);
+        return verified?.Events ?? [];
+    }
+
+    internal static async Task<RepositoryEffectRecord?> ReadByIdAsync(SqliteConnection connection, SqliteTransaction? transaction,
+        Guid effectId, CancellationToken cancellationToken) =>
+        (await ReadAndVerifyByIdAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false))?.Record;
+
+    private static async Task<List<RepositoryEffectRecord>> ReadAllAsync(SqliteConnection connection, SqliteTransaction transaction,
+        CancellationToken cancellationToken)
+    {
+        var ids = new HashSet<Guid>();
+        await using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "SELECT effect_id FROM repository_effects ORDER BY effect_id";
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            {
+                if (!Guid.TryParse(reader.GetString(0), out var id) || id == Guid.Empty || !ids.Add(id))
+                    throw new InvalidDataException("Effect journal contains an invalid projection identity.");
+            }
+        }
+
+        var records = new List<RepositoryEffectRecord>(ids.Count);
+        foreach (var id in ids)
+        {
+            var verified = await ReadAndVerifyByIdAsync(connection, transaction, id, cancellationToken).ConfigureAwait(false)
+                ?? throw new InvalidDataException("Effect projection disappeared during a consistent journal read.");
+            records.Add(verified.Record);
+        }
+
+        await using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "SELECT DISTINCT effect_id FROM repository_effect_events";
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            {
+                if (!Guid.TryParse(reader.GetString(0), out var id) || id == Guid.Empty || !ids.Contains(id))
+                    throw new InvalidDataException("Effect events exist without their durable projection.");
+            }
+        }
+        return records;
+    }
+
+    private sealed record VerifiedEffect(RepositoryEffectRecord Record, IReadOnlyList<RepositoryEffectEvent> Events);
+
+    private static async Task<VerifiedEffect?> ReadAndVerifyByIdAsync(SqliteConnection connection, SqliteTransaction? transaction,
+        Guid effectId, CancellationToken cancellationToken)
+    {
+        await using var command = connection.CreateCommand(); command.Transaction = transaction;
+        command.CommandText = "SELECT effect_id,workflow_id,repository_id,intent_digest,stage,document,updated_at FROM repository_effects WHERE effect_id=$id";
+        command.Parameters.AddWithValue("$id", effectId.ToString("D"));
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+        if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+        {
+            await reader.DisposeAsync().ConfigureAwait(false);
+            var orphanEvents = await ReadEventsAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false);
+            if (orphanEvents.Count != 0) throw new InvalidDataException("Effect events exist without their durable projection.");
+            return null;
+        }
+
+        var projectionId = reader.GetString(0);
+        var workflowId = reader.GetString(1);
+        var repositoryId = reader.GetString(2);
+        var intentDigest = reader.GetString(3);
+        var stage = reader.GetString(4);
+        var json = reader.GetString(5);
+        var updatedAt = reader.GetString(6);
+        await reader.DisposeAsync().ConfigureAwait(false);
+        var record = DeserializeRecord(json);
+        if (projectionId != record.Intent.EffectId.ToString("D") || projectionId != effectId.ToString("D") ||
+            workflowId != record.Intent.WorkflowId.ToString("D") || repositoryId != record.Intent.RepositoryId ||
+            intentDigest != record.Intent.IntentDigest || stage != record.Stage.ToString() ||
+            !DateTimeOffset.TryParseExact(updatedAt, "O", null, System.Globalization.DateTimeStyles.RoundtripKind, out var columnTime) ||
+            columnTime != record.UpdatedAt)
+            throw new InvalidDataException("Effect projection columns disagree with the serialized durable record.");
+
+        var events = await ReadEventsAsync(connection, transaction, effectId, cancellationToken).ConfigureAwait(false);
+        ValidateHistory(record, events);
+        return new VerifiedEffect(record, events);
+    }
+
+    private static async Task<List<RepositoryEffectEvent>> ReadEventsAsync(SqliteConnection connection, SqliteTransaction? transaction,
+        Guid effectId, CancellationToken cancellationToken)
+    {
         await using var command = connection.CreateCommand();
-        command.CommandText = "SELECT document FROM repository_effect_events WHERE effect_id=$id ORDER BY sequence";
+        command.Transaction = transaction;
+        command.CommandText = "SELECT event_digest,document FROM repository_effect_events WHERE effect_id=$id ORDER BY sequence";
         command.Parameters.AddWithValue("$id", effectId.ToString("D"));
         await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
         var events = new List<RepositoryEffectEvent>();
         while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
-            events.Add(JsonSerializer.Deserialize<RepositoryEffectEvent>(reader.GetString(0), Json)
-                ?? throw new InvalidDataException("Effect journal contains invalid event JSON."));
+        {
+            var digest = reader.GetString(0);
+            var json = reader.GetString(1);
+            if (RepositoryStateSnapshot.Hash(json) != digest)
+                throw new InvalidDataException("Effect event digest does not match its durable document.");
+            RepositoryEffectEvent item;
+            try
+            {
+                item = JsonSerializer.Deserialize<RepositoryEffectEvent>(json, Json)
+                    ?? throw new InvalidDataException("Effect journal contains invalid event JSON.");
+            }
+            catch (JsonException exception)
+            {
+                throw new InvalidDataException("Effect journal contains invalid event JSON.", exception);
+            }
+            if (item.EffectId != effectId || !Enum.IsDefined(item.Stage) ||
+                item.Classification is { } classification && !Enum.IsDefined(classification) ||
+                item.ObservedState is { } observed && !observed.HasValidDigest() || item.AuthorityEvidence is null ||
+                item.Validation is { } validation && !ValidValidation(validation))
+                throw new InvalidDataException("Effect event contains invalid or inconsistent durable fields.");
+            events.Add(item);
+        }
         return events;
     }
 
-    private static async Task<RepositoryEffectRecord?> ReadByIdAsync(SqliteConnection connection, SqliteTransaction? transaction,
-        Guid effectId, CancellationToken cancellationToken)
+    private static void ValidateHistory(RepositoryEffectRecord record, IReadOnlyList<RepositoryEffectEvent> events)
     {
-        await using var command = connection.CreateCommand(); command.Transaction = transaction;
-        command.CommandText = "SELECT document FROM repository_effects WHERE effect_id=$id";
-        command.Parameters.AddWithValue("$id", effectId.ToString("D"));
-        var json = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false) as string;
-        return json is null ? null : DeserializeRecord(json);
+        if (events.Count == 0) throw new InvalidDataException("Effect projection has no append-only event history.");
+        if (events[0].Stage != RepositoryEffectStage.Prepared || events[0].Classification is not null ||
+            events[0].ObservedState is not null || events[0].Validation is not null || events[0].AuthorityEvidence.Count != 0)
+            throw new InvalidDataException("Effect event history does not begin with its prepared intent.");
+
+        var authority = new List<RepositoryEffectAuthorizationEvidence>();
+        for (var i = 0; i < events.Count; i++)
+        {
+            var current = events[i];
+            if (i > 0 && !Allowed(events[i - 1].Stage, current.Stage))
+                throw new InvalidDataException("Effect event history contains an illegal lifecycle transition.");
+            if (current.ObservedState is { } observed && observed.RepositoryId != record.Intent.RepositoryId)
+                throw new InvalidDataException("Effect event observation belongs to another repository.");
+            if (current.Stage is RepositoryEffectStage.AppliedObserved or RepositoryEffectStage.ValidationPassed or RepositoryEffectStage.ValidationFailed)
+            {
+                var exactObservation = current.ObservedState ?? (i == 0 ? null : events[i - 1].ObservedState);
+                if (current.Classification != RepositoryEffectClassification.DefinitelyApplied || exactObservation is null ||
+                    exactObservation.StateDigest != record.Intent.ExpectedPostState.StateDigest)
+                    throw new InvalidDataException("Applied effect event lacks its exact post-state observation.");
+            }
+            if (current.Validation is { } validation &&
+                (current.ObservedState ?? (i == 0 ? null : events[i - 1].ObservedState))?.StateDigest != validation.TargetStateDigest)
+                throw new InvalidDataException("Effect event validation is not bound to its observed state.");
+            authority.AddRange(current.AuthorityEvidence);
+        }
+
+        var last = events[^1];
+        if (last.Stage != record.Stage || last.Classification != record.Classification ||
+            !SameJson(last.ObservedState, record.ObservedState) || !SameJson(last.Validation, record.Validation) ||
+            last.RecordedAt != record.UpdatedAt || !SameJson(authority, record.AuthorityEvidence))
+            throw new InvalidDataException("Effect projection disagrees with its append-only event history.");
     }
 
-    private static RepositoryEffectRecord DeserializeRecord(string json)
+    private static bool SameJson<T>(T? left, T? right) => JsonSerializer.Serialize(left, Json) == JsonSerializer.Serialize(right, Json);
+
+    private static bool ValidValidation(RepositoryEffectValidation validation) =>
+        RepositoryStateSnapshot.IsSha256(validation.TargetStateDigest) && !string.IsNullOrWhiteSpace(validation.Target) &&
+        !string.IsNullOrWhiteSpace(validation.CommandIdentity) && RepositoryStateSnapshot.IsSha256(validation.OutputDigest) &&
+        !string.IsNullOrWhiteSpace(validation.Evidence);
+
+    internal static RepositoryEffectRecord DeserializeRecord(string json)
     {
-        var record = JsonSerializer.Deserialize<RepositoryEffectRecord>(json, Json)
-            ?? throw new InvalidDataException("Effect journal contains invalid JSON.");
+        RepositoryEffectRecord record;
+        try
+        {
+            record = JsonSerializer.Deserialize<RepositoryEffectRecord>(json, Json)
+                ?? throw new InvalidDataException("Effect journal contains invalid JSON.");
+        }
+        catch (JsonException exception)
+        {
+            throw new InvalidDataException("Effect journal contains invalid JSON.", exception);
+        }
         if (!record.Intent.HasValidDigest() || record.Intent.EffectId == Guid.Empty || record.Intent.WorkflowId == Guid.Empty ||
-            record.ObservedState is { } observed && !observed.HasValidDigest() ||
-            record.Validation is { } validation && string.IsNullOrWhiteSpace(validation.CommandIdentity))
+            !record.Intent.BaseState.HasValidDigest() || !record.Intent.ExpectedPostState.HasValidDigest() ||
+            !Enum.IsDefined(record.Stage) || record.Classification is { } classification && !Enum.IsDefined(classification) ||
+            record.ObservedState is { } observed && !observed.HasValidDigest() || record.AuthorityEvidence is null ||
+            record.Validation is { } validation && !ValidValidation(validation))
             throw new InvalidDataException("Effect journal contains a tampered or incomplete durable record.");
         return record;
     }

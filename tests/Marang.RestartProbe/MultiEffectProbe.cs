@@ -5,6 +5,7 @@ using Marang.Tests.LifecycleBroker;
 using Marang.Hufu;
 using Marang.Runs.Adaptive;
 using Marang.Runs.Effects;
+using Marang.Runs.Integrity;
 using Penghou.Fuwen;
 using Penghou.Fuwen.Zhinu;
 using Penghou.Hufu;
@@ -52,8 +53,12 @@ internal static class MultiEffectProbe
 
     public static async Task RunAsync(string directory, string? barrier, bool resume, bool reconcileOnly = false, int reconcileRun = 0)
     {
-        Directory.CreateDirectory(directory);
         directory = Path.GetFullPath(directory);
+        var existingStore = Path.Combine(directory, "runtime", "execution.db");
+        if (resume || reconcileOnly || File.Exists(existingStore) || File.Exists(Path.Combine(directory, "checkout-path.txt")))
+            await RepositoryRecoveryInspector.RequireAsync(existingStore, WorkflowId,
+                [Path.Combine(directory, "runtime", "hufu.db")]);
+        Directory.CreateDirectory(directory);
         await File.WriteAllTextAsync(Path.Combine(directory, "workflow-process-id.txt"), Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
         // Keep the isolated checkout path short: its full M1–M3 regression suite
         // launches child probes that load native SQLite libraries on Windows.
