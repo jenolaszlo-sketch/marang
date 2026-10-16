@@ -1,6 +1,8 @@
 # M6.1 corruption detection and fail-closed recovery
 
-Status: implementation/qualification in progress. Baseline: Marang
+Status: **complete for the bounded repository profile**; see the
+[qualification record](qualification.md). Qualified application source:
+`e267f1c16b5cd7dc56ac33b65971be3d712fc673`. Baseline: Marang
 `9638e2a37524ba6999c4e7df6016851578ec7fc8`; the four M5 qualification anchors
 remain unchanged. Branch: `codex/aaaw-m6-1-integrity`.
 

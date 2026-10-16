@@ -27,9 +27,9 @@ and unresolved states remain fail-closed. This remains an experimental profile.
 The [qualification report](docs/aaaw-m5/gp-resume/qualification.md) preserves the
 original counterexample, exact matrix, filesystem skip and independent reviews.
 The proposed next work is [M6 operational recovery hardening](docs/aaaw-m6/plan.md),
-split into bounded evidence batches. [M6.1](docs/aaaw-m6-1/contract.md) is in
-implementation/qualification for corruption detection and fail-closed recovery
-only; later M6 batches have not started.
+split into bounded evidence batches. [M6.1](docs/aaaw-m6-1/qualification.md) is
+complete for corruption detection and fail-closed recovery in this profile;
+the M5 behavior remains qualified. Later M6 batches have not started.
 
 ```text
 Codex / MCP client

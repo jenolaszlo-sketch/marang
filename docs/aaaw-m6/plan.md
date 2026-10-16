@@ -1,6 +1,7 @@
 # AAAW M6: Operational Readiness / Recovery Hardening
 
-Status: **M6.1 implementation/qualification in progress; later batches planned.**
+Status: **M6.1 complete for the bounded repository profile; later batches planned.**
+See the [M6.1 qualification record](../aaaw-m6-1/qualification.md).
 Direction recorded: 2026-10-16.
 
 M6 asks what happens when the environment is damaged or unavailable. It does

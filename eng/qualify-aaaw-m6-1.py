@@ -372,8 +372,11 @@ def validate_windows(args: argparse.Namespace) -> int:
                 "net10RuntimeVersions": [line.strip() for line in runtimes if re.match(r"^Microsoft\.NETCore\.App 10\.", line.strip())],
             }
             inventory["passed"] = all(command.get("ok") for command in (sdk_info, sdk_list, runtime_list)) and all((
-                inventory["hasSdk8"], inventory["hasSdk10"], inventory["net8RuntimeVersions"], inventory["net10RuntimeVersions"]
+                inventory["hasSdk10"], inventory["net8RuntimeVersions"], inventory["net10RuntimeVersions"]
             ))
+            # The Windows M5 profile builds both targets with SDK 10. SDK 8
+            # presence is inventory information, not a prerequisite for it.
+            inventory["requiredBuildSdkMajor"] = 10
             provenance = {
                 "m1Lock": str(shared.M1_LOCK), "m5RuntimeLock": str(shared.M5_LOCK),
                 "m1Packages": shared.validate_package_lock(shared.M1_LOCK),

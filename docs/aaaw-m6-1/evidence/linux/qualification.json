@@ -1,0 +1,2231 @@
+{
+  "capturedArtifacts": {
+    "memberCount": 202,
+    "path": "artifacts/aaaw-m6-1/linux-qualification/captured-artifacts.zip"
+  },
+  "completedAt": "2026-10-16T11:10:57.825060+00:00",
+  "m5": {
+    "passed": true,
+    "qualification": {
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/python3",
+            "eng/bootstrap-aaaw-m5-feed.py"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:09.911168+00:00",
+          "exitCode": 0,
+          "name": "bootstrap-pinned-feed",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34616,
+          "processId": 34616,
+          "startedAt": "2026-10-16T11:02:09.809222+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "Restored nine hash-pinned local qualification packages; nothing published.\n",
+          "stdoutBytesSeen": 75,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "--list-sdks"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:10.018916+00:00",
+          "exitCode": 0,
+          "name": "dotnet-sdks",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34619,
+          "processId": 34619,
+          "startedAt": "2026-10-16T11:02:09.917287+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "8.0.426 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n10.0.401 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n",
+          "stdoutBytesSeen": 125,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 30
+        },
+        {
+          "argv": [
+            "dotnet",
+            "--list-runtimes"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:10.120615+00:00",
+          "exitCode": 0,
+          "name": "dotnet-runtimes",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34622,
+          "processId": 34622,
+          "startedAt": "2026-10-16T11:02:10.019034+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "Microsoft.AspNetCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\n",
+          "stdoutBytesSeen": 668,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 30
+        },
+        {
+          "argv": [
+            "dotnet",
+            "restore",
+            "eng/aaaw-m5-native-prerequisites.csproj",
+            "--source",
+            "https://api.nuget.org/v3/index.json",
+            "--disable-parallel"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:11.224451+00:00",
+          "exitCode": 0,
+          "name": "native-prerequisite-restore",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34625,
+          "processId": 34625,
+          "startedAt": "2026-10-16T11:02:10.121300+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "  Determining projects to restore...\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/eng/aaaw-m5-native-prerequisites.csproj (in 149 ms).\n",
+          "stdoutBytesSeen": 177,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "restore",
+            "Marang.slnx",
+            "--configfile",
+            "NuGet.AAAWM1.Config",
+            "--disable-parallel"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:14.934111+00:00",
+          "exitCode": 0,
+          "name": "restore",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34649,
+          "processId": 34649,
+          "startedAt": "2026-10-16T11:02:11.225164+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "  Determining projects to restore...\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Mcp/Marang.Mcp.csproj (in 548 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/Marang.Tests.csproj (in 531 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj (in 62 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Hufu/Marang.Hufu.csproj (in 3 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.SessionJournal/Marang.SessionJournal.csproj (in 12 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Server/Marang.Server.csproj (in 16 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.DelegationAuthority/Marang.DelegationAuthority.csproj (in 4 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Codex/Marang.Codex.csproj (in 3 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Http/Marang.Http.csproj (in 12 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Marang.RestartProbe.csproj (in 12 ms).\n  Restored /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Marang.Runs.csproj (in 15 ms).\n",
+          "stdoutBytesSeen": 1576,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "build",
+            "Marang.slnx",
+            "-c",
+            "Release",
+            "--no-restore",
+            "-m:1",
+            "-p:UseSharedCompilation=false"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:02:57.063847+00:00",
+          "exitCode": 0,
+          "name": "build",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 34899,
+          "processId": 34899,
+          "startedAt": "2026-10-16T11:02:14.934973+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "  Marang.Codex -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Codex/bin/Release/net8.0/Marang.Codex.dll\n  Marang.Codex -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Codex/bin/Release/net10.0/Marang.Codex.dll\n  Marang.DelegationAuthority -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.DelegationAuthority/bin/Release/net8.0/Marang.DelegationAuthority.dll\n  Marang.DelegationAuthority -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.DelegationAuthority/bin/Release/net10.0/Marang.DelegationAuthority.dll\n/home/gaga/.nuget/packages/microsoft.build.tasks.git/10.0.401/build/Microsoft.Build.Tasks.Git.targets(25,5): warning : The URL of repository remote 'origin' is invalid: '/mnt/c/Users/Laszlos/source/repos/Solo/aaaw-m5/marang/artifacts/aaaw-m6-1/source-e267f1c.bundle'. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net8.0]\n/home/gaga/.nuget/packages/microsoft.sourcelink.common/10.0.401/build/Microsoft.SourceLink.Common.targets(56,5): warning : Source control information is not available - the generated source link is empty. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net8.0]\n  Marang -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/bin/Release/net8.0/Marang.dll\n  Marang.Mcp -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Mcp/bin/Release/net8.0/Marang.Mcp.dll\n  Marang.Hufu -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Hufu/bin/Release/net8.0/Marang.Hufu.dll\n  Marang.Runs -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/bin/Release/net8.0/Marang.Runs.dll\n  Marang.Http -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Http/bin/Release/net8.0/Marang.Http.dll\n/home/gaga/.nuget/packages/microsoft.build.tasks.git/10.0.401/build/Microsoft.Build.Tasks.Git.targets(25,5): warning : The URL of repository remote 'origin' is invalid: '/mnt/c/Users/Laszlos/source/repos/Solo/aaaw-m5/marang/artifacts/aaaw-m6-1/source-e267f1c.bundle'. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net10.0]\n/home/gaga/.nuget/packages/microsoft.sourcelink.common/10.0.401/build/Microsoft.SourceLink.Common.targets(56,5): warning : Source control information is not available - the generated source link is empty. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net10.0]\n  Marang -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/bin/Release/net10.0/Marang.dll\n  Marang.Mcp -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Mcp/bin/Release/net10.0/Marang.Mcp.dll\n  Marang.Hufu -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Hufu/bin/Release/net10.0/Marang.Hufu.dll\n  Marang.Runs -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/bin/Release/net10.0/Marang.Runs.dll\n  Marang.Http -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Http/bin/Release/net10.0/Marang.Http.dll\n  Marang.SessionJournal -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.SessionJournal/bin/Release/net10.0/Marang.SessionJournal.dll\n  Marang.Server -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Server/bin/Release/net10.0/Marang.Server.dll\n  Marang.RestartProbe -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll\n  Marang.Tests -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll\n  Marang.Tests -> /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll\n\nBuild succeeded.\n\n/home/gaga/.nuget/packages/microsoft.build.tasks.git/10.0.401/build/Microsoft.Build.Tasks.Git.targets(25,5): warning : The URL of repository remote 'origin' is invalid: '/mnt/c/Users/Laszlos/source/repos/Solo/aaaw-m5/marang/artifacts/aaaw-m6-1/source-e267f1c.bundle'. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net8.0]\n/home/gaga/.nuget/packages/microsoft.sourcelink.common/10.0.401/build/Microsoft.SourceLink.Common.targets(56,5): warning : Source control information is not available - the generated source link is empty. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net8.0]\n/home/gaga/.nuget/packages/microsoft.build.tasks.git/10.0.401/build/Microsoft.Build.Tasks.Git.targets(25,5): warning : The URL of repository remote 'origin' is invalid: '/mnt/c/Users/Laszlos/source/repos/Solo/aaaw-m5/marang/artifacts/aaaw-m6-1/source-e267f1c.bundle'. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net10.0]\n/home/gaga/.nuget/packages/microsoft.sourcelink.common/10.0.401/build/Microsoft.SourceLink.Common.targets(56,5): warning : Source control information is not available - the generated source link is empty. [/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang/Marang.csproj::TargetFramework=net10.0]\n    4 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:41.89\n",
+          "stdoutBytesSeen": 5868,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "format",
+            "Marang.slnx",
+            "--verify-no-changes",
+            "--no-restore"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:03:31.359354+00:00",
+          "exitCode": 0,
+          "name": "format",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 35822,
+          "processId": 35822,
+          "startedAt": "2026-10-16T11:02:57.064879+00:00",
+          "stderr": "Warnings were encountered while loading the workspace. Set the verbosity option to the 'diagnostic' level to log warnings.\n",
+          "stderrBytesSeen": 123,
+          "stderrTruncated": false,
+          "stdout": "",
+          "stdoutBytesSeen": 0,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "test",
+            "tests/Marang.Tests/Marang.Tests.csproj",
+            "-c",
+            "Release",
+            "-f",
+            "net8.0",
+            "--no-build",
+            "--no-restore",
+            "--logger",
+            "trx;LogFileName=m5-net8.0.trx",
+            "--results-directory",
+            "/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:03:45.386336+00:00",
+          "exitCode": 0,
+          "name": "test-net8.0",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 35927,
+          "processId": 35927,
+          "startedAt": "2026-10-16T11:03:31.360818+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "Test run for /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net8.0.trx\n\nPassed!  - Failed:     0, Passed:   272, Skipped:     0, Total:   272, Duration: 11 s - Marang.Tests.dll (net8.0)\n",
+          "stdoutBytesSeen": 515,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        },
+        {
+          "argv": [
+            "dotnet",
+            "test",
+            "tests/Marang.Tests/Marang.Tests.csproj",
+            "-c",
+            "Release",
+            "-f",
+            "net10.0",
+            "--no-build",
+            "--no-restore",
+            "--logger",
+            "trx;LogFileName=m5-net10.0.trx",
+            "--results-directory",
+            "/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx"
+          ],
+          "captureErrors": [],
+          "cleanupConfirmed": true,
+          "completedAt": "2026-10-16T11:10:57.417540+00:00",
+          "exitCode": 0,
+          "name": "test-net10.0",
+          "ok": true,
+          "orphanedProcessGroupObserved": false,
+          "outputDrainComplete": true,
+          "processGroupId": 37594,
+          "processId": 37594,
+          "startedAt": "2026-10-16T11:03:45.394798+00:00",
+          "stderr": "",
+          "stderrBytesSeen": 0,
+          "stderrTruncated": false,
+          "stdout": "Test run for /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net10.0.trx\n\nPassed!  - Failed:     0, Passed:   332, Skipped:     0, Total:   332, Duration: 7 m 9 s - Marang.Tests.dll (net10.0)\n",
+          "stdoutBytesSeen": 522,
+          "stdoutTruncated": false,
+          "termination": "not-needed",
+          "timedOut": false,
+          "timeoutSeconds": 3600
+        }
+      ],
+      "completedAt": "2026-10-16T11:10:57.759367+00:00",
+      "host": {
+        "cgroup2Mounts": [
+          "/sys/fs/cgroup"
+        ],
+        "cgroupParent": "/sys/fs/cgroup/aaaw-m5-m6-1-e267f1c-1792148527",
+        "cgroupParentConfigured": true,
+        "checks": {
+          "cgroupV2ControlFiles": true,
+          "cgroupV2Path": true,
+          "configuredCgroupParent": true,
+          "nonRoot": true,
+          "ready": true,
+          "writableCgroupParent": true
+        },
+        "delegationProof": "Static mount, control-file, identity, and access checks only. Successful canonical Gagamba prepare/launch/stop receipts are the runtime evidence of delegation.",
+        "effectiveUid": 1000,
+        "machine": "x86_64",
+        "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "system": "Linux"
+      },
+      "inferred": [
+        "A fresh passing canonical result plus Linux Gagamba receipts supports the tested lifecycle path on this one host and its current delegated cgroup v2 subtree.",
+        "Passing M1-M4 consumer suites establish compatibility only for the pinned package set and recorded SDK/runtime environment."
+      ],
+      "notExercised": [
+        "macOS qualification",
+        "Gagamba owner-death cleanup",
+        "cgroup escape resistance and hostile multi-user isolation",
+        "power-loss recovery",
+        "general exactly-once external effects"
+      ],
+      "observed": {
+        "barriers": {
+          "K1": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30552,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K1.json",
+              "sha256": "bbf47cba8a9450a2f598b4b6296ed8eea5ad18359fa374d9910563fdca4ed6fe"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K1.json",
+              "sha256": "3f013e1aaa4181d2a40434684c438f5af842e6e13cb64675f1ef6f68cb153489"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K10": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 31399,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K10.json",
+              "sha256": "ab7fd2d6bf52944c64a32594b24bd3f377ad3b494dd64923227571c7f75b0da7"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 452,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K10.json",
+              "sha256": "cf8f5491bf9e2fcbf62ba6454f18d39bacf2bfebd4b67e915815efded454856c"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K11": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 31193,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K11.json",
+              "sha256": "dcb02ad8e2ec96fde1b8c6c2cc4492c695e331465f68571cb19f1af7bafd9c93"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 452,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K11.json",
+              "sha256": "a86777fcc209dbcda6ee8cf8c2cb037cf9af22b3026c895a875b02749c872e22"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K12": {
+            "brokerCommandCauses": [
+              "ExplicitStop"
+            ],
+            "brokerCommandCount": 1,
+            "context": {
+              "bytes": 31186,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K12.json",
+              "sha256": "d21c3730c39e85fe735e3cd19e2e61e49b8f56d06d42d5ef80ebbd31dbc79986"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": true,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 848,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K12.json",
+              "sha256": "86c570315760b43ce67dd720396e6846ccd75b612d2b0405a03a40a0b584c1fa"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K2": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30622,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K2.json",
+              "sha256": "0369e153e06c5d9a29c3b0bf427ef83729054232f8c668e6da44531517bd5ec3"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K2.json",
+              "sha256": "44ac2ae5488a2248acb6273def237935c5a2b493ddbc318e055d9c2fecee15bb"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K3": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30628,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K3.json",
+              "sha256": "122b5e86fd90552b165e0b2526b9499ce4780254fc54ee084304633be6e165e5"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K3.json",
+              "sha256": "7998cbd5fa4e50dfdcfe090bc9269a14b6f08607bf020edf9195f658d6083a78"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K4": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30707,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261016-111014327-254faf0d95434c008d6d932be221ed4b/barrier-context-K4.json",
+              "sha256": "5555228bc11db3a8c253b0ac45f74cb20fb28214b11f2f28d8f8f3ef5b4ef3d5"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261016-111014327-254faf0d95434c008d6d932be221ed4b/lifecycle-stop-K4.json",
+              "sha256": "95dcf7f9abd54bc934cb32e0618aa8553d573cd47dba47c52d5ee32620c0298a"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K5": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30713,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K5.json",
+              "sha256": "0ea96a00d4b32068f549ab393757f21ed26018988b00b7cebe3cfd723798231a"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K5.json",
+              "sha256": "44f1dc11b67ebcbc94bf2bd58235d8033a6f49b9fe35b480fb2844140df0d008"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K6": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30492,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K6.json",
+              "sha256": "d0d4ea07158b3d5b145b9dc3ce695127be6b5c7a8eea876318502df22093a603"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K6.json",
+              "sha256": "d2cd3a1e24e6e0246428bee914f143f61ff65ec6539e7703b855cf33e3f6d75d"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K7": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 30494,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K7.json",
+              "sha256": "d8e4f5b9ab6d45f02c0f7f7711e85c36c566175bd79bf17a6202747908d9af9c"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K7.json",
+              "sha256": "4beb76ea8cb2155a1fd4743269b3ee6c8c0d3e93348375a8cc0da73c9a01752a"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K8": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 31102,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K8.json",
+              "sha256": "9cac67eedcb984b095cc0a5da7365b11c7a0c42af5a9f29dc8d53122cd28648f"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K8.json",
+              "sha256": "b848efe8422b73344c22d04078c89bc83548fd9cc6a7d8b4af431e85124e1afe"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          },
+          "K9": {
+            "brokerCommandCauses": [],
+            "brokerCommandCount": 0,
+            "context": {
+              "bytes": 31003,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/barrier-context-K9.json",
+              "sha256": "0fb627662637ef78151cfb390bb6e67751c4337c52d86f70e2a57d632ae254dc"
+            },
+            "contextPresent": true,
+            "k12ActualValidationWasRunning": null,
+            "lifecycleReceiptPresent": true,
+            "rootCause": "ExplicitStop",
+            "rootCleanup": "Confirmed",
+            "stopReceipt": {
+              "bytes": 451,
+              "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/lifecycle-stop-K9.json",
+              "sha256": "c7ae2b6716112831c87aca5467faf0b4704b1517459fa28b5bb34c4e1727824a"
+            },
+            "usedMarkerPresent": true,
+            "verified": true
+          }
+        },
+        "gagambaPlatformsInReceipts": [
+          "linux-cgroup-v2"
+        ],
+        "m4CanonicalWorkflow": {
+          "assertions": {
+            "aWasExplicitlyAdopted": true,
+            "acceptedLogicalEffects": true,
+            "activeAcceptedEffects": true,
+            "activeGraphMutationBlocked": true,
+            "applyCounts": true,
+            "exactStateLineage": true,
+            "finalBranchCompleted": true,
+            "fixtureCommit": true,
+            "inventoryInvocationCount": true,
+            "localValidationPassed": true,
+            "noDuplicateMutation": true,
+            "oldBAndCRemainAppliedEvidence": true,
+            "oldGraphValidationPassed": true,
+            "recoveryBarriers": true,
+            "workflowValidationPassed": true
+          },
+          "effectApplyCounts": {
+            "A": 1,
+            "B": 1,
+            "B2": 1,
+            "C": 1,
+            "C2": 1
+          },
+          "file": {
+            "bytes": 5868004,
+            "path": "artifacts/aaaw-m4/process-probes/multi-effect-20261016-110347208-973642d1396b4f0bafd421cb07902198/multi-effect-result.json",
+            "sha256": "973ca7163f7385fc43fc0d9edfed4c8486a886962ee1b56924639b7c24abeb34"
+          },
+          "fixtureSourceCommit": "a0916534d0e82e499cffb2dea526b64357eb32e2",
+          "inventoryInvocationCount": 1,
+          "observed": true,
+          "recoveryBarrierCount": 11,
+          "verified": true
+        },
+        "m4PartialK4": {
+          "assertions": {
+            "dependentBlocked": true,
+            "dependentPhysicalApplyCount": true,
+            "dependentStage": true,
+            "namedBlockerPresent": true,
+            "partiallyApplied": true,
+            "physicalApplyCount": true
+          },
+          "file": {
+            "bytes": 56698,
+            "path": "artifacts/aaaw-m4/process-probes/multi-effect-K4-20261016-111014327-254faf0d95434c008d6d932be221ed4b/multi-effect-K4-result.json",
+            "sha256": "0af14a841f7fc65c55c92bbbbba0e7d27983d34b99681e4fd1617c99270a76b3"
+          },
+          "observed": true,
+          "verified": true
+        },
+        "m5ActualStateNegativeControl": {
+          "assertions": {
+            "BAndCUnchanged": true,
+            "actualStateStableAcrossRuns": true,
+            "beforeAfterStateStable": true,
+            "checkpointNotCalled": true,
+            "mutationBlocked": true,
+            "projectWasClassifiedStale": true,
+            "tamperedProjectHashStableAcrossRuns": true,
+            "unexpectedActualStateDetected": true,
+            "validatorNotCalled": true
+          },
+          "firstObservation": {
+            "bytes": 113800,
+            "path": "artifacts/aaaw-m5/process-probes/multi-effect-negative-control-20261016-110941370-aa1a01de4bb44e9a9a9d3cd07561ad77/multi-effect-reconcile-1.json",
+            "sha256": "b7d62225420fc4d097eb4a2c7644aacc1b3b3f6fb9c22b6791458bd858015aff"
+          },
+          "observed": true,
+          "observedStateDigest": "eec15b1eb9a794a039579e3522bf873a25f1f1f848a047031ad0adbcf8e8bb7e",
+          "secondObservation": {
+            "bytes": 113800,
+            "path": "artifacts/aaaw-m5/process-probes/multi-effect-negative-control-20261016-110941370-aa1a01de4bb44e9a9a9d3cd07561ad77/multi-effect-reconcile-2.json",
+            "sha256": "345c55f0bb5dd0cf387538e215792cd7713d6ee26252574a3953855847b51fcc"
+          },
+          "tamperedProjectSha256": "e1d251753dd754375d983cc04cc68957a2dd53a6a4cde027520232ff9cc85237",
+          "verified": true
+        },
+        "platformMatchesLinuxCgroupV2": true
+      },
+      "packageProvenance": {
+        "m1": {
+          "lock": {
+            "bytes": 833,
+            "path": "eng/aaaw-m2-packages.json",
+            "sha256": "3058c9d2dd153cfebc2a09193d87fedc76af7a38b2ffaea30403db7cf987071f"
+          },
+          "ok": true,
+          "packages": [
+            {
+              "file": {
+                "bytes": 522158,
+                "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg",
+                "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875"
+              },
+              "id": "Penghou.Zhinu",
+              "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+              "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+              "version": "0.2.0-preview.4-aaaw-m1.3"
+            },
+            {
+              "file": {
+                "bytes": 475389,
+                "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg",
+                "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39"
+              },
+              "id": "Penghou.Zhinu.Sqlite",
+              "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+              "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+              "version": "0.2.0-preview.4-aaaw-m1.3"
+            },
+            {
+              "file": {
+                "bytes": 196835,
+                "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg",
+                "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870"
+              },
+              "id": "Penghou.Qingniao.Abstractions",
+              "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+              "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+              "version": "0.1.0-preview.5-aaaw-m1.4"
+            },
+            {
+              "file": {
+                "bytes": 224427,
+                "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg",
+                "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37"
+              },
+              "id": "Penghou.Qingniao",
+              "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+              "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+              "version": "0.1.0-preview.5-aaaw-m1.4"
+            }
+          ]
+        },
+        "m5Runtime": {
+          "lock": {
+            "bytes": 1126,
+            "path": "eng/aaaw-m5-runtime-packages.json",
+            "sha256": "05b2ca3f6684bed3fb72663d5903b3d5cf7bd5ad5eadb0f5d697c7d685325042"
+          },
+          "ok": true,
+          "packages": [
+            {
+              "file": {
+                "bytes": 31192,
+                "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.0.1.0-preview.4-gp-m5.1.nupkg",
+                "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c"
+              },
+              "id": "Gagamba.Execution",
+              "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c",
+              "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+              "version": "0.1.0-preview.4-gp-m5.1"
+            },
+            {
+              "file": {
+                "bytes": 24943,
+                "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Linux.0.1.0-preview.4-gp-m5.1.nupkg",
+                "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc"
+              },
+              "id": "Gagamba.Execution.Linux",
+              "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc",
+              "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+              "version": "0.1.0-preview.4-gp-m5.1"
+            },
+            {
+              "file": {
+                "bytes": 32565,
+                "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.MacOS.0.1.0-preview.4-gp-m5.1.nupkg",
+                "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8"
+              },
+              "id": "Gagamba.Execution.MacOS",
+              "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8",
+              "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+              "version": "0.1.0-preview.4-gp-m5.1"
+            },
+            {
+              "file": {
+                "bytes": 23471,
+                "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Windows.0.1.0-preview.4-gp-m5.1.nupkg",
+                "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00"
+              },
+              "id": "Gagamba.Execution.Windows",
+              "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00",
+              "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+              "version": "0.1.0-preview.4-gp-m5.1"
+            },
+            {
+              "file": {
+                "bytes": 20282,
+                "path": "artifacts/aaaw-m1/packages/Gagamba.Runtime.0.1.0-preview.4-gp-m5.1.nupkg",
+                "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311"
+              },
+              "id": "Gagamba.Runtime",
+              "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311",
+              "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+              "version": "0.1.0-preview.4-gp-m5.1"
+            }
+          ]
+        }
+      },
+      "preflightPassed": true,
+      "qualificationEnvironment": {
+        "DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER": "1",
+        "DOTNET_CLI_HOME": "/home/gaga",
+        "DOTNET_ROOT": "/home/gaga/aaaw-m5-qualification-7833bbe/dotnet",
+        "GAGAMBA_LINUX_CGROUP": "/sys/fs/cgroup/aaaw-m5-m6-1-e267f1c-1792148527",
+        "MSBUILDDISABLENODEREUSE": "1",
+        "UseSharedCompilation": "false",
+        "VSTEST_CONNECTION_TIMEOUT": "180"
+      },
+      "qualificationPassed": true,
+      "runId": "20261016T110209Z-a91a87a9b9",
+      "runtimeInventory": {
+        "dotnetRuntimes": "Microsoft.AspNetCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.AspNetCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]\n",
+        "dotnetSdks": "8.0.426 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n10.0.401 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/sdk]\n",
+        "hasSdk10": true,
+        "hasSdk8": true,
+        "inventoryPassed": true,
+        "nativeHostPackagePin": "Microsoft.NETCore.App.Host.$(NETCoreSdkRuntimeIdentifier) 8.0.31",
+        "net10RuntimeVersions": [
+          "Microsoft.NETCore.App 10.0.12 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]"
+        ],
+        "net8RuntimeVersions": [
+          "Microsoft.NETCore.App 8.0.31 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]",
+          "Microsoft.NETCore.App 8.0.32 [/home/gaga/aaaw-m5-qualification-7833bbe/dotnet/shared/Microsoft.NETCore.App]"
+        ],
+        "sdkMajors": [
+          "10",
+          "8"
+        ]
+      },
+      "schema": "aaaw-m5-linux-qualification/v1",
+      "sdkVersion": {
+        "argv": [
+          "dotnet",
+          "--version"
+        ],
+        "captureErrors": [],
+        "cleanupConfirmed": true,
+        "completedAt": "2026-10-16T11:02:09.808996+00:00",
+        "exitCode": 0,
+        "name": "dotnet-version",
+        "ok": true,
+        "orphanedProcessGroupObserved": false,
+        "outputDrainComplete": true,
+        "processGroupId": 34606,
+        "processId": 34606,
+        "startedAt": "2026-10-16T11:02:09.606503+00:00",
+        "stderr": "",
+        "stderrBytesSeen": 0,
+        "stderrTruncated": false,
+        "stdout": "10.0.401\n",
+        "stdoutBytesSeen": 9,
+        "stdoutTruncated": false,
+        "termination": "not-needed",
+        "timedOut": false,
+        "timeoutSeconds": 30
+      },
+      "source": {
+        "end": {
+          "branch": "",
+          "clean": true,
+          "commit": "e267f1c16b5cd7dc56ac33b65971be3d712fc673",
+          "status": []
+        },
+        "start": {
+          "branch": "",
+          "clean": true,
+          "commit": "e267f1c16b5cd7dc56ac33b65971be3d712fc673",
+          "status": []
+        },
+        "unchangedAndClean": true
+      },
+      "startedAt": "2026-10-16T11:02:09.474471+00:00",
+      "testRuns": [
+        {
+          "baselineMinimum": 201,
+          "baselineMinimumMet": true,
+          "command": {
+            "argv": [
+              "dotnet",
+              "test",
+              "tests/Marang.Tests/Marang.Tests.csproj",
+              "-c",
+              "Release",
+              "-f",
+              "net8.0",
+              "--no-build",
+              "--no-restore",
+              "--logger",
+              "trx;LogFileName=m5-net8.0.trx",
+              "--results-directory",
+              "/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx"
+            ],
+            "captureErrors": [],
+            "cleanupConfirmed": true,
+            "completedAt": "2026-10-16T11:03:45.386336+00:00",
+            "exitCode": 0,
+            "name": "test-net8.0",
+            "ok": true,
+            "orphanedProcessGroupObserved": false,
+            "outputDrainComplete": true,
+            "processGroupId": 35927,
+            "processId": 35927,
+            "startedAt": "2026-10-16T11:03:31.360818+00:00",
+            "stderr": "",
+            "stderrBytesSeen": 0,
+            "stderrTruncated": false,
+            "stdout": "Test run for /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net8.0/Marang.Tests.dll (.NETCoreApp,Version=v8.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net8.0.trx\n\nPassed!  - Failed:     0, Passed:   272, Skipped:     0, Total:   272, Duration: 11 s - Marang.Tests.dll (net8.0)\n",
+            "stdoutBytesSeen": 515,
+            "stdoutTruncated": false,
+            "termination": "not-needed",
+            "timedOut": false,
+            "timeoutSeconds": 3600
+          },
+          "counters": {
+            "aborted": 0,
+            "completed": 0,
+            "disconnected": 0,
+            "error": 0,
+            "executed": 272,
+            "failed": 0,
+            "inconclusive": 0,
+            "inprogress": 0,
+            "notexecuted": 0,
+            "notrunnable": 0,
+            "passed": 272,
+            "passedbutrunaborted": 0,
+            "pending": 0,
+            "timeout": 0,
+            "total": 272,
+            "warning": 0
+          },
+          "failedTests": [],
+          "framework": "net8.0",
+          "m4ProcessTestCount": 0,
+          "m4ProcessTests": [],
+          "m5TestCount": 0,
+          "m5Tests": [],
+          "passed": true,
+          "skippedTests": [],
+          "testResultCount": 272,
+          "trx": {
+            "bytes": 406148,
+            "path": "artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net8.0.trx",
+            "sha256": "76cd4880a9c9ac2beb238e4d6f4ba9a99bc6807c9a95f44ef3ea9a2be9e211e3"
+          }
+        },
+        {
+          "baselineMinimum": 245,
+          "baselineMinimumMet": true,
+          "command": {
+            "argv": [
+              "dotnet",
+              "test",
+              "tests/Marang.Tests/Marang.Tests.csproj",
+              "-c",
+              "Release",
+              "-f",
+              "net10.0",
+              "--no-build",
+              "--no-restore",
+              "--logger",
+              "trx;LogFileName=m5-net10.0.trx",
+              "--results-directory",
+              "/home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx"
+            ],
+            "captureErrors": [],
+            "cleanupConfirmed": true,
+            "completedAt": "2026-10-16T11:10:57.417540+00:00",
+            "exitCode": 0,
+            "name": "test-net10.0",
+            "ok": true,
+            "orphanedProcessGroupObserved": false,
+            "outputDrainComplete": true,
+            "processGroupId": 37594,
+            "processId": 37594,
+            "startedAt": "2026-10-16T11:03:45.394798+00:00",
+            "stderr": "",
+            "stderrBytesSeen": 0,
+            "stderrTruncated": false,
+            "stdout": "Test run for /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.Tests/bin/Release/net10.0/Marang.Tests.dll (.NETCoreApp,Version=v10.0)\nA total of 1 test files matched the specified pattern.\nResults File: /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net10.0.trx\n\nPassed!  - Failed:     0, Passed:   332, Skipped:     0, Total:   332, Duration: 7 m 9 s - Marang.Tests.dll (net10.0)\n",
+            "stdoutBytesSeen": 522,
+            "stdoutTruncated": false,
+            "termination": "not-needed",
+            "timedOut": false,
+            "timeoutSeconds": 3600
+          },
+          "counters": {
+            "aborted": 0,
+            "completed": 0,
+            "disconnected": 0,
+            "error": 0,
+            "executed": 332,
+            "failed": 0,
+            "inconclusive": 0,
+            "inprogress": 0,
+            "notexecuted": 0,
+            "notrunnable": 0,
+            "passed": 332,
+            "passedbutrunaborted": 0,
+            "pending": 0,
+            "timeout": 0,
+            "total": 332,
+            "warning": 0
+          },
+          "failedTests": [],
+          "framework": "net10.0",
+          "m4ProcessTestCount": 3,
+          "m4ProcessTests": [
+            {
+              "duration": "00:05:54.1884225",
+              "outcome": "Passed",
+              "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_graph_survives_each_restart_and_revises_only_stale_downstream_effects"
+            },
+            {
+              "duration": "00:00:32.9616146",
+              "outcome": "Passed",
+              "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A"
+            },
+            {
+              "duration": "00:00:32.0025687",
+              "outcome": "Passed",
+              "testName": "Marang.Tests.MultiEffectProcessTests.Partial_B_fixture_blocks_its_dependent_effect_without_replay"
+            }
+          ],
+          "m5TestCount": 1,
+          "m5Tests": [
+            {
+              "duration": "00:00:32.9616146",
+              "outcome": "Passed",
+              "testName": "Marang.Tests.MultiEffectProcessTests.Multi_effect_reconciliation_refuses_to_continue_when_actual_state_diverges_from_validated_A"
+            }
+          ],
+          "passed": true,
+          "requiredM4AndM5ProcessTestsPresent": true,
+          "requiredM5ControlPassed": true,
+          "skippedTests": [],
+          "testResultCount": 332,
+          "trx": {
+            "bytes": 500079,
+            "path": "artifacts/aaaw-m5/linux-qualification/20261016T110209Z-a91a87a9b9/trx/m5-net10.0.trx",
+            "sha256": "186373b1c951005b9cde1d71b5768ee2f54dce391a8a01d099829925bbce3969"
+          }
+        }
+      ]
+    },
+    "returnCode": 0
+  },
+  "m6": {
+    "processArtifacts": {
+      "entryRefusals": {
+        "empty": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: DamagedStore (empty-existing-store, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "empty",
+            "databaseDigest": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+            "databaseUnchanged": true,
+            "databaseWasMissing": false,
+            "expectedStatus": "DamagedStore",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-absent",
+            "walLengthAfterInspection": null,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "2ce62977-fe69-4202-9aa0-90f26e12bf17",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (empty-existing-store, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "faa908be-2173-4978-b002-2761839b6fc7",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (empty-existing-store, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        },
+        "logical-event-digest": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "logical-event-digest",
+            "databaseDigest": "5096AE96BF327B469C69939E95C052AC5A5BCBFF144DD20C601788772FB046B7",
+            "databaseUnchanged": true,
+            "databaseWasMissing": false,
+            "expectedStatus": "InconsistentState",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-empty-created",
+            "walLengthAfterInspection": 0,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "6c99a4a8-cbca-4a24-97b0-d4075b50d253",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "80eebecf-f470-447f-aaae-45e3137d32ab",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        },
+        "logical-revision-json": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "logical-revision-json",
+            "databaseDigest": "2E66450323FB7F32F1567368097A2C3CD48ECFF73668978DD511461329E0449A",
+            "databaseUnchanged": true,
+            "databaseWasMissing": false,
+            "expectedStatus": "InconsistentState",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-empty-created",
+            "walLengthAfterInspection": 0,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "a5c6898b-0501-4e60-8bec-3635b2c70a52",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "41e0e751-8d5b-4474-bef6-a929f9d9f392",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        },
+        "missing": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "missing",
+            "databaseDigest": null,
+            "databaseUnchanged": true,
+            "databaseWasMissing": true,
+            "expectedStatus": "MissingStore",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-absent",
+            "walLengthAfterInspection": null,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "0e5ca15f-076e-4181-9427-1fe94b1c697e",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "836cc1f0-14e2-4fcf-aa67-a368403d8bf7",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        },
+        "not-sqlite": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "not-sqlite",
+            "databaseDigest": "87BE9875E22A5ABA1722A6E9DDFE2AF1B9AE1EE5E91D86F1FA9A8ACE4C0387CA",
+            "databaseUnchanged": true,
+            "databaseWasMissing": false,
+            "expectedStatus": "DamagedStore",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-absent",
+            "walLengthAfterInspection": null,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "080d56d3-d7d1-4d52-a8c9-309c9177b7fa",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "a051f6bf-5192-4dac-b585-85d41babbcd2",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        },
+        "truncated-header": {
+          "error": {
+            "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+            "message": "Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db)."
+          },
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "authorityInitializationAbsent": true,
+            "checkoutAdmissionAbsent": true,
+            "damage": "truncated-header",
+            "databaseDigest": "3F8434AFF012FFCB594AD7527D6042841CE94F499887F86AB828F84A9A275F91",
+            "databaseUnchanged": true,
+            "databaseWasMissing": false,
+            "expectedStatus": "DamagedStore",
+            "freshProcessAttempts": 2,
+            "walContentPreserved": true,
+            "walDisposition": "absent-to-absent",
+            "walLengthAfterInspection": null,
+            "walWasAbsent": true,
+            "workflowAdmissionAbsent": true
+          },
+          "receipts": [
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "b0d62058-209e-4bee-b315-287040e04042",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 1
+            },
+            {
+              "CaptureStatus": "Complete",
+              "Cause": "NonzeroExit",
+              "Cleanup": "Confirmed",
+              "CorrelationId": "d9f84afd-8d61-4426-92d0-3c52162b4a5f",
+              "Platform": "linux-cgroup-v2",
+              "RootExitCode": 1,
+              "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /home/gaga/aaaw-m6-1-qualification-e267f1c16b5cd7dc56ac33b65971be3d712fc673/tests/Marang.RestartProbe/Program.cs:line 81\n",
+              "Stdout": "",
+              "attempt": 2
+            }
+          ],
+          "requiredFailureEvidencePresent": true
+        }
+      },
+      "freshProcessInspection": {
+        "event-digest": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "CB351311607457F6247604388FAF5C2C7DA810915F3824B783425C59ACF65D75",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48489,
+            "ready": false,
+            "scenario": "event-digest",
+            "sharedMemoryPresent": true,
+            "walDigest": "A4F6B0DD38FCF5C9747D53CD20EC3F88C9A6D0ECD7D85A83B34A840EE9E6BD74",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "durable-state-inconsistent",
+            "status": "InconsistentState",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "graph-digest": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "7C7F79AA0913943BCAC3C2CC9FDBEFB24D2B836D3F259BF033E9E45B2A8717B8",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48511,
+            "ready": false,
+            "scenario": "graph-digest",
+            "sharedMemoryPresent": true,
+            "walDigest": "0B9645590D4693DBD3E0CAD07C0FEF762A41E19F7B8C304307AD6B0EF7333611",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "durable-state-inconsistent",
+            "status": "InconsistentState",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "healthy-committed": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "611E029E102EE93EB0DF52B670E4A81547856AA3CD0E6043DDC7C5B113D6744F",
+            "databaseUnchanged": true,
+            "exitCode": 0,
+            "processId": 48552,
+            "ready": true,
+            "scenario": "healthy-committed",
+            "sharedMemoryPresent": true,
+            "walDigest": "434D6BB1C1184CBFD61324F084C0707AAB0C12DD2E2305B9CB25B6481ED52112",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": true,
+            "reasonCode": "existing-profile-consistent",
+            "status": "Ready",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "healthy-initial": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "E6C6747ADD7CDDC116A2FF0D7228B7853B7062E6548831C9092FA0A31DA68D26",
+            "databaseUnchanged": true,
+            "exitCode": 0,
+            "processId": 48530,
+            "ready": true,
+            "scenario": "healthy-initial",
+            "sharedMemoryPresent": true,
+            "walDigest": "05FDB83C0FFC08EDA75DCD4EDB4CFFA6F0817AF49B06707210082F8C0FF9BDA4",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": true,
+            "reasonCode": "existing-profile-consistent",
+            "status": "Ready",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "healthy-pending": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "302B7318C4B0CD0FDD8A5FE038B03F6429D5BF9AE7C36E2ABE4352484B8789F3",
+            "databaseUnchanged": true,
+            "exitCode": 0,
+            "processId": 48596,
+            "ready": true,
+            "scenario": "healthy-pending",
+            "sharedMemoryPresent": true,
+            "walDigest": "899ED4CF0944CEBFCAFB97A386D910208D6225BDFC89BF32377197CB39457779",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": true,
+            "reasonCode": "existing-profile-consistent",
+            "status": "Ready",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "intent-conflict": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "73F10444A6287906A5C8534E641E18AFEA518B7C868B35CE8C26438799E48195",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48445,
+            "ready": false,
+            "scenario": "intent-conflict",
+            "sharedMemoryPresent": true,
+            "walDigest": "3780FA1BF582A3751F213B9E5119BA617D5250D97CEDEDCBDE13BF77A37E4822",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "durable-state-inconsistent",
+            "status": "InconsistentState",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "owner-missing": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "F2A63140A1E0B94EF134EB86C7EF5F1079269616F77FB5A9F698ABD77902A755",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48574,
+            "ready": false,
+            "scenario": "owner-missing",
+            "sharedMemoryPresent": true,
+            "walDigest": "700B0936B6D13FA401B0D30B0D0CF7A5ED1F3CE985DE87E3507E2536492F1683",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "durable-state-inconsistent",
+            "status": "InconsistentState",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "revision-json": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "60E5B719E811C2926054EAE5F1EBD00C65F4C4D263619D69F7EB75C48857EE37",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48467,
+            "ready": false,
+            "scenario": "revision-json",
+            "sharedMemoryPresent": true,
+            "walDigest": "933210671817B9E3D634F7F3F8CBDDAF19B12A4CD341E3DCE4E5A4A33C77207A",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "durable-state-inconsistent",
+            "status": "InconsistentState",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        },
+        "table-missing": {
+          "evidencePreserved": true,
+          "freshArtifactDirectories": 1,
+          "preservation": {
+            "databaseDigest": "E77F30562BDFADF99DA5CD713C39853BE2C306EEB87639730E2B58D02349CB77",
+            "databaseUnchanged": true,
+            "exitCode": 1,
+            "processId": 48422,
+            "ready": false,
+            "scenario": "table-missing",
+            "sharedMemoryPresent": true,
+            "walDigest": "77D698EE0EF0AC80DBED0BBF524840613B7BBD7B39C1CE40E041FEAF6919977A",
+            "walDisposition": "existing-byte-identical",
+            "walUnchanged": true
+          },
+          "requiredEvidencePresent": true,
+          "result": {
+            "canRecover": false,
+            "reasonCode": "required-profile-table-missing",
+            "status": "MissingStateShape",
+            "store": "execution.db"
+          },
+          "resultMatchesCase": true
+        }
+      },
+      "passed": true
+    },
+    "tests": {
+      "frameworks": {
+        "net10.0": {
+          "classes": {
+            "RepositoryEffectJournalIntegrityTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 21,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"intent_digest\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_digest_must_match_its_document"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_empty_authority_applying_event_is_corrupt_even_when_stage_skip_is_legal"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_global_sequence_allows_interleaved_effect_histories"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_tail_event_is_corrupt_even_when_projection_is_rewound_consistently"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Blocked\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Missing_projection_with_events_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"effect_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Validation_output_identity_must_match_history"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"repository_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_event_history_with_projection_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Invalid_expected_post_state_digest_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Unknown_persisted_stage_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_event_authority_deltas_accumulate_to_the_projection"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"updated_at\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"stage\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Applying\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"workflow_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_document_must_be_valid_json"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"ValidationFailed\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Current_projection_must_match_last_append_only_event"
+                }
+              ],
+              "trxCases": 21
+            },
+            "RepositoryRecoveryAdmissionTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 12,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE zhinu_schema SET version=5\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Empty_effect_history_cannot_hide_a_retained_allocator_watermark"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Cancellation_is_not_reported_as_corruption"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Unavailable_required_authority_store_refuses_and_is_not_initialized"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE adaptive_evidence SET document='{'\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM adaptive_workflows\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE workflow_runs SET output_json='{'\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO workflow_steps(id,workflow_run_id,step\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_events\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM zhinu_schema\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO adaptive_execution_witness(run_id,witn\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_steps\", expected: MissingStateShape)"
+                }
+              ],
+              "trxCases": 12
+            },
+            "RepositoryRecoveryEntryProcessTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 6,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"logical-event-digest\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"not-sqlite\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"logical-revision-json\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"truncated-header\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"missing\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"empty\")"
+                }
+              ],
+              "trxCases": 6
+            },
+            "RepositoryRecoveryInspectorProcessTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 9,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-pending\", damageSql: null, ready: True)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"graph-digest\", damageSql: \"UPDATE repository_effect_graphs SET graph_digest='\"\u00b7\u00b7\u00b7, ready: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-committed\", damageSql: null, ready: True)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7, ready: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"intent-conflict\", damageSql: null, ready: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-initial\", damageSql: null, ready: True)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"event-digest\", damageSql: \"UPDATE repository_effect_events SET event_digest='\"\u00b7\u00b7\u00b7, ready: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"table-missing\", damageSql: \"DROP TABLE adaptive_provider_handles\", ready: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7, ready: False)"
+                }
+              ],
+              "trxCases": 9
+            },
+            "RepositoryRecoveryInspectorTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 37,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Partially_applied_blocked_effect_remains_admissible_for_existing_reconciliation"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Initial_workflow_without_a_proposal_or_effect_graph_is_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-json\", damageSql: \"UPDATE adaptive_operator_approvals SET document='{\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"dependency-extra\", damageSql: \"INSERT INTO adaptive_execution_dependencies(run_id\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-target-digest\", damageSql: \"UPDATE repository_effect_graph_validations SET tar\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-missing\", damageSql: \"DELETE FROM workflow_runs WHERE id=(SELECT run_id \"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-required-fields\", damageSql: \"UPDATE repository_effect_graph_validations SET doc\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_revision_intents SET evidence_re\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-identity\", damageSql: \"UPDATE workflow_runs SET workflow_name='wrong' WHE\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-json\", damageSql: \"UPDATE adaptive_proposals SET document='{' WHERE i\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_proposal_contexts SET document='\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"null\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_requires_host_branch_binding"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"{\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-column\", damageSql: \"UPDATE adaptive_revisions SET revision_id='wrong' \"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-digest\", damageSql: \"UPDATE repository_causal_effects SET causal_digest\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Prepared_graph_belonging_to_pending_proposal_is_consistent_without_becoming_active"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-missing\", damageSql: \"DELETE FROM repository_effect_graphs WHERE revisio\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Causal_intent_cannot_be_rebound_to_another_valid_effect_journal_intent"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: True)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_pending_discussions SET missing_\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_without_capture_needs_no_handle_index"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_revision_intents\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Validation_failed_graph_evidence_remains_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_operator_checkpoints\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-json\", damageSql: \"UPDATE repository_effect_graphs SET document='{' W\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-digest\", damageSql: \"UPDATE adaptive_proposals SET digest='bad' WHERE s\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-missing\", damageSql: \"DELETE FROM repository_causal_effects\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_pending_discussions\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_proposal_contexts\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Committed_graph_and_mutable_effect_states_remain_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_required_profile_table_is_a_shape_refusal"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Accepted_branch_binding_without_provider_attempt_remains_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-column\", damageSql: \"UPDATE adaptive_operator_approvals SET digest='bad\"\u00b7\u00b7\u00b7)"
+                }
+              ],
+              "trxCases": 37
+            }
+          },
+          "trxPresent": true
+        },
+        "net8.0": {
+          "classes": {
+            "RepositoryEffectJournalIntegrityTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 21,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_digest_must_match_its_document"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Blocked\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_event_authority_deltas_accumulate_to_the_projection"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Unknown_persisted_stage_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Missing_projection_with_events_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_event_history_with_projection_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"updated_at\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_empty_authority_applying_event_is_corrupt_even_when_stage_skip_is_legal"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"intent_digest\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"ValidationFailed\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"workflow_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_document_must_be_valid_json"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"repository_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Applying\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Current_projection_must_match_last_append_only_event"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_tail_event_is_corrupt_even_when_projection_is_rewound_consistently"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Invalid_expected_post_state_digest_is_corrupt"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"effect_id\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"stage\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Validation_output_identity_must_match_history"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_global_sequence_allows_interleaved_effect_histories"
+                }
+              ],
+              "trxCases": 21
+            },
+            "RepositoryRecoveryAdmissionTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 12,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_events\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Cancellation_is_not_reported_as_corruption"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM adaptive_workflows\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE workflow_runs SET output_json='{'\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM zhinu_schema\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE adaptive_evidence SET document='{'\", expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Empty_effect_history_cannot_hide_a_retained_allocator_watermark"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO adaptive_execution_witness(run_id,witn\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO workflow_steps(id,workflow_run_id,step\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_steps\", expected: MissingStateShape)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Unavailable_required_authority_store_refuses_and_is_not_initialized"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE zhinu_schema SET version=5\", expected: MissingStateShape)"
+                }
+              ],
+              "trxCases": 12
+            },
+            "RepositoryRecoveryInspectorTests": {
+              "allPassed": true,
+              "expectedCasesFromSource": 37,
+              "tests": [
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_requires_host_branch_binding"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_required_profile_table_is_a_shape_refusal"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Validation_failed_graph_evidence_remains_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"null\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_without_capture_needs_no_handle_index"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Partially_applied_blocked_effect_remains_admissible_for_existing_reconciliation"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-column\", damageSql: \"UPDATE adaptive_operator_approvals SET digest='bad\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"{\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_proposal_contexts\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-identity\", damageSql: \"UPDATE workflow_runs SET workflow_name='wrong' WHE\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: False)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-target-digest\", damageSql: \"UPDATE repository_effect_graph_validations SET tar\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Accepted_branch_binding_without_provider_attempt_remains_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_operator_checkpoints\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-missing\", damageSql: \"DELETE FROM repository_causal_effects\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-json\", damageSql: \"UPDATE adaptive_proposals SET document='{' WHERE i\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-missing\", damageSql: \"DELETE FROM repository_effect_graphs WHERE revisio\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-digest\", damageSql: \"UPDATE repository_causal_effects SET causal_digest\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-missing\", damageSql: \"DELETE FROM workflow_runs WHERE id=(SELECT run_id \"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-column\", damageSql: \"UPDATE adaptive_revisions SET revision_id='wrong' \"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_proposal_contexts SET document='\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Prepared_graph_belonging_to_pending_proposal_is_consistent_without_becoming_active"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-digest\", damageSql: \"UPDATE adaptive_proposals SET digest='bad' WHERE s\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: True)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_pending_discussions SET missing_\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Causal_intent_cannot_be_rebound_to_another_valid_effect_journal_intent"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-json\", damageSql: \"UPDATE repository_effect_graphs SET document='{' W\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_pending_discussions\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_revision_intents SET evidence_re\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-json\", damageSql: \"UPDATE adaptive_operator_approvals SET document='{\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_revision_intents\")"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Committed_graph_and_mutable_effect_states_remain_admissible"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-required-fields\", damageSql: \"UPDATE repository_effect_graph_validations SET doc\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"dependency-extra\", damageSql: \"INSERT INTO adaptive_execution_dependencies(run_id\"\u00b7\u00b7\u00b7)"
+                },
+                {
+                  "outcome": "Passed",
+                  "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Initial_workflow_without_a_proposal_or_effect_graph_is_admissible"
+                }
+              ],
+              "trxCases": 37
+            }
+          },
+          "trxPresent": true
+        }
+      },
+      "passed": true
+    }
+  },
+  "platform": "linux",
+  "qualificationPassed": true,
+  "schema": "aaaw-m6-1-qualification/v1",
+  "startedAt": "2026-10-16T11:02:09.452680+00:00"
+}

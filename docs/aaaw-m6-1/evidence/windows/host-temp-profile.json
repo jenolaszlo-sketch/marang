@@ -1,0 +1,9 @@
+{
+  "source": "e267f1c16b5cd7dc56ac33b65971be3d712fc673",
+  "temporaryRoot": "D:\\CodexQualification\\MarangM6.1\\e267f1c\\temp",
+  "scope": "Only this qualification process and its children; user environment unchanged",
+  "reason": "Incidental full C: host volume invalidated the prior Windows attempt; this is not a resource-exhaustion scenario or an application recovery feature",
+  "createdAt": "2026-10-16T19:16:30.2608963+08:00",
+  "driveFormat": "NTFS",
+  "driveType": "Fixed"
+}

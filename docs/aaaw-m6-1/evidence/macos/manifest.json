@@ -1,0 +1,1368 @@
+{
+  "schema": "aaaw-m6-1-platform-seal/v1",
+  "platform": "macos",
+  "qualifiedSource": "e267f1c16b5cd7dc56ac33b65971be3d712fc673",
+  "qualificationPassed": true,
+  "testRuns": [
+    {
+      "framework": "net8.0",
+      "passed": 271,
+      "failed": 0,
+      "skipped": 1,
+      "total": 272,
+      "skippedTests": [
+        {
+          "duration": "00:00:00.0010000",
+          "outcome": "NotExecuted",
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+        }
+      ]
+    },
+    {
+      "framework": "net10.0",
+      "passed": 331,
+      "failed": 0,
+      "skipped": 1,
+      "total": 332,
+      "skippedTests": [
+        {
+          "duration": "00:00:00.0010000",
+          "outcome": "NotExecuted",
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+        }
+      ]
+    }
+  ],
+  "host": {
+    "effectiveUid": 501,
+    "imageOS": "macos15",
+    "imageVersion": "20260907.0337.1",
+    "machine": "arm64",
+    "platform": "macOS-15.7.9-arm64-arm-64bit-Mach-O",
+    "tempDirectory": "/Users/runner/work/_temp/aaaw-m6-1/"
+  },
+  "m6Tests": {
+    "frameworks": {
+      "net10.0": {
+        "classes": {
+          "RepositoryEffectJournalIntegrityTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 21,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"updated_at\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"workflow_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_digest_must_match_its_document"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"stage\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Invalid_expected_post_state_digest_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Unknown_persisted_stage_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_tail_event_is_corrupt_even_when_projection_is_rewound_consistently"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_event_history_with_projection_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"intent_digest\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_event_authority_deltas_accumulate_to_the_projection"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Missing_projection_with_events_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"effect_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Validation_output_identity_must_match_history"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"repository_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Current_projection_must_match_last_append_only_event"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"ValidationFailed\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_document_must_be_valid_json"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_empty_authority_applying_event_is_corrupt_even_when_stage_skip_is_legal"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Applying\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_global_sequence_allows_interleaved_effect_histories"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Blocked\")"
+              }
+            ],
+            "trxCases": 21
+          },
+          "RepositoryRecoveryAdmissionTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 12,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Unavailable_required_authority_store_refuses_and_is_not_initialized"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE workflow_runs SET output_json='{'\", expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO adaptive_execution_witness(run_id,witn\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Cancellation_is_not_reported_as_corruption"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Empty_effect_history_cannot_hide_a_retained_allocator_watermark"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE adaptive_evidence SET document='{'\", expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE zhinu_schema SET version=5\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM zhinu_schema\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO workflow_steps(id,workflow_run_id,step\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_steps\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM adaptive_workflows\", expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_events\", expected: MissingStateShape)"
+              }
+            ],
+            "trxCases": 12
+          },
+          "RepositoryRecoveryEntryProcessTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 6,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"missing\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"empty\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"logical-revision-json\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"not-sqlite\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"truncated-header\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryEntryProcessTests.Known_recovery_refuses_before_initialization_or_downstream_work(damage: \"logical-event-digest\")"
+              }
+            ],
+            "trxCases": 6
+          },
+          "RepositoryRecoveryInspectorProcessTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 9,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-initial\", damageSql: null, ready: True)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"table-missing\", damageSql: \"DROP TABLE adaptive_provider_handles\", ready: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-committed\", damageSql: null, ready: True)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"event-digest\", damageSql: \"UPDATE repository_effect_events SET event_digest='\"\u00b7\u00b7\u00b7, ready: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7, ready: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7, ready: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"healthy-pending\", damageSql: null, ready: True)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"intent-conflict\", damageSql: null, ready: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorProcessTests.Fresh_process_observes_live_wal_and_preserves_database_evidence(scenario: \"graph-digest\", damageSql: \"UPDATE repository_effect_graphs SET graph_digest='\"\u00b7\u00b7\u00b7, ready: False)"
+              }
+            ],
+            "trxCases": 9
+          },
+          "RepositoryRecoveryInspectorTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 37,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_proposal_contexts SET document='\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-missing\", damageSql: \"DELETE FROM repository_effect_graphs WHERE revisio\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-column\", damageSql: \"UPDATE adaptive_revisions SET revision_id='wrong' \"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_operator_checkpoints\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_revision_intents SET evidence_re\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Causal_intent_cannot_be_rebound_to_another_valid_effect_journal_intent"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-json\", damageSql: \"UPDATE adaptive_proposals SET document='{' WHERE i\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_revision_intents\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-missing\", damageSql: \"DELETE FROM workflow_runs WHERE id=(SELECT run_id \"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Validation_failed_graph_evidence_remains_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"null\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"{\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_pending_discussions SET missing_\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_proposal_contexts\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Partially_applied_blocked_effect_remains_admissible_for_existing_reconciliation"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Committed_graph_and_mutable_effect_states_remain_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_required_profile_table_is_a_shape_refusal"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-target-digest\", damageSql: \"UPDATE repository_effect_graph_validations SET tar\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-column\", damageSql: \"UPDATE adaptive_operator_approvals SET digest='bad\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_requires_host_branch_binding"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Accepted_branch_binding_without_provider_attempt_remains_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Prepared_graph_belonging_to_pending_proposal_is_consistent_without_becoming_active"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-json\", damageSql: \"UPDATE repository_effect_graphs SET document='{' W\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"dependency-extra\", damageSql: \"INSERT INTO adaptive_execution_dependencies(run_id\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-missing\", damageSql: \"DELETE FROM repository_causal_effects\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-digest\", damageSql: \"UPDATE repository_causal_effects SET causal_digest\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-json\", damageSql: \"UPDATE adaptive_operator_approvals SET document='{\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_pending_discussions\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_without_capture_needs_no_handle_index"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: True)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-required-fields\", damageSql: \"UPDATE repository_effect_graph_validations SET doc\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-identity\", damageSql: \"UPDATE workflow_runs SET workflow_name='wrong' WHE\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Initial_workflow_without_a_proposal_or_effect_graph_is_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-digest\", damageSql: \"UPDATE adaptive_proposals SET digest='bad' WHERE s\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7)"
+              }
+            ],
+            "trxCases": 37
+          }
+        },
+        "trxPresent": true
+      },
+      "net8.0": {
+        "classes": {
+          "RepositoryEffectJournalIntegrityTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 21,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"ValidationFailed\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_event_history_with_projection_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Current_projection_must_match_last_append_only_event"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"stage\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"intent_digest\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_digest_must_match_its_document"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Validation_output_identity_must_match_history"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Applying\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_global_sequence_allows_interleaved_effect_histories"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"updated_at\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Missing_projection_with_events_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_tail_event_is_corrupt_even_when_projection_is_rewound_consistently"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_m5_lifecycle_states_remain_readable(target: \"Blocked\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Invalid_expected_post_state_digest_is_corrupt"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Healthy_event_authority_deltas_accumulate_to_the_projection"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Event_document_must_be_valid_json"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"repository_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Deleted_empty_authority_applying_event_is_corrupt_even_when_stage_skip_is_legal"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"effect_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Projection_columns_must_match_the_serialized_record(column: \"workflow_id\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryEffectJournalIntegrityTests.Unknown_persisted_stage_is_corrupt"
+              }
+            ],
+            "trxCases": 21
+          },
+          "RepositoryRecoveryAdmissionTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 12,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Unavailable_required_authority_store_refuses_and_is_not_initialized"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Cancellation_is_not_reported_as_corruption"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO adaptive_execution_witness(run_id,witn\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE workflow_runs SET output_json='{'\", expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_events\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE adaptive_evidence SET document='{'\", expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM zhinu_schema\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"INSERT INTO workflow_steps(id,workflow_run_id,step\"\u00b7\u00b7\u00b7, expected: InconsistentState)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DROP TABLE workflow_steps\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Empty_effect_history_cannot_hide_a_retained_allocator_watermark"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"UPDATE zhinu_schema SET version=5\", expected: MissingStateShape)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryAdmissionTests.Recovery_cannot_initialize_missing_execution_shape_or_interpret_damaged_execution(damageSql: \"DELETE FROM adaptive_workflows\", expected: InconsistentState)"
+              }
+            ],
+            "trxCases": 12
+          },
+          "RepositoryRecoveryInspectorTests": {
+            "allPassed": true,
+            "expectedCasesFromSource": 37,
+            "tests": [
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-column\", damageSql: \"UPDATE adaptive_revisions SET revision_id='wrong' \"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-target-digest\", damageSql: \"UPDATE repository_effect_graph_validations SET tar\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-json\", damageSql: \"UPDATE repository_effect_graphs SET document='{' W\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: True)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_revision_intents\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_proposal_contexts SET document='\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"dependency-extra\", damageSql: \"INSERT INTO adaptive_execution_dependencies(run_id\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"null\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_revision_intents SET evidence_re\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_pending_discussions\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-digest\", damageSql: \"UPDATE adaptive_proposals SET digest='bad' WHERE s\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_proposal_contexts\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-json\", damageSql: \"UPDATE adaptive_operator_approvals SET document='{\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_captured_provider_record_refuses(document: \"{\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Validation_failed_graph_evidence_remains_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-identity\", damageSql: \"UPDATE workflow_runs SET workflow_name='wrong' WHE\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_supervisor_continuity_payload_refuses(damageSql: \"UPDATE supervisor_pending_discussions SET missing_\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Accepted_branch_binding_without_provider_attempt_remains_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-missing\", damageSql: \"DELETE FROM repository_causal_effects\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Causal_intent_cannot_be_rebound_to_another_valid_effect_journal_intent"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"causal-digest\", damageSql: \"UPDATE repository_causal_effects SET causal_digest\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_requires_host_branch_binding"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"run-missing\", damageSql: \"DELETE FROM workflow_runs WHERE id=(SELECT run_id \"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"owner-missing\", damageSql: \"DELETE FROM adaptive_run_ownership WHERE run_id=(S\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"revision-json\", damageSql: \"UPDATE adaptive_revisions SET document='{' WHERE r\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Malformed_graph_validation_evidence_refuses(_: \"validation-required-fields\", damageSql: \"UPDATE repository_effect_graph_validations SET doc\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_required_profile_table_is_a_shape_refusal"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Provider_start_intent_without_capture_needs_no_handle_index"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"proposal-json\", damageSql: \"UPDATE adaptive_proposals SET document='{' WHERE i\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"graph-missing\", damageSql: \"DELETE FROM repository_effect_graphs WHERE revisio\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Missing_supervisor_continuity_table_is_a_shape_refusal(damageSql: \"DROP TABLE supervisor_operator_checkpoints\")"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Partially_applied_blocked_effect_remains_admissible_for_existing_reconciliation"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Initial_workflow_without_a_proposal_or_effect_graph_is_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Captured_provider_handle_index_is_reciprocal_and_valid_for_nonreconnectable_records(markNotReconnectable: False)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Logical_damage_refuses_without_repairing_database(_: \"approval-column\", damageSql: \"UPDATE adaptive_operator_approvals SET digest='bad\"\u00b7\u00b7\u00b7)"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Committed_graph_and_mutable_effect_states_remain_admissible"
+              },
+              {
+                "outcome": "Passed",
+                "testName": "Marang.Tests.RepositoryRecoveryInspectorTests.Prepared_graph_belonging_to_pending_proposal_is_consistent_without_becoming_active"
+              }
+            ],
+            "trxCases": 37
+          }
+        },
+        "trxPresent": true
+      }
+    },
+    "passed": true
+  },
+  "m6ProcessArtifacts": {
+    "entryRefusals": {
+      "empty": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: DamagedStore (empty-existing-store, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "empty",
+          "databaseDigest": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+          "databaseUnchanged": true,
+          "databaseWasMissing": false,
+          "expectedStatus": "DamagedStore",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-absent",
+          "walLengthAfterInspection": null,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "0df9198c-45c2-4cc9-8d07-87999a121df7",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (empty-existing-store, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "035832c0-f811-4997-abdb-e59083285548",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (empty-existing-store, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      },
+      "logical-event-digest": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "logical-event-digest",
+          "databaseDigest": "C244BF5E7D91443A85209AD04530692C0673B1629AD017A35A42E7DF3CE18421",
+          "databaseUnchanged": true,
+          "databaseWasMissing": false,
+          "expectedStatus": "InconsistentState",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-empty-created",
+          "walLengthAfterInspection": 0,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "5fece705-0f77-4ba1-a3e5-f2e7372e4cf5",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "ebc2f04f-a3df-4cf3-ae58-2e71493b47af",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      },
+      "logical-revision-json": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "logical-revision-json",
+          "databaseDigest": "B27FEBF54E272D014646A3A129686216EBA07C9456BA85930033E2110B66EF20",
+          "databaseUnchanged": true,
+          "databaseWasMissing": false,
+          "expectedStatus": "InconsistentState",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-empty-created",
+          "walLengthAfterInspection": 0,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "03ce8949-459a-4fe6-9696-48935dbd08e3",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "a8f8ba22-018b-45bc-8b8e-c27d6692ca47",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: InconsistentState (durable-state-inconsistent, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      },
+      "missing": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "missing",
+          "databaseDigest": null,
+          "databaseUnchanged": true,
+          "databaseWasMissing": true,
+          "expectedStatus": "MissingStore",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-absent",
+          "walLengthAfterInspection": null,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "98764b29-1c93-4bdb-ab40-48fdb4652efe",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "66de949e-c397-4291-b3e0-b8a8e6a73bbe",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: MissingStore (known-workflow-store-missing, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      },
+      "not-sqlite": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "not-sqlite",
+          "databaseDigest": "87BE9875E22A5ABA1722A6E9DDFE2AF1B9AE1EE5E91D86F1FA9A8ACE4C0387CA",
+          "databaseUnchanged": true,
+          "databaseWasMissing": false,
+          "expectedStatus": "DamagedStore",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-absent",
+          "walLengthAfterInspection": null,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "5dea5b9e-0b46-4d60-b2c8-46022cb18838",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "59248302-91f5-4797-878f-540153bebd53",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      },
+      "truncated-header": {
+        "error": {
+          "error": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException",
+          "message": "Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db)."
+        },
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "authorityInitializationAbsent": true,
+          "checkoutAdmissionAbsent": true,
+          "damage": "truncated-header",
+          "databaseDigest": "3F8434AFF012FFCB594AD7527D6042841CE94F499887F86AB828F84A9A275F91",
+          "databaseUnchanged": true,
+          "databaseWasMissing": false,
+          "expectedStatus": "DamagedStore",
+          "freshProcessAttempts": 2,
+          "walContentPreserved": true,
+          "walDisposition": "absent-to-absent",
+          "walLengthAfterInspection": null,
+          "walWasAbsent": true,
+          "workflowAdmissionAbsent": true
+        },
+        "receipts": [
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "d164d4fe-e4bb-4af4-bc92-24b2f8a7b6ba",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 1
+          },
+          {
+            "CaptureStatus": "Complete",
+            "Cause": "NonzeroExit",
+            "Cleanup": "Confirmed",
+            "CorrelationId": "664cac20-931d-4645-84e9-7b271c54e5cf",
+            "Platform": "macos-launchd-pg",
+            "RootExitCode": 1,
+            "Stderr": "Marang.Runs.Integrity.RepositoryRecoveryRefusedException: Repository recovery refused: DamagedStore (sqlite-storage-invalid, execution.db).\n   at Marang.Runs.Integrity.RepositoryRecoveryInspector.RequireAsync(String databasePath, Guid workflowId, IReadOnlyList`1 additionalRequiredSqliteStores, CancellationToken cancellationToken) in /_/src/Marang.Runs/Integrity/RepositoryRecoveryInspector.cs:line 57\n   at Marang.RestartProbe.MultiEffectProbe.RunAsync(String directory, String barrier, Boolean resume, Boolean reconcileOnly, Int32 reconcileRun) in /_/tests/Marang.RestartProbe/MultiEffectProbe.cs:line 59\n   at Marang.RestartProbe.Program.Main(String[] args) in /_/tests/Marang.RestartProbe/Program.cs:line 81\n",
+            "Stdout": "",
+            "attempt": 2
+          }
+        ],
+        "requiredFailureEvidencePresent": true
+      }
+    },
+    "freshProcessInspection": {
+      "event-digest": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "621AA978ABB6C1C21E8E9AE0314B78FDF798F5C6E0CBA5B732D8175B46D2B4A4",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32697,
+          "ready": false,
+          "scenario": "event-digest",
+          "sharedMemoryPresent": true,
+          "walDigest": "A8E17455B56F66969E2AF558D9E62A7A29A18B8C690F32AA755ED132378B537D",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "durable-state-inconsistent",
+          "status": "InconsistentState",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "graph-digest": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "A2294E8890B171507A4AE2EF89DE911E71637E65ABFB17BAA6EAA371D6DD0E84",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32682,
+          "ready": false,
+          "scenario": "graph-digest",
+          "sharedMemoryPresent": true,
+          "walDigest": "C69CE3870C9CC3B788605ADA0E6AAC0DD7CF0D7CC52FC0BBBDB8101945ACD781",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "durable-state-inconsistent",
+          "status": "InconsistentState",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "healthy-committed": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "AB91B719CDFD570CB1E187F6AB6E89C5C4D123DCEDC7FC1E248CB2433C9DCE7F",
+          "databaseUnchanged": true,
+          "exitCode": 0,
+          "processId": 32500,
+          "ready": true,
+          "scenario": "healthy-committed",
+          "sharedMemoryPresent": true,
+          "walDigest": "46AAF5B09BEDC87493B978339BCC0244716B5AD98D47AD857972D03E864C38E7",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": true,
+          "reasonCode": "existing-profile-consistent",
+          "status": "Ready",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "healthy-initial": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "D1255576EB5EEDA4D946628A86DA0CA3C8BDC200A5F84E481CE94D753DCEE245",
+          "databaseUnchanged": true,
+          "exitCode": 0,
+          "processId": 32593,
+          "ready": true,
+          "scenario": "healthy-initial",
+          "sharedMemoryPresent": true,
+          "walDigest": "7DFEB8F48714A0AAFEE2D8307A4A0DD2C1E4249320AB32DF0A24FD7BD17ED0E1",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": true,
+          "reasonCode": "existing-profile-consistent",
+          "status": "Ready",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "healthy-pending": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "E64B11874DB36F2527D7AAD4BCF5BE00A82D9A4019493DFED9E7CEEDEDB8638C",
+          "databaseUnchanged": true,
+          "exitCode": 0,
+          "processId": 32655,
+          "ready": true,
+          "scenario": "healthy-pending",
+          "sharedMemoryPresent": true,
+          "walDigest": "E825292A1E4CA3D44C22D766B682C25A56F5ED9C384AB91112F5CC80BACA0A84",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": true,
+          "reasonCode": "existing-profile-consistent",
+          "status": "Ready",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "intent-conflict": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "4688959916BC4FF9C45BADD9E9099A496DE187700C34434F7D5DDD36D7CBEE94",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32640,
+          "ready": false,
+          "scenario": "intent-conflict",
+          "sharedMemoryPresent": true,
+          "walDigest": "642E7F10AA64BB4B4718EABBA43B4744ECCFB422669D1702E885707900C6F03F",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "durable-state-inconsistent",
+          "status": "InconsistentState",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "owner-missing": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "2077DE591984C82B5B4D7F0BF9A13F0D92AC19E4A1C146C63FEC8C6812250D7E",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32625,
+          "ready": false,
+          "scenario": "owner-missing",
+          "sharedMemoryPresent": true,
+          "walDigest": "7093970A40F186A4037C0C144008D0BDBF00B4277800428B9AEAC37B0DAFCCF5",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "durable-state-inconsistent",
+          "status": "InconsistentState",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "revision-json": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "E8E518CF680A27482CC4225841A85EA077092E895DC17F222B466E7DFDFA9D48",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32613,
+          "ready": false,
+          "scenario": "revision-json",
+          "sharedMemoryPresent": true,
+          "walDigest": "6A63E4266630532D94D014A50429161F143185FDE3488AC39D2F33A2F8FC0B65",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "durable-state-inconsistent",
+          "status": "InconsistentState",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      },
+      "table-missing": {
+        "evidencePreserved": true,
+        "freshArtifactDirectories": 1,
+        "preservation": {
+          "databaseDigest": "859C965BCAC95DA7D9A106A9BB032385CBC00B96B4CFBD4FDD5081FC9957D245",
+          "databaseUnchanged": true,
+          "exitCode": 1,
+          "processId": 32667,
+          "ready": false,
+          "scenario": "table-missing",
+          "sharedMemoryPresent": true,
+          "walDigest": "38BAD40EB71E8FF39F4A26F972C42AD82BA5CA93BE5E58BF2533B3A3AFF24116",
+          "walDisposition": "existing-byte-identical",
+          "walUnchanged": true
+        },
+        "requiredEvidencePresent": true,
+        "result": {
+          "canRecover": false,
+          "reasonCode": "required-profile-table-missing",
+          "status": "MissingStateShape",
+          "store": "execution.db"
+        },
+        "resultMatchesCase": true
+      }
+    },
+    "passed": true
+  },
+  "canonical": true,
+  "K4": true,
+  "actualStateControl": true,
+  "barrierCount": 12,
+  "verifiedCapturedFileCount": 204,
+  "packages": [
+    {
+      "file": {
+        "bytes": 522158,
+        "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.0.2.0-preview.4-aaaw-m1.3.nupkg",
+        "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875"
+      },
+      "id": "Penghou.Zhinu",
+      "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+      "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "version": "0.2.0-preview.4-aaaw-m1.3"
+    },
+    {
+      "file": {
+        "bytes": 475389,
+        "path": "artifacts/aaaw-m1/packages/Penghou.Zhinu.Sqlite.0.2.0-preview.4-aaaw-m1.3.nupkg",
+        "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39"
+      },
+      "id": "Penghou.Zhinu.Sqlite",
+      "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+      "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "version": "0.2.0-preview.4-aaaw-m1.3"
+    },
+    {
+      "file": {
+        "bytes": 196835,
+        "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.Abstractions.0.1.0-preview.5-aaaw-m1.4.nupkg",
+        "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870"
+      },
+      "id": "Penghou.Qingniao.Abstractions",
+      "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+      "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "version": "0.1.0-preview.5-aaaw-m1.4"
+    },
+    {
+      "file": {
+        "bytes": 224427,
+        "path": "artifacts/aaaw-m1/packages/Penghou.Qingniao.0.1.0-preview.5-aaaw-m1.4.nupkg",
+        "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37"
+      },
+      "id": "Penghou.Qingniao",
+      "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+      "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "version": "0.1.0-preview.5-aaaw-m1.4"
+    },
+    {
+      "file": {
+        "bytes": 31192,
+        "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.0.1.0-preview.4-gp-m5.1.nupkg",
+        "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c"
+      },
+      "id": "Gagamba.Execution",
+      "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "file": {
+        "bytes": 24943,
+        "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Linux.0.1.0-preview.4-gp-m5.1.nupkg",
+        "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc"
+      },
+      "id": "Gagamba.Execution.Linux",
+      "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "file": {
+        "bytes": 32565,
+        "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.MacOS.0.1.0-preview.4-gp-m5.1.nupkg",
+        "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8"
+      },
+      "id": "Gagamba.Execution.MacOS",
+      "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "file": {
+        "bytes": 23471,
+        "path": "artifacts/aaaw-m1/packages/Gagamba.Execution.Windows.0.1.0-preview.4-gp-m5.1.nupkg",
+        "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00"
+      },
+      "id": "Gagamba.Execution.Windows",
+      "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "file": {
+        "bytes": 20282,
+        "path": "artifacts/aaaw-m1/packages/Gagamba.Runtime.0.1.0-preview.4-gp-m5.1.nupkg",
+        "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311"
+      },
+      "id": "Gagamba.Runtime",
+      "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    }
+  ],
+  "files": [
+    {
+      "path": "evidence/macos/qualification.json",
+      "bytes": 130698,
+      "sha256": "a33ef6a62e6b3d0acb50f0bb291f52b45f6ec99bc3fd255b9f90a38fcb6e9449"
+    },
+    {
+      "path": "evidence/macos/macos-raw-evidence.zip",
+      "bytes": 3900180,
+      "sha256": "4869e66dd9147081f8e4fac4e5c7ec8ec0ffafc6026de3c75b450ed292b78121"
+    },
+    {
+      "path": "evidence/macos/job.json",
+      "bytes": 2166,
+      "sha256": "fa4b6d9141fc4fe945ce157fb9bde7b60719904fd38e37e669247979d68398e6"
+    },
+    {
+      "path": "evidence/macos/job.log",
+      "bytes": 47966,
+      "sha256": "dc389b3a0fcbf38e87a78c952d6cee2db7f723b17b262ff47c9d7396adab6926"
+    }
+  ]
+}

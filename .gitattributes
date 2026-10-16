@@ -10,3 +10,6 @@ docs/aaaw-m5/**/*.md text eol=lf
 # Preserve test-runner whitespace as part of original, hash-verifiable evidence.
 docs/aaaw-m5/**/*.trx -whitespace
 docs/aaaw-m5/**/*.log -whitespace
+# M6.1 seals bind the original report/log bytes, including native line endings.
+docs/aaaw-m6-1/evidence/** -text whitespace=cr-at-eol
+docs/aaaw-m6-1/evidence/**/*.log -whitespace

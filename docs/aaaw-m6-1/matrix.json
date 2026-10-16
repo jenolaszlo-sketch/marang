@@ -1,0 +1,129 @@
+{
+  "schema": "aaaw-m6-1-final-matrix/v1",
+  "qualifiedSource": "e267f1c16b5cd7dc56ac33b65971be3d712fc673",
+  "macOSRunId": 38891066363,
+  "platforms": {
+    "windows": {
+      "testRuns": [
+        {
+          "framework": "net8.0",
+          "passed": 271,
+          "failed": 0,
+          "skipped": 1,
+          "total": 272,
+          "skippedTests": [
+            {
+              "duration": "00:00:00.0010000",
+              "outcome": "NotExecuted",
+              "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+            }
+          ]
+        },
+        {
+          "framework": "net10.0",
+          "passed": 331,
+          "failed": 0,
+          "skipped": 1,
+          "total": 332,
+          "skippedTests": [
+            {
+              "duration": "00:00:00.0010000",
+              "outcome": "NotExecuted",
+              "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+            }
+          ]
+        }
+      ],
+      "manifest": {
+        "path": "evidence/windows/manifest.json",
+        "bytes": 83327,
+        "sha256": "b3d64392f3a8ca921237a289bfd050310cb5a0d692e17f6d3718b9ae711df224"
+      },
+      "m6TestCases": {
+        "net8.0": 70,
+        "net10.0": 85
+      },
+      "barriers": 12,
+      "sourceUnchangedAndClean": true,
+      "preservationPassed": true
+    },
+    "linux": {
+      "testRuns": [
+        {
+          "framework": "net8.0",
+          "passed": 272,
+          "failed": 0,
+          "skipped": 0,
+          "total": 272,
+          "skippedTests": []
+        },
+        {
+          "framework": "net10.0",
+          "passed": 332,
+          "failed": 0,
+          "skipped": 0,
+          "total": 332,
+          "skippedTests": []
+        }
+      ],
+      "manifest": {
+        "path": "evidence/linux/manifest.json",
+        "bytes": 78350,
+        "sha256": "ed579235309cdcf424b101c7c0ec0b8283c5dd0f07997f04edbd9de526bc6d4a"
+      },
+      "m6TestCases": {
+        "net8.0": 70,
+        "net10.0": 85
+      },
+      "barriers": 12,
+      "sourceUnchangedAndClean": true,
+      "preservationPassed": true
+    },
+    "macos": {
+      "testRuns": [
+        {
+          "framework": "net8.0",
+          "passed": 271,
+          "failed": 0,
+          "skipped": 1,
+          "total": 272,
+          "skippedTests": [
+            {
+              "duration": "00:00:00.0010000",
+              "outcome": "NotExecuted",
+              "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+            }
+          ]
+        },
+        {
+          "framework": "net10.0",
+          "passed": 331,
+          "failed": 0,
+          "skipped": 1,
+          "total": 332,
+          "skippedTests": [
+            {
+              "duration": "00:00:00.0010000",
+              "outcome": "NotExecuted",
+              "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+            }
+          ]
+        }
+      ],
+      "manifest": {
+        "path": "evidence/macos/manifest.json",
+        "bytes": 75892,
+        "sha256": "80781dc7f28d25d382552242a856d48ca8a6857322f4d9f71c05f0486643ef4c"
+      },
+      "m6TestCases": {
+        "net8.0": 70,
+        "net10.0": 85
+      },
+      "barriers": 12,
+      "sourceUnchangedAndClean": true,
+      "preservationPassed": true
+    }
+  },
+  "allPassed": true,
+  "packagePinsIdenticalAcrossPlatforms": true
+}
