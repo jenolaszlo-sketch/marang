@@ -1,0 +1,11 @@
+# M6.2 source review 04 — manifest-schema correction
+
+**Disposition: prior source blocker corrected; qualification remains pending.** This follow-up reviews the manifest schema correction currently in the shared working tree. It does not replace or edit `03-source-review.md`, and it does not report test or qualification results.
+
+The profile table now uses `PRAGMA table_xinfo` to check ordered exact columns, declared types, nullability, primary-key position, and absence of hidden/generated columns. The profile row format version is read as a 64-bit SQLite integer, avoiding the earlier narrow integer read. A new same-name malformed-manifest test uses the expected column names with wrong/permissive definitions, addressing the gap documented in review 03. The correction closes that source finding, subject to the focused negative test passing.
+
+One qualification improvement is recommended: move the `AfterDdl` process checkpoint to immediately after `ALTER TABLE ... ADD COLUMN record_format` and before creating/inserting the profile manifest. Its current location is after all DDL and the manifest row insertion, making it close to the later `BeforeCommit` checkpoint. Stopping at the intermediate column-only uncommitted state would exercise rollback of a genuinely partial transition and add distinct process evidence.
+
+SQLite permits storage classes that differ from declared affinity. Reads of malformed manifest cell values through `GetString`/`GetInt64` may therefore raise `InvalidCastException`; the recovery inspector currently maps several corruption exceptions but not that one. The operation still aborts rather than admitting the state, so this is not evidence of unsafe admission, but either explicit `typeof(...)` validation or mapping this malformed-value exception would keep the inspector's refusal result consistent.
+
+The profile-1 host boundary is the explicit qualification host phase: `MultiEffectProbe` calls `RequireCurrentAsync` before its existing initialization/recovery path. No universal gate for every Marang library consumer or server entry point is claimed; library callers remain responsible for choosing and requiring their profile. No builds or tests were run by this reviewer. Cross-version and cross-platform qualification still must be inspected before any completion claim.

@@ -29,7 +29,10 @@ original counterexample, exact matrix, filesystem skip and independent reviews.
 The proposed next work is [M6 operational recovery hardening](docs/aaaw-m6/plan.md),
 split into bounded evidence batches. [M6.1](docs/aaaw-m6-1/qualification.md) is
 complete for corruption detection and fail-closed recovery in this profile;
-the M5 behavior remains qualified. Later M6 batches have not started.
+the M5 behavior remains qualified. Its immutable qualification anchor is
+[`5dce00e`](https://github.com/jenolaszlo-sketch/marang/commit/5dce00ef8d7ca962e3de42f4a28b1e0d1e52fb29).
+[M6.2](docs/aaaw-m6-2/contract.md) is in implementation/qualification for one
+Marang-owned profile-format transition. M6.3 and M6.4 have not started.
 
 ```text
 Codex / MCP client

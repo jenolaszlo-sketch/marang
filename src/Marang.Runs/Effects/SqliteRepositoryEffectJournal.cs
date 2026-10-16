@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
+using Marang.Runs.Integrity;
 using Penghou.Zhinu.Sqlite;
 
 namespace Marang.Runs.Effects;
@@ -87,7 +88,10 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
         await using (var command = connection.CreateCommand())
         {
             command.Transaction = transaction;
-            command.CommandText = "INSERT INTO repository_effects(effect_id,workflow_id,repository_id,intent_digest,stage,document,updated_at) VALUES($id,$workflow,$repository,$digest,$stage,$doc,$at)";
+            var format = await RepositoryProfileCompatibility.InspectFormatAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+            command.CommandText = format == RepositoryProfileFormat.Current
+                ? "INSERT INTO repository_effects(effect_id,workflow_id,repository_id,intent_digest,stage,document,updated_at,record_format) VALUES($id,$workflow,$repository,$digest,$stage,$doc,$at,1)"
+                : "INSERT INTO repository_effects(effect_id,workflow_id,repository_id,intent_digest,stage,document,updated_at) VALUES($id,$workflow,$repository,$digest,$stage,$doc,$at)";
             command.Parameters.AddWithValue("$id", intent.EffectId.ToString("D"));
             command.Parameters.AddWithValue("$workflow", intent.WorkflowId.ToString("D"));
             command.Parameters.AddWithValue("$repository", intent.RepositoryId);
@@ -287,6 +291,7 @@ public sealed class SqliteRepositoryEffectJournal(IZhinuSqliteDatabase database)
     internal static async Task ValidateGlobalEventSequenceAsync(SqliteConnection connection, SqliteTransaction? transaction,
         CancellationToken cancellationToken)
     {
+        _ = await RepositoryProfileCompatibility.InspectFormatAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
         long count;
         long minimum;
         long maximum;

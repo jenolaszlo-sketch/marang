@@ -1,7 +1,10 @@
 # AAAW M6: Operational Readiness / Recovery Hardening
 
-Status: **M6.1 complete for the bounded repository profile; later batches planned.**
+Status: **M6.1 complete; M6.2 implementation/qualification in progress; M6.3/M6.4 planned.**
 See the [M6.1 qualification record](../aaaw-m6-1/qualification.md).
+Its immutable qualification anchor is `5dce00ef8d7ca962e3de42f4a28b1e0d1e52fb29`.
+The [M6.2 contract](../aaaw-m6-2/contract.md) authorizes one Marang-owned format
+transition and explicitly excludes backup/restore and resource exhaustion.
 Direction recorded: 2026-10-16.
 
 M6 asks what happens when the environment is damaged or unavailable. It does
@@ -35,7 +38,7 @@ weakening or artificially bypassing the test.
 | Batch | Question and scope | Required evidence before closure |
 | --- | --- | --- |
 | **M6.1 Durable-state integrity and fail-closed recovery** | Detect missing, truncated, malformed or inconsistent durable records before bounded-profile recovery. Refuse uncertain state and preserve evidence. No repair, quarantine implementation, migration, backup/restore, resource-exhaustion or soak behavior. See the [authorized contract](../aaaw-m6-1/contract.md). | Controlled corruption counterexamples, explicit admission/refusal classifications, preservation of database/WAL bytes, no guessed approvals or authoritative results, and unchanged M5 recovery qualification. |
-| **M6.2 Upgrade/schema compatibility** | Establish supported reader/writer/schema versions, migration ownership and compatibility policy. Exercise interruption and restart at migration boundaries. | Exact before/after versions, preserved backups, interrupted-upgrade fixtures, fail-closed handling of unsupported versions, and demonstrated recovery paths that preserve identity, revision lineage and effect evidence. |
+| **M6.2 Upgrade/schema compatibility** | Qualify one exact M6.1 implicit-profile to explicit Marang profile-1 transition, including reader/writer policy and interruption/restart. No backup/restore or resource exhaustion. | Exact old/new source and representations, preserved original fixture evidence, atomic interruption/retry, unsupported/partial-format refusal, and recovery that preserves meaning, identity, lineage and completed effects. |
 | **M6.3 Operational failure and resource-exhaustion recovery** | Exercise bounded storage exhaustion, write/flush failures, unavailable dependencies, external repository modification and abrupt host loss where a real host-level fixture is available. | Native fault evidence with exact injection boundaries, cleanup/resource accounting, explicit uncertain-effect handling, and recovery from actual repository state without duplicate mutation. Process termination alone must not be labeled host-death or power-loss evidence. |
 | **M6.4 Soak, observability and operator recovery drills** | Run finite longer-lived scenarios and make failures diagnosable. Rehearse backup/restore and documented operator decisions without reconstructing authority from logs or memory. | Declared duration/load/resource bounds, observable failure categories and lineage, independent restore/recovery drills, bounded resource trends, and an operator runbook validated against the exercised failures. |
 

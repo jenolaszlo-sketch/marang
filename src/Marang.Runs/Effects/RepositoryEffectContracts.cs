@@ -4,6 +4,7 @@ using System.Text;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Marang.Tests")]
+[assembly: InternalsVisibleTo("Marang.RestartProbe")]
 
 namespace Marang.Runs.Effects;
 
