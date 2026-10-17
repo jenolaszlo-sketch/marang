@@ -4,6 +4,7 @@ on:
   push:
     branches: [codex/aaaw-m6-2-compatibility]
     paths:
+      - '.editorconfig'
       - '.github/workflows/aaaw-m6-2-macos.yml'
       - 'eng/**'
       - 'src/**'
