@@ -1,0 +1,151 @@
+{
+  "files": [
+    {
+      "bytes": 17902298,
+      "path": "captured-artifacts.zip",
+      "sha256": "f49dce616e7d9032d30e10729788ce33066b85168a992255a019e08fd7b87829"
+    },
+    {
+      "bytes": 2251,
+      "path": "job.json",
+      "sha256": "2b04f58d0ba93eb70e2e93d77faed17d73aedfca8071f84aec39d5f45342e552"
+    },
+    {
+      "bytes": 49776,
+      "path": "job.log",
+      "sha256": "1a5a2524d4e732b414fb9fb04c458f10cecb850220fc92e28245d7240181bed3"
+    },
+    {
+      "bytes": 242851,
+      "path": "qualification.json",
+      "sha256": "7bdae4148cb20403c39bc09be3007d840f3e17eae8659057e9eb84ad10122232"
+    }
+  ],
+  "m61Cases": {
+    "net10.0": 85,
+    "net8.0": 70
+  },
+  "m62Cases": {
+    "crossVersionProcesses": 8,
+    "net10.0": 42,
+    "net8.0": 34
+  },
+  "newSource": "f216844f251c1ff7ade8beda602b696b4a288b74",
+  "oldProbe": {
+    "bytes": 519168,
+    "path": "/Users/runner/work/marang/marang/artifacts/aaaw-m6-2/oldwriter-source/tests/Marang.RestartProbe/bin/Release/net10.0/Marang.RestartProbe.dll",
+    "sha256": "d949fccb7b91520127dd254200f6f31f65b3197bbbc8f2d5909e0ae77b19e123"
+  },
+  "oldWriterSource": "5dce00ef8d7ca962e3de42f4a28b1e0d1e52fb29",
+  "packages": [
+    {
+      "id": "Gagamba.Execution",
+      "sha256": "8a93d8fbcfb43d695ea8d65db3603b98e2e9c00750a662829c6374c0a8be4c0c",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "id": "Gagamba.Execution.Linux",
+      "sha256": "7fa53482b389a12630d649ba43cafb09b6a2f61d7a45fd6b77df63a5379df1cc",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "id": "Gagamba.Execution.MacOS",
+      "sha256": "912d8033d66feb9fe45c50fa0e2aa862ee77790b8d62f8dc86d65b2138be7ac8",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "id": "Gagamba.Execution.Windows",
+      "sha256": "1d57fd0bbf4ae6830be49fe6c4c4339a26a6349fbd5308d39e167c0d7decef00",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "id": "Gagamba.Runtime",
+      "sha256": "b141f8775185864f491110c0f22684a58a7bbd02d0481ae74776a0961b954311",
+      "sourceCommit": "0c1f05e199588622a5987f95a9149374f5bd858b",
+      "version": "0.1.0-preview.4-gp-m5.1"
+    },
+    {
+      "id": "Penghou.Qingniao",
+      "sha256": "1a5a268ed65073c3b78b1af8cf69688c7d2f633cffe5d5da8d1e04ed1f2b7d37",
+      "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "version": "0.1.0-preview.5-aaaw-m1.4"
+    },
+    {
+      "id": "Penghou.Qingniao.Abstractions",
+      "sha256": "7f111991ff208ad573f8af8cdab7b45b9a451825b4e2de1189db949584f75870",
+      "sourceCommit": "f08971df33916be184fd1bebb5940ba2bd660a49",
+      "version": "0.1.0-preview.5-aaaw-m1.4"
+    },
+    {
+      "id": "Penghou.Zhinu",
+      "sha256": "8c850fc2f63cf73c586209aaffb2db29277d1c8240e46fe9734b7da479efa875",
+      "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "version": "0.2.0-preview.4-aaaw-m1.3"
+    },
+    {
+      "id": "Penghou.Zhinu.Sqlite",
+      "sha256": "5b18324a395b71c36043546d2580ac6c76739fb8f45323ca4b1d1ee19ca1fe39",
+      "sourceCommit": "07e1807cc4b867dd4f527445aa108f56135d37db",
+      "version": "0.2.0-preview.4-aaaw-m1.3"
+    }
+  ],
+  "platform": "macos",
+  "qualificationPassed": true,
+  "schema": "aaaw-m6-2-platform-seal/v1",
+  "sourceUnchangedAndClean": true,
+  "testRuns": [
+    {
+      "failed": 0,
+      "framework": "net8.0",
+      "passed": 305,
+      "skipped": 1,
+      "skippedTests": [
+        {
+          "duration": "00:00:00.0010000",
+          "outcome": "NotExecuted",
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+        }
+      ],
+      "total": 306
+    },
+    {
+      "failed": 0,
+      "framework": "net10.0",
+      "passed": 373,
+      "skipped": 1,
+      "skippedTests": [
+        {
+          "duration": "00:00:00.0010000",
+          "outcome": "NotExecuted",
+          "testName": "Marang.Tests.RepositoryPortabilityTests.Distinct_case_sensitive_git_roots_have_distinct_repository_identities"
+        }
+      ],
+      "total": 374
+    }
+  ],
+  "unchangedM5RestartBarriers": 12,
+  "verifiedArchives": [
+    {
+      "archive": "macos/captured-artifacts.zip",
+      "hashedMembers": 211,
+      "members": 212,
+      "sha256": "f49dce616e7d9032d30e10729788ce33066b85168a992255a019e08fd7b87829"
+    },
+    {
+      "archive": "macos/captured-artifacts.zip!artifacts/aaaw-m6-1/macos-qualification/captured-artifacts.zip",
+      "hashedMembers": 204,
+      "members": 205,
+      "sha256": "1eceaaa6eb214417ba9a486dd0322633114c28960a331745f8c6f240d2b7ff97"
+    },
+    {
+      "archive": "macos/captured-artifacts.zip!artifacts/aaaw-m6-1/macos-qualification/captured-artifacts.zip!artifacts/aaaw-m5/macos-qualification/captured-artifacts.zip",
+      "hashedMembers": 97,
+      "members": 98,
+      "sha256": "ebf3169f604e2a28da48d04a314a46ca08a4c87a609e2eed3cd1da8465f19b34"
+    }
+  ]
+}
