@@ -88,3 +88,42 @@ passed together on .NET 10 (3/3). Those two provider cases also passed on
 `evidence/corrected-focus.zip`. The K3 and K4 cases are now separately named
 facts because their repeat operations differ. Full native qualification must
 still execute all cases together from the exact frozen source.
+
+
+The first clean native Windows attempt at `6f441fe` passed both runtime suites
+and all 42 new .NET 10 cases, but the inherited formatter expected CRLF at two
+wrapped lines while Git requires LF. An explicit matching formatter policy
+passed a fresh LF-checkout check. The native attempts, including the interrupted
+Ubuntu run and successful supplemental Mac run, remain in
+`evidence/native-attempts-6f441fe.zip` with manifests and hashes. The complete
+interrupted Linux clone is retained on task D: storage; the published subset
+excludes duplicate source/Git objects and rebuildable output.
+
+The first `f216844` Windows run passed formatting and .NET 8, then failed to
+produce the K4 legacy fixture when effect A's NuGet restore could not write
+vulnerability data to the full C: HTTP cache. It never reached migration for
+that case. `evidence/windows-host-space-f216844.zip` preserves this invalidated
+run. A fresh same-source run used D: for checkout, temporary files and HTTP
+cache without disabling audit checks.
+
+That D:-cache run was interrupted by host Modern Standby. Kernel-Power records
+show standby beginning at 10:11:47 and return at 10:30:23 (local +08:00).
+The unchanged M3 K7 and M4 K3 test deadlines elapsed across the interruption.
+A separate new-test `AfterDdl` marker read hit a Windows sharing violation.
+Atomic JSON publication remained intact, but file existence did not guarantee
+immediate read availability. The marker reader now retries only Windows
+sharing/lock codes 32/33 for at most two seconds. Other I/O errors, malformed
+JSON, missing files and cancellation still fail; checkpoint and process
+identity checks remain strict. A compiled-helper reproduction resolves a
+100ms exclusive lock, refuses a permanent lock after 2001ms, and proves
+missing-file/cancellation propagation. No original M5 timeout was increased.
+
+The `f216844` Linux run also retains its unsuccessful outcome after the
+user-authorized cgroup pause/resume. All eight new cross-version cases passed,
+but an existing actual-state control's broker deadline expired across the
+pause; cleanup remained confirmed. This is not a successful final native run
+or a state-integrity regression. Raw reports, captures, selected native power
+events and the marker reproduction are in
+`evidence/qualification-corrections-f216844.zip`. These incidents do not
+qualify resource exhaustion or host-sleep recovery. The next qualification
+must run uninterrupted at the corrected, clean test source.

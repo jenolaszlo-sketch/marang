@@ -154,7 +154,7 @@ public sealed class RepositoryProfileCompatibilityProcessTests
         {
             var ready = Path.Combine(directory, "profile-upgrade-checkpoint-" + checkpoint + ".json");
             await WaitForFileAsync(ready, migration, directory, TimeSpan.FromMinutes(2));
-            using var marker = JsonDocument.Parse(await File.ReadAllTextAsync(ready, TestContext.Current.CancellationToken));
+            using var marker = JsonDocument.Parse(await ReadCheckpointMarkerAsync(ready, TestContext.Current.CancellationToken));
             marker.RootElement.GetProperty("checkpoint").GetString().Should().Be(checkpoint);
             var pid = marker.RootElement.GetProperty("processId").GetInt32();
             await migration.StopAtBarrierAsync(directory, "profile-" + checkpoint, pid, requireActive: false,
@@ -288,6 +288,25 @@ public sealed class RepositoryProfileCompatibilityProcessTests
         var pidPath = Path.Combine(directory, "workflow-process-id.txt");
         var pid = int.Parse((await File.ReadAllTextAsync(pidPath, TestContext.Current.CancellationToken)).Trim(), System.Globalization.CultureInfo.InvariantCulture);
         await run.StopAtBarrierAsync(directory, barrier, pid, requireActive: false, TestContext.Current.CancellationToken);
+    }
+
+    private static async Task<string> ReadCheckpointMarkerAsync(string path, CancellationToken cancellationToken)
+    {
+        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        while (true)
+        {
+            try
+            {
+                return await File.ReadAllTextAsync(path, cancellationToken);
+            }
+            catch (IOException error) when (OperatingSystem.IsWindows() &&
+                (error.HResult & 0xffff) is 32 or 33 && elapsed.Elapsed < TimeSpan.FromSeconds(2))
+            {
+                // Windows can transiently deny reads after atomic marker publication.
+                // Retry only sharing/lock conflicts; malformed JSON and other I/O errors still fail.
+                await Task.Delay(25, cancellationToken);
+            }
+        }
     }
 
     private static async Task WaitForFileAsync(string path, OwnedProbeRun run, string directory, TimeSpan timeout)
