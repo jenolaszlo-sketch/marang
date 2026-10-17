@@ -81,6 +81,7 @@ internal static class Program
             else if (phase == "multi-effect-reconcile") await MultiEffectProbe.RunAsync(dir, barrier, resume, reconcileOnly: true, reconcileRun: reconcileRun);
             else if (phase == "profile-upgrade") await RepositoryProfileCompatibilityProbe.UpgradeAsync(dir, barrier);
             else if (phase == "multi-effect-v1") await RepositoryProfileCompatibilityProbe.ResumeCurrentProfileAsync(dir);
+            else if (phase == "multi-effect-v1-catch-up") await RepositoryProfileCompatibilityProbe.ResumeCurrentProfilePartialCatchUpAsync(dir);
             else throw new ArgumentException($"Unknown phase '{phase}'.");
             return 0;
         }

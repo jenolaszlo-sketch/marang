@@ -59,6 +59,23 @@ public sealed class RepositoryProfileCompatibilityTests
         (await RepositoryRecoveryInspector.InspectAsync(fixture.DatabasePath, fixture.WorkflowId, cancellationToken: ct)).CanRecover.Should().BeTrue();
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Upgrade_preserves_uncaptured_and_captured_provider_records(bool captureHandle)
+    {
+        var ct = TestContext.Current.CancellationToken;
+        using var fixture = await RecoveryIntegrityFixture.CreateAsync();
+        await fixture.AddProviderAttemptAsync(captureHandle, markNotReconnectable: false, ct);
+        var before = await CaptureStoreAsync(fixture.DatabasePath, ct);
+
+        (await RepositoryProfileCompatibility.UpgradeAsync(fixture.DatabasePath, fixture.WorkflowId, cancellationToken: ct))
+            .Should().Be(RepositoryProfileUpgradeResult.Upgraded);
+
+        AssertOnlyProfileAdditions(before, await CaptureStoreAsync(fixture.DatabasePath, ct));
+        await RepositoryProfileCompatibility.RequireCurrentAsync(fixture.DatabasePath, fixture.WorkflowId, cancellationToken: ct);
+    }
+
     [Fact]
     public async Task Repeated_upgrade_is_idempotent_and_does_not_write_database_bytes()
     {

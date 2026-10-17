@@ -101,6 +101,11 @@ Atomicity is qualified for process termination, not host power loss.
   explicitly migrate, and recover the same stores. Preserve completed mutation
   receipts, the partial mutation, effect identities, graph/revision lineage,
   supervisor state and uncertainty; repeat recovery without replay.
+  Completed A exercises two normal host resumes; partial B exercises the normal
+  recovery followed by a fresh read-only supervisor catch-up. Its durable
+  blocker remains explicit. Normal recovery retains the existing authority
+  publication behavior; only migration and read-only catch-up preserve the
+  separate authority-store bytes.
 - Compare exact original typed-cell contents in all pre-existing tables,
   including approval/authority/effect/provider/supervisor/execution records and
   `sqlite_sequence`. Do not canonicalize JSON to hide byte changes. Existing

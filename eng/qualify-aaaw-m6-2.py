@@ -144,20 +144,47 @@ def verify_process_artifacts(started_epoch: float, shared: Any, expected_new_sha
             stop_ok, stop = verify_stop(directory / f"lifecycle-stop-{prefix}.json", "ExplicitStop")
             apply_log = directory / "physical-applies.log"
             phase_receipts = list(directory.glob("natural-multi-effect-v1-*.json"))
+            legacy_admission_receipts = [read_json(path) for path in sorted(directory.glob("refusal-multi-effect-v1-*.json"))]
             upgrade_receipts = [read_json(path) for path in sorted(directory.glob("natural-profile-upgrade-*.json"))]
             phase_receipts_json = [read_json(path) for path in sorted(phase_receipts)]
+            repeated_phase = "multi-effect-v1-catch-up" if prefix == "K4" else "multi-effect-v1"
+            catchup_path = directory / "profile-current-partial-catchup.json"
+            catchup = read_json(catchup_path) if prefix == "K4" and catchup_path.is_file() else {}
+            catchup_ok = (prefix != "K4" or (catchup_path.is_file()
+                           and catchup.get("currentProfileRequired") is True
+                           and catchup.get("mutationBlocked") is True
+                           and catchup.get("bClassification") == "PartiallyApplied"
+                           and catchup.get("bStage") == "Blocked"
+                           and catchup.get("cStage") == "Prepared"
+                           and "bb288558-11d7-4a4d-91e2-a4332cecedc8" in catchup.get("cBlockingPrerequisites", [])
+                           and bool(catchup.get("observedStateDigest"))
+                           and catchup.get("declaredNoExecution") is True))
             case["evidence"] = evidence
             case["oldWriterStop"] = stop
             case["currentResumeReceiptCount"] = len(phase_receipts)
+            case["legacyAdmissionRefusalReceipts"] = legacy_admission_receipts
             case["upgradeReceipts"] = upgrade_receipts
             case["currentResumeReceipts"] = phase_receipts_json
+            case["repeatedResume"] = {"expectedPhase": repeated_phase, "evidence": catchup, "passed": catchup_ok}
             case["passed"] = (evidence.get("schema") == "aaaw-m6-2-profile-process-case/v1"
                                and evidence.get("oldSourceSha") == OLD_SHA
                                and evidence.get("newSourceSha") == expected_new_sha
                                and evidence.get("barrier") == prefix
+                               and evidence.get("workflowId") == "dd7e19af-e327-4886-b286-ec96c26835a7"
+                               and evidence.get("legacyAdmissionRefusedWithoutMutation") is True
+                               and evidence.get("legacyAdmissionFingerprint")
+                               and evidence.get("externalStateUnchangedByUpgrade") is True
+                               and evidence.get("legacyApplyLogPreserved") is True
+                               and (prefix != "K4" or evidence.get("catchUpSnapshotUnchanged") is True)
+                               and evidence.get("repeatedResumePhase") == repeated_phase
                                and evidence.get("oldProbeSha256") == old_build_probe_sha()
                                and evidence.get("newProbeSha256") == new_probe_sha
-                               and stop_ok and apply_log.is_file() and len(phase_receipts) == 2 and len(upgrade_receipts) == 2
+                               and stop_ok and apply_log.is_file() and len(legacy_admission_receipts) == 1
+                               and len(phase_receipts) == 2 and len(upgrade_receipts) == 2
+                               and catchup_ok
+                               and all(receipt.get("cause") == "NonzeroExit" and receipt.get("rootExitCode") not in (None, 0)
+                                       and receipt.get("cleanup") == "Confirmed" and receipt.get("captureStatus") == "Complete"
+                                       for receipt in legacy_admission_receipts)
                                and all(receipt.get("cause") == "NaturalExit" and receipt.get("rootExitCode") == 0
                                        and receipt.get("cleanup") == "Confirmed" and receipt.get("captureStatus") == "Complete"
                                        for receipt in upgrade_receipts + phase_receipts_json))
@@ -318,7 +345,13 @@ def qualify(platform_name: str, validate_windows: bool = False, test_results_dir
             raise RuntimeError("Source changed between the runner start and evidence validation.")
         bootstrap = read_json(OLD_BUILD) if OLD_BUILD.is_file() else {}
         report["oldWriterBootstrap"] = {"report": bootstrap, "passed": bootstrap.get("passed") is True
-                                        and bootstrap.get("oldSourceSha") == OLD_SHA}
+                                        and bootstrap.get("oldSourceSha") == OLD_SHA
+                                        and bootstrap.get("newSourceSha") == state.get("commit")
+                                        and bootstrap.get("newSourceClean") is True
+                                        and bootstrap.get("oldSource", {}).get("commit") == OLD_SHA
+                                        and bootstrap.get("oldSource", {}).get("clean") is True
+                                        and bootstrap.get("oldSourceEnd", {}).get("commit") == OLD_SHA
+                                        and bootstrap.get("oldSourceEnd", {}).get("clean") is True}
 
         if validate_windows:
             m61_path = m61_folder / "qualification.json"

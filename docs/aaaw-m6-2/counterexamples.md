@@ -46,3 +46,45 @@ that the old runtime promised support for future formats, that an arbitrary
 future schema can be migrated, or that coherent removal of all version evidence
 can be detected. The current transition recognizes only the exact supported
 legacy profile and its one declared destination.
+
+The first eight-case cross-version process run used genuine old-writer output
+and candidate `51371d2`. It passed five cases and failed three; the complete
+raw run and fixtures remain in `evidence/process-attempt-51371d2.zip`.
+The actual partial-DDL and pre-commit interruption/retry cases passed, as did
+completed-A upgrade with two fresh resumes and both repeated unsupported-state
+refusal cases. Failures were kept separately:
+
+- The transaction-begin marker was observed before its asynchronous write
+  finished on Windows. Checkpoint evidence now publishes by temporary write
+  followed by atomic rename.
+- The post-commit retry correctly returned `AlreadyCurrent`; its test had
+  incorrectly expected `Upgraded` for every checkpoint. The oracle now
+  distinguishes committed and uncommitted interruption.
+- The partial-B fixture migrated and completed its first recovery correctly.
+  A second invocation of the original demonstration's normal path skipped its
+  already-written K4 report and attempted final validation against partial
+  state, which refused. Repeated partial-state recovery uses the existing
+  supervisor catch-up APIs. No original M5 host behavior or
+  workflow semantics changed to satisfy this test.
+
+The updated cases also exercise profile-1 host refusal before explicit upgrade
+and compare external authority storage and checkout state across migration.
+Their acceptance remains pending a corrected process run and native matrix.
+
+The second development process run passed seven cases and failed one; its raw
+fixtures, TRX and compiled probe/test binaries are retained in
+`evidence/process-run2.zip`. The reused M5 negative-control entry explicitly
+forbids executor checkpoints and refused a partial-effect attempt before
+reconciliation. It was designed for a different actual-state mismatch. The
+final partial-state repeat check instead reconstructs the blocked operator
+view through the existing graph supervisor and journal readers, without
+constructing an executor, validator or authority publisher. All-table, external
+authority/checkout and apply-log preservation remain required. Completed-A
+still exercises two normal execution-host resumes.
+
+The final partial-state catch-up and two nonempty provider-preservation cases
+passed together on .NET 10 (3/3). Those two provider cases also passed on
+.NET 8. Their raw results and the successful partial fixture are in
+`evidence/corrected-focus.zip`. The K3 and K4 cases are now separately named
+facts because their repeat operations differ. Full native qualification must
+still execute all cases together from the exact frozen source.

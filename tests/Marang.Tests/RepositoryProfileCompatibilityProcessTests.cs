@@ -15,10 +15,15 @@ public sealed class RepositoryProfileCompatibilityProcessTests
     private const string WorkflowId = "dd7e19af-e327-4886-b286-ec96c26835a7";
     private const string ProfileIdentity = "marang/bounded-repository/m6.1@5dce00ef8d7ca962e3de42f4a28b1e0d1e52fb29;zhinu-schema=6;effect-json=web-v1;profile=1;effect-record=1";
     private static readonly string ProfileDigest = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(ProfileIdentity))).ToLowerInvariant();
-    [Theory]
-    [InlineData("K3", "ValidationPassed")]
-    [InlineData("K4", "Applying")]
-    public async Task Exact_old_writer_state_upgrades_without_rewriting_payloads_and_resumes(string barrier, string expectedStage)
+    [Fact]
+    public Task Completed_old_writer_state_upgrades_without_rewriting_payloads_and_resumes() =>
+        QualifyOldWriterAsync("K3", "ValidationPassed");
+
+    [Fact]
+    public Task Partially_applied_old_writer_state_upgrades_without_rewriting_payloads_and_recovers_context() =>
+        QualifyOldWriterAsync("K4", "Applying");
+
+    private static async Task QualifyOldWriterAsync(string barrier, string expectedStage)
     {
         var (root, oldRoot, oldProbe, newProbe, directory) = CreateRun(barrier);
         await using (var old = OwnedProbeRun.Start(oldProbe, oldRoot, directory, barrier, resume: false, phase: "multi-effect"))
@@ -38,11 +43,41 @@ public sealed class RepositoryProfileCompatibilityProcessTests
             oldStages[Guid.Parse("bb288558-11d7-4a4d-91e2-a4332cecedc8")].Should().Be("Applying");
             oldStages[Guid.Parse("912081ef-5f01-4d72-890a-75a381f6abdd")].Should().Be("Prepared");
         }
+
+        var checkout = (await File.ReadAllTextAsync(Path.Combine(directory, "checkout-path.txt"), TestContext.Current.CancellationToken)).Trim();
+        var hufu = Path.Combine(directory, "runtime", "hufu.db");
+        var beforeLegacyAdmission = await PersistentStateFingerprintAsync(database, hufu, checkout,
+            TestContext.Current.CancellationToken);
+        var oldApplyLogExists = File.Exists(Path.Combine(directory, "physical-applies.log"));
+        oldApplyLogExists.Should().BeTrue("both selected old-writer barriers occur after the first physical effect");
+        var oldApplyLog = oldApplyLogExists
+            ? await File.ReadAllBytesAsync(Path.Combine(directory, "physical-applies.log"), TestContext.Current.CancellationToken)
+            : Array.Empty<byte>();
+        await RunRefusalAsync(newProbe, root, directory, "multi-effect-v1");
+        var afterLegacyAdmission = await PersistentStateFingerprintAsync(database, hufu, checkout,
+            TestContext.Current.CancellationToken);
+        afterLegacyAdmission.Digest.Should().Be(beforeLegacyAdmission.Digest,
+            "the current-runtime admission gate must refuse a genuine legacy profile before any SQLite or checkout mutation");
+        afterLegacyAdmission.GitHead.Should().Be(beforeLegacyAdmission.GitHead);
+        afterLegacyAdmission.GitStatus.Should().Be(beforeLegacyAdmission.GitStatus);
+        afterLegacyAdmission.ExistingWalHashes.Should().Be(beforeLegacyAdmission.ExistingWalHashes);
+        File.Exists(Path.Combine(directory, "profile-current-resume.json")).Should().BeFalse();
+        File.Exists(Path.Combine(directory, "physical-applies.log")).Should().Be(oldApplyLogExists);
+        if (oldApplyLogExists)
+            (await File.ReadAllBytesAsync(Path.Combine(directory, "physical-applies.log"), TestContext.Current.CancellationToken))
+                .Should().Equal(oldApplyLog, "legacy admission refusal must preserve existing physical-apply evidence");
+
+        var externalBeforeUpgrade = await PersistentStateFingerprintAsync(database, hufu, checkout,
+            TestContext.Current.CancellationToken, includeExecutionDatabase: false);
         await RunNaturalAsync(newProbe, root, directory, "profile-upgrade", barrier: null);
         var after = await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken);
         await File.WriteAllTextAsync(Path.Combine(directory, "legacy-cells-before.json"), JsonSerializer.Serialize(before), TestContext.Current.CancellationToken);
         await File.WriteAllTextAsync(Path.Combine(directory, "legacy-cells-after.json"), JsonSerializer.Serialize(after), TestContext.Current.CancellationToken);
         after.Should().Be(before, "the transition is additive and must preserve every existing typed value and schema except the new profile tag");
+        var externalAfterUpgrade = await PersistentStateFingerprintAsync(database, hufu, checkout,
+            TestContext.Current.CancellationToken, includeExecutionDatabase: false);
+        externalAfterUpgrade.Digest.Should().Be(externalBeforeUpgrade.Digest,
+            "the schema transition must not change Hufu or tracked checkout state");
         await AssertProfileAsync(database, TestContext.Current.CancellationToken);
         using (var firstUpgrade = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "profile-upgrade-result.json"), TestContext.Current.CancellationToken)))
             firstUpgrade.RootElement.GetProperty("result").GetString().Should().Be("Upgraded");
@@ -56,16 +91,45 @@ public sealed class RepositoryProfileCompatibilityProcessTests
         File.Exists(Path.Combine(directory, "profile-current-resume.json")).Should().BeTrue();
         var firstApplyLog = await File.ReadAllTextAsync(Path.Combine(directory, "physical-applies.log"), TestContext.Current.CancellationToken);
         var firstLineage = await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken);
-        await RunNaturalAsync(newProbe, root, directory, "multi-effect-v1", barrier: null, timeout: TimeSpan.FromMinutes(30));
+        var beforeCatchUp = await PersistentStateFingerprintAsync(database, hufu, checkout, TestContext.Current.CancellationToken);
+        string repeatedResumePhase = "multi-effect-v1";
+        if (barrier == "K4") repeatedResumePhase = "multi-effect-v1-catch-up";
+        await RunNaturalAsync(newProbe, root, directory, repeatedResumePhase, barrier: null, timeout: TimeSpan.FromMinutes(30));
         (await File.ReadAllTextAsync(Path.Combine(directory, "physical-applies.log"), TestContext.Current.CancellationToken)).Should().Be(firstApplyLog);
-        (await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken)).Should().Be(firstLineage,
-            "repeated current-profile admission and resume must not append or rewrite existing effects");
+        var afterCatchUp = await PersistentStateFingerprintAsync(database, hufu, checkout, TestContext.Current.CancellationToken);
+        if (barrier == "K4")
+            afterCatchUp.Digest.Should().Be(beforeCatchUp.Digest, "a fresh authenticated supervisor catch-up read must leave the complete current-profile stores and checkout unchanged");
+        if (barrier == "K3")
+        {
+            (await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken)).Should().Be(firstLineage,
+                "repeated current-profile admission and resume must not append or rewrite the completed effect lineage");
+        }
+        else
+        {
+            (await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken)).Should().Be(firstLineage,
+                "fresh profile-1 supervisor catch-up must be a read-only projection of the partial state");
+            using var catchUp = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "profile-current-partial-catchup.json"), TestContext.Current.CancellationToken));
+            var result = catchUp.RootElement;
+            result.GetProperty("currentProfileRequired").GetBoolean().Should().BeTrue();
+            result.GetProperty("mutationBlocked").GetBoolean().Should().BeTrue();
+            result.GetProperty("bClassification").GetString().Should().Be("PartiallyApplied");
+            result.GetProperty("bStage").GetString().Should().Be("Blocked");
+            result.GetProperty("cStage").GetString().Should().Be("Prepared");
+            result.GetProperty("cBlockingPrerequisites").EnumerateArray().Select(item => item.GetString())
+                .Should().Contain("bb288558-11d7-4a4d-91e2-a4332cecedc8");
+            result.GetProperty("observedStateDigest").GetString().Should().NotBeNullOrWhiteSpace();
+            result.GetProperty("declaredNoExecution").GetBoolean().Should().BeTrue();
+        }
         var report = new
         {
             Schema = "aaaw-m6-2-profile-process-case/v1", OldSourceSha, NewSourceSha = Git(root, "rev-parse", "HEAD"),
             OldProbeSha256 = Hash(File.ReadAllBytes(oldProbe)), NewProbeSha256 = Hash(File.ReadAllBytes(newProbe)),
             Barrier = barrier, ExpectedStage = expectedStage, LegacyPayloadSnapshotSha256 = Hash(before.Rows + before.Schema),
-            ProfileDigest, Database = database, ProcessEvidenceDirectory = directory
+            ProfileDigest, WorkflowId, LegacyAdmissionRefusedWithoutMutation = true,
+            LegacyAdmissionFingerprint = beforeLegacyAdmission.Digest, LegacyApplyLogPreserved = oldApplyLogExists,
+            ExternalStateUnchangedByUpgrade = externalBeforeUpgrade.Digest == externalAfterUpgrade.Digest,
+            RepeatedResumePhase = repeatedResumePhase, CatchUpSnapshotUnchanged = beforeCatchUp.Digest == afterCatchUp.Digest,
+            Database = database, ProcessEvidenceDirectory = directory
         };
         await File.WriteAllTextAsync(Path.Combine(directory, "profile-compatibility-case.json"),
             JsonSerializer.Serialize(report, new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true }),
@@ -112,7 +176,7 @@ public sealed class RepositoryProfileCompatibilityProcessTests
         await AssertProfileAsync(database, TestContext.Current.CancellationToken);
         (await ReadLegacyPayloadSnapshotAsync(database, TestContext.Current.CancellationToken)).Should().Be(before);
         using (var retry = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(directory, "profile-upgrade-result.json"), TestContext.Current.CancellationToken)))
-            retry.RootElement.GetProperty("result").GetString().Should().Be("Upgraded");
+            retry.RootElement.GetProperty("result").GetString().Should().Be(committed ? "AlreadyCurrent" : "Upgraded");
         await File.WriteAllTextAsync(Path.Combine(directory, "profile-checkpoint-case.json"), JsonSerializer.Serialize(new
         {
             Schema = "aaaw-m6-2-profile-checkpoint-case/v1", OldSourceSha,
@@ -285,17 +349,18 @@ public sealed class RepositoryProfileCompatibilityProcessTests
     private sealed record PersistentFingerprint(string Digest, string GitHead, string GitStatus,
         string WalDisposition, string ExistingWalHashes);
 
-    private static async Task<PersistentFingerprint> PersistentStateFingerprintAsync(string database, string hufu, string checkout, CancellationToken ct)
+    private static async Task<PersistentFingerprint> PersistentStateFingerprintAsync(string database, string hufu, string checkout,
+        CancellationToken ct, bool includeExecutionDatabase = true)
     {
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-        foreach (var path in new[] { database, hufu })
+        foreach (var path in includeExecutionDatabase ? new[] { database, hufu } : new[] { hufu })
         {
             hash.AppendData(Encoding.UTF8.GetBytes(Path.GetFileName(path) + "\0"));
             if (!File.Exists(path)) { hash.AppendData(Encoding.UTF8.GetBytes("missing\0")); continue; }
             hash.AppendData(Encoding.UTF8.GetBytes("present\0"));
             hash.AppendData(await ReadSharedFileAsync(path, ct));
         }
-        var walPaths = new[] { database + "-wal", hufu + "-wal" };
+        var walPaths = includeExecutionDatabase ? new[] { database + "-wal", hufu + "-wal" } : new[] { hufu + "-wal" };
         var walHashes = new List<string>();
         var walDisposition = new List<string>();
         foreach (var path in walPaths)

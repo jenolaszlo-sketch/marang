@@ -1,0 +1,13 @@
+# M6.2 source review 07 — process-harness corrections
+
+**Disposition: no new source blocker found; the corrected process run and platform matrix remain pending.** This read-only review covers the qualification-only changes following preserved failed attempt `51371d2`. It does not substitute for fresh process evidence, and no tests/builds were run by this reviewer.
+
+The process checkpoint marker is now written to a unique temporary file and moved into place before the child waits, removing the observed Windows partial-read race. The post-commit retry assertion now expects `AlreadyCurrent`, while precommit interruptions still expect a successful `Upgraded` retry. The K4 second recovery uses the existing reconciliation-only operation rather than the normal completion demonstration, which appropriately preserves the partial B/C safety state without changing the original workflow implementation.
+
+K3/K4 process cases now test profile-1 admission against the genuine old legacy fixture before upgrading. They compare the complete persistent-state fingerprint and physical-apply log across the refusal, require no profile-current success marker, and record the external Hufu/checkout fingerprint across the migration. The report and verifier bind the fixture to the expected workflow identity, exact old source/probe hashes, current probe hash, expected retry phase, refusal receipt, cleanup and complete output capture. For K4, the verifier checks the reconciliation result and requires B to remain Applying, C Prepared, no B/C mutation, no validator/checkpoint call, and the observed repository state to remain distinct from A's expected state.
+
+The preserved attempt failures are documented in `docs/aaaw-m6-2/counterexamples.md` and the raw archive/hash are retained. They correctly remain historical failures rather than being overwritten by the new run. The revised exact-source bootstrap acceptance now binds its new-source SHA to the qualification commit and requires clean old-source state both before and after build.
+
+The current-profile admission guarantee remains deliberately scoped: `RequireCurrentAsync` is called by the explicit profile-1 qualification host before the existing resume path. The contract does not claim universal enforcement for arbitrary Marang library consumers or every server entry point; those callers must choose profile 1 and invoke the gate. Legacy-compatible reader behavior remains available with unchanged meaning.
+
+No additional source blocker was found in these harness corrections. The eight fresh process cases and native Windows/WSL2/macOS matrix must still complete, and their raw artifacts should be inspected before describing migration/process/platform qualification as passed.
